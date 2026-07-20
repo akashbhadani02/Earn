@@ -384,4 +384,52 @@ router.put("/withdraw/reject/:userId/:requestId", adminAuth, async (req, res) =>
 
 });
 
+router.delete("/withdraw/delete/:userId/:requestId", adminAuth, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        const request = user.withdrawRequests.id(req.params.requestId);
+
+        if (!request) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Request Not Found"
+            });
+
+        }
+
+        request.deleteOne();   // અથવા request.remove(); (Mongoose version પ્રમાણે)
+
+        await user.save();
+
+        res.json({
+
+            success: true,
+            message: "Withdraw Request Deleted"
+
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+
+            success: false,
+            message: err.message
+
+        });
+
+    }
+
+});
+
 module.exports = router;

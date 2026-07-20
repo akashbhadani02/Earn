@@ -407,15 +407,15 @@ Delete
 <td>
 
 <button onclick="approveWithdraw('${w.userId}','${w.requestId}')">
-
 Approve
-
 </button>
 
 <button onclick="rejectWithdraw('${w.userId}','${w.requestId}')">
-
 Reject
+</button>
 
+<button onclick="deleteWithdraw('${w.userId}','${w.requestId}')">
+Delete
 </button>
 
 </td>
@@ -494,6 +494,24 @@ function logout() {
 
     location.href = "admin-login.html";
 
+}
+
+async function deleteWithdraw(userId, requestId) {
+
+    if (!confirm("Delete this withdraw request?")) return;
+
+    await fetch(
+        "/api/admin/withdraw/delete/" + userId + "/" + requestId,
+        {
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + token
+            }
+        }
+    );
+
+    loadWithdraws();
+    loadDashboard();
 }
         //==========================
 
