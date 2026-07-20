@@ -22,18 +22,20 @@ router.get("/", auth, async (req, res) => {
 
         res.json({
 
-            success: true,
+    success: true,
 
-            wallet: user.wallet,
-            totalEarn: user.totalEarn,
-            quizScore: user.quizScore,
-            dailyReward: user.dailyReward,
-            spinReward: user.spinReward,
-            lastClaim: user.lastClaim,
-            lastSpin: user.lastSpin,
-            withdrawRequests: user.withdrawRequests
+    userId: user._id,
 
-        });
+    wallet: user.wallet,
+    totalEarn: user.totalEarn,
+    quizScore: user.quizScore,
+    dailyReward: user.dailyReward,
+    spinReward: user.spinReward,
+    lastClaim: user.lastClaim,
+    lastSpin: user.lastSpin,
+    withdrawRequests: user.withdrawRequests
+
+});
 
     } catch (err) {
 

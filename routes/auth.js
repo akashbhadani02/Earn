@@ -127,4 +127,37 @@ router.post("/login", async (req, res) => {
 
 });
 
+// ==========================
+// Logout
+// ==========================
+
+const auth = require("../middleware/auth");
+
+router.post("/logout", auth, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.user.id);
+
+        if (user) {
+            user.isOnline = false;
+            await user.save();
+        }
+
+        res.json({
+            success: true,
+            message: "Logout Successful"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
+
 module.exports = router;

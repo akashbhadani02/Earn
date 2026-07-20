@@ -143,9 +143,12 @@
         <button class="btn" style="background:#636e72;" onclick="showScreen('dashboard')">Back to Dashboard</button>
     </div>
 
-    <script>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        
         const token = localStorage.getItem("token");
+        const socket = io("http://localhost:5000");
 
         if (!token) {
             window.location.href = "login.html";
@@ -931,6 +934,8 @@
 
                 if (data.success) {
 
+                    socket.emit("user-online", data.userId);
+                     
                     wallet = data.wallet;
 
                     lastClaim = data.lastClaim;
@@ -1172,6 +1177,11 @@
             }
         });
         loadWallet();
+        window.addEventListener("beforeunload", () => {
+
+    socket.disconnect();
+
+});
 
         document.getElementById("wallet").innerText = wallet.toFixed(2);
 

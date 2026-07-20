@@ -369,8 +369,9 @@
 
     </table>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-
+        const socket = io("http://localhost:5000");
         const token = localStorage.getItem("adminToken");
 
         if (!token) {
@@ -462,7 +463,7 @@
 
                 html += `
 
-<tr style="background:${user.isOnline ? '#d4ffd4' : ''};">
+<tr id="user-${user._id}" style="background:${user.isOnline ? '#d8ffd8' : 'white'};">
 
 <td>${user.name}</td>
 
@@ -472,10 +473,10 @@
 
 <td>${Number(user.totalEarn).toFixed(2)}</td>
 
-<td>
+<td id="status-${user._id}">
 ${user.isOnline
-    ? '<span style="color:green;font-weight:bold;">🟢 Online</span>'
-    : '<span style="color:red;font-weight:bold;">🔴 Offline</span>'
+? '<span style="color:green;font-weight:bold;">🟢 Online</span>'
+: '<span style="color:red;font-weight:bold;">🔴 Offline</span>'
 }
 </td>
 
@@ -504,6 +505,32 @@ Delete
             document.getElementById("userTable").innerHTML = html;
 
         }
+
+        socket.on("online-update", (data) => {
+
+    const row = document.getElementById("user-" + data.userId);
+
+    const status = document.getElementById("status-" + data.userId);
+
+    if (!row || !status) return;
+
+    if (data.isOnline) {
+
+        row.style.background = "#d8ffd8";
+
+        status.innerHTML =
+            '<span style="color:green;font-weight:bold;">🟢 Online</span>';
+
+    } else {
+
+        row.style.background = "white";
+
+        status.innerHTML =
+            '<span style="color:red;font-weight:bold;">🔴 Offline</span>';
+
+    }
+
+});
 
         //==========================
         // Search
@@ -754,7 +781,6 @@ Delete
 
         loadWithdraws();
     </script>
-
 </body>
 
 </html>
