@@ -100,9 +100,6 @@ router.post("/login", async (req, res) => {
 
         );
 
-        user.isOnline = true;
-        await user.save();
-
         res.json({
 
             success: true,
@@ -121,39 +118,6 @@ router.post("/login", async (req, res) => {
 
             message: err.message
 
-        });
-
-    }
-
-});
-
-// ==========================
-// Logout
-// ==========================
-
-const auth = require("../middleware/auth");
-
-router.post("/logout", auth, async (req, res) => {
-
-    try {
-
-        const user = await User.findById(req.user.id);
-
-        if (user) {
-            user.isOnline = false;
-            await user.save();
-        }
-
-        res.json({
-            success: true,
-            message: "Logout Successful"
-        });
-
-    } catch (err) {
-
-        res.status(500).json({
-            success: false,
-            message: err.message
         });
 
     }
