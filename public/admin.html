@@ -59,7 +59,14 @@
 
 <body>
 
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
     <h2>Admin Dashboard</h2>
+
+    <button onclick="logout()"
+        style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;">
+        Logout
+    </button>
+</div>
 
     <div class="cards">
 
@@ -475,6 +482,19 @@ Reject
 
         }
 
+        //==========================
+// Logout
+//==========================
+
+function logout() {
+
+    if (!confirm("Are you sure you want to logout?")) return;
+
+    localStorage.removeItem("adminToken");
+
+    location.href = "admin-login.html";
+
+}
         //==========================
 
         loadDashboard();
