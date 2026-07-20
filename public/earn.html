@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="gu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Mastery Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --accent: #00cec9;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #7474bf, #348ac7);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .wallet-box {
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .wallet-val {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-quiz {
+            background: #fd79a8;
+        }
+
+        .btn-spin {
+            background: #e17055;
+        }
+
+        .btn-reward {
+            background: #00b894;
+        }
+
+        .btn-withdraw {
+            background: #f39c12;
+        }
+
+        .btn-withdraw:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .option-btn {
+            background: #f1f2f6;
+            border: none;
+            padding: 12px;
+            margin: 5px 0;
+            width: 100%;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="dashboard" class="card">
+        <h2 style="color: #2d3436;">Learning Dashboard</h2>
+        <div class="wallet-box">
+            <small>Total Balance</small>
+            <span class="wallet-val">₹<span id="wallet">0.00</span></span>
+        </div>
+
+        <div class="grid">
+            <button class="btn btn-quiz" onclick="showScreen('quiz')">Start Quiz</button>
+            <button class="btn btn-spin" onclick="spinWheel()">Spin Wheel</button>
+            <button class="btn" onclick="location.href='profile.html'">👤 Profile</button>
+        </div>
+        <button class="btn btn-reward" onclick="claimReward()">🎁 Daily Reward (+₹5)</button>
+        <button id="withdrawBtn" class="btn btn-withdraw" onclick="withdrawMoney()" disabled>💰 Withdraw Now (Min
+            ₹500)</button>
+    </div>
+
+    <div id="quiz" class="card hidden">
+        <h3 id="question">Loading...</h3>
+        <div id="options"></div>
+        <button class="btn" style="background:#636e72;" onclick="showScreen('dashboard')">Back to Dashboard</button>
+    </div>
+
+    <script>
+
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        let wallet = 0;
+
+        let totalEarn = 0;
+
+        let quizReward = 0;
+
+        let dailyReward = 0;
+
+        let spinReward = 0;
+
+        let lastClaim = "";
+
+        let lastSpin = "";
+
+        const quizData = [
+            { q: "How do you greet someone in the morning?", options: ["Good Night", "Good Morning", "Good Evening"], correct: 1 },
+            { q: "What do you say when someone helps you?", options: ["Sorry", "Please", "Thank You"], correct: 2 },
+            { q: "How do you ask someone's name?", options: ["What is your name?", "Where do you live?", "How old are you?"], correct: 0 },
+            { q: "What do you say before asking for help?", options: ["Thanks", "Please", "Sorry"], correct: 1 },
+            { q: "What do you say after making a mistake?", options: ["Excuse me", "Goodbye", "Sorry"], correct: 2 },
+            { q: "How do you ask someone's age?", options: ["How old are you?", "What is your hobby?", "Where are you from?"], correct: 0 },
+            { q: "Choose the correct response to 'How are you?'", options: ["Good Night", "I'm fine, thank you.", "See you later"], correct: 1 },
+            { q: "What do you say when leaving?", options: ["Good Morning", "Thank You", "Goodbye"], correct: 2 },
+            { q: "How do you ask for water politely?", options: ["May I have some water?", "Give me water.", "Water now."], correct: 0 },
+            { q: "What do you say when you don't hear clearly?", options: ["Please sit down.", "Could you repeat that, please?", "I am busy."], correct: 1 },
+            { q: "Choose the correct reply to 'Thank you.'", options: ["Sorry", "Good Luck", "You're welcome"], correct: 2 },
+            { q: "How do you introduce yourself?", options: ["My name is Akash.", "Where are you?", "See you tomorrow."], correct: 0 },
+            { q: "What do you say when asking permission?", options: ["Thank you.", "May I come in?", "Goodbye."], correct: 1 },
+            { q: "How do you wish someone on their birthday?", options: ["Good Morning", "Good Luck", "Happy Birthday"], correct: 2 },
+            { q: "How do you ask where someone lives?", options: ["Where do you live?", "What is your job?", "How are you?"], correct: 0 },
+            { q: "Choose the polite request.", options: ["Open the door!", "Could you open the door, please?", "Door!"], correct: 1 },
+            { q: "What do you say before eating?", options: ["See you.", "Welcome.", "Enjoy your meal."], correct: 2 },
+            { q: "How do you ask the time?", options: ["What time is it?", "Where is the clock?", "Who are you?"], correct: 0 },
+
+        ];
+
+        async function loadWallet() {
+
+            try {
+
+                const res = await fetch("/api/wallet", {
+
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+
+                    wallet = data.wallet;
+
+                    lastClaim = data.lastClaim;
+
+                    lastSpin = data.lastSpin;
+                    totalEarn = data.totalEarn || 0;
+
+                    quizReward = data.quizScore || 0;
+
+                    dailyReward = data.dailyReward || 0;
+
+                    spinReward = data.spinReward || 0;
+
+                    document.getElementById("wallet").innerText = wallet.toFixed(2);
+
+                    checkWithdrawStatus();
+
+                }
+
+            } catch (err) {
+
+                console.log(err);
+
+            }
+
+        }
+
+       async function saveWallet() {
+
+    try {
+
+        const res = await fetch("/api/wallet", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token
+            },
+
+            body: JSON.stringify({
+
+                wallet,
+                totalEarn,
+                quizScore: quizReward,
+                dailyReward,
+                spinReward,
+                lastClaim,
+                lastSpin
+
+            })
+
+        });
+
+        const data = await res.json();
+
+        console.log("Save Response:", data);
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
+        async function updateWallet(amount) {
+
+            amount = Number(amount);
+
+            wallet += amount;
+
+            if (wallet < 0) {
+
+                wallet = 0;
+
+            }
+
+            // Reward હોય ત્યારે જ Total Earn વધારો
+            if (amount > 0) {
+
+                totalEarn += amount;
+
+                quizReward += amount;
+
+            }
+
+            document.getElementById("wallet").innerText = wallet.toFixed(2);
+
+            checkWithdrawStatus();
+
+            await saveWallet();
+
+           // await loadWallet();
+
+        }
+        function checkWithdrawStatus() {
+            document.getElementById("withdrawBtn").disabled = (wallet < 500);
+        }
+
+        function showScreen(id) {
+            document.getElementById('dashboard').classList.toggle('hidden', id !== 'dashboard');
+            document.getElementById('quiz').classList.toggle('hidden', id !== 'quiz');
+            if (id === 'quiz') loadQuiz();
+        }
+
+        function claimReward() {
+            let today = new Date().toDateString();
+            if (lastClaim === today) {
+                alert("તમે આજે રિવોર્ડ લઈ લીધો છે!");
+            } else {
+                updateWallet(5.00);
+                lastClaim = today;
+
+                saveWallet();
+                alert("Congratulations! ₹5 મળ્યા.");
+            }
+        }
+
+        function spinWheel() {
+            let today = new Date().toDateString();
+            if (lastSpin === today) {
+                alert("તમે આજે સ્પિન કરી લીધું છે!");
+            } else {
+                let prize = Math.floor(Math.random() * 20) + 1;
+                alert("Congratulations! Spin પર તમને ₹" + prize + " મળ્યા!");
+                updateWallet(prize);
+                lastSpin = today;
+
+                saveWallet();
+            }
+        }
+
+        async function withdrawMoney() {
+
+            try {
+
+                const res = await fetch("/api/wallet/withdraw", {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type": "application/json",
+
+                        Authorization: "Bearer " + token
+
+                    },
+
+                    body: JSON.stringify({
+
+                        amount: wallet
+
+                    })
+
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+
+                    wallet = data.wallet;
+
+                    document.getElementById("wallet").innerText = wallet.toFixed(2);
+
+                    checkWithdrawStatus();
+
+                    alert("Withdraw Request Submitted");
+
+                } else {
+
+                    alert(data.message);
+
+                }
+
+            } catch (err) {
+
+                console.log(err);
+
+            }
+
+        }
+
+        function loadQuiz() {
+            let q = quizData[Math.floor(Math.random() * quizData.length)];
+            document.getElementById("question").innerText = q.q;
+            let optDiv = document.getElementById("options");
+            optDiv.innerHTML = "";
+            q.options.forEach((o, i) => {
+                let b = document.createElement("button");
+                b.className = "option-btn";
+                b.innerText = o;
+                b.onclick = () => {
+                    if (i === q.correct) {
+                        updateWallet(0.20); // સાચો જવાબ પર 0.20
+                        alert("સાચો! +₹0.20");
+                    } else {
+                        updateWallet(-0.15); // ખોટો જવાબ પર 0.2 માઈનસ
+                        alert("ખોટો! -₹0.15");
+                    }
+                    loadQuiz();
+                };
+                optDiv.appendChild(b);
+            });
+        }
+
+        document.getElementById("wallet").innerText = wallet.toFixed(2);
+        checkWithdrawStatus();
+        // Disable right click
+        document.addEventListener("contextmenu", e => e.preventDefault());
+
+        // Disable text selection
+        document.addEventListener("selectstart", e => e.preventDefault());
+
+        // Disable copy, cut and paste
+        ["copy", "cut", "paste"].forEach(event => {
+            document.addEventListener(event, e => e.preventDefault());
+        });
+
+        // Disable common shortcut keys
+        document.addEventListener("keydown", function (e) {
+            if (
+                e.ctrlKey &&
+                ["c", "u", "s", "a", "p"].includes(e.key.toLowerCase())
+            ) {
+                e.preventDefault();
+            }
+
+            // Disable F12
+            if (e.key === "F12") e.preventDefault();
+
+            // Disable Ctrl+Shift+I / J / C
+            if (
+                e.ctrlKey &&
+                e.shiftKey &&
+                ["I", "J", "C"].includes(e.key.toUpperCase())
+            ) {
+                e.preventDefault();
+            }
+        });
+        loadWallet();
+
+        document.getElementById("wallet").innerText = wallet.toFixed(2);
+
+        checkWithdrawStatus();
+
+
+    </script>
+</body>
+
+</html>

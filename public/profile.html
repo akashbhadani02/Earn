@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Profile</title>
+
+<style>
+
+body{
+
+font-family:Arial;
+
+background:#eee;
+
+}
+
+.box{
+
+width:400px;
+
+margin:40px auto;
+
+background:white;
+
+padding:20px;
+
+border-radius:10px;
+
+}
+
+button{
+
+padding:10px 20px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>User Profile</h2>
+
+<p>Name : <span id="name"></span></p>
+
+<p>Mobile : <span id="mobile"></span></p>
+
+<p>Wallet : ₹<span id="wallet"></span></p>
+
+<p>Total Earn : ₹<span id="earn"></span></p>
+
+<h3>Withdraw History</h3>
+
+<div id="history"></div>
+
+<button onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+<script>
+
+const token = localStorage.getItem("token");
+
+if(!token){
+
+location.href="login.html";
+
+}
+
+async function loadProfile(){
+
+const res=await fetch(
+
+"/api/profile",
+
+{
+
+headers:{
+
+Authorization:"Bearer "+token
+
+}
+
+}
+
+);
+
+const data=await res.json();
+
+const u=data.user;
+
+document.getElementById("name").innerHTML=u.name;
+
+document.getElementById("mobile").innerHTML=u.mobile;
+
+document.getElementById("wallet").innerHTML=u.wallet;
+
+document.getElementById("earn").innerHTML=u.totalEarn;
+
+let html="";
+
+u.withdrawRequests.forEach(w=>{
+
+html+=`
+
+<p>
+
+₹${w.amount}
+
+-
+
+${w.status}
+
+</p>
+
+`;
+
+});
+
+document.getElementById("history").innerHTML=html;
+
+}
+
+function logout(){
+
+localStorage.removeItem("token");
+
+location.href="login.html";
+
+}
+
+loadProfile();
+
+</script>
+
+</body>
+
+</html>

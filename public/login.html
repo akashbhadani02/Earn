@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>English App Login</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#4facfe,#00f2fe);
+}
+
+.container{
+
+width:360px;
+
+background:white;
+
+padding:30px;
+
+border-radius:15px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.2);
+
+}
+
+h2{
+
+text-align:center;
+
+margin-bottom:20px;
+
+}
+
+input{
+
+width:100%;
+
+padding:12px;
+
+margin:8px 0;
+
+border:1px solid #ccc;
+
+border-radius:8px;
+
+font-size:16px;
+
+}
+
+button{
+
+width:100%;
+
+padding:12px;
+
+margin-top:10px;
+
+border:none;
+
+border-radius:8px;
+
+background:#2196f3;
+
+color:white;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#0b7dda;
+
+}
+
+p{
+
+text-align:center;
+
+margin-top:15px;
+
+}
+
+a{
+
+cursor:pointer;
+
+color:#2196f3;
+
+}
+
+#signupForm{
+
+display:none;
+
+}
+
+#message{
+
+margin-top:15px;
+
+text-align:center;
+
+font-weight:bold;
+
+color:green;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>English Learning App</h2>
+
+<div id="loginForm">
+
+<input type="text" id="loginMobile" placeholder="Mobile Number">
+
+<input type="password" id="loginPassword" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p>
+
+Don't have an account?
+
+<a onclick="showSignup()">Signup</a>
+
+</p>
+
+</div>
+
+<div id="signupForm">
+
+<input type="text" id="signupName" placeholder="Full Name">
+
+<input type="text" id="signupMobile" placeholder="Mobile Number">
+
+<input type="password" id="signupPassword" placeholder="Password">
+
+<button onclick="signup()">Create Account</button>
+
+<p>
+
+Already have an account?
+
+<a onclick="showLogin()">Login</a>
+
+</p>
+
+</div>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+const API = "/api/auth";
+
+function showSignup(){
+
+document.getElementById("loginForm").style.display="none";
+
+document.getElementById("signupForm").style.display="block";
+
+document.getElementById("message").innerHTML="";
+
+}
+
+function showLogin(){
+
+document.getElementById("signupForm").style.display="none";
+
+document.getElementById("loginForm").style.display="block";
+
+document.getElementById("message").innerHTML="";
+
+}
+
+async function signup(){
+
+const name=document.getElementById("signupName").value;
+
+const mobile=document.getElementById("signupMobile").value;
+
+const password=document.getElementById("signupPassword").value;
+
+const res=await fetch(API+"/signup",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+name,
+
+mobile,
+
+password
+
+})
+
+});
+
+const data=await res.json();
+
+document.getElementById("message").innerHTML=data.message;
+
+if(data.success){
+
+showLogin();
+
+}
+
+}
+
+async function login(){
+
+const mobile=document.getElementById("loginMobile").value;
+
+const password=document.getElementById("loginPassword").value;
+
+const res=await fetch(API+"/login",{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify({
+
+mobile,
+
+password
+
+})
+
+});
+
+const data=await res.json();
+
+if(data.success){
+
+localStorage.setItem("token",data.token);
+
+localStorage.setItem("user",JSON.stringify(data.user));
+
+window.location.href="earn.html";
+
+}else{
+
+document.getElementById("message").innerHTML=data.message;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

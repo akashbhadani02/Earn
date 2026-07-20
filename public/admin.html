@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Admin Panel</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eee;
+            margin: 20px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 180px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        button {
+            padding: 6px 12px;
+            margin: 2px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Admin Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Users</h3>
+            <h1 id="totalUsers">0</h1>
+        </div>
+
+        <div class="card">
+            <h3>Total Wallet</h3>
+            <h1 id="wallet">0</h1>
+        </div>
+
+        <div class="card">
+            <h3>Total Earn</h3>
+            <h1 id="earn">0</h1>
+        </div>
+
+        <div class="card">
+            <h3>Pending Withdraw</h3>
+            <h1 id="withdraw">0</h1>
+        </div>
+
+    </div>
+    <h2>Withdraw Requests</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Name</th>
+
+                <th>Mobile</th>
+
+                <th>Amount</th>
+
+                <th>Status</th>
+
+                <th>Date</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="withdrawTable">
+
+        </tbody>
+
+    </table>
+
+    <input id="search" placeholder="Search User" onkeyup="searchUser()">
+
+    <h2>All Users</h2>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Wallet</th>
+                <th>Total Earn</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="userTable">
+
+        </tbody>
+
+    </table>
+
+    <script>
+
+        const token = localStorage.getItem("adminToken");
+
+        if (!token) {
+
+            location.href = "admin-login.html";
+
+        }
+
+        let allUsers = [];
+
+        //==========================
+        // Dashboard
+        //==========================
+
+        async function loadDashboard() {
+
+            const res = await fetch("/api/admin/dashboard", {
+
+                headers: {
+
+                    Authorization: "Bearer " + token
+
+                }
+
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+
+                alert(data.message);
+
+                return;
+
+            }
+
+            document.getElementById("totalUsers").innerHTML = data.totalUsers;
+            document.getElementById("wallet").innerHTML = data.totalWallet;
+            document.getElementById("earn").innerHTML = data.totalEarn;
+            document.getElementById("withdraw").innerHTML = data.pendingWithdraw;
+
+        }
+
+        //==========================
+        // Load Users
+        //==========================
+
+        async function loadUsers() {
+
+            const res = await fetch("/api/admin/users", {
+
+                headers: {
+
+                    Authorization: "Bearer " + token
+
+                }
+
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+
+                alert(data.message);
+
+                return;
+
+            }
+
+            allUsers = data.users || [];
+
+            showUsers(allUsers);
+
+        }
+
+        //==========================
+        // Show Users
+        //==========================
+
+        function showUsers(users) {
+
+            let html = "";
+
+            users.forEach(user => {
+
+                html += `
+
+<tr>
+
+<td>${user.name}</td>
+
+<td>${user.mobile}</td>
+
+<td>${user.wallet}</td>
+
+<td>${user.totalEarn}</td>
+
+<td>
+
+<button onclick="editWallet('${user._id}',${user.wallet})">
+
+Edit
+
+</button>
+
+<button onclick="deleteUser('${user._id}')">
+
+Delete
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+            });
+
+            document.getElementById("userTable").innerHTML = html;
+
+        }
+
+        //==========================
+        // Search
+        //==========================
+
+        function searchUser() {
+
+            const value = document
+                .getElementById("search")
+                .value
+                .toLowerCase();
+
+            const filtered = allUsers.filter(user => {
+
+                return user.name.toLowerCase().includes(value)
+                    ||
+                    user.mobile.includes(value);
+
+            });
+
+            showUsers(filtered);
+
+        }
+
+        //==========================
+        // Edit Wallet
+        //==========================
+
+        async function editWallet(id, currentWallet) {
+
+            const amount = prompt("Enter New Wallet", currentWallet);
+
+            if (amount == null) return;
+            if (isNaN(amount)) {
+
+                alert("Enter Valid Number");
+
+                return;
+
+            }
+
+            await fetch("/api/admin/wallet/" + id, {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type": "application/json",
+
+                    Authorization: "Bearer " + token
+
+                },
+
+                body: JSON.stringify({
+
+                    wallet: Number(amount)
+
+                })
+
+            });
+
+            loadUsers();
+
+            loadDashboard();
+
+        }
+
+        //==========================
+        // Delete User
+        //==========================
+
+        async function deleteUser(id) {
+
+            if (!confirm("Delete User?")) return;
+
+            await fetch("/api/admin/user/" + id, {
+
+                method: "DELETE",
+
+                headers: {
+
+                    Authorization: "Bearer " + token
+
+                }
+
+            });
+
+            loadUsers();
+
+            loadDashboard();
+
+        }
+
+        async function loadWithdraws() {
+
+            const res = await fetch(
+
+                "/api/admin/withdraws",
+
+                {
+
+                    headers: {
+
+                        Authorization: "Bearer " + token
+
+                    }
+
+                }
+
+            );
+
+            const data = await res.json();
+
+            let html = "";
+
+            const list = data.withdraws || [];
+
+            list.forEach(w => {
+
+                html += `
+
+<tr>
+
+<td>${w.name}</td>
+
+<td>${w.mobile}</td>
+
+<td>${w.amount}</td>
+
+<td>${w.status}</td>
+
+<td>${new Date(w.date).toLocaleString()}</td>
+
+<td>
+
+<button onclick="approveWithdraw('${w.userId}','${w.requestId}')">
+
+Approve
+
+</button>
+
+<button onclick="rejectWithdraw('${w.userId}','${w.requestId}')">
+
+Reject
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+            });
+
+            document.getElementById("withdrawTable").innerHTML = html;
+
+        }
+
+        async function approveWithdraw(userId, requestId) {
+
+            await fetch(
+
+                "/api/admin/withdraw/approve/" + userId + "/" + requestId,
+
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        Authorization: "Bearer " + token
+
+                    }
+
+                }
+
+            );
+
+            loadWithdraws();
+
+            loadDashboard();
+
+        }
+
+        async function rejectWithdraw(userId, requestId) {
+
+            await fetch(
+
+                "/api/admin/withdraw/reject/" + userId + "/" + requestId,
+
+                {
+
+                    method: "PUT",
+
+                    headers: {
+
+                        Authorization: "Bearer " + token
+
+                    }
+
+                }
+
+            );
+
+            loadWithdraws();
+
+            loadDashboard();
+
+        }
+
+        //==========================
+
+        loadDashboard();
+
+        loadUsers();
+
+        loadWithdraws();
+    </script>
+
+</body>
+
+</html>
