@@ -77,6 +77,14 @@
             background: #00b894;
         }
 
+        .btn-profile {
+            background: #497b71;
+        }
+
+        .btn-Admin {
+            background: #80ae1c;
+        }
+
         .btn-withdraw {
             background: #f39c12;
         }
@@ -121,7 +129,8 @@
         <div class="grid">
             <button class="btn btn-quiz" onclick="showScreen('quiz')">Start Quiz</button>
             <button class="btn btn-spin" onclick="spinWheel()">Spin Wheel</button>
-            <button class="btn" onclick="location.href='profile.html'">👤 Profile</button>
+            <button class="btn btn-profile" onclick="location.href='profile.html'">👤 Profile</button>
+            <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
         </div>
         <button class="btn btn-reward" onclick="claimReward()">🎁 Daily Reward (+₹5)</button>
         <button id="withdrawBtn" class="btn btn-withdraw" onclick="withdrawMoney()" disabled>💰 Withdraw Now (Min
@@ -221,44 +230,44 @@
 
         }
 
-       async function saveWallet() {
+        async function saveWallet() {
 
-    try {
+            try {
 
-        const res = await fetch("/api/wallet", {
+                const res = await fetch("/api/wallet", {
 
-            method: "PUT",
+                    method: "PUT",
 
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token
-            },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
 
-            body: JSON.stringify({
+                    body: JSON.stringify({
 
-                wallet,
-                totalEarn,
-                quizScore: quizReward,
-                dailyReward,
-                spinReward,
-                lastClaim,
-                lastSpin
+                        wallet,
+                        totalEarn,
+                        quizScore: quizReward,
+                        dailyReward,
+                        spinReward,
+                        lastClaim,
+                        lastSpin
 
-            })
+                    })
 
-        });
+                });
 
-        const data = await res.json();
+                const data = await res.json();
 
-        console.log("Save Response:", data);
+                console.log("Save Response:", data);
 
-    } catch (err) {
+            } catch (err) {
 
-        console.log(err);
+                console.log(err);
 
-    }
+            }
 
-}
+        }
 
         async function updateWallet(amount) {
 
@@ -287,7 +296,7 @@
 
             await saveWallet();
 
-           // await loadWallet();
+            // await loadWallet();
 
         }
         function checkWithdrawStatus() {
@@ -347,7 +356,7 @@
 
                         amount: wallet
 
-                    }) 
+                    })
 
                 });
 
