@@ -100,6 +100,9 @@ router.post("/login", async (req, res) => {
 
         );
 
+        user.isOnline = true;
+        await user.save();
+
         res.json({
 
             success: true,

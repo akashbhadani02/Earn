@@ -176,104 +176,105 @@
             }
 
         }
+
         /* ===========================
    Mobile Responsive
 =========================== */
 
-@media (max-width:768px){
+        @media (max-width:768px) {
 
-    body{
-        padding:12px;
-    }
+            body {
+                padding: 12px;
+            }
 
-    h2{
-        font-size:22px;
-        margin:15px 0;
-    }
+            h2 {
+                font-size: 22px;
+                margin: 15px 0;
+            }
 
-    /* Header */
-    body > div:first-child{
-        flex-direction:column;
-        gap:12px;
-        align-items:flex-start !important;
-    }
+            /* Header */
+            body>div:first-child {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start !important;
+            }
 
-    body > div:first-child button{
-        width:100%;
-    }
+            body>div:first-child button {
+                width: 100%;
+            }
 
-    /* Dashboard Cards */
-    .cards{
-        grid-template-columns:1fr;
-        gap:15px;
-    }
+            /* Dashboard Cards */
+            .cards {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
 
-    .card{
-        padding:18px;
-    }
+            .card {
+                padding: 18px;
+            }
 
-    .card h1{
-        font-size:30px;
-    }
+            .card h1 {
+                font-size: 30px;
+            }
 
-    /* Search */
-    input{
-        width:100%;
-        max-width:100%;
-        margin:15px 0;
-    }
+            /* Search */
+            input {
+                width: 100%;
+                max-width: 100%;
+                margin: 15px 0;
+            }
 
-    /* Tables */
-    table{
-        display:block;
-        width:100%;
-        overflow-x:auto;
-        white-space:nowrap;
-        border-radius:12px;
-    }
+            /* Tables */
+            table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                white-space: nowrap;
+                border-radius: 12px;
+            }
 
-    th,
-    td{
-        padding:10px;
-        font-size:14px;
-    }
+            th,
+            td {
+                padding: 10px;
+                font-size: 14px;
+            }
 
-    button{
-        padding:7px 10px;
-        font-size:13px;
-    }
+            button {
+                padding: 7px 10px;
+                font-size: 13px;
+            }
 
-}
+        }
 
-/* Very Small Phones */
+        /* Very Small Phones */
 
-@media (max-width:480px){
+        @media (max-width:480px) {
 
-    body{
-        padding:10px;
-    }
+            body {
+                padding: 10px;
+            }
 
-    .card h3{
-        font-size:16px;
-    }
+            .card h3 {
+                font-size: 16px;
+            }
 
-    .card h1{
-        font-size:26px;
-    }
+            .card h1 {
+                font-size: 26px;
+            }
 
-    th,
-    td{
-        font-size:12px;
-        padding:8px;
-    }
+            th,
+            td {
+                font-size: 12px;
+                padding: 8px;
+            }
 
-    button{
-        display:block;
-        width:100%;
-        margin:5px 0;
-    }
+            button {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
 
-}
+        }
     </style>
 
 </head>
@@ -355,6 +356,7 @@
                 <th>Mobile</th>
                 <th>Wallet</th>
                 <th>Total Earn</th>
+                <th>Status</th>
                 <th>Action</th>
 
             </tr>
@@ -412,7 +414,7 @@
             document.getElementById("earn").innerHTML =
                 Number(data.totalEarn).toFixed(2);
             document.getElementById("withdraw").innerHTML =
-                Number(data.pendingWithdraw).toFixed(2);    
+                Number(data.pendingWithdraw).toFixed(2);
 
         }
 
@@ -460,14 +462,22 @@
 
                 html += `
 
-<tr>
+<tr style="background:${user.isOnline ? '#d4ffd4' : ''};">
 
 <td>${user.name}</td>
 
 <td>${user.mobile}</td>
 
 <td>${Number(user.wallet).toFixed(2)}</td>
+
 <td>${Number(user.totalEarn).toFixed(2)}</td>
+
+<td>
+${user.isOnline
+    ? '<span style="color:green;font-weight:bold;">🟢 Online</span>'
+    : '<span style="color:red;font-weight:bold;">🔴 Offline</span>'
+}
+</td>
 
 <td>
 
