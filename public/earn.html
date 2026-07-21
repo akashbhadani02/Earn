@@ -7,114 +7,714 @@
     <title>English Mastery Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --accent: #00cec9;
-        }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #7474bf, #348ac7);
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+/* =====================================
+   RESET
+===================================== */
 
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        .wallet-box {
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
 
-        .wallet-val {
-            font-size: 2.5rem;
-            font-weight: 700;
-            display: block;
-        }
+    min-height: 100vh;
 
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-        .btn {
-            padding: 15px;
-            border: none;
-            border-radius: 20px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            width: 100%;
-            margin-top: 10px;
-        }
+    padding: 20px;
 
-        .btn-quiz {
-            background: #fd79a8;
-        }
+    /* Colorful Background */
+    background:
+        radial-gradient(circle at 10% 20%, #ff9ff3 0%, transparent 25%),
+        radial-gradient(circle at 90% 10%, #54a0ff 0%, transparent 25%),
+        radial-gradient(circle at 20% 90%, #1dd1a1 0%, transparent 25%),
+        radial-gradient(circle at 90% 90%, #feca57 0%, transparent 25%),
+        linear-gradient(135deg, #667eea, #764ba2);
 
-        .btn-spin {
-            background: #e17055;
-        }
+    background-attachment: fixed;
 
-        .btn-reward {
-            background: #00b894;
-        }
+    color: #2d3436;
 
-        .btn-profile {
-            background: #497b71;
-        }
+    user-select: none;
+    -webkit-user-select: none;
+}
 
-        .btn-Admin {
-            background: #80ae1c;
-        }
 
-        .btn-withdraw {
-            background: #f39c12;
-        }
+/* =====================================
+   MAIN CARD
+===================================== */
 
-        .btn-withdraw:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-        }
+.card {
+    width: 100%;
+    max-width: 440px;
 
-        .hidden {
-            display: none;
-        }
+    padding: 28px 22px;
 
-        .option-btn {
-            background: #f1f2f6;
-            border: none;
-            padding: 12px;
-            margin: 5px 0;
-            width: 100%;
-            border-radius: 15px;
-            cursor: pointer;
-        }
+    background: rgba(255, 255, 255, 0.96);
 
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-    </style>
+    border-radius: 32px;
+
+    border: 4px solid rgba(255, 255, 255, 0.7);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.25),
+        0 0 40px rgba(255, 255, 255, 0.15);
+
+    animation: cardShow 0.6s ease;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+@keyframes cardShow {
+
+    0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =====================================
+   DECORATIVE TOP
+===================================== */
+
+
+/* =====================================
+   DASHBOARD TITLE
+===================================== */
+
+#dashboard h2 {
+
+    text-align: center;
+
+    font-size: 27px;
+
+    font-weight: 700;
+
+    margin-bottom: 22px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff0080,
+            #7928ca,
+            #00c6ff,
+            #00b894
+        );
+
+    background-size: 300%;
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+    animation: gradientText 5s infinite;
+
+}
+
+@keyframes gradientText {
+
+    0% {
+        background-position: 0%;
+    }
+
+    50% {
+        background-position: 100%;
+    }
+
+    100% {
+        background-position: 0%;
+    }
+
+}
+
+
+/* =====================================
+   WALLET
+===================================== */
+
+.wallet-box {
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 25px 22px;
+
+    border-radius: 25px;
+
+    color: white;
+
+    margin-bottom: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff0080,
+            #7928ca,
+            #2f80ed
+        );
+
+    box-shadow:
+        0 12px 30px rgba(121, 40, 202, 0.4);
+
+}
+
+
+/* Wallet Shine */
+
+.wallet-box::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 200px;
+    height: 200px;
+
+    background: rgba(255,255,255,0.15);
+
+    border-radius: 50%;
+
+    right: -80px;
+    top: -90px;
+
+}
+
+.wallet-box::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    background: rgba(255,255,255,0.1);
+
+    border-radius: 50%;
+
+    left: -40px;
+    bottom: -50px;
+
+}
+
+.wallet-box small {
+
+    position: relative;
+
+    z-index: 2;
+
+    font-size: 14px;
+
+    opacity: 0.9;
+
+}
+
+.wallet-val {
+
+    position: relative;
+
+    z-index: 2;
+
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 36px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* =====================================
+   BUTTON GRID
+===================================== */
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 13px;
+
+}
+
+
+/* =====================================
+   ALL BUTTON
+===================================== */
+
+.btn {
+
+    border: none;
+
+    width: 100%;
+
+    min-height: 60px;
+
+    padding: 13px 10px;
+
+    border-radius: 20px;
+
+    color: white;
+
+    font-family: 'Poppins', sans-serif;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,0.15);
+
+    position: relative;
+
+    overflow: hidden;
+
+    margin-top: 10px;
+
+}
+
+
+/* Button Shine */
+
+.btn::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: -100%;
+
+    width: 70%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.35),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition: 0.5s;
+
+}
+
+.btn:hover::after {
+
+    left: 130%;
+
+}
+
+.btn:hover {
+
+    transform: translateY(-5px) scale(1.02);
+
+    box-shadow:
+        0 15px 28px rgba(0,0,0,0.2);
+
+}
+
+.btn:active {
+
+    transform: scale(0.94);
+
+}
+
+
+/* =====================================
+   QUIZ BUTTON
+===================================== */
+
+.btn-quiz {
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff416c,
+            #ff4b2b
+        );
+
+}
+
+
+/* =====================================
+   SPIN BUTTON
+===================================== */
+
+.btn-spin {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f7971e,
+            #ffd200
+        );
+
+    color: #5c3d00;
+
+}
+
+
+/* =====================================
+   PROFILE
+===================================== */
+
+.btn-profile {
+
+    background:
+        linear-gradient(
+            135deg,
+            #00c6ff,
+            #0072ff
+        );
+
+}
+
+
+/* =====================================
+   ADMIN
+===================================== */
+
+.btn-Admin {
+
+    background:
+        linear-gradient(
+            135deg,
+            #11998e,
+            #38ef7d
+        );
+
+}
+
+
+/* =====================================
+   DAILY REWARD
+===================================== */
+
+.btn-reward {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f857a6,
+            #ff5858
+        );
+
+    margin-top: 18px;
+
+    font-size: 14px;
+
+}
+
+
+/* =====================================
+   WITHDRAW
+===================================== */
+
+.btn-withdraw {
+
+    background:
+        linear-gradient(
+            135deg,
+            #8e2de2,
+            #4a00e0
+        );
+
+    margin-top: 12px;
+
+    font-size: 14px;
+
+}
+
+
+.btn-withdraw:disabled {
+
+    background:
+        linear-gradient(
+            135deg,
+            #bdc3c7,
+            #7f8c8d
+        );
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+
+    transform: none;
+
+}
+
+
+/* =====================================
+   QUIZ SCREEN
+===================================== */
+
+#quiz {
+
+    text-align: center;
+
+}
+
+#quiz h3 {
+
+    font-size: 20px;
+
+    line-height: 1.6;
+
+    margin-bottom: 22px;
+
+    color: #5f27cd;
+
+}
+
+
+/* =====================================
+   QUIZ OPTIONS
+===================================== */
+
+.option-btn {
+
+    width: 100%;
+
+    padding: 16px;
+
+    margin: 9px 0;
+
+    border-radius: 18px;
+
+    border: 3px solid #eee;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #f3f0ff
+        );
+
+    color: #2d3436;
+
+    font-family: 'Poppins', sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+
+}
+
+.option-btn:hover {
+
+    color: white;
+
+    border-color: transparent;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff0080,
+            #7928ca
+        );
+
+    transform:
+        translateX(6px)
+        scale(1.02);
+
+    box-shadow:
+        0 10px 22px rgba(121,40,202,0.3);
+
+}
+
+.option-btn:active {
+
+    transform: scale(0.95);
+
+}
+
+
+/* =====================================
+   BACK BUTTON
+===================================== */
+
+#quiz .btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #636e72,
+            #2d3436
+        );
+
+    margin-top: 20px;
+
+}
+
+
+/* =====================================
+   HIDDEN
+===================================== */
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 480px) {
+
+    body {
+
+        padding: 12px;
+
+        align-items: flex-start;
+
+    }
+
+    .card {
+
+        margin-top: 10px;
+
+        padding: 24px 16px;
+
+        border-radius: 28px;
+
+    }
+
+    #dashboard h2 {
+
+        font-size: 23px;
+
+    }
+
+    .wallet-box {
+
+        padding: 22px 18px;
+
+        border-radius: 22px;
+
+    }
+
+    .wallet-val {
+
+        font-size: 31px;
+
+    }
+
+    .grid {
+
+        gap: 10px;
+
+    }
+
+    .btn {
+
+        min-height: 58px;
+
+        font-size: 11.5px;
+
+        border-radius: 17px;
+
+    }
+
+    .btn-reward,
+    .btn-withdraw {
+
+        font-size: 13px;
+
+    }
+
+    .option-btn {
+
+        padding: 14px 10px;
+
+        font-size: 13px;
+
+    }
+
+}
+
+
+/* =====================================
+   SMALL PHONES
+===================================== */
+
+@media (max-width: 350px) {
+
+    body {
+
+        padding: 8px;
+
+    }
+
+    .card {
+
+        padding: 20px 12px;
+
+    }
+
+    #dashboard h2 {
+
+        font-size: 20px;
+
+    }
+
+    .wallet-val {
+
+        font-size: 27px;
+
+    }
+
+    .btn {
+
+        min-height: 54px;
+
+        font-size: 10px;
+
+    }
+
+}
+
+</style>
 </head>
 
 <body>
