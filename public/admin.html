@@ -760,15 +760,25 @@ Delete
             loadWithdraws();
             loadDashboard();
         }
-       //==========================
+      //==========================
 // Initial Load
 //==========================
 
 loadDashboard();
-
 loadUsers();
-
 loadWithdraws();
+
+
+//==========================
+// Auto Refresh Dashboard
+// Every 1 Second
+//==========================
+
+setInterval(() => {
+
+    loadDashboard();
+
+}, 1000);
 
 
 //==========================
