@@ -285,6 +285,43 @@ document.getElementById("message").innerHTML=data.message;
 
 }
 
+async function setOffline(){
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if(!user) return;
+
+    try{
+
+        await fetch("/api/auth/logout",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+                userId:user._id
+            })
+
+        });
+
+    }catch(e){}
+
+}
+
+window.addEventListener("beforeunload",function(){
+
+    navigator.sendBeacon(
+        "/api/auth/logout",
+        JSON.stringify({
+            userId:JSON.parse(localStorage.getItem("user"))._id
+        })
+    );
+
+});
+
 </script>
 
 </body>

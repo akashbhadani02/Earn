@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
-        }, 
+        },
 
         mobile: {
             type: String,
@@ -45,6 +45,16 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        isOnline: {
+            type: Boolean,
+            default: false,
+        },
+
+        lastSeen: {
+            type: Date,
+            default: null,
+        },
+
         lastClaim: {
             type: String,
             default: ""
@@ -54,7 +64,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: ""
         },
-        
+
         withdrawRequests: [
             {
                 amount: Number,

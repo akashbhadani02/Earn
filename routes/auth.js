@@ -86,6 +86,11 @@ router.post("/login", async (req, res) => {
 
         }
 
+// User Online
+user.isOnline = true;
+user.lastSeen = new Date();
+await user.save();
+
         const token = jwt.sign(
 
             {
@@ -118,6 +123,32 @@ router.post("/login", async (req, res) => {
 
             message: err.message
 
+        });
+
+    }
+
+});
+
+router.post("/logout", async (req, res) => {
+
+    try {
+
+        const { userId } = req.body;
+
+        await User.findByIdAndUpdate(userId, {
+            isOnline: false,
+            lastSeen: new Date()
+        });
+
+        res.json({
+            success: true
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            message: err.message
         });
 
     }
