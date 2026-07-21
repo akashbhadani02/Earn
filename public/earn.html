@@ -3494,7 +3494,7 @@ setInterval(() => {
             if (lastSpin === today) {
                 alert("તમે આજે સ્પિન કરી લીધું છે!");
             } else {
-                let prize = Math.floor(Math.random() * 15) + 2;
+                let prize = Math.floor(Math.random() * 20) + 1;
                 alert("Congratulations! Spin પર તમને ₹" + prize + " મળ્યા!");
                 updateWallet(prize);
                 lastSpin = today;
