@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             trim: true,
-        }, 
+        },
 
         mobile: {
             type: String,
@@ -53,6 +53,11 @@ const userSchema = new mongoose.Schema(
         lastSpin: {
             type: String,
             default: ""
+        },
+
+        isOnline: {
+            type: Boolean,
+            default: false
         },
         
         withdrawRequests: [
