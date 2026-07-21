@@ -86,10 +86,11 @@ router.post("/login", async (req, res) => {
 
         }
 
-// User Online
-user.isOnline = true;
-user.lastSeen = new Date();
-await user.save();
+        // Student ને Online કરો
+        user.isOnline = true;
+        user.lastSeen = new Date();
+
+        await user.save();
 
         const token = jwt.sign(
 
@@ -129,30 +130,67 @@ await user.save();
 
 });
 
-router.post("/logout", async (req, res) => {
+// ==========================
+// Student Heartbeat
+// ==========================
+
+router.post("/heartbeat", async (req, res) => {
 
     try {
 
-        const { userId } = req.body;
+        // Token check
+        const authHeader = req.headers.authorization;
 
-        await User.findByIdAndUpdate(userId, {
-            isOnline: false,
-            lastSeen: new Date()
-        });
+        if (!authHeader) {
+            return res.status(401).json({
+                success: false,
+                message: "No token provided"
+            });
+        }
+
+        const token = authHeader.split(" ")[1];
+
+        // Token verify
+        const decoded = jwt.verify(
+            token,
+            process.env.JWT_SECRET
+        );
+
+        // User find
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // Student online
+        user.isOnline = true;
+
+        // Last heartbeat time
+        user.lastSeen = new Date();
+
+        await user.save();
 
         res.json({
-            success: true
+            success: true,
+            message: "Heartbeat updated"
         });
 
     } catch (err) {
 
-        res.status(500).json({
+        console.error("Heartbeat Error:", err);
+
+        res.status(401).json({
             success: false,
-            message: err.message
+            message: "Invalid token"
         });
 
     }
 
 });
+
 
 module.exports = router;

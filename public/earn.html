@@ -151,6 +151,48 @@
             window.location.href = "login.html";
         }
 
+        // ===============================
+// STUDENT ONLINE HEARTBEAT
+// ===============================
+
+async function sendHeartbeat() {
+
+    if (!token) {
+        return;
+    }
+
+    try {
+
+        await fetch("/api/auth/heartbeat", {
+
+            method: "POST",
+
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+
+        });
+
+        console.log("Student Online");
+
+    } catch (error) {
+
+        console.log("Heartbeat Error:", error);
+
+    }
+
+}
+
+// Page open થાય ત્યારે તરત heartbeat મોકલો
+sendHeartbeat();
+
+// દર 1 secondે heartbeat મોકલો
+setInterval(() => {
+
+    sendHeartbeat();
+
+}, 1000);
+
         let wallet = 0;
 
         let totalEarn = 0;

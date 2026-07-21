@@ -454,13 +454,36 @@
         // Show Users
         //==========================
 
-        function showUsers(users) {
+       //==========================
+// Show Users
+//==========================
 
-            let html = "";
+function showUsers(users) {
 
-            users.forEach(user => {
+    let html = "";
 
-                html += `
+    users.forEach(user => {
+
+        // Online / Offline Status
+        const statusHTML = user.isOnline
+            ? `<span style="
+                color: #16a34a;
+                font-weight: bold;
+                background: #dcfce7;
+                padding: 5px 10px;
+                border-radius: 20px;
+                display: inline-block;
+              ">🟢 Online</span>`
+            : `<span style="
+                color: #dc2626;
+                font-weight: bold;
+                background: #fee2e2;
+                padding: 5px 10px;
+                border-radius: 20px;
+                display: inline-block;
+              ">🔴 Offline</span>`;
+
+        html += `
 
 <tr>
 
@@ -468,31 +491,20 @@
 
 <td>${user.mobile}</td>
 
-<td>
-${user.isOnline
-                        ?
-                        '<span style="color:green;font-weight:bold;">🟢 Online</span>'
-                        :
-                        '<span style="color:red;font-weight:bold;">🔴 Offline</span>'
-                    }
-</td>
+<td>${statusHTML}</td>
 
-<td>${Number(user.wallet).toFixed(2)}</td>
+<td>${Number(user.wallet || 0).toFixed(2)}</td>
 
-<td>${Number(user.totalEarn).toFixed(2)}</td>
+<td>${Number(user.totalEarn || 0).toFixed(2)}</td>
 
 <td>
 
-<button onclick="editWallet('${user._id}',${user.wallet})">
-
+<button onclick="editWallet('${user._id}',${user.wallet || 0})">
 Edit
-
 </button>
 
 <button onclick="deleteUser('${user._id}')">
-
 Delete
-
 </button>
 
 </td>
@@ -501,11 +513,11 @@ Delete
 
 `;
 
-            });
+    });
 
-            document.getElementById("userTable").innerHTML = html;
+    document.getElementById("userTable").innerHTML = html;
 
-        }
+}
 
         //==========================
         // Search
@@ -748,23 +760,27 @@ Delete
             loadWithdraws();
             loadDashboard();
         }
-        //==========================
+       //==========================
+// Initial Load
+//==========================
 
-        loadDashboard();
+loadDashboard();
 
-        loadUsers();
+loadUsers();
 
-        loadWithdraws();
+loadWithdraws();
 
-        setInterval(() => {
 
-            loadDashboard();
+//==========================
+// Auto Refresh Users
+// Every 1 Second
+//==========================
 
-            loadUsers();
+setInterval(() => {
 
-            loadWithdraws();
+    loadUsers();
 
-        }, 3000);
+}, 1000);
     </script>
 
 </body>

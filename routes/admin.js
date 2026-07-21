@@ -128,6 +128,7 @@ router.get("/dashboard", adminAuth, async (req, res) => {
 
 // ===========================
 // All Users
+// Online / Offline Status
 // ===========================
 
 router.get("/users", adminAuth, async (req, res) => {
@@ -136,15 +137,51 @@ router.get("/users", adminAuth, async (req, res) => {
 
         const users = await User.find().select("-password");
 
+        const currentTime = Date.now();
+
+        const updatedUsers = users.map(user => {
+
+            let online = false;
+
+            // જો lastSeen ઉપલબ્ધ છે
+            if (user.lastSeen) {
+
+                const lastSeenTime =
+                    new Date(user.lastSeen).getTime();
+
+                const difference =
+                    currentTime - lastSeenTime;
+
+                // છેલ્લો heartbeat 3 secondsની અંદર હોય
+                if (difference <= 3000) {
+
+                    online = true;
+
+                }
+
+            }
+
+            return {
+
+                ...user.toObject(),
+
+                isOnline: online
+
+            };
+
+        });
+
         res.json({
 
             success: true,
 
-            users
+            users: updatedUsers
 
         });
 
     } catch (err) {
+
+        console.error("Users API Error:", err);
 
         res.status(500).json({
 
@@ -157,7 +194,6 @@ router.get("/users", adminAuth, async (req, res) => {
     }
 
 });
-
 // ===========================
 // Update Wallet
 // ===========================
