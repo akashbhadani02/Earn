@@ -174,11 +174,10 @@ Already have an account?
 <div id="message"></div>
 
 </div>
-<script src="/socket.io/socket.io.js"></script>
+
 <script>
 
 const API = "/api/auth";
-const socket = io();
 
 function showSignup(){
 
@@ -275,8 +274,6 @@ if(data.success){
 localStorage.setItem("token",data.token);
 
 localStorage.setItem("user",JSON.stringify(data.user));
-
-socket.emit("student-online", data.user._id);
 
 window.location.href="earn.html";
 
