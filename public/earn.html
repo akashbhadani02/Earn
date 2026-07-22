@@ -806,9 +806,8 @@ setInterval(() => {
 
         let lastSpin = "";
 
-        let spinCount = 0;
-        
-        let lastSpinDate = "";
+        let spinCount = Number(localStorage.getItem("spinCount")) || 0;
+        let lastSpinDate = localStorage.getItem("lastSpinDate") || "";
 
         const quizData = [
             { q: "How do you greet someone in the morning?", options: ["Good Night", "Good Morning", "Good Evening"], correct: 1 },
@@ -4093,39 +4092,44 @@ setInterval(() => {
             }
         }
 
-       function spinWheel() {
+     function spinWheel() {
 
     let today = new Date().toDateString();
 
-    // જો નવી તારીખ હોય તો count reset
+    // નવી તારીખે Spin Count Reset
     if (lastSpinDate !== today) {
         spinCount = 0;
         lastSpinDate = today;
+
+        localStorage.setItem("spinCount", "0");
+        localStorage.setItem("lastSpinDate", today);
     }
 
-    // દિવસમાં 2 spin ની limit
+    // દિવસમાં માત્ર 2 Spin
     if (spinCount >= 2) {
-        alert("તમે આજે 2 વાર સ્પિન કરી લીધું છે!");
+        alert("તમે આજે 2 વાર Spin કરી લીધું છે! આવતીકાલે ફરી Spin કરી શકશો.");
         return;
     }
 
-    // Prize
-    let prize = Math.floor(Math.random() * 15) + 1;
+    // Random Prize ₹1 થી ₹20
+    let prize = Math.floor(Math.random() * 20) + 1;
 
-    alert("Congratulations! Spin પર તમને ₹" + prize + " મળ્યા!");
-
-    // Wallet માં પૈસા add
-    updateWallet(prize);
-
-    // Spin count વધારવો
+    // Spin Count વધારવો
     spinCount++;
 
-    // Save
-    saveWallet();
+    // LocalStorage માં Save
+    localStorage.setItem("spinCount", spinCount);
+    localStorage.setItem("lastSpinDate", lastSpinDate);
 
-    alert("આજે તમારા " + spinCount + "/2 Spin થઈ ગયા છે.");
+    // Wallet માં Prize Add
+    updateWallet(prize);
+
+    alert(
+        "Congratulations! 🎉\n" +
+        "Spin પર તમને ₹" + prize + " મળ્યા!\n\n" +
+        "આજે તમારા " + spinCount + "/2 Spin થઈ ગયા છે."
+    );
 }
-
         async function withdrawMoney() {
 
             try {
