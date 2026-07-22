@@ -806,6 +806,10 @@ setInterval(() => {
 
         let lastSpin = "";
 
+        let spinCount = 0;
+        
+        let lastSpinDate = "";
+
         const quizData = [
             { q: "How do you greet someone in the morning?", options: ["Good Night", "Good Morning", "Good Evening"], correct: 1 },
             { q: "What do you say when someone helps you?", options: ["Sorry", "Please", "Thank You"], correct: 2 },
@@ -4089,19 +4093,38 @@ setInterval(() => {
             }
         }
 
-        function spinWheel() {
-            let today = new Date().toDateString();
-            if (lastSpin === today) {
-                alert("તમે આજે સ્પિન કરી લીધું છે!");
-            } else {
-                let prize = Math.floor(Math.random() * 20) + 1;
-                alert("Congratulations! Spin પર તમને ₹" + prize + " મળ્યા!");
-                updateWallet(prize);
-                lastSpin = today;
+       function spinWheel() {
 
-                saveWallet();
-            }
-        }
+    let today = new Date().toDateString();
+
+    // જો નવી તારીખ હોય તો count reset
+    if (lastSpinDate !== today) {
+        spinCount = 0;
+        lastSpinDate = today;
+    }
+
+    // દિવસમાં 2 spin ની limit
+    if (spinCount >= 2) {
+        alert("તમે આજે 2 વાર સ્પિન કરી લીધું છે!");
+        return;
+    }
+
+    // Prize
+    let prize = Math.floor(Math.random() * 15) + 1;
+
+    alert("Congratulations! Spin પર તમને ₹" + prize + " મળ્યા!");
+
+    // Wallet માં પૈસા add
+    updateWallet(prize);
+
+    // Spin count વધારવો
+    spinCount++;
+
+    // Save
+    saveWallet();
+
+    alert("આજે તમારા " + spinCount + "/2 Spin થઈ ગયા છે.");
+}
 
         async function withdrawMoney() {
 
