@@ -208,8 +208,10 @@ router.post("/spin", auth, async (req, res) => {
     }
 });
 
+
 // =============================
 // Withdraw Request
+// Minimum Wallet: ₹500
 // =============================
 router.post("/withdraw", auth, async (req, res) => {
     try {
@@ -224,16 +226,7 @@ router.post("/withdraw", auth, async (req, res) => {
 
         const wallet = Number(user.wallet || 0);
 
-        // ₹500 અથવા વધુ હોય તો Withdraw Request નહીં મોકલી શકાય
-        if (wallet >= 500) {
-            return res.status(400).json({
-                success: false,
-                message: "તમારું Wallet ₹500 અથવા તેથી વધુ છે, તેથી તમે Withdraw Request મોકલી શકતા નથી.",
-                ...walletResponse(user)
-            });
-        }
-
-        // ₹500 થી ઓછું હોય તો પણ request નહીં
+        // Minimum ₹500 required
         if (wallet < 500) {
             return res.status(400).json({
                 success: false,
@@ -242,21 +235,42 @@ router.post("/withdraw", auth, async (req, res) => {
             });
         }
 
+        // Only one Pending request at a time
+        const pendingRequest = (user.withdrawRequests || []).find(
+            request => request.status === "Pending"
+        );
+
+        if (pendingRequest) {
+            return res.status(400).json({
+                success: false,
+                message: "તમારી Withdraw Request પહેલેથી Pending છે.",
+                ...walletResponse(user)
+            });
+        }
+
+        const amount = wallet;
+
+        // Save withdraw request in the same User document
         user.withdrawRequests.push({
-            amount: wallet,
+            amount,
             status: "Pending",
             date: new Date()
         });
+
+        // Lock/deduct the requested wallet amount while request is pending.
+        // If Admin rejects it, admin route refunds this amount.
+        user.wallet = 0;
 
         await user.save();
 
         return res.json({
             ...walletResponse(user),
-            message: "Withdraw Request Submitted"
+            message: "Withdraw Request Admin ને મોકલવામાં આવી છે.",
+            withdrawAmount: amount
         });
 
     } catch (err) {
-        console.error("Withdraw Error:", err);
+        console.error("Withdraw Request Error:", err);
 
         return res.status(500).json({
             success: false,

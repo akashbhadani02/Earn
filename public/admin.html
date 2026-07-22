@@ -631,9 +631,24 @@ Delete
 
             const data = await res.json();
 
+            if (!res.ok || !data.success) {
+                console.error("Withdraw Load Error:", data.message);
+                document.getElementById("withdrawTable").innerHTML = `
+                    <tr><td colspan="6">${data.message || "Failed to load withdraw requests"}</td></tr>
+                `;
+                return;
+            }
+
             let html = "";
 
             const list = data.withdraws || [];
+
+            if (list.length === 0) {
+                document.getElementById("withdrawTable").innerHTML = `
+                    <tr><td colspan="6">No Withdraw Requests Found</td></tr>
+                `;
+                return;
+            }
 
             list.forEach(w => {
 
@@ -679,54 +694,52 @@ Delete
 
         async function approveWithdraw(userId, requestId) {
 
-            await fetch(
+            if (!confirm("Approve this withdraw request?")) return;
 
+            const res = await fetch(
                 "/api/admin/withdraw/approve/" + userId + "/" + requestId,
-
                 {
-
                     method: "PUT",
-
                     headers: {
-
                         Authorization: "Bearer " + token
-
                     }
-
                 }
-
             );
 
-            loadWithdraws();
+            const data = await res.json();
 
-            loadDashboard();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Approve failed");
+                return;
+            }
 
+            await loadWithdraws();
+            await loadDashboard();
         }
 
         async function rejectWithdraw(userId, requestId) {
 
-            await fetch(
+            if (!confirm("Reject this withdraw request? Amount will be refunded to student wallet.")) return;
 
+            const res = await fetch(
                 "/api/admin/withdraw/reject/" + userId + "/" + requestId,
-
                 {
-
                     method: "PUT",
-
                     headers: {
-
                         Authorization: "Bearer " + token
-
                     }
-
                 }
-
             );
 
-            loadWithdraws();
+            const data = await res.json();
 
-            loadDashboard();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Reject failed");
+                return;
+            }
 
+            await loadWithdraws();
+            await loadDashboard();
         }
 
         //==========================
@@ -747,7 +760,7 @@ Delete
 
             if (!confirm("Delete this withdraw request?")) return;
 
-            await fetch(
+            const res = await fetch(
                 "/api/admin/withdraw/delete/" + userId + "/" + requestId,
                 {
                     method: "DELETE",
@@ -757,8 +770,15 @@ Delete
                 }
             );
 
-            loadWithdraws();
-            loadDashboard();
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "Delete failed");
+                return;
+            }
+
+            await loadWithdraws();
+            await loadDashboard();
         }
       //==========================
 // Initial Load

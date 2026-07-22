@@ -4100,11 +4100,7 @@
 
                 if (data.success) {
 
-                    wallet = data.wallet;
-
-                    document.getElementById("wallet").innerText = wallet.toFixed(2);
-
-                    checkWithdrawStatus();
+                    applyWalletData(data);
 
                     alert("Withdraw Request Submitted");
 

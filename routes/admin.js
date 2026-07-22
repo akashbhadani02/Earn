@@ -271,153 +271,134 @@ router.delete("/user/:id", adminAuth, async (req, res) => {
 });
 
 router.get("/withdraws", adminAuth, async (req, res) => {
-
     try {
-
         const users = await User.find().select("-password");
-
-        let withdraws = [];
+        const withdraws = [];
 
         users.forEach(user => {
-
-            user.withdrawRequests.forEach(request => {
-
+            (user.withdrawRequests || []).forEach(request => {
                 withdraws.push({
-
-                    userId: user._id,
-
-                    name: user.name,
-
-                    mobile: user.mobile,
-
-                    amount: request.amount,
-
-                    status: request.status,
-
-                    date: request.date,
-
-                    requestId: request._id
-
+                    userId: String(user._id),
+                    name: user.name || "-",
+                    mobile: user.mobile || "-",
+                    amount: Number(request.amount || 0),
+                    status: request.status || "Pending",
+                    date: request.date || request.createdAt || user.createdAt,
+                    requestId: String(request._id)
                 });
-
             });
-
         });
 
-        res.json({
+        // Latest requests first
+        withdraws.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
+        return res.json({
             success: true,
-
             withdraws
-
         });
 
     } catch (err) {
-
-        res.status(500).json({
-
+        console.error("Load Withdraws Error:", err);
+        return res.status(500).json({
             success: false,
-
             message: err.message
-
         });
-
     }
-
 });
 
 router.put("/withdraw/approve/:userId/:requestId", adminAuth, async (req, res) => {
-
     try {
-
         const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
 
         const request = user.withdrawRequests.id(req.params.requestId);
 
         if (!request) {
-
             return res.status(404).json({
-
                 success: false,
-
                 message: "Request Not Found"
-
             });
+        }
 
+        if (request.status !== "Pending") {
+            return res.status(400).json({
+                success: false,
+                message: "This request is already " + request.status
+            });
         }
 
         request.status = "Approved";
-
         await user.save();
 
-        res.json({
-
+        return res.json({
             success: true,
-
-            message: "Withdraw Approved"
-
+            message: "Withdraw Approved",
+            request: request
         });
 
     } catch (err) {
-
-        res.status(500).json({
-
+        console.error("Approve Withdraw Error:", err);
+        return res.status(500).json({
             success: false,
-
             message: err.message
-
         });
-
     }
-
 });
 
 router.put("/withdraw/reject/:userId/:requestId", adminAuth, async (req, res) => {
-
     try {
-
         const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
 
         const request = user.withdrawRequests.id(req.params.requestId);
 
         if (!request) {
-
             return res.status(404).json({
-
                 success: false,
-
                 message: "Request Not Found"
-
             });
+        }
 
+        if (request.status !== "Pending") {
+            return res.status(400).json({
+                success: false,
+                message: "This request is already " + request.status
+            });
         }
 
         request.status = "Rejected";
 
-        user.wallet += request.amount;
+        // Refund the locked withdraw amount to the student's wallet.
+        user.wallet = Number(user.wallet || 0) + Number(request.amount || 0);
 
         await user.save();
 
-        res.json({
-
+        return res.json({
             success: true,
-
-            message: "Withdraw Rejected"
-
+            message: "Withdraw Rejected and amount refunded",
+            wallet: user.wallet,
+            request: request
         });
 
     } catch (err) {
-
-        res.status(500).json({
-
+        console.error("Reject Withdraw Error:", err);
+        return res.status(500).json({
             success: false,
-
             message: err.message
-
         });
-
     }
-
 });
 
 router.delete("/withdraw/delete/:userId/:requestId", adminAuth, async (req, res) => {
