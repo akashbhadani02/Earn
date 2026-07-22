@@ -208,4 +208,61 @@ router.post("/spin", auth, async (req, res) => {
     }
 });
 
+// =============================
+// Withdraw Request
+// =============================
+router.post("/withdraw", auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        const wallet = Number(user.wallet || 0);
+
+        // ₹500 અથવા વધુ હોય તો Withdraw Request નહીં મોકલી શકાય
+        if (wallet >= 500) {
+            return res.status(400).json({
+                success: false,
+                message: "તમારું Wallet ₹500 અથવા તેથી વધુ છે, તેથી તમે Withdraw Request મોકલી શકતા નથી.",
+                ...walletResponse(user)
+            });
+        }
+
+        // ₹500 થી ઓછું હોય તો પણ request નહીં
+        if (wallet < 500) {
+            return res.status(400).json({
+                success: false,
+                message: "Withdraw કરવા માટે Wallet માં ઓછામાં ઓછા ₹500 હોવા જોઈએ.",
+                ...walletResponse(user)
+            });
+        }
+
+        user.withdrawRequests.push({
+            amount: wallet,
+            status: "Pending",
+            date: new Date()
+        });
+
+        await user.save();
+
+        return res.json({
+            ...walletResponse(user),
+            message: "Withdraw Request Submitted"
+        });
+
+    } catch (err) {
+        console.error("Withdraw Error:", err);
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
 module.exports = router;
