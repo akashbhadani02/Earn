@@ -183,7 +183,7 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        const prize = Math.floor(Math.random() * 20) + 1;
+        const prize = Math.floor(Math.random() * 10) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
