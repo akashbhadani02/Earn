@@ -65,6 +65,16 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        isBlocked: {
+            type: Boolean,
+            default: false
+        },
+
+        blockReason: {
+            type: String,
+            default: ""
+        },
+
         lastClaim: {
             type: String,
             default: ""

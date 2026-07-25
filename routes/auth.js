@@ -86,6 +86,14 @@ router.post("/login", async (req, res) => {
 
         }
 
+        if (user.isBlocked) {
+            return res.status(403).json({
+                success: false,
+                message: "Your account has been blocked by Admin.",
+                reason: user.blockReason
+            });
+        }
+
         // Student ને Online કરો
         user.isOnline = true;
         user.lastSeen = new Date();
@@ -192,5 +200,45 @@ router.post("/heartbeat", async (req, res) => {
 
 });
 
+// ==========================
+// Block Student
+// ==========================
+const auth = require("../middleware/auth");
+
+router.post("/block-me", auth, async (req, res) => {
+
+    try {
+
+        const { reason } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        user.isBlocked = true;
+        user.blockReason = reason || "Cheating Detected";
+
+        await user.save();
+
+        return res.json({
+            success: true,
+            message: "Account Blocked"
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
 
 module.exports = router;

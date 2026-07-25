@@ -491,7 +491,11 @@ function showUsers(users) {
 
 <td>${user.mobile}</td>
 
-<td>${statusHTML}</td>
+<td>
+${user.isBlocked
+? '<span style="color:red;font-weight:bold;">🚫 Blocked</span>'
+: statusHTML}
+</td>
 
 <td>${Number(user.wallet || 0).toFixed(2)}</td>
 
@@ -506,6 +510,13 @@ Edit
 <button onclick="deleteUser('${user._id}')">
 Delete
 </button>
+
+${user.isBlocked ? `
+<button onclick="unblockUser('${user._id}')"
+style="background:#16a34a;">
+Unblock
+</button>
+` : ""}
 
 </td>
 
@@ -780,6 +791,25 @@ Delete
             await loadWithdraws();
             await loadDashboard();
         }
+
+        async function unblockUser(id){
+
+    if(!confirm("Unblock this student?")) return;
+
+    const res = await fetch("/api/admin/unblock/" + id,{
+        method:"PUT",
+        headers:{
+            Authorization:"Bearer " + token
+        }
+    });
+
+    const data = await res.json();
+
+    alert(data.message);
+
+    loadUsers();
+
+}
       //==========================
 // Initial Load
 //==========================

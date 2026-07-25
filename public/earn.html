@@ -714,6 +714,82 @@
     </div>
 
     <script>
+        // =====================
+// Anti Cheating
+// =====================
+let warningMode = false;
+let clickCount = 0;
+let spaceCount = 0;
+let warningTimer = null;
+
+function startWarningMonitor() {
+
+    warningMode = true;
+    clickCount = 0;
+    spaceCount = 0;
+
+    clearTimeout(warningTimer);
+
+    warningTimer = setTimeout(() => {
+        warningMode = false;
+    }, 3000);
+
+}
+
+document.addEventListener("click", () => {
+
+    if (!warningMode) return;
+
+    clickCount++;
+
+    if (clickCount >= 3) {
+        blockStudent("Too many mouse clicks");
+    }
+
+});
+
+document.addEventListener("keydown", (e) => {
+
+    if (!warningMode) return;
+
+    if (e.code === "Space") {
+
+        e.preventDefault();
+
+        spaceCount++;
+
+        if (spaceCount >= 3) {
+            blockStudent("Too many space presses");
+        }
+
+    }
+
+});
+
+async function blockStudent(reason) {
+
+    warningMode = false;
+
+    try{
+
+        await fetch("/api/auth/block-me",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                Authorization:"Bearer " + localStorage.getItem("token")
+            },
+            body:JSON.stringify({reason})
+        });
+
+    }catch(e){}
+
+    alert("🚫 Your account has been blocked.");
+
+    localStorage.removeItem("token");
+
+    location.href="login.html";
+
+}
 
         const token = localStorage.getItem("token");
 
@@ -4133,8 +4209,10 @@
                     if (!saved) return;
 
                     if (isCorrect) {
+                        startWarningMonitor();
                         alert("સાચો! +₹0.20");
                     } else {
+                        startWarningMonitor();
                         alert("ખોટો! -₹0.30");
                     }
 

@@ -449,4 +449,41 @@ router.delete("/withdraw/delete/:userId/:requestId", adminAuth, async (req, res)
 
 });
 
+// ===========================
+// Unblock Student
+// ===========================
+router.put("/unblock/:id", adminAuth, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        user.isBlocked = false;
+        user.blockReason = "";
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Student Unblocked Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
+
 module.exports = router;
