@@ -703,7 +703,8 @@
         </div>
         <button class="btn btn-spin" onclick="spinWheel()">Spin Wheel</button>
         <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Daily Reward</button>
-        <button id="withdrawBtn" class="btn btn-withdraw" onclick="withdrawMoney()" disabled>💰 Withdraw Now (Min ₹500)</button>
+        <button id="withdrawBtn" class="btn btn-withdraw" onclick="withdrawMoney()" disabled>💰 Withdraw Now (Min
+            ₹500)</button>
         <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
     </div>
 
@@ -715,81 +716,91 @@
 
     <script>
         // =====================
-// Anti Cheating
-// =====================
-let warningMode = false;
-let clickCount = 0;
-let spaceCount = 0;
-let warningTimer = null;
+        // Anti Cheating
+        // =====================
+        let warningMode = false;
+        let clickCount = 0;
+        let spaceCount = 0;
+        let questionStartTime = 0;
+        let warningTimer = null;
 
-function startWarningMonitor() {
+        function startWarningMonitor() {
 
-    warningMode = true;
-    clickCount = 0;
-    spaceCount = 0;
+            warningMode = true;
+            clickCount = 0;
+            spaceCount = 0;
 
-    clearTimeout(warningTimer);
+            clearTimeout(warningTimer);
 
-    warningTimer = setTimeout(() => {
-        warningMode = false;
-    }, 5000);
+            warningTimer = setTimeout(() => {
+                warningMode = false;
+            }, 5000);
 
-}
-
-document.addEventListener("click", () => {
-
-    if (!warningMode) return;
-
-    clickCount++;
-
-    if (clickCount >= 3) {
-        blockStudent("Too many mouse clicks");
-    }
-
-});
-
-document.addEventListener("keydown", (e) => {
-
-    if (!warningMode) return;
-
-    if (e.code === "Space") {
-
-        e.preventDefault();
-
-        spaceCount++;
-
-        if (spaceCount >= 3) {
-            blockStudent("Too many space presses");
         }
 
-    }
+        document.addEventListener("click", () => {
 
-});
+            if (!warningMode) return;
 
-async function blockStudent(reason) {
+            clickCount++;
 
-    warningMode = false;
+            if (clickCount >= 3) {
+                blockStudent("Too many mouse clicks");
+            }
 
-    try{
-
-        await fetch("/api/auth/block-me",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                Authorization:"Bearer " + localStorage.getItem("token")
-            },
-            body:JSON.stringify({reason})
         });
 
-    }catch(e){}
+        document.addEventListener("keydown", (e) => {
 
-    alert("🚫 Your account has been blocked.");
+            if (!warningMode) return;
 
-    localStorage.removeItem("token");
+            if (e.code === "Space") {
 
-    location.href="login.html";
+                e.preventDefault();
 
-}
+                spaceCount++;
+
+                if (spaceCount >= 3) {
+                    blockStudent("Too many space presses");
+                }
+
+            }
+
+        });
+
+        let alreadyBlocked = false;
+
+        async function blockStudent(reason) {
+
+            // પહેલેથી Block થઈ ગયો હોય તો ફરી API Call નહીં થાય
+            if (alreadyBlocked) return;
+
+            alreadyBlocked = true;
+
+            warningMode = false;
+
+            try {
+
+                await fetch("/api/auth/block-me", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ reason })
+                });
+
+            } catch (e) {
+                console.error(e);
+            }
+
+            alert("🚫 Your account has been blocked.\nReason: " + reason);
+
+            localStorage.removeItem("token");
+
+            location.href = "login.html";
+
+        }
 
         const token = localStorage.getItem("token");
 
@@ -4196,6 +4207,7 @@ async function blockStudent(reason) {
         function loadQuiz() {
             let q = quizData[Math.floor(Math.random() * quizData.length)];
             document.getElementById("question").innerText = q.q;
+            questionStartTime = Date.now();
             let optDiv = document.getElementById("options");
             optDiv.innerHTML = "";
             q.options.forEach((o, i) => {
@@ -4203,6 +4215,15 @@ async function blockStudent(reason) {
                 b.className = "option-btn";
                 b.innerText = o;
                 b.onclick = async () => {
+                    const timeTaken = (Date.now() - questionStartTime) / 1000;
+
+                    if (timeTaken < 3) {
+
+                        await blockStudent("Answered within 3 seconds");
+
+                        return;
+
+                    }
                     const isCorrect = i === q.correct;
                     const saved = await updateWallet(isCorrect);
 
