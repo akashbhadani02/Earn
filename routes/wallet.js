@@ -4,10 +4,10 @@ const router = express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 
-const DAILY_REWARD_AMOUNT = 5;
+const DAILY_REWARD_AMOUNT = 3;
 const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
-const MAX_SPINS_PER_DAY = 2;
+const MAX_SPINS_PER_DAY = 1;
 
 function todayKey() {
     return new Date().toISOString().split("T")[0];
@@ -183,7 +183,7 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        const prize = Math.floor(Math.random() * 27) + 1;
+        const prize = Math.floor(Math.random() * 10) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
