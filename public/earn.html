@@ -4217,9 +4217,9 @@
                 b.onclick = async () => {
                     const timeTaken = (Date.now() - questionStartTime) / 1000;
 
-                    if (timeTaken < 1) {
+                    if (timeTaken < 3) {
 
-                        await blockStudent("વાંચી ને જવાબ આપવાનો છે. 1 સેકંડથી ઓછા સમય માં જવાબ આપ્યો છે.");
+                        await blockStudent("વાંચી ને જવાબ આપવાનો છે ઓછા સમય માં જવાબ આપ્યો છે.");
 
                         return;
 
