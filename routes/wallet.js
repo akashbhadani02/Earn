@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 
-const DAILY_REWARD_AMOUNT = 3;
+const DAILY_REWARD_AMOUNT = 15;
 const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
 const MAX_SPINS_PER_DAY = 1;
