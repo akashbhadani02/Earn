@@ -7,7 +7,7 @@ const auth = require("../middleware/auth");
 const DAILY_REWARD_AMOUNT = 5;
 const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
-const MAX_SPINS_PER_DAY = 1;
+const MAX_SPINS_PER_DAY = 3;
 
 function todayKey() {
     return new Date().toISOString().split("T")[0];
@@ -183,7 +183,7 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        const prize = Math.floor(Math.random() * 15) + 1;
+        const prize = Math.floor(Math.random() * 7) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
