@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 
-const DAILY_REWARD_AMOUNT = 15;
+const DAILY_REWARD_AMOUNT = 5;
 const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
 const MAX_SPINS_PER_DAY = 1;
@@ -183,7 +183,7 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        const prize = Math.floor(Math.random() * 10) + 1;
+        const prize = Math.floor(Math.random() * 15) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
