@@ -804,6 +804,319 @@
             background: #3b82f6;
             color: #ffffff;
         }
+
+    
+/* =========================================
+   WITHDRAW REQUEST - PROFESSIONAL DESIGN
+========================================= */
+
+#withdrawTable tr {
+    transition: all 0.25s ease;
+}
+
+#withdrawTable tr:hover {
+    background: #f0f7ff !important;
+    box-shadow: inset 4px 0 0 #2563eb;
+}
+
+
+/* Name */
+
+#withdrawTable td:nth-child(1) {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+
+/* Mobile */
+
+#withdrawTable td:nth-child(2) {
+    font-weight: 600;
+    color: #475569;
+}
+
+
+/* Amount */
+
+#withdrawTable td:nth-child(3) {
+    font-size: 16px;
+    font-weight: 800;
+    color: #16a34a;
+}
+
+
+/* Payment Method */
+
+#withdrawTable td:nth-child(4) {
+    font-weight: 700;
+}
+
+#withdrawTable td:nth-child(4) {
+    color: #2563eb;
+}
+
+
+/* Payment Details */
+
+#withdrawTable td:nth-child(5) {
+    min-width: 250px;
+    max-width: 350px;
+
+    white-space: normal;
+
+    line-height: 1.7;
+
+    color: #334155;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+}
+
+
+/* Payment Details Bold Text */
+
+#withdrawTable td:nth-child(5) b {
+    color: #1e293b;
+}
+
+
+/* Status */
+
+#withdrawTable td:nth-child(6) {
+    text-align: center;
+}
+
+#withdrawTable td:nth-child(6) strong {
+    display: inline-block;
+
+    padding: 7px 13px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    background: #fef3c7;
+
+    color: #92400e;
+
+    border: 1px solid #f59e0b;
+}
+
+
+/* Transaction ID */
+
+#withdrawTable td:nth-child(7) {
+    font-family: monospace;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #475569;
+
+    max-width: 180px;
+
+    white-space: normal;
+
+    word-break: break-word;
+}
+
+
+/* Date */
+
+#withdrawTable td:nth-child(8),
+#withdrawTable td:nth-child(9) {
+
+    min-width: 160px;
+
+    font-size: 12px;
+
+    color: #64748b;
+
+    white-space: normal;
+}
+
+
+/* Action Column */
+
+#withdrawTable td:nth-child(10) {
+
+    min-width: 220px;
+
+    text-align: center;
+
+    white-space: normal;
+}
+
+
+/* Action Buttons */
+
+#withdrawTable td:nth-child(10) button {
+
+    min-width: 90px;
+
+    padding: 9px 12px;
+
+    margin: 4px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    border: none;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+
+/* Approve */
+
+#withdrawTable td:nth-child(10) button[onclick^="approveWithdraw"] {
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    ) !important;
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.25);
+}
+
+
+/* Reject */
+
+#withdrawTable td:nth-child(10) button[onclick^="rejectWithdraw"] {
+
+    background: linear-gradient(
+        135deg,
+        #ef4444,
+        #dc2626
+    ) !important;
+
+    box-shadow:
+        0 4px 10px rgba(239, 68, 68, 0.25);
+}
+
+
+/* Mark Paid */
+
+#withdrawTable td:nth-child(10) button[onclick^="markWithdrawPaid"] {
+
+    background: linear-gradient(
+        135deg,
+        #16a34a,
+        #15803d
+    ) !important;
+
+    box-shadow:
+        0 4px 10px rgba(22, 163, 74, 0.25);
+}
+
+
+/* Delete */
+
+#withdrawTable td:nth-child(10) button[onclick^="deleteWithdraw"] {
+
+    background: linear-gradient(
+        135deg,
+        #64748b,
+        #334155
+    ) !important;
+
+    box-shadow:
+        0 4px 10px rgba(51, 65, 85, 0.25);
+}
+
+
+/* Button Hover */
+
+#withdrawTable td:nth-child(10) button:hover {
+
+    transform: translateY(-3px) scale(1.03);
+
+    filter: brightness(1.08);
+}
+
+
+/* =========================================
+   MOBILE WITHDRAW REQUEST
+========================================= */
+
+@media (max-width: 768px) {
+
+    #withdrawTable td:nth-child(5) {
+
+        min-width: 230px;
+
+        max-width: 280px;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    #withdrawTable td:nth-child(8),
+    #withdrawTable td:nth-child(9) {
+
+        min-width: 140px;
+    }
+
+    #withdrawTable td:nth-child(10) {
+
+        min-width: 200px;
+
+        text-align: center;
+    }
+
+    #withdrawTable td:nth-child(10) button {
+
+        display: inline-block;
+
+        min-width: 85px;
+
+        margin: 3px;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    #withdrawTable td:nth-child(5) {
+
+        min-width: 220px;
+
+        max-width: 250px;
+    }
+
+    #withdrawTable td:nth-child(10) {
+
+        min-width: 190px;
+    }
+
+    #withdrawTable td:nth-child(10) button {
+
+        display: block;
+
+        width: 100%;
+
+        margin: 5px 0;
+    }
+
+}
+
     </style>
 
 </head>
