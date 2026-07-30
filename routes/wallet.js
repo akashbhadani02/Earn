@@ -303,7 +303,7 @@ router.post("/withdraw", auth, async (req, res) => {
     fullName: user.name,
     mobileNumber: user.mobile,
 
-    paymentMethod,
+    paymentMethod, 
 
     upiId,
 
