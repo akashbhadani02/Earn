@@ -25,6 +25,9 @@ function walletResponse(user) {
         lastSpin: user.lastSpin || "",
         spinCount: Number(user.spinCount || 0),
         lastSpinDate: user.lastSpinDate || "",
+        dailyQuestionsAnswered: Number(user.dailyQuestionsAnswered || 0),
+        dailyQuestionsDate: user.dailyQuestionsDate || "",
+        canSpinAfterQuestions: Number(user.dailyQuestionsAnswered || 0) >= 100,
         withdrawRequests: user.withdrawRequests || []
     };
 }
@@ -82,6 +85,21 @@ router.post("/quiz", auth, async (req, res) => {
                 message: "User not found"
             });
         }
+
+        // =============================
+        // Count today's answered questions
+        // Every submitted answer counts:
+        // correct OR wrong.
+        // =============================
+        const today = todayKey();
+
+        if (user.dailyQuestionsDate !== today) {
+            user.dailyQuestionsDate = today;
+            user.dailyQuestionsAnswered = 0;
+        }
+
+        user.dailyQuestionsAnswered =
+            Number(user.dailyQuestionsAnswered || 0) + 1;
 
         user.wallet = Number(user.wallet || 0) + amount;
 
@@ -175,10 +193,28 @@ router.post("/spin", auth, async (req, res) => {
             user.lastSpinDate = today;
         }
 
+        // A student must answer 100 quiz questions today
+        // before the Spin Wheel becomes available.
+        if (user.dailyQuestionsDate !== today) {
+            user.dailyQuestionsDate = today;
+            user.dailyQuestionsAnswered = 0;
+        }
+
+        if (Number(user.dailyQuestionsAnswered || 0) < 100) {
+            const remaining = 100 - Number(user.dailyQuestionsAnswered || 0);
+
+            return res.status(400).json({
+                success: false,
+                message: `Spin કરવા માટે આજે હજુ ${remaining} પ્રશ્નોના જવાબ આપવાના બાકી છે. 100 પ્રશ્નો પૂર્ણ કર્યા પછી જ Spin કરી શકશો.`,
+                remainingQuestions: remaining,
+                ...walletResponse(user)
+            });
+        }
+
         if (Number(user.spinCount || 0) >= MAX_SPINS_PER_DAY) {
             return res.status(400).json({
                 success: false,
-                message: "તમે આજે 2 Spin કરી લીધા છે! કાલે ફરી Spin કરી શકશો.",
+                message: "તમે આજે Spin કરી લીધું છે! કાલે ફરી Spin કરી શકશો.",
                 ...walletResponse(user)
             });
         }

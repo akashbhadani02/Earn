@@ -40,6 +40,18 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        // Number of quiz questions answered today.
+        dailyQuestionsAnswered: {
+            type: Number,
+            default: 0,
+        },
+
+        // Date for dailyQuestionsAnswered, in YYYY-MM-DD format.
+        dailyQuestionsDate: {
+            type: String,
+            default: "",
+        },
+
         totalEarn: {
             type: Number,
             default: 0,
