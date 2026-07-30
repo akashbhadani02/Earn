@@ -85,19 +85,78 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
-        withdrawRequests: [
-            {
-                amount: Number,
-                status: {
-                    type: String,
-                    default: "Pending",
-                },
-                date: {
-                    type: Date,
-                    default: Date.now,
-                },
-            },
-        ],
+       withdrawRequests: [
+    {
+        amount: {
+            type: Number,
+            required: true,
+        },
+
+        status: {
+            type: String,
+            enum: ["Pending", "Approved", "Paid", "Rejected", "Failed"],
+            default: "Pending",
+        },
+
+        paymentMethod: {
+            type: String,
+            enum: ["UPI", "Bank"],
+            default: "UPI",
+        },
+
+        upiId: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        bankName: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        accountHolderName: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        accountNumber: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        ifscCode: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        transactionId: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        adminNote: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        date: {
+            type: Date,
+            default: Date.now,
+        },
+
+        paidAt: {
+            type: Date,
+            default: null,
+        },
+    },
+],
     },
     {
         timestamps: true,

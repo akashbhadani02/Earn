@@ -314,27 +314,24 @@
     </div>
     <h2>Withdraw Requests</h2>
 
-    <table>
+<table>
 
-        <thead>
+    <thead>
 
-            <tr>
+        <tr>
 
-                <th>Name</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Transaction ID</th>
+            <th>Date</th>
+            <th>Paid Date</th>
+            <th>Action</th>
 
-                <th>Mobile</th>
+        </tr>
 
-                <th>Amount</th>
-
-                <th>Status</th>
-
-                <th>Date</th>
-
-                <th>Action</th>
-
-            </tr>
-
-        </thead>
+    </thead>
 
         <tbody id="withdrawTable">
 
@@ -346,22 +343,22 @@
 
     <h2>All Users</h2>
 
-    <table>
+<table>
 
-        <thead>
+    <thead>
 
-            <tr>
+        <tr>
 
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Status</th>
-                <th>Wallet</th>
-                <th>Total Earn</th>
-                <th>Action</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Status</th>
+            <th>Wallet</th>
+            <th>Total Earn</th>
+            <th>Action</th>
 
-            </tr>
+        </tr>
 
-        </thead>
+    </thead>
 
         <tbody id="userTable">
 
@@ -454,19 +451,19 @@
         // Show Users
         //==========================
 
-       //==========================
-// Show Users
-//==========================
+        //==========================
+        // Show Users
+        //==========================
 
-function showUsers(users) {
+        function showUsers(users) {
 
-    let html = "";
+            let html = "";
 
-    users.forEach(user => {
+            users.forEach(user => {
 
-        // Online / Offline Status
-        const statusHTML = user.isOnline
-            ? `<span style="
+                // Online / Offline Status
+                const statusHTML = user.isOnline
+                    ? `<span style="
                 color: #16a34a;
                 font-weight: bold;
                 background: #dcfce7;
@@ -474,7 +471,7 @@ function showUsers(users) {
                 border-radius: 20px;
                 display: inline-block;
               ">🟢 Online</span>`
-            : `<span style="
+                    : `<span style="
                 color: #dc2626;
                 font-weight: bold;
                 background: #fee2e2;
@@ -483,7 +480,7 @@ function showUsers(users) {
                 display: inline-block;
               ">🔴 Offline</span>`;
 
-        html += `
+                html += `
 
 <tr>
 
@@ -493,8 +490,8 @@ function showUsers(users) {
 
 <td>
 ${user.isBlocked
-? '<span style="color:red;font-weight:bold;">🚫 Blocked</span>'
-: statusHTML}
+                        ? '<span style="color:red;font-weight:bold;">🚫 Blocked</span>'
+                        : statusHTML}
 </td>
 
 <td>${Number(user.wallet || 0).toFixed(2)}</td>
@@ -524,11 +521,11 @@ Unblock
 
 `;
 
-    });
+            });
 
-    document.getElementById("userTable").innerHTML = html;
+            document.getElementById("userTable").innerHTML = html;
 
-}
+        }
 
         //==========================
         // Search
@@ -645,7 +642,7 @@ Unblock
             if (!res.ok || !data.success) {
                 console.error("Withdraw Load Error:", data.message);
                 document.getElementById("withdrawTable").innerHTML = `
-                    <tr><td colspan="6">${data.message || "Failed to load withdraw requests"}</td></tr>
+                    <tr><td colspan="8">${data.message || "Failed to load withdraw requests"}</td></tr>
                 `;
                 return;
             }
@@ -656,14 +653,14 @@ Unblock
 
             if (list.length === 0) {
                 document.getElementById("withdrawTable").innerHTML = `
-                    <tr><td colspan="6">No Withdraw Requests Found</td></tr>
+                    <tr><td colspan="8">No Withdraw Requests Found</td></tr>
                 `;
                 return;
             }
 
             list.forEach(w => {
 
-                html += `
+               html += `
 
 <tr>
 
@@ -671,24 +668,58 @@ Unblock
 
 <td>${w.mobile}</td>
 
-<td>${w.amount}</td>
+<td>₹${Number(w.amount || 0).toFixed(2)}</td>
 
-<td>${w.status}</td>
+<td>
+    <strong>${w.status}</strong>
+</td>
 
-<td>${new Date(w.date).toLocaleString()}</td>
+<td>
+    ${w.transactionId || "-"}
+</td>
+
+<td>
+    ${w.date
+        ? new Date(w.date).toLocaleString()
+        : "-"
+    }
+</td>
+
+<td>
+    ${w.paidAt
+        ? new Date(w.paidAt).toLocaleString()
+        : "-"
+    }
+</td>
 
 <td>
 
-<button onclick="approveWithdraw('${w.userId}','${w.requestId}')">
-Approve
+${w.status === "Pending" ? `
+<button
+    onclick="approveWithdraw('${w.userId}','${w.requestId}')"
+    style="background:#2563eb;">
+    Approve
 </button>
 
-<button onclick="rejectWithdraw('${w.userId}','${w.requestId}')">
-Reject
+<button
+    onclick="rejectWithdraw('${w.userId}','${w.requestId}')"
+    style="background:#ef4444;">
+    Reject
 </button>
+` : ""}
 
-<button onclick="deleteWithdraw('${w.userId}','${w.requestId}')">
-Delete
+${w.status === "Approved" ? `
+<button
+    onclick="markWithdrawPaid('${w.userId}','${w.requestId}')"
+    style="background:#16a34a;">
+    Mark Paid
+</button>
+` : ""}
+
+<button
+    onclick="deleteWithdraw('${w.userId}','${w.requestId}')"
+    style="background:#6b7280;">
+    Delete
 </button>
 
 </td>
@@ -767,6 +798,102 @@ Delete
 
         }
 
+        //==========================
+        // Mark Withdraw as Paid
+        //==========================
+
+        async function markWithdrawPaid(userId, requestId) {
+
+            const transactionId = prompt(
+                "Enter Payment Transaction ID:"
+            );
+
+            // Cancel clicked
+            if (transactionId === null) {
+                return;
+            }
+
+            // Empty Transaction ID
+            if (!transactionId.trim()) {
+
+                alert("Transaction ID is required.");
+
+                return;
+            }
+
+            const confirmPayment = confirm(
+                "Have you successfully paid the student?\n\n" +
+                "Transaction ID: " + transactionId.trim()
+            );
+
+            if (!confirmPayment) {
+                return;
+            }
+
+            try {
+
+                const res = await fetch(
+                    "/api/admin/withdraw/paid/" +
+                    userId +
+                    "/" +
+                    requestId,
+                    {
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type": "application/json",
+
+                            Authorization: "Bearer " + token
+
+                        },
+
+                        body: JSON.stringify({
+
+                            transactionId: transactionId.trim()
+
+                        })
+
+                    }
+                );
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+
+                    alert(
+                        data.message ||
+                        "Payment update failed"
+                    );
+
+                    return;
+                }
+
+                alert(
+                    "Payment marked as Paid successfully!\n\n" +
+                    "Transaction ID: " +
+                    data.transactionId
+                );
+
+                await loadWithdraws();
+
+                await loadDashboard();
+
+            } catch (err) {
+
+                console.error(
+                    "Mark Paid Error:",
+                    err
+                );
+
+                alert(
+                    "Something went wrong while updating payment."
+                );
+
+            }
+
+        }
+
         async function deleteWithdraw(userId, requestId) {
 
             if (!confirm("Delete this withdraw request?")) return;
@@ -792,55 +919,55 @@ Delete
             await loadDashboard();
         }
 
-        async function unblockUser(id){
+        async function unblockUser(id) {
 
-    if(!confirm("Unblock this student?")) return;
+            if (!confirm("Unblock this student?")) return;
 
-    const res = await fetch("/api/admin/unblock/" + id,{
-        method:"PUT",
-        headers:{
-            Authorization:"Bearer " + token
+            const res = await fetch("/api/admin/unblock/" + id, {
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            const data = await res.json();
+
+            alert(data.message);
+
+            loadUsers();
+
         }
-    });
+        //==========================
+        // Initial Load
+        //==========================
 
-    const data = await res.json();
-
-    alert(data.message);
-
-    loadUsers();
-
-}
-      //==========================
-// Initial Load
-//==========================
-
-loadDashboard();
-loadUsers();
-loadWithdraws();
+        loadDashboard();
+        loadUsers();
+        loadWithdraws();
 
 
-//==========================
-// Auto Refresh Dashboard
-// Every 1 Second
-//==========================
+        //==========================
+        // Auto Refresh Dashboard
+        // Every 1 Second
+        //==========================
 
-setInterval(() => {
+        setInterval(() => {
 
-    loadDashboard();
+            loadDashboard();
 
-}, 1000);
+        }, 1000);
 
 
-//==========================
-// Auto Refresh Users
-// Every 1 Second
-//==========================
+        //==========================
+        // Auto Refresh Users
+        // Every 1 Second
+        //==========================
 
-setInterval(() => {
+        setInterval(() => {
 
-    loadUsers();
+            loadUsers();
 
-}, 1000);
+        }, 1000);
     </script>
 
 </body>

@@ -278,14 +278,19 @@ router.get("/withdraws", adminAuth, async (req, res) => {
         users.forEach(user => {
             (user.withdrawRequests || []).forEach(request => {
                 withdraws.push({
-                    userId: String(user._id),
-                    name: user.name || "-",
-                    mobile: user.mobile || "-",
-                    amount: Number(request.amount || 0),
-                    status: request.status || "Pending",
-                    date: request.date || request.createdAt || user.createdAt,
-                    requestId: String(request._id)
-                });
+    userId: String(user._id),
+    name: user.name || "-",
+    mobile: user.mobile || "-",
+    amount: Number(request.amount || 0),
+    status: request.status || "Pending",
+
+    // Payment details
+    transactionId: request.transactionId || "",
+    paidAt: request.paidAt || null,
+
+    date: request.date || request.createdAt || user.createdAt,
+    requestId: String(request._id)
+});
             });
         });
 
@@ -306,51 +311,97 @@ router.get("/withdraws", adminAuth, async (req, res) => {
     }
 });
 
-router.put("/withdraw/approve/:userId/:requestId", adminAuth, async (req, res) => {
+// ===========================
+// Mark Withdraw as Paid
+// Admin pays student manually
+// ===========================
+
+router.put("/withdraw/paid/:userId/:requestId", adminAuth, async (req, res) => {
+
     try {
+
+        const { transactionId } = req.body;
+
+        if (!transactionId || !String(transactionId).trim()) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Transaction ID is required"
+            });
+
+        }
+
         const user = await User.findById(req.params.userId);
 
         if (!user) {
+
             return res.status(404).json({
                 success: false,
                 message: "User Not Found"
             });
+
         }
 
         const request = user.withdrawRequests.id(req.params.requestId);
 
         if (!request) {
+
             return res.status(404).json({
                 success: false,
                 message: "Request Not Found"
             });
+
         }
 
-        if (request.status !== "Pending") {
+        // Only Approved request can be marked as Paid
+        if (request.status !== "Approved") {
+
             return res.status(400).json({
                 success: false,
-                message: "This request is already " + request.status
+                message: "Only Approved withdraw can be marked as Paid"
             });
+
         }
 
-        request.status = "Approved";
+        request.status = "Paid";
+
+        // Save payment transaction ID
+        request.transactionId = String(transactionId).trim();
+
+        // Save payment date
+        request.paidAt = new Date();
+
         await user.save();
 
         return res.json({
+
             success: true,
-            message: "Withdraw Approved",
+
+            message: "Payment marked as Paid successfully",
+
+            transactionId: request.transactionId,
+
+            paidAt: request.paidAt,
+
             request: request
+
         });
 
     } catch (err) {
-        console.error("Approve Withdraw Error:", err);
-        return res.status(500).json({
-            success: false,
-            message: err.message
-        });
-    }
-});
 
+        console.error("Mark Withdraw Paid Error:", err);
+
+        return res.status(500).json({
+
+            success: false,
+
+            message: err.message
+
+        });
+
+    }
+
+});
 router.put("/withdraw/reject/:userId/:requestId", adminAuth, async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
@@ -473,6 +524,71 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
         res.json({
             success: true,
             message: "Student Unblocked Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
+
+// ===========================
+// Mark Withdraw as Paid
+// ===========================
+router.put("/withdraw/paid/:userId/:requestId", adminAuth, async (req, res) => {
+
+    try {
+
+        const { transactionId } = req.body;
+
+        if (!transactionId) {
+            return res.status(400).json({
+                success: false,
+                message: "Transaction ID is required"
+            });
+        }
+
+        const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        const request = user.withdrawRequests.id(req.params.requestId);
+
+        if (!request) {
+            return res.status(404).json({
+                success: false,
+                message: "Withdraw Request Not Found"
+            });
+        }
+
+        if (request.status !== "Approved") {
+            return res.status(400).json({
+                success: false,
+                message: "Withdraw must be Approved first"
+            });
+        }
+
+        request.status = "Paid";
+        request.transactionId = transactionId;
+        request.paidAt = new Date();
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Payment marked as Paid",
+            transactionId: request.transactionId,
+            paidAt: request.paidAt
         });
 
     } catch (err) {
