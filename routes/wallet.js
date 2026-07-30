@@ -227,10 +227,10 @@ router.post("/withdraw", auth, async (req, res) => {
         const wallet = Number(user.wallet || 0);
 
         // Minimum ₹500 required
-        if (wallet < 300) {
+        if (wallet < 50) {
             return res.status(400).json({
                 success: false,
-                message: "Withdraw કરવા માટે Wallet માં ઓછામાં ઓછા ₹300 હોવા જોઈએ.",
+                message: "Withdraw કરવા માટે Wallet માં ઓછામાં ઓછા ₹50 હોવા જોઈએ.",
                 ...walletResponse(user)
             });
         }
