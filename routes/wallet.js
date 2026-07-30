@@ -7,7 +7,7 @@ const auth = require("../middleware/auth");
 const DAILY_REWARD_AMOUNT = 5;
 const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
-const MAX_SPINS_PER_DAY = 3;
+const MAX_SPINS_PER_DAY = 1;
 
 function todayKey() {
     return new Date().toISOString().split("T")[0];
