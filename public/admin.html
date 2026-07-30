@@ -1189,7 +1189,7 @@
             document.getElementById("earn").innerHTML =
                 Number(data.totalEarn).toFixed(2);
             document.getElementById("withdraw").innerHTML =
-                Number(data.pendingWithdraw).toFixed(2);
+                Number(data.pendingWithdraw || 0);
 
         }
 
