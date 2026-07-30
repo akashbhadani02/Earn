@@ -402,6 +402,60 @@ router.put("/withdraw/paid/:userId/:requestId", adminAuth, async (req, res) => {
     }
 
 });
+
+// ===========================
+// Approve Withdraw
+// ===========================
+router.put("/withdraw/approve/:userId/:requestId", adminAuth, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        const request = user.withdrawRequests.id(req.params.requestId);
+
+        if (!request) {
+            return res.status(404).json({
+                success: false,
+                message: "Request Not Found"
+            });
+        }
+
+        if (request.status !== "Pending") {
+            return res.status(400).json({
+                success: false,
+                message: "Request already " + request.status
+            });
+        }
+
+        request.status = "Approved";
+
+        await user.save();
+
+        return res.json({
+            success: true,
+            message: "Withdraw Approved Successfully",
+            request
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
+
 router.put("/withdraw/reject/:userId/:requestId", adminAuth, async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
@@ -537,69 +591,5 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
 
 });
 
-// ===========================
-// Mark Withdraw as Paid
-// ===========================
-router.put("/withdraw/paid/:userId/:requestId", adminAuth, async (req, res) => {
-
-    try {
-
-        const { transactionId } = req.body;
-
-        if (!transactionId) {
-            return res.status(400).json({
-                success: false,
-                message: "Transaction ID is required"
-            });
-        }
-
-        const user = await User.findById(req.params.userId);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User Not Found"
-            });
-        }
-
-        const request = user.withdrawRequests.id(req.params.requestId);
-
-        if (!request) {
-            return res.status(404).json({
-                success: false,
-                message: "Withdraw Request Not Found"
-            });
-        }
-
-        if (request.status !== "Approved") {
-            return res.status(400).json({
-                success: false,
-                message: "Withdraw must be Approved first"
-            });
-        }
-
-        request.status = "Paid";
-        request.transactionId = transactionId;
-        request.paidAt = new Date();
-
-        await user.save();
-
-        res.json({
-            success: true,
-            message: "Payment marked as Paid",
-            transactionId: request.transactionId,
-            paidAt: request.paidAt
-        });
-
-    } catch (err) {
-
-        res.status(500).json({
-            success: false,
-            message: err.message
-        });
-
-    }
-
-});
 
 module.exports = router;
