@@ -671,8 +671,32 @@ Unblock
 <td>₹${Number(w.amount || 0).toFixed(2)}</td>
 
 <td>
-    <strong>${w.status}</strong>
+    ${w.paymentMethod || "-"}
 </td>
+
+<td>
+
+${w.paymentMethod === "UPI"
+? `
+<b>UPI:</b><br>
+${w.upiId || "-"}
+`
+: `
+<b>Bank:</b> ${w.bankName || "-"}<br>
+
+<b>Holder:</b> ${w.accountHolderName || "-"}<br>
+
+<b>Account:</b> ${w.accountNumber || "-"}<br>
+
+<b>IFSC:</b> ${w.ifscCode || "-"}
+`
+}
+
+</td>
+
+<td>
+<strong>${w.status}</strong>
+</td>   
 
 <td>
     ${w.transactionId || "-"}

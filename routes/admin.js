@@ -278,19 +278,38 @@ router.get("/withdraws", adminAuth, async (req, res) => {
         users.forEach(user => {
             (user.withdrawRequests || []).forEach(request => {
                 withdraws.push({
-    userId: String(user._id),
-    name: user.name || "-",
-    mobile: user.mobile || "-",
-    amount: Number(request.amount || 0),
-    status: request.status || "Pending",
 
-    // Payment details
-    transactionId: request.transactionId || "",
-    paidAt: request.paidAt || null,
+                    userId: String(user._id),
 
-    date: request.date || request.createdAt || user.createdAt,
-    requestId: String(request._id)
-});
+                    name: request.fullName || user.name || "-",
+
+                    mobile: request.mobileNumber || user.mobile || "-",
+
+                    amount: Number(request.amount || 0),
+
+                    status: request.status || "Pending",
+
+                    paymentMethod: request.paymentMethod || "",
+
+                    upiId: request.upiId || "",
+
+                    bankName: request.bankName || "",
+
+                    accountHolderName: request.accountHolderName || "",
+
+                    accountNumber: request.accountNumber || "",
+
+                    ifscCode: request.ifscCode || "",
+
+                    transactionId: request.transactionId || "",
+
+                    paidAt: request.paidAt || null,
+
+                    date: request.date || request.createdAt || user.createdAt,
+
+                    requestId: String(request._id)
+
+                });
             });
         });
 
