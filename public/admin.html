@@ -6,98 +6,309 @@
     <title>Admin Panel</title>
 
     <style>
+        /* =========================================
+   GLOBAL RESET
+========================================= */
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, 0.25), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.20), transparent 35%),
+                linear-gradient(135deg, #020617, #0f172a 45%, #1e293b);
             min-height: 100vh;
-            padding: 30px;
-            color: #fff;
+            padding: 25px;
+            color: #ffffff;
         }
 
-        h2 {
-            margin: 20px 0;
-            font-size: 28px;
-            font-weight: bold;
+
+        /* =========================================
+   MAIN HEADER
+========================================= */
+
+        body>div:first-child {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+
+            padding: 18px 22px;
+            border-radius: 18px;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.25);
+
+            position: relative;
+            overflow: hidden;
         }
+
+        body>div:first-child::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: rgba(59, 130, 246, 0.18);
+            border-radius: 50%;
+            top: -80px;
+            right: -50px;
+            filter: blur(10px);
+        }
+
+        body>div:first-child h2 {
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        body>div:first-child button {
+            position: relative;
+            z-index: 2;
+        }
+
+
+        /* =========================================
+   HEADINGS
+========================================= */
+
+        h2 {
+            margin: 30px 0 18px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #f8fafc;
+            letter-spacing: 0.3px;
+        }
+
+        h2::after {
+            content: "";
+            display: block;
+            width: 55px;
+            height: 4px;
+            margin-top: 8px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #38bdf8, #6366f1);
+        }
+
+
+        /* =========================================
+   DASHBOARD CARDS
+========================================= */
 
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-bottom: 30px;
+            margin: 25px 0 35px;
         }
 
         .card {
-            background: rgba(255, 255, 255, .08);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, .15);
-            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+
+            min-height: 145px;
             padding: 25px;
-            text-align: center;
-            transition: .3s;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.25);
+
+            transition: all 0.3s ease;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+
+            width: 130px;
+            height: 130px;
+
+            border-radius: 50%;
+
+            top: -60px;
+            right: -50px;
+
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 18px 40px rgba(0, 0, 0, .4);
+            transform: translateY(-7px) scale(1.02);
+
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.4);
         }
 
         .card h3 {
+            position: relative;
+            z-index: 2;
+
             color: #cbd5e1;
+            font-size: 16px;
+            font-weight: 600;
+
             margin-bottom: 10px;
-            font-size: 18px;
         }
 
         .card h1 {
-            font-size: 38px;
+            position: relative;
+            z-index: 2;
+
+            font-size: 34px;
+            font-weight: 800;
+
             color: #38bdf8;
         }
 
-        input {
-            width: 100%;
-            max-width: 350px;
-            padding: 14px 18px;
-            border: none;
-            outline: none;
-            border-radius: 12px;
-            margin: 20px 0;
-            font-size: 16px;
-            background: #fff;
-            color: #000;
+
+        /* Individual Card Colors */
+
+        .card:nth-child(1) h1 {
+            color: #38bdf8;
         }
+
+        .card:nth-child(2) h1 {
+            color: #22c55e;
+        }
+
+        .card:nth-child(3) h1 {
+            color: #fbbf24;
+        }
+
+        .card:nth-child(4) h1 {
+            color: #f87171;
+        }
+
+
+        /* =========================================
+   SEARCH INPUT
+========================================= */
+
+        #search {
+            width: 100%;
+            max-width: 450px;
+
+            padding: 14px 18px;
+
+            margin: 5px 0 20px;
+
+            border: 2px solid rgba(255, 255, 255, 0.10);
+
+            outline: none;
+
+            border-radius: 12px;
+
+            background: rgba(255, 255, 255, 0.95);
+
+            color: #111827;
+
+            font-size: 16px;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.15);
+
+            transition: 0.3s;
+        }
+
+        #search:focus {
+            border-color: #38bdf8;
+
+            box-shadow:
+                0 0 0 4px rgba(56, 189, 248, 0.15);
+        }
+
+        #search::placeholder {
+            color: #64748b;
+        }
+
+
+        /* =========================================
+   TABLE WRAPPER EFFECT
+========================================= */
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            overflow: hidden;
-            border-radius: 15px;
-            background: #fff;
+
+            border-collapse: separate;
+            border-spacing: 0;
+
+            margin-bottom: 40px;
+
+            background: #ffffff;
+
             color: #111827;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .25);
-            margin-bottom: 35px;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.30);
         }
 
+
+        /* =========================================
+   TABLE HEADER
+========================================= */
+
         thead {
-            background: linear-gradient(90deg, #2563eb, #1d4ed8);
-            color: #fff;
+            background: linear-gradient(135deg,
+                    #2563eb,
+                    #4f46e5);
+
+            color: #ffffff;
         }
 
         th {
-            padding: 16px;
-            font-size: 15px;
-            letter-spacing: .5px;
+            padding: 16px 14px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            text-align: left;
+
+            white-space: nowrap;
+
+            letter-spacing: 0.3px;
         }
+
+
+        /* =========================================
+   TABLE BODY
+========================================= */
 
         td {
             padding: 14px;
+
+            font-size: 14px;
+
             border-bottom: 1px solid #e5e7eb;
+
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
         }
 
         tbody tr:nth-child(even) {
@@ -105,175 +316,493 @@
         }
 
         tbody tr:hover {
-            background: #dbeafe;
-            transition: .3s;
+            background: #eff6ff;
+
+            transform: scale(1.002);
         }
+
+
+        /* Last Row */
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =========================================
+   BUTTON BASE
+========================================= */
 
         button {
             border: none;
-            border-radius: 8px;
-            padding: 8px 14px;
+
+            padding: 9px 14px;
+
             margin: 3px;
-            color: #fff;
+
+            border-radius: 8px;
+
+            color: #ffffff;
+
             cursor: pointer;
+
+            font-size: 13px;
+
             font-weight: 600;
-            transition: .3s;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
         }
 
         button:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 5px 15px rgba(0, 0, 0, 0.20);
         }
 
-        /* Edit Button */
-        button:nth-child(1) {
-            background: #2563eb;
+        button:active {
+            transform: scale(0.96);
         }
 
-        /* Delete / Reject */
-        button:nth-child(2) {
-            background: #ef4444;
+
+        /* =========================================
+   ACTION BUTTON COLORS
+========================================= */
+
+        /* Edit */
+
+        button[onclick^="editWallet"] {
+            background: linear-gradient(135deg,
+                    #2563eb,
+                    #1d4ed8);
         }
 
-        /* Third Button */
-        button:nth-child(3) {
-            background: #f59e0b;
+
+        /* Delete User */
+
+        button[onclick^="deleteUser"] {
+            background: linear-gradient(135deg,
+                    #ef4444,
+                    #dc2626);
         }
 
-        /* Logout Button */
-        div button {
-            background: linear-gradient(90deg, #ef4444, #dc2626) !important;
-            padding: 12px 22px;
-            border-radius: 10px;
-            font-size: 15px;
+
+        /* Unblock */
+
+        button[onclick^="unblockUser"] {
+            background: linear-gradient(135deg,
+                    #22c55e,
+                    #15803d) !important;
         }
 
-        div button:hover {
-            background: linear-gradient(90deg, #dc2626, #b91c1c) !important;
+
+        /* Approve */
+
+        button[onclick^="approveWithdraw"] {
+            background: linear-gradient(135deg,
+                    #2563eb,
+                    #1d4ed8) !important;
         }
 
-        @media(max-width:768px) {
+
+        /* Reject */
+
+        button[onclick^="rejectWithdraw"] {
+            background: linear-gradient(135deg,
+                    #ef4444,
+                    #b91c1c) !important;
+        }
+
+
+        /* Mark Paid */
+
+        button[onclick^="markWithdrawPaid"] {
+            background: linear-gradient(135deg,
+                    #16a34a,
+                    #15803d) !important;
+        }
+
+
+        /* Delete Withdraw */
+
+        button[onclick^="deleteWithdraw"] {
+            background: linear-gradient(135deg,
+                    #64748b,
+                    #334155) !important;
+        }
+
+
+        /* =========================================
+   LOGOUT BUTTON
+========================================= */
+
+        body>div:first-child button {
+            background: linear-gradient(135deg,
+                    #ef4444,
+                    #b91c1c) !important;
+
+            padding: 11px 22px !important;
+
+            border-radius: 10px !important;
+
+            font-size: 14px !important;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 5px 15px rgba(239, 68, 68, 0.25);
+        }
+
+        body>div:first-child button:hover {
+            background: linear-gradient(135deg,
+                    #dc2626,
+                    #991b1b) !important;
+        }
+
+
+        /* =========================================
+   STATUS BADGES
+========================================= */
+
+        td span {
+            white-space: nowrap;
+        }
+
+
+        /* =========================================
+   WITHDRAW TABLE
+========================================= */
+
+        #withdrawTable td {
+            min-width: 100px;
+        }
+
+        #withdrawTable td:nth-child(5) {
+            line-height: 1.7;
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+   EMPTY TABLE MESSAGE
+========================================= */
+
+        #withdrawTable td[colspan] {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #64748b;
+
+            font-weight: 600;
+
+            background: #f8fafc;
+        }
+
+
+        /* =========================================
+   RESPONSIVE TABLE CONTAINER
+========================================= */
+
+        @media (max-width: 1100px) {
 
             body {
-                padding: 15px;
+                padding: 20px;
             }
 
-            h2 {
-                font-size: 22px;
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             table {
                 display: block;
+
                 overflow-x: auto;
+
                 white-space: nowrap;
+
+                -webkit-overflow-scrolling: touch;
             }
 
-            .cards {
-                grid-template-columns: 1fr;
-            }
-
-            input {
+            thead,
+            tbody,
+            tr {
                 width: 100%;
             }
 
         }
 
-        /* ===========================
-   Mobile Responsive
-=========================== */
 
-        @media (max-width:768px) {
+        /* =========================================
+   TABLET
+========================================= */
+
+        @media (max-width: 768px) {
 
             body {
-                padding: 12px;
+                padding: 14px;
             }
 
-            h2 {
-                font-size: 22px;
-                margin: 15px 0;
-            }
 
             /* Header */
+
             body>div:first-child {
-                flex-direction: column;
+                padding: 16px;
+
+                flex-direction: column !important;
+
+                align-items: stretch !important;
+
                 gap: 12px;
-                align-items: flex-start !important;
+            }
+
+            body>div:first-child h2 {
+                font-size: 22px;
+
+                text-align: center;
             }
 
             body>div:first-child button {
                 width: 100%;
             }
 
-            /* Dashboard Cards */
+
+            /* Cards */
+
             .cards {
-                grid-template-columns: 1fr;
-                gap: 15px;
+                grid-template-columns: repeat(2, 1fr);
+
+                gap: 14px;
             }
 
             .card {
+                min-height: 125px;
+
                 padding: 18px;
+            }
+
+            .card h3 {
+                font-size: 14px;
+            }
+
+            .card h1 {
+                font-size: 28px;
+            }
+
+
+            /* Headings */
+
+            h2 {
+                font-size: 21px;
+
+                margin: 24px 0 15px;
+            }
+
+
+            /* Search */
+
+            #search {
+                max-width: 100%;
+
+                margin: 5px 0 15px;
+            }
+
+
+            /* Tables */
+
+            table {
+                display: block;
+
+                width: 100%;
+
+                overflow-x: auto;
+
+                white-space: nowrap;
+
+                border-radius: 12px;
+            }
+
+            th {
+                padding: 12px;
+
+                font-size: 13px;
+            }
+
+            td {
+                padding: 11px;
+
+                font-size: 13px;
+            }
+
+            button {
+                padding: 7px 10px;
+
+                font-size: 12px;
+            }
+
+        }
+
+
+        /* =========================================
+   MOBILE
+========================================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 10px;
+            }
+
+
+            /* Dashboard */
+
+            .cards {
+                grid-template-columns: 1fr;
+
+                gap: 12px;
+            }
+
+            .card {
+                min-height: 110px;
+
+                border-radius: 15px;
             }
 
             .card h1 {
                 font-size: 30px;
             }
 
-            /* Search */
-            input {
-                width: 100%;
-                max-width: 100%;
-                margin: 15px 0;
+
+            /* Heading */
+
+            h2 {
+                font-size: 20px;
+
+                margin: 22px 0 13px;
             }
 
-            /* Tables */
+
+            /* Table */
+
             table {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                white-space: nowrap;
-                border-radius: 12px;
+                margin-bottom: 28px;
+
+                border-radius: 10px;
             }
 
             th,
             td {
                 padding: 10px;
-                font-size: 14px;
+
+                font-size: 12px;
             }
 
-            button {
-                padding: 7px 10px;
-                font-size: 13px;
+
+            /* Buttons */
+
+            td button {
+                display: inline-block;
+
+                width: auto;
+
+                min-width: 80px;
+
+                margin: 3px 2px;
             }
 
         }
 
-        /* Very Small Phones */
 
-        @media (max-width:480px) {
+        /* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+        @media (max-width: 400px) {
 
             body {
-                padding: 10px;
+                padding: 8px;
+            }
+
+            body>div:first-child {
+                padding: 14px;
+            }
+
+            body>div:first-child h2 {
+                font-size: 19px;
+            }
+
+            .card {
+                padding: 15px;
             }
 
             .card h3 {
-                font-size: 16px;
+                font-size: 13px;
             }
 
             .card h1 {
                 font-size: 26px;
             }
 
-            th,
-            td {
-                font-size: 12px;
-                padding: 8px;
+            #search {
+                padding: 12px 14px;
+
+                font-size: 14px;
             }
 
-            button {
+            th,
+            td {
+                padding: 8px;
+
+                font-size: 11px;
+            }
+
+            td button {
                 display: block;
+
                 width: 100%;
+
                 margin: 5px 0;
             }
 
+        }
+
+
+        /* =========================================
+   CUSTOM SCROLLBAR
+========================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(#3b82f6,
+                    #6366f1);
+
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(#2563eb,
+                    #4f46e5);
+        }
+
+
+        /* =========================================
+   SELECTION
+========================================= */
+
+        ::selection {
+            background: #3b82f6;
+            color: #ffffff;
         }
     </style>
 
@@ -314,24 +843,26 @@
     </div>
     <h2>Withdraw Requests</h2>
 
-<table>
+    <table>
 
-    <thead>
+        <thead>
 
-        <tr>
+            <tr>
 
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Amount</th>
-            <th>Status</th>
-            <th>Transaction ID</th>
-            <th>Date</th>
-            <th>Paid Date</th>
-            <th>Action</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Amount</th>
+                <th>Payment Method</th>
+                <th>Payment Details</th>
+                <th>Status</th>
+                <th>Transaction ID</th>
+                <th>Date</th>
+                <th>Paid Date</th>
+                <th>Action</th>
 
-        </tr>
+            </tr>
 
-    </thead>
+        </thead>
 
         <tbody id="withdrawTable">
 
@@ -343,22 +874,22 @@
 
     <h2>All Users</h2>
 
-<table>
+    <table>
 
-    <thead>
+        <thead>
 
-        <tr>
+            <tr>
 
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Status</th>
-            <th>Wallet</th>
-            <th>Total Earn</th>
-            <th>Action</th>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Status</th>
+                <th>Wallet</th>
+                <th>Total Earn</th>
+                <th>Action</th>
 
-        </tr>
+            </tr>
 
-    </thead>
+        </thead>
 
         <tbody id="userTable">
 
@@ -642,7 +1173,7 @@ Unblock
             if (!res.ok || !data.success) {
                 console.error("Withdraw Load Error:", data.message);
                 document.getElementById("withdrawTable").innerHTML = `
-                    <tr><td colspan="8">${data.message || "Failed to load withdraw requests"}</td></tr>
+                    <tr><td colspan="10">${data.message || "Failed to load withdraw requests"}</td></tr>
                 `;
                 return;
             }
@@ -653,14 +1184,14 @@ Unblock
 
             if (list.length === 0) {
                 document.getElementById("withdrawTable").innerHTML = `
-                    <tr><td colspan="8">No Withdraw Requests Found</td></tr>
+                    <tr><td colspan="10">No Withdraw Requests Found</td></tr>
                 `;
                 return;
             }
 
             list.forEach(w => {
 
-               html += `
+                html += `
 
 <tr>
 
@@ -677,11 +1208,11 @@ Unblock
 <td>
 
 ${w.paymentMethod === "UPI"
-? `
+                        ? `
 <b>UPI:</b><br>
 ${w.upiId || "-"}
 `
-: `
+                        : `
 <b>Bank:</b> ${w.bankName || "-"}<br>
 
 <b>Holder:</b> ${w.accountHolderName || "-"}<br>
@@ -690,7 +1221,7 @@ ${w.upiId || "-"}
 
 <b>IFSC:</b> ${w.ifscCode || "-"}
 `
-}
+                    }
 
 </td>
 
@@ -704,16 +1235,16 @@ ${w.upiId || "-"}
 
 <td>
     ${w.date
-        ? new Date(w.date).toLocaleString()
-        : "-"
-    }
+                        ? new Date(w.date).toLocaleString()
+                        : "-"
+                    }
 </td>
 
 <td>
     ${w.paidAt
-        ? new Date(w.paidAt).toLocaleString()
-        : "-"
-    }
+                        ? new Date(w.paidAt).toLocaleString()
+                        : "-"
+                    }
 </td>
 
 <td>
