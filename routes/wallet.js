@@ -248,14 +248,42 @@ router.post("/withdraw", auth, async (req, res) => {
             });
         }
 
+        const {
+    paymentMethod,
+    upiId,
+    bankName,
+    accountHolderName,
+    accountNumber,
+    ifscCode
+} = req.body;
+
         const amount = wallet;
 
         // Save withdraw request in the same User document
         user.withdrawRequests.push({
-            amount,
-            status: "Pending",
-            date: new Date()
-        });
+
+    amount,
+
+    fullName: user.name,
+    mobileNumber: user.mobile,
+
+    paymentMethod,
+
+    upiId,
+
+    bankName,
+
+    accountHolderName,
+
+    accountNumber,
+
+    ifscCode,
+
+    status: "Pending",
+
+    date: new Date()
+
+});
 
         // Lock/deduct the requested wallet amount while request is pending.
         // If Admin rejects it, admin route refunds this amount.

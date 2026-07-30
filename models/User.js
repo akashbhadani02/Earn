@@ -85,78 +85,90 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
-       withdrawRequests: [
-    {
-        amount: {
-            type: Number,
-            required: true,
-        },
+        withdrawRequests: [
+            {
+                amount: {
+                    type: Number,
+                    required: true,
+                },
 
-        status: {
-            type: String,
-            enum: ["Pending", "Approved", "Paid", "Rejected", "Failed"],
-            default: "Pending",
-        },
+                fullName: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        paymentMethod: {
-            type: String,
-            enum: ["UPI", "Bank"],
-            default: "UPI",
-        },
+                mobileNumber: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        upiId: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                status: {
+                    type: String,
+                    enum: ["Pending", "Approved", "Paid", "Rejected", "Failed"],
+                    default: "Pending",
+                },
 
-        bankName: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                paymentMethod: {
+                    type: String,
+                    enum: ["UPI", "Bank"],
+                    default: "UPI",
+                },
 
-        accountHolderName: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                upiId: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        accountNumber: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                bankName: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        ifscCode: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                accountHolderName: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        transactionId: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                accountNumber: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        adminNote: {
-            type: String,
-            trim: true,
-            default: "",
-        },
+                ifscCode: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        date: {
-            type: Date,
-            default: Date.now,
-        },
+                transactionId: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
 
-        paidAt: {
-            type: Date,
-            default: null,
-        },
-    },
-],
+                adminNote: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                date: {
+                    type: Date,
+                    default: Date.now,
+                },
+
+                paidAt: {
+                    type: Date,
+                    default: null,
+                },
+            },
+        ],
     },
     {
         timestamps: true,
