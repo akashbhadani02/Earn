@@ -589,6 +589,11 @@ td span{
         </div>
 
         <div class="card">
+            <h3>Total Questions</h3>
+            <h1 id="totalQuestions">0</h1>
+        </div>
+
+        <div class="card">
             <h3>Pending Withdraw</h3>
             <h1 id="withdraw">0</h1>
         </div>
@@ -638,6 +643,7 @@ td span{
                 <th>Status</th>
                 <th>Wallet</th>
                 <th>Total Earn</th>
+                <th>Questions</th>
                 <th>Action</th>
 
             </tr>
@@ -694,6 +700,10 @@ td span{
 
             document.getElementById("earn").innerHTML =
                 Number(data.totalEarn).toFixed(2);
+
+            document.getElementById("totalQuestions").innerHTML =
+                Number(data.totalQuestionsAnswered || 0);
+
             document.getElementById("withdraw").innerHTML =
                 Number(data.pendingWithdraw || 0);
 
@@ -781,6 +791,8 @@ ${user.isBlocked
 <td>${Number(user.wallet || 0).toFixed(2)}</td>
 
 <td>${Number(user.totalEarn || 0).toFixed(2)}</td>
+
+<td>${Number(user.totalQuestionsAnswered || 0)}</td>
 
 <td>
 

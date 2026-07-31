@@ -7,7 +7,7 @@ const auth = require("../middleware/auth");
 const DAILY_REWARD_AMOUNT = 5;
 const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
-const MAX_SPINS_PER_DAY = 1;
+// No daily spin limit. One spin is earned for every 100 answered questions.
 
 function todayKey() {
     return new Date().toISOString().split("T")[0];
@@ -27,6 +27,7 @@ function walletResponse(user) {
         lastSpinDate: user.lastSpinDate || "",
         dailyQuestionsAnswered: Number(user.dailyQuestionsAnswered || 0),
         dailyQuestionsDate: user.dailyQuestionsDate || "",
+        totalQuestionsAnswered: Number(user.totalQuestionsAnswered || 0),
         canSpinAfterQuestions: Number(user.dailyQuestionsAnswered || 0) >= 100,
         withdrawRequests: user.withdrawRequests || []
     };
@@ -101,6 +102,11 @@ router.post("/quiz", auth, async (req, res) => {
         user.dailyQuestionsAnswered =
             Number(user.dailyQuestionsAnswered || 0) + 1;
 
+        // Lifetime counter for Admin reporting.
+        // This never resets when the 100-question spin cycle resets.
+        user.totalQuestionsAnswered =
+            Number(user.totalQuestionsAnswered || 0) + 1;
+
         user.wallet = Number(user.wallet || 0) + amount;
 
         // Wallet should never become negative.
@@ -174,7 +180,7 @@ router.post("/daily-reward", auth, async (req, res) => {
 });
 
 // =============================
-// Spin Wheel - Maximum 2 Spins Per Day
+// Spin Wheel - 1 Spin Per 100 Questions
 // =============================
 router.post("/spin", auth, async (req, res) => {
     try {
@@ -211,19 +217,20 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        if (Number(user.spinCount || 0) >= MAX_SPINS_PER_DAY) {
-            return res.status(400).json({
-                success: false,
-                message: "તમે આજે Spin કરી લીધું છે! કાલે ફરી Spin કરી શકશો.",
-                ...walletResponse(user)
-            });
-        }
+        // Every completed set of 100 questions gives one spin.
+        // There is no daily spin limit: after each spin the current
+        // 100-question cycle starts again from 0.
 
         const prize = Math.floor(Math.random() * 150) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
         user.lastSpin = today;
+
+        // Reset only the current spin-cycle counter.
+        // The lifetime totalQuestionsAnswered is preserved.
+        user.dailyQuestionsAnswered = 0;
+
         user.wallet = Number(user.wallet || 0) + prize;
         user.totalEarn = Number(user.totalEarn || 0) + prize;
         user.spinReward = Number(user.spinReward || 0) + prize;
@@ -233,7 +240,8 @@ router.post("/spin", auth, async (req, res) => {
         return res.json({
             ...walletResponse(user),
             prize,
-            remainingSpins: MAX_SPINS_PER_DAY - user.spinCount
+            remainingSpins: null,
+            nextSpinQuestions: 100
         });
     } catch (err) {
         console.error("Spin Error:", err);

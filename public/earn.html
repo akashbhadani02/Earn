@@ -965,6 +965,7 @@
         // Daily quiz progress: 100 answered questions are required for Spin.
         let dailyQuestionsAnswered = 0;
         let dailyQuestionsDate = "";
+        let totalQuestionsAnswered = 0;
 
         let lastClaim = "";
 
@@ -4150,6 +4151,7 @@
 
                     spinReward = data.spinReward || 0;
                     dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+                    totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
                     dailyQuestionsDate = data.dailyQuestionsDate || "";
 
                     document.getElementById("wallet").innerText = wallet.toFixed(2);
@@ -4174,6 +4176,7 @@
             dailyReward = Number(data.dailyReward || 0);
             spinReward = Number(data.spinReward || 0);
             dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+            totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
             dailyQuestionsDate = data.dailyQuestionsDate || "";
             lastClaim = data.lastClaim || "";
             lastSpin = data.lastSpin || "";
@@ -4291,7 +4294,8 @@
                 alert(
                     "Congratulations! 🎉\n\n" +
                     "Spin પર તમને ₹" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
-                    "આજે તમારા " + data.spinCount + "/1 Spin થઈ ગયા છે."
+                    "Spin #" + Number(data.spinCount || 0) + " complete.\n" +
+                    "હવે ફરી 100 પ્રશ્નો પૂરા કરો અને ફરી Spin કરો."
                 );
             } catch (err) {
                 console.error("Spin Error:", err);

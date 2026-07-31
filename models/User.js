@@ -52,6 +52,13 @@ const userSchema = new mongoose.Schema(
             default: "",
         },
 
+        // Lifetime number of quiz questions answered by this user.
+        // This is not reset after a 100-question spin cycle.
+        totalQuestionsAnswered: {
+            type: Number,
+            default: 0,
+        },
+
         totalEarn: {
             type: Number,
             default: 0,

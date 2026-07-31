@@ -75,12 +75,14 @@ router.get("/dashboard", adminAuth, async (req, res) => {
 
         let totalWallet = 0;
         let totalEarn = 0;
+        let totalQuestionsAnswered = 0;
         let pendingWithdraw = 0;
 
         users.forEach(user => {
 
             totalWallet += user.wallet || 0;
             totalEarn += user.totalEarn || 0;
+            totalQuestionsAnswered += Number(user.totalQuestionsAnswered || 0);
 
             if (user.withdrawRequests) {
 
