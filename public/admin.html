@@ -730,8 +730,11 @@ td span{
         <div class="question-toolbar">
             <input id="questionSearch" placeholder="Search question..." oninput="questionPage=1; loadQuestions();">
             <button onclick="openQuestionEditor()">➕ Add Question</button>
-            <button onclick="loadQuestions()">🔄 Refresh</button>
+            <button onclick="loadQuestions()">🔄 All Questions</button>
+            <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
+            <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
         </div>
+        <div class="page-info" id="repeatInfo"></div>
         <div class="page-info" id="questionInfo">Loading questions...</div>
         <div class="table-wrap">
             <table>
@@ -1065,8 +1068,11 @@ Unblock
         const questionLimit = 20;
         let questionTotalPages = 1;
         const questionCache = {};
+        let repeatedMode = false;
 
         async function loadQuestions() {
+            repeatedMode = false;
+            document.getElementById("repeatInfo").innerText = "";
             const search = document.getElementById("questionSearch").value.trim();
             const res = await fetch(
                 "/api/questions/admin?page=" + questionPage +
@@ -1107,6 +1113,94 @@ Unblock
 
             document.getElementById("questionTable").innerHTML = html ||
                 `<tr><td colspan="5">No questions found.</td></tr>`;
+        }
+
+        async function showRepeatedQuestions() {
+            repeatedMode = true;
+            questionPage = 1;
+            const res = await fetch("/api/questions/admin/repeated", {
+                headers: { Authorization: "Bearer " + token }
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Could not find repeated questions");
+                return;
+            }
+
+            const groups = data.groups || [];
+            document.getElementById("repeatInfo").innerText =
+                groups.length
+                    ? `🔁 ${groups.length} repeated question group(s) found • ${data.repeatedCount} total repeated entries`
+                    : "✅ No repeated questions found.";
+
+            const rows = [];
+            groups.forEach((group, groupIndex) => {
+                (group.questions || []).forEach((question, index) => {
+                    questionCache[question._id] = question;
+                    const options = (question.options || []).map((option, i) =>
+                        `<div style="${i === Number(question.correct) ? 'font-weight:800;text-decoration:underline;' : ''}">${i + 1}. ${escapeHtml(option)}</div>`
+                    ).join("");
+
+                    rows.push(`<tr>
+                        <td>${groupIndex + 1}</td>
+                        <td style="min-width:280px;max-width:500px;white-space:normal;">${escapeHtml(question.q)}</td>
+                        <td style="min-width:220px;white-space:normal;">${options}</td>
+                        <td>Option ${Number(question.correct) + 1}</td>
+                        <td>
+                            <span style="display:inline-block;padding:5px 9px;border-radius:999px;background:#7c2d12;color:#fed7aa;margin-bottom:5px;">Repeat ${index + 1}/${group.count}</span><br>
+                            <button onclick="openQuestionEditorById('${question._id}')">✏️ Edit</button>
+                            <button onclick="deleteQuestion('${question._id}')" style="background:#ef4444;">🗑️ Delete</button>
+                        </td>
+                    </tr>`);
+                });
+            });
+
+            document.getElementById("questionInfo").innerText =
+                `Showing repeated questions only: ${data.repeatedCount || 0} entries`;
+            document.getElementById("questionTable").innerHTML = rows.join("") ||
+                `<tr><td colspan="5">No repeated questions found.</td></tr>`;
+        }
+
+        async function removeRepeatedQuestions() {
+            const checkRes = await fetch("/api/questions/admin/repeated", {
+                headers: { Authorization: "Bearer " + token }
+            });
+            const checkData = await checkRes.json();
+
+            if (!checkRes.ok || !checkData.success) {
+                alert(checkData.message || "Could not check repeated questions");
+                return;
+            }
+
+            if (!checkData.repeatedCount) {
+                document.getElementById("repeatInfo").innerText = "✅ No repeated questions found.";
+                alert("No repeated questions found.");
+                return;
+            }
+
+            const ok = confirm(
+                `Found ${checkData.repeatedCount} entries in ${checkData.duplicateGroups} repeated group(s).\n\n` +
+                `Click OK to keep ONE copy of each question and delete the extra repeated copies.`
+            );
+            if (!ok) return;
+
+            const res = await fetch("/api/questions/admin/repeated/remove", {
+                method: "DELETE",
+                headers: { Authorization: "Bearer " + token }
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "Could not remove repeated questions");
+                return;
+            }
+
+            alert(`Done! ${data.deleted} repeated question(s) removed. One copy of each question was kept.`);
+            document.getElementById("repeatInfo").innerText = "✅ Repeated questions removed; one copy kept for each question.";
+            questionPage = 1;
+            await loadQuestions();
+            await loadDashboard();
         }
 
         function escapeHtml(value) {

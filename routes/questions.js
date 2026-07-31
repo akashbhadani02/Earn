@@ -92,6 +92,97 @@ router.get("/admin", adminAuth, async (req, res) => {
     }
 });
 
+// Admin: find repeated questions by normalized question text.
+router.get("/admin/repeated", adminAuth, async (req, res) => {
+    try {
+        await ensureQuestionsSeeded();
+
+        const questions = await Question.find()
+            .select("q options correct")
+            .sort({ _id: 1 })
+            .lean();
+
+        const normalize = value => String(value || "")
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
+
+        const groups = new Map();
+        for (const question of questions) {
+            const key = normalize(question.q);
+            if (!key) continue;
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(question);
+        }
+
+        const repeatedGroups = [...groups.values()]
+            .filter(group => group.length > 1)
+            .map(group => ({
+                question: group[0].q,
+                count: group.length,
+                questions: group
+            }));
+
+        const repeatedQuestions = repeatedGroups.flatMap(group => group.questions);
+
+        return res.json({
+            success: true,
+            repeatedCount: repeatedQuestions.length,
+            duplicateGroups: repeatedGroups.length,
+            groups: repeatedGroups,
+            questions: repeatedQuestions
+        });
+    } catch (err) {
+        console.error("Repeated Questions Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// Admin: remove repeated questions and keep the first copy of each question.
+router.delete("/admin/repeated/remove", adminAuth, async (req, res) => {
+    try {
+        await ensureQuestionsSeeded();
+
+        const questions = await Question.find()
+            .select("_id q")
+            .sort({ _id: 1 })
+            .lean();
+
+        const normalize = value => String(value || "")
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
+
+        const seen = new Set();
+        const duplicateIds = [];
+
+        for (const question of questions) {
+            const key = normalize(question.q);
+            if (!key) continue;
+            if (seen.has(key)) duplicateIds.push(question._id);
+            else seen.add(key);
+        }
+
+        let deleted = 0;
+        if (duplicateIds.length) {
+            const result = await Question.deleteMany({ _id: { $in: duplicateIds } });
+            deleted = Number(result.deletedCount || 0);
+        }
+
+        return res.json({
+            success: true,
+            deleted,
+            remaining: questions.length - deleted,
+            message: deleted
+                ? `${deleted} repeated question(s) removed. One copy of each question was kept.`
+                : "No repeated questions found."
+        });
+    } catch (err) {
+        console.error("Remove Repeated Questions Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // Admin can create a new question.
 router.post("/admin", adminAuth, async (req, res) => {
     try {
