@@ -18,6 +18,186 @@
     "correct": 2
   },
   {
+  "q": "She ___ already submitted her application.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "They ___ been studying for the test since morning.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "He ___ finished the report before the meeting started.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 2
+},
+{
+  "q": "I ___ never visited such a beautiful garden.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "The students ___ completed their practical exam.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "My brother ___ just bought a new bicycle.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "We ___ been waiting for the bus since 8 o'clock.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "She ___ left the office before her manager arrived.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 2
+},
+{
+  "q": "You ___ already learned this grammar rule.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "The dog ___ eaten all its food.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "I ___ been practicing these questions for an hour.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "They ___ completed the project before the deadline.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 2
+},
+{
+  "q": "He ___ never driven a truck before.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "The manager ___ just announced the decision.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "We ___ visited this temple many times.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "She ___ been teaching at this school since 2020.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "The workers ___ repaired the damaged road.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "My parents ___ already arrived at the airport.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "He ___ been working on his computer all morning.",
+  "options": [
+    "have",
+    "has",
+    "had"
+  ],
+  "correct": 1
+},
+{
+  "q": "I ___ just received an important message.",
+  "options": [
+    "has",
+    "have",
+    "had"
+  ],
+  "correct": 1
+},
+  {
     "q": "How do you ask someone's name?",
     "options": [
       "What is your name?",
