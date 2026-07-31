@@ -89,7 +89,7 @@ router.post("/login", async (req, res) => {
         if (user.isBlocked) {
             return res.status(403).json({
                 success: false,
-                message: "Your account has been blocked by Admin. You will Unlocked at next 1<sup>st</sup> Date",
+                message: "Your account has been blocked. You will unbocked at next 1<sup>st</sup> Date",
                 reason: user.blockReason
             });
         }
