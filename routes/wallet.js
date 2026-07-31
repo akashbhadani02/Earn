@@ -221,7 +221,7 @@ router.post("/spin", auth, async (req, res) => {
         // There is no daily spin limit: after each spin the current
         // 100-question cycle starts again from 0.
 
-        const prize = Math.floor(Math.random() * 150) + 1;
+        const prize = Math.floor(Math.random() * 80) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
