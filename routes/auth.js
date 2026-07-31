@@ -201,7 +201,9 @@ router.post("/heartbeat", async (req, res) => {
 });
 
 // ==========================
-// Block Student
+// Student Warning / Block System
+// 1st, 2nd, 3rd violation = Warning
+// 4th violation = Account Blocked
 // ==========================
 const auth = require("../middleware/auth");
 
@@ -220,17 +222,50 @@ router.post("/block-me", auth, async (req, res) => {
             });
         }
 
-        user.isBlocked = true;
+        // Already blocked
+        if (user.isBlocked) {
+            return res.json({
+                success: true,
+                blocked: true,
+                warning: false,
+                warningCount: user.warningCount || 0,
+                message: "Account is already blocked"
+            });
+        }
+
+        // Increase warning count for every confirmed violation.
+        user.warningCount = (user.warningCount || 0) + 1;
         user.blockReason = reason || "Cheating Detected";
 
+        // First 3 violations: warning only.
+        if (user.warningCount <= 3) {
+            await user.save();
+
+            return res.json({
+                success: true,
+                blocked: false,
+                warning: true,
+                warningCount: user.warningCount,
+                remainingWarnings: 3 - user.warningCount,
+                message: `Warning ${user.warningCount}/3`
+            });
+        }
+
+        // 4th violation: block account.
+        user.isBlocked = true;
         await user.save();
 
         return res.json({
             success: true,
+            blocked: true,
+            warning: false,
+            warningCount: user.warningCount,
             message: "Account Blocked"
         });
 
     } catch (err) {
+
+        console.error("Warning/Block Error:", err);
 
         return res.status(500).json({
             success: false,
@@ -240,5 +275,3 @@ router.post("/block-me", auth, async (req, res) => {
     }
 
 });
-
-module.exports = router;

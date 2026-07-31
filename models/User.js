@@ -94,6 +94,14 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        // Number of anti-cheating warnings received by the student.
+        // 1st, 2nd and 3rd violation = warning.
+        // 4th violation = account blocked.
+        warningCount: {
+            type: Number,
+            default: 0
+        },
+
         lastClaim: {
             type: String,
             default: ""

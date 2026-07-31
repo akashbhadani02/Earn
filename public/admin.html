@@ -712,6 +712,7 @@ td span{
                 <th>Wallet</th>
                 <th>Total Earn</th>
                 <th>Questions</th>
+                <th>Warnings</th>
                 <th>Action</th>
 
             </tr>
@@ -930,6 +931,17 @@ ${user.isBlocked
 <td>${Number(user.totalEarn || 0).toFixed(2)}</td>
 
 <td>${Number(user.totalQuestionsAnswered || 0)}</td>
+
+<td>
+    <span style="
+        font-weight:bold;
+        color:${Number(user.warningCount || 0) >= 3 ? '#dc2626' : '#d97706'};
+        background:${Number(user.warningCount || 0) >= 3 ? '#fee2e2' : '#fef3c7'};
+        padding:5px 9px;
+        border-radius:12px;
+        display:inline-block;
+    ">⚠️ ${Number(user.warningCount || 0)}/3</span>
+</td>
 
 <td>
 
