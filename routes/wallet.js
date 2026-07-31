@@ -219,7 +219,7 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        const prize = Math.floor(Math.random() * 30) + 1;
+        const prize = Math.floor(Math.random() * 150) + 1;
 
         user.spinCount = Number(user.spinCount || 0) + 1;
         user.lastSpinDate = today;
@@ -263,10 +263,10 @@ router.post("/withdraw", auth, async (req, res) => {
         const wallet = Number(user.wallet || 0);
 
         // Minimum ₹500 required
-        if (wallet < 50) {
+        if (wallet < 500) {
             return res.status(400).json({
                 success: false,
-                message: "Withdraw કરવા માટે Wallet માં ઓછામાં ઓછા ₹50 હોવા જોઈએ.",
+                message: "Withdraw કરવા માટે Wallet માં ઓછામાં ઓછા ₹500 હોવા જોઈએ.",
                 ...walletResponse(user)
             });
         }
