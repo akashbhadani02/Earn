@@ -271,4 +271,90 @@ router.delete("/admin/:id", adminAuth, async (req, res) => {
     }
 });
 
+
+// Admin: import questions from the project's questions.json file.
+// Existing questions are detected by normalized question text, so duplicates are skipped.
+router.post("/admin/import-json", adminAuth, async (req, res) => {
+    try {
+        const fs = require("fs");
+        const path = require("path");
+
+        const candidates = [
+            path.join(__dirname, "..", "questions.json"),
+            path.join(__dirname, "..", "question.json")
+        ];
+
+        const jsonPath = candidates.find(file => fs.existsSync(file));
+        if (!jsonPath) {
+            return res.status(404).json({
+                success: false,
+                message: "questions.json file not found."
+            });
+        }
+
+        const raw = fs.readFileSync(jsonPath, "utf8");
+        const source = JSON.parse(raw);
+
+        if (!Array.isArray(source)) {
+            return res.status(400).json({
+                success: false,
+                message: "JSON must contain an array of questions."
+            });
+        }
+
+        const normalize = value => String(value || "")
+            .toLowerCase()
+            .replace(/\s+/g, " ")
+            .trim();
+
+        const existing = await Question.find().select("q").lean();
+        const existingKeys = new Set(existing.map(item => normalize(item.q)));
+
+        const docs = [];
+        const seenInFile = new Set();
+        let skipped = 0;
+
+        for (const item of source) {
+            const q = String(item.q || "").trim();
+            const options = Array.isArray(item.options)
+                ? item.options.map(value => String(value || "").trim())
+                : [];
+            const correct = Number(item.correct);
+            const key = normalize(q);
+
+            if (!q || options.length < 2 ||
+                options.some(option => !option) ||
+                !Number.isInteger(correct) ||
+                correct < 0 || correct >= options.length ||
+                !key || existingKeys.has(key) || seenInFile.has(key)) {
+                skipped++;
+                continue;
+            }
+
+            seenInFile.add(key);
+            docs.push({ q, options, correct });
+        }
+
+        if (docs.length) {
+            await Question.insertMany(docs, { ordered: false });
+        }
+
+        const total = await Question.countDocuments();
+
+        return res.json({
+            success: true,
+            added: docs.length,
+            skipped,
+            total,
+            message: `${docs.length} new question(s) imported from questions.json. ${skipped} duplicate/invalid question(s) skipped.`
+        });
+    } catch (err) {
+        console.error("Import JSON Questions Error:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message || "Could not import questions.json"
+        });
+    }
+});
+
 module.exports = { router, ensureQuestionsSeeded };

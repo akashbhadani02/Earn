@@ -730,6 +730,7 @@ td span{
         <div class="question-toolbar">
             <input id="questionSearch" placeholder="Search question..." oninput="questionPage=1; loadQuestions();">
             <button onclick="openQuestionEditor()">➕ Add Question</button>
+            <button onclick="importQuestionsJson()" style="background:#16a34a;">📥 Import questions.json</button>
             <button onclick="loadQuestions()">🔄 All Questions</button>
             <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
             <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
@@ -1069,6 +1070,44 @@ Unblock
         let questionTotalPages = 1;
         const questionCache = {};
         let repeatedMode = false;
+
+        async function importQuestionsJson() {
+            const ok = confirm(
+                "questions.json ના નવા questions Question Bank માં add કરવા છે?\n\n" +
+                "Existing/repeated questions automatically skip થશે."
+            );
+            if (!ok) return;
+
+            try {
+                const res = await fetch("/api/questions/admin/import-json", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    alert(data.message || "questions.json import failed");
+                    return;
+                }
+
+                alert(
+                    "✅ Import Complete!\n\n" +
+                    "New Questions: " + Number(data.added || 0) + "\n" +
+                    "Skipped: " + Number(data.skipped || 0) + "\n" +
+                    "Total Question Bank: " + Number(data.total || 0)
+                );
+
+                questionPage = 1;
+                await loadQuestions();
+                await loadDashboard();
+            } catch (err) {
+                console.error("Import JSON Error:", err);
+                alert("Server સાથે connect થવામાં error આવ્યો.");
+            }
+        }
 
         async function loadQuestions() {
             repeatedMode = false;
