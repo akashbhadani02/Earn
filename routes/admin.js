@@ -649,6 +649,20 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
         user.isBlocked = false;
         user.blockReason = "";
 
+        // Reset warning system
+        user.warningCount = 0;
+
+        // Reset online status (optional)
+        user.lastSeen = new Date();
+        user.isOnline = false;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Student Unblocked Successfully. Warning count has been reset."
+        });
+
         await user.save();
 
         res.json({
