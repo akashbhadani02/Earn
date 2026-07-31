@@ -40,6 +40,18 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        // Number of quiz questions answered today.
+        dailyQuestionsAnswered: {
+            type: Number,
+            default: 0,
+        },
+
+        // Date for dailyQuestionsAnswered, in YYYY-MM-DD format.
+        dailyQuestionsDate: {
+            type: String,
+            default: "",
+        },
+
         totalEarn: {
             type: Number,
             default: 0,
@@ -87,14 +99,85 @@ const userSchema = new mongoose.Schema(
 
         withdrawRequests: [
             {
-                amount: Number,
+                amount: {
+                    type: Number,
+                    required: true,
+                },
+
+                fullName: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                mobileNumber: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
                 status: {
                     type: String,
+                    enum: ["Pending", "Approved", "Paid", "Rejected", "Failed"],
                     default: "Pending",
                 },
+
+                paymentMethod: {
+                    type: String,
+                    enum: ["UPI", "Bank"],
+                    default: "UPI",
+                },
+
+                upiId: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                bankName: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                accountHolderName: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                accountNumber: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                ifscCode: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                transactionId: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
+                adminNote: {
+                    type: String,
+                    trim: true,
+                    default: "",
+                },
+
                 date: {
                     type: Date,
                     default: Date.now,
+                },
+
+                paidAt: {
+                    type: Date,
+                    default: null,
                 },
             },
         ],

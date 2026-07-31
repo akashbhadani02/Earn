@@ -114,7 +114,7 @@
                     #00c6ff,
                     #00b894);
 
-            background-size: 300%; 
+            background-size: 300%;
 
             -webkit-background-clip: text;
 
@@ -685,6 +685,93 @@
             }
 
         }
+
+        /* ===========================
+   Withdraw Popup
+=========================== */
+
+        .withdraw-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+        }
+
+        .withdraw-box {
+            width: 420px;
+            max-width: 95%;
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+        }
+
+        .withdraw-box h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .withdraw-box p {
+            text-align: center;
+            font-weight: bold;
+            color: #0a8f08;
+            margin-bottom: 20px;
+        }
+
+        .withdraw-box label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .withdraw-box select,
+        .withdraw-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .withdraw-box input:focus,
+        .withdraw-box select:focus {
+            border-color: #007bff;
+        }
+
+        .withdraw-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .withdraw-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .withdraw-buttons button:first-child {
+            background: #28a745;
+        }
+
+        .withdraw-buttons button:last-child {
+            background: #dc3545;
+        }
+
+        .withdraw-buttons button:hover {
+            opacity: .9;
+        }
     </style>
 </head>
 
@@ -701,10 +788,15 @@
             <button class="btn btn-quiz" onclick="showScreen('quiz')">Start Quiz</button>
             <button class="btn btn-profile" onclick="location.href='profile.html'">👤 Profile</button>
         </div>
-        <button class="btn btn-spin" onclick="spinWheel()">Spin Wheel</button>
+        <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>
+            🔒 Spin Wheel — Complete 100 Questions
+        </button>
+        <div id="questionProgress" style="text-align:center;margin:8px 0 14px;font-weight:700;color:#6c5ce7;">
+            Today's Questions: 0 / 100
+        </div>
         <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Daily Reward</button>
-        <button id="withdrawBtn" class="btn btn-withdraw" onclick="withdrawMoney()" disabled>💰 Withdraw Now (Min
-            ₹300)</button>
+        <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw Now (Min
+            ₹50)</button>
         <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
 
     </div>
@@ -715,7 +807,7 @@
         <button class="btn" style="background:#a048bb;" onclick="showScreen('dashboard')">Back to Dashboard</button>
 
 
-<a>3 સેકેન્ડ પછી જવાબ આપવો ત્યાં સુધીમાં સવાલ વાંચવો પછી જવાબ આપવો નહીંતર બ્લોક થઇ જશો </a>
+        <a>3 સેકેન્ડ પછી જવાબ આપવો ત્યાં સુધીમાં સવાલ વાંચવો પછી જવાબ આપવો નહીંતર બ્લોક થઇ જશો </a>
     </div>
 
     <script>
@@ -863,6 +955,10 @@
         let dailyReward = 0;
 
         let spinReward = 0;
+
+        // Daily quiz progress: 100 answered questions are required for Spin.
+        let dailyQuestionsAnswered = 0;
+        let dailyQuestionsDate = "";
 
         let lastClaim = "";
 
@@ -4047,10 +4143,13 @@
                     dailyReward = data.dailyReward || 0;
 
                     spinReward = data.spinReward || 0;
+                    dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+                    dailyQuestionsDate = data.dailyQuestionsDate || "";
 
                     document.getElementById("wallet").innerText = wallet.toFixed(2);
 
                     checkWithdrawStatus();
+                    updateQuestionProgress();
 
                 }
 
@@ -4068,11 +4167,14 @@
             quizReward = Number(data.quizScore || 0);
             dailyReward = Number(data.dailyReward || 0);
             spinReward = Number(data.spinReward || 0);
+            dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+            dailyQuestionsDate = data.dailyQuestionsDate || "";
             lastClaim = data.lastClaim || "";
             lastSpin = data.lastSpin || "";
 
             document.getElementById("wallet").innerText = wallet.toFixed(2);
             checkWithdrawStatus();
+            updateQuestionProgress();
         }
 
         async function claimDailyReward() {
@@ -4124,8 +4226,36 @@
             }
         }
 
+        function updateQuestionProgress() {
+            const count = Math.min(100, Number(dailyQuestionsAnswered || 0));
+            const progress = document.getElementById("questionProgress");
+            const spinBtn = document.getElementById("spinBtn");
+
+            if (progress) {
+                progress.innerText = `Today's Questions: ${count} / 100`;
+            }
+
+            if (spinBtn) {
+                const unlocked = count >= 100;
+
+                spinBtn.disabled = !unlocked;
+
+                if (unlocked) {
+                    spinBtn.innerText = "🎡 Spin Wheel — UNLOCKED";
+                    spinBtn.style.opacity = "1";
+                    spinBtn.style.cursor = "pointer";
+                } else {
+                    spinBtn.innerText =
+                        `🔒 Spin Wheel — ${100 - count} Questions Left`;
+                    spinBtn.style.opacity = "0.65";
+                    spinBtn.style.cursor = "not-allowed";
+                }
+            }
+        }
+
         function checkWithdrawStatus() {
-            document.getElementById("withdrawBtn").disabled = (wallet < 300);
+            document.getElementById("withdrawBtn").disabled = (wallet < 50);
+            updateQuestionProgress();
         }
 
         function showScreen(id) {
@@ -4146,6 +4276,7 @@
 
                 if (!data.success) {
                     alert(data.message || "Spin failed");
+                    applyWalletData(data);
                     return;
                 }
 
@@ -4154,7 +4285,7 @@
                 alert(
                     "Congratulations! 🎉\n\n" +
                     "Spin પર તમને ₹" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
-                    "આજે તમારા " + data.spinCount + "/10 Spin થઈ ગયા છે."
+                    "આજે તમારા " + data.spinCount + "/1 Spin થઈ ગયા છે."
                 );
             } catch (err) {
                 console.error("Spin Error:", err);
@@ -4162,7 +4293,22 @@
             }
         }
 
-        async function withdrawMoney() {
+        async function submitWithdraw() {
+
+            const paymentMethod = document.getElementById("paymentMethod").value;
+
+            const upiId = document.getElementById("upiId").value;
+
+            const bankName = document.getElementById("bankName").value;
+
+            const accountHolderName =
+                document.getElementById("accountHolderName").value;
+
+            const accountNumber =
+                document.getElementById("accountNumber").value;
+
+            const ifscCode =
+                document.getElementById("ifscCode").value;
 
             try {
 
@@ -4171,16 +4317,25 @@
                     method: "POST",
 
                     headers: {
-
                         "Content-Type": "application/json",
-
                         Authorization: "Bearer " + token
-
                     },
 
                     body: JSON.stringify({
 
-                        amount: wallet
+                        amount: wallet,
+
+                        paymentMethod,
+
+                        upiId,
+
+                        bankName,
+
+                        accountHolderName,
+
+                        accountNumber,
+
+                        ifscCode
 
                     })
 
@@ -4189,6 +4344,8 @@
                 const data = await res.json();
 
                 if (data.success) {
+
+                    closeWithdrawPopup();
 
                     applyWalletData(data);
 
@@ -4219,6 +4376,11 @@
                 b.className = "option-btn";
                 b.innerText = o;
                 b.onclick = async () => {
+                    // Prevent double-clicking / submitting the same question twice.
+                    optDiv.querySelectorAll("button").forEach(btn => {
+                        btn.disabled = true;
+                    });
+
                     const timeTaken = (Date.now() - questionStartTime) / 1000;
 
                     if (timeTaken < 0.5) {
@@ -4231,7 +4393,12 @@
                     const isCorrect = i === q.correct;
                     const saved = await updateWallet(isCorrect);
 
-                    if (!saved) return;
+                    if (!saved) {
+                        optDiv.querySelectorAll("button").forEach(btn => {
+                            btn.disabled = false;
+                        });
+                        return;
+                    }
 
                     if (isCorrect) {
                         startWarningMonitor();
@@ -4281,6 +4448,34 @@
                 e.preventDefault();
             }
         });
+
+        // Open Withdraw Popup
+        function openWithdrawPopup() {
+
+            document.getElementById("withdrawPopup").style.display = "flex";
+
+            document.getElementById("withdrawAmountText").innerText =
+                "Withdraw Amount : ₹" + wallet;
+
+            changePaymentMethod();
+        }
+
+        // Close Popup
+        function closeWithdrawPopup() {
+            document.getElementById("withdrawPopup").style.display = "none";
+        }
+
+        // Show / Hide Payment Fields
+        function changePaymentMethod() {
+
+            const method = document.getElementById("paymentMethod").value;
+
+            document.getElementById("upiSection").style.display =
+                method === "UPI" ? "block" : "none";
+
+            document.getElementById("bankSection").style.display =
+                method === "Bank" ? "block" : "none";
+        }
         loadWallet();
 
         document.getElementById("wallet").innerText = wallet.toFixed(2);
@@ -4289,6 +4484,55 @@
 
 
     </script>
+    <!-- Withdraw Popup -->
+    <div id="withdrawPopup" class="withdraw-popup">
+
+        <div class="withdraw-box">
+
+            <h2>Withdraw Request</h2>
+
+            <p id="withdrawAmountText"></p>
+
+            <label>Payment Method</label>
+
+            <select id="paymentMethod" onchange="changePaymentMethod()">
+                <option value="UPI">UPI</option>
+                <option value="Bank">Bank</option>
+            </select>
+
+            <!-- UPI -->
+            <div id="upiSection">
+                <input type="text" id="upiId" placeholder="Enter UPI ID">
+            </div>
+
+            <!-- Bank -->
+            <div id="bankSection" style="display:none;">
+
+                <input type="text" id="bankName" placeholder="Bank Name">
+
+                <input type="text" id="accountHolderName" placeholder="Account Holder Name">
+
+                <input type="text" id="accountNumber" placeholder="Account Number">
+
+                <input type="text" id="ifscCode" placeholder="IFSC Code">
+
+            </div>
+
+            <div class="withdraw-buttons">
+
+                <button onclick="submitWithdraw()">
+                    Submit Request
+                </button>
+
+                <button onclick="closeWithdrawPopup()">
+                    Cancel
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
 </body>
 
 </html>

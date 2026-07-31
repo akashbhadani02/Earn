@@ -278,13 +278,37 @@ router.get("/withdraws", adminAuth, async (req, res) => {
         users.forEach(user => {
             (user.withdrawRequests || []).forEach(request => {
                 withdraws.push({
+
                     userId: String(user._id),
-                    name: user.name || "-",
-                    mobile: user.mobile || "-",
+
+                    name: request.fullName || user.name || "-",
+
+                    mobile: request.mobileNumber || user.mobile || "-",
+
                     amount: Number(request.amount || 0),
+
                     status: request.status || "Pending",
+
+                    paymentMethod: request.paymentMethod || "",
+
+                    upiId: request.upiId || "",
+
+                    bankName: request.bankName || "",
+
+                    accountHolderName: request.accountHolderName || "",
+
+                    accountNumber: request.accountNumber || "",
+
+                    ifscCode: request.ifscCode || "",
+
+                    transactionId: request.transactionId || "",
+
+                    paidAt: request.paidAt || null,
+
                     date: request.date || request.createdAt || user.createdAt,
+
                     requestId: String(request._id)
+
                 });
             });
         });
@@ -306,8 +330,105 @@ router.get("/withdraws", adminAuth, async (req, res) => {
     }
 });
 
-router.put("/withdraw/approve/:userId/:requestId", adminAuth, async (req, res) => {
+// ===========================
+// Mark Withdraw as Paid
+// Admin pays student manually
+// ===========================
+
+router.put("/withdraw/paid/:userId/:requestId", adminAuth, async (req, res) => {
+
     try {
+
+        const { transactionId } = req.body;
+
+        if (!transactionId || !String(transactionId).trim()) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Transaction ID is required"
+            });
+
+        }
+
+        const user = await User.findById(req.params.userId);
+
+        if (!user) {
+
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+
+        }
+
+        const request = user.withdrawRequests.id(req.params.requestId);
+
+        if (!request) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Request Not Found"
+            });
+
+        }
+
+        // Only Approved request can be marked as Paid
+        if (request.status !== "Approved") {
+
+            return res.status(400).json({
+                success: false,
+                message: "Only Approved withdraw can be marked as Paid"
+            });
+
+        }
+
+        request.status = "Paid";
+
+        // Save payment transaction ID
+        request.transactionId = String(transactionId).trim();
+
+        // Save payment date
+        request.paidAt = new Date();
+
+        await user.save();
+
+        return res.json({
+
+            success: true,
+
+            message: "Payment marked as Paid successfully",
+
+            transactionId: request.transactionId,
+
+            paidAt: request.paidAt,
+
+            request: request
+
+        });
+
+    } catch (err) {
+
+        console.error("Mark Withdraw Paid Error:", err);
+
+        return res.status(500).json({
+
+            success: false,
+
+            message: err.message
+
+        });
+
+    }
+
+});
+
+// ===========================
+// Approve Withdraw
+// ===========================
+router.put("/withdraw/approve/:userId/:requestId", adminAuth, async (req, res) => {
+
+    try {
+
         const user = await User.findById(req.params.userId);
 
         if (!user) {
@@ -329,26 +450,29 @@ router.put("/withdraw/approve/:userId/:requestId", adminAuth, async (req, res) =
         if (request.status !== "Pending") {
             return res.status(400).json({
                 success: false,
-                message: "This request is already " + request.status
+                message: "Request already " + request.status
             });
         }
 
         request.status = "Approved";
+
         await user.save();
 
         return res.json({
             success: true,
-            message: "Withdraw Approved",
-            request: request
+            message: "Withdraw Approved Successfully",
+            request
         });
 
     } catch (err) {
-        console.error("Approve Withdraw Error:", err);
+
         return res.status(500).json({
             success: false,
             message: err.message
         });
+
     }
+
 });
 
 router.put("/withdraw/reject/:userId/:requestId", adminAuth, async (req, res) => {
@@ -485,5 +609,6 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
     }
 
 });
+
 
 module.exports = router;
