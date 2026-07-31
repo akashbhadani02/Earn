@@ -351,6 +351,2382 @@
     "correct": 1
   },
   {
+    "q": "She ___ her homework before dinner.",
+    "options": [
+      "has completed",
+      "have completed",
+      "completing"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "They ___ the movie before we arrived.",
+    "options": [
+      "have watched",
+      "had watched",
+      "watch"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ this book three times.",
+    "options": [
+      "have read",
+      "has read",
+      "had read"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "He ___ his keys somewhere.",
+    "options": [
+      "have lost",
+      "has lost",
+      "had lose"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ already eaten lunch.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ to the office before I called her.",
+    "options": [
+      "has gone",
+      "had gone",
+      "have gone"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The train ___ just arrived at the station.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ made a good decision.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ never visited a foreign country.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ completed the work by Monday.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "My sister ___ just returned from school.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ never seen such a beautiful painting.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ submitted their projects.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ worked here since 2018.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ known each other for many years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ finished the job before sunset.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "The children ___ gone home.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My father ___ just bought a new watch.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ completed the application form.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ already seen this movie.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ finished dinner when the guests arrived.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "He ___ lived in Surat for ten years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ never tried this restaurant before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The manager ___ approved the proposal.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ just received your email.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ learned English for five years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ already left the building.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ completed his studies before moving abroad.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "You ___ done your best.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The teacher ___ explained the topic clearly.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My friends ___ visited me several times.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ just called her mother.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ finished our work before the manager came.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "The doctor ___ examined the patient.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ already told him about the problem.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ never broken his promise.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been waiting for an hour.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been studying since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been living here since 2022.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been working hard all day.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been waiting for you since noon.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The workers ___ been repairing the road for two days.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been preparing for the exam for months.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been playing cricket since morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My brother ___ been learning French for a year.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been discussing this issue for hours.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The company ___ been growing rapidly.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ been working very hard lately.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The baby ___ been sleeping for three hours.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been trying to contact you all day.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ already finished her work.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been to London twice.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ never eaten sushi before.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ just completed the assignment.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ already seen this place.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My sister ___ gone to the library.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The boys ___ finished their game.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ just received the news.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ made a great effort.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The teacher ___ checked our notebooks.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ never forgotten your kindness.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ written three books.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ already paid the fees.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The manager ___ approved the application.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ just arrived at the hotel.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ lost his mobile phone.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My parents ___ visited us recently.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The dog ___ eaten its food.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ completed all my tasks.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ never driven a car.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ just entered the room.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been absent for three days.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ known him for many years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The company ___ announced a new policy.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ improved your English a lot.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My brother ___ just come home.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ completed the test.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been ill since Monday.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ already answered the question.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ never heard this story before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ just opened the door.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ visited the museum several times.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The girl ___ broken her pencil.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been studying English for two years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been waiting for an hour.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been working since morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been living here since 2019.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been preparing for the exam.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ been learning quickly.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The workers ___ been repairing the road.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My mother ___ been cooking since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been waiting for your reply.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been practicing the piano for months.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been traveling around India.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been working on this project all week.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been discussing the problem for hours.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The children ___ been playing outside since morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My father ___ been running his business for ten years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The team ___ been practicing every day.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been trying to solve this problem.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been working hard for the competition.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ just returned from the office.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ never visited this museum before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ already eaten his breakfast.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ completed the project on time.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ just spoken to the manager.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The baby ___ fallen asleep.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My friends ___ already arrived at the airport.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ never climbed a mountain.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ forgotten your password.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The teacher ___ checked all the answers.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ just closed the window.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ already booked our tickets.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ learned the new lesson.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My father ___ never traveled by ship.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ seen this person somewhere before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ just cleaned her room.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ never played this game before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The company ___ recently opened a new branch.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ finished our dinner already.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ lost his important documents.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The police ___ arrested the thief.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My sister ___ bought a new laptop.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ already finished reading the book.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The players ___ won the match.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ received many awards.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been absent from school for a week.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been waiting outside since morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been working on this task for two hours.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been learning Spanish for three years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been living in this city since 2021.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been driving since early morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The children ___ been studying for the examination.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My mother ___ been preparing dinner for an hour.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ been improving your communication skills.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The workers ___ been building the house for months.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The doctor ___ been treating the patient since Monday.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been practicing English every day.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been preparing for her interview.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been traveling for several weeks.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been repairing his car all afternoon.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been discussing the matter since morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The team ___ been training very hard.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My brother ___ been studying medicine for five years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been waiting for the bus for thirty minutes.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ been preparing for the competition.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been working at the bank since 2019.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been practicing cricket since sunrise.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been trying to solve the problem.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been planning this trip for months.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The company ___ been developing new software.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My friends ___ been waiting for me since noon.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ completed the assignment before the teacher arrived.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "I ___ already finished my breakfast.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ just returned from the market.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ never visited this country before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ completed the work before the deadline.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "The girl ___ lost her school bag.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ already received the message.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My father ___ just arrived at home.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The workers ___ finished the building before winter.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "She ___ never seen such a large crowd.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ visited Delhi three times.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ already paid the electricity bill.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ left before we reached the station.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "We ___ just completed our lunch.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The teacher ___ explained the lesson clearly.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My friends ___ already gone home.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ written a letter to her friend.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ never heard this song before.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The manager ___ approved the proposal.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ completed his studies before joining the company.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "They ___ already eaten dinner.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been working here since 2021.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ known each other for ten years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ lost his wallet somewhere.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The children ___ finished their homework.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ just spoken to my brother.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ gone to the bank before I arrived.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "You ___ done an excellent job.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ submitted their assignments.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My mother ___ prepared the food.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been waiting for two hours.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been studying since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been learning English for three years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been preparing for the exam all week.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been living here since 2020.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The workers ___ been repairing the road since Monday.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My brother ___ been playing cricket for two hours.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been traveling around India for a month.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been practicing English every day.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been waiting for your call since morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been working on the project for weeks.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been discussing this matter since yesterday.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The company ___ been growing rapidly.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ been improving your pronunciation.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The doctor ___ been treating patients all day.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My parents ___ been living in this city for twenty years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The team ___ been practicing for the final match.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been teaching English since 2015.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been trying to solve this question.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been waiting outside for an hour.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been working together for many years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ been preparing for their exams.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My sister ___ been learning music since childhood.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been planning this trip for months.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The children ___ been playing in the garden.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been driving since early morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been working hard for the competition.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been practicing speaking English for six months.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been waiting for the train since noon.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been studying computer science for four years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been working on this project since January.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been reading the book for two hours.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been searching for my keys all morning.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The boys ___ been playing football since afternoon.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My father ___ been running his business for fifteen years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The teacher ___ been explaining the topic for an hour.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ been asking the same question repeatedly.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The workers ___ been building the bridge for two years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been waiting for her friend since 5 o'clock.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been studying grammar for several months.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been repairing the computer since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been watching this series for a week.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been practicing for the competition since June.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My mother ___ been cooking in the kitchen for an hour.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The manager ___ been checking the reports all morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been working hard to improve my skills.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been attending English classes for six months.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been preparing the event since last week.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been learning how to drive.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been waiting for the results for several days.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The children ___ been watching television since noon.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My brother ___ been working at this company since 2022.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been collecting coins for many years.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been writing a novel for the past year.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been discussing their plans all evening.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been exercising regularly for six months.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been preparing for the meeting since yesterday.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ been practicing their speeches.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My father ___ been reading the newspaper for an hour.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been learning new words every day.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been working on her presentation since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The team ___ been preparing for the tournament for months.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "You ___ been using this computer for a long time.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been practicing the guitar every evening.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been looking for a new house.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The company ___ been developing this product for years.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My friends ___ been planning a surprise party.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been preparing dinner since 6 o'clock.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been trying to contact the customer.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been working on the new website.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been studying for his final examination.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been improving our English skills every day.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The manager ___ been talking to the employees since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My sister ___ been practicing dance for three hours.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The students ___ been preparing for their final test.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "I ___ been reading English newspapers regularly.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "She ___ been helping her mother all day.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ been building their new house for a year.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "He ___ been practicing public speaking recently.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "We ___ been working together since 2023.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "The doctor ___ been examining patients since morning.",
+    "options": [
+      "have",
+      "has",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "My friends ___ been learning English online.",
+    "options": [
+      "has",
+      "have",
+      "had"
+    ],
+    "correct": 1
+  },
+  {
     "q": "He ___ already left the office.",
     "options": [
       "have",
