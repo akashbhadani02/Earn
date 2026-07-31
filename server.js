@@ -23,7 +23,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/admin",adminRoutes);
-app.use("/api/questions", questionRoutes.router);
+// app.use("/api/questions", questionRoutes.router);
+app.use("/api/questions", questionRoutes.router || questionRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
 
