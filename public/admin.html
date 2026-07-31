@@ -557,6 +557,69 @@ td span{
     }
 }
 
+    
+
+/* Question editor */
+.question-toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin:14px 0;
+}
+.question-toolbar input{
+    flex:1 1 280px;
+    min-width:220px;
+    padding:12px 14px;
+    border:1px solid var(--border-strong);
+    border-radius:12px;
+    background:rgba(15,23,42,.72);
+    color:var(--text);
+    outline:none;
+}
+.question-toolbar input:focus{border-color:rgba(96,165,250,.7);}
+.question-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.question-actions button{margin:0;}
+.question-option{display:flex;gap:8px;align-items:center;margin:8px 0;}
+.question-option input[type="text"]{flex:1;}
+.question-option input[type="radio"]{width:auto;}
+.question-editor-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    padding:20px;
+    background:rgba(0,0,0,.72);
+    align-items:center;
+    justify-content:center;
+}
+.question-editor-modal.show{display:flex;}
+.question-editor-box{
+    width:min(720px,100%);
+    max-height:90vh;
+    overflow:auto;
+    padding:24px;
+    border:1px solid var(--border-strong);
+    border-radius:20px;
+    background:linear-gradient(145deg,#111c2f,#0b1423);
+    box-shadow:0 30px 90px rgba(0,0,0,.5);
+}
+.question-editor-box h2{margin-bottom:16px;}
+.question-editor-box label{display:block;margin:12px 0 6px;color:var(--muted);font-weight:700;}
+.question-editor-box textarea,
+.question-editor-box input[type="text"]{
+    width:100%;
+    padding:12px;
+    border:1px solid var(--border-strong);
+    border-radius:10px;
+    background:#0a1322;
+    color:var(--text);
+    outline:none;
+}
+.question-editor-box textarea{min-height:110px;resize:vertical;}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+.page-info{color:var(--muted);font-size:14px;margin:4px 0;}
+
     </style>
 
 </head>
@@ -589,13 +652,18 @@ td span{
         </div>
 
         <div class="card">
-            <h3>Total Questions</h3>
+            <h3>Questions Answered</h3>
             <h1 id="totalQuestions">0</h1>
         </div>
 
         <div class="card">
             <h3>Pending Withdraw</h3>
             <h1 id="withdraw">0</h1>
+        </div>
+
+        <div class="card">
+            <h3>Question Bank</h3>
+            <h1 id="questionBankTotal">0</h1>
         </div>
 
     </div>
@@ -656,6 +724,68 @@ td span{
 
     </table>
 
+
+    <section style="margin-top:34px;">
+        <h2>Question Bank — Add / Edit Questions</h2>
+        <div class="question-toolbar">
+            <input id="questionSearch" placeholder="Search question..." oninput="questionPage=1; loadQuestions();">
+            <button onclick="openQuestionEditor()">➕ Add Question</button>
+            <button onclick="loadQuestions()">🔄 Refresh</button>
+        </div>
+        <div class="page-info" id="questionInfo">Loading questions...</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Question</th>
+                        <th>Options</th>
+                        <th>Correct</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="questionTable"></tbody>
+            </table>
+        </div>
+        <div class="question-actions" style="margin-top:12px;">
+            <button onclick="changeQuestionPage(-1)">◀ Previous</button>
+            <button onclick="changeQuestionPage(1)">Next ▶</button>
+        </div>
+    </section>
+
+    <div id="questionModal" class="question-editor-modal" onclick="closeQuestionEditor(event)">
+        <div class="question-editor-box" onclick="event.stopPropagation()">
+            <h2 id="questionModalTitle">Add Question</h2>
+            <input type="hidden" id="editQuestionId">
+
+            <label>Question</label>
+            <textarea id="questionText" placeholder="Enter question"></textarea>
+
+            <label>Options — select the correct answer</label>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="0" checked>
+                <input type="text" id="option0" placeholder="Option 1">
+            </div>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="1">
+                <input type="text" id="option1" placeholder="Option 2">
+            </div>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="2">
+                <input type="text" id="option2" placeholder="Option 3">
+            </div>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="3">
+                <input type="text" id="option3" placeholder="Option 4">
+            </div>
+
+            <div class="modal-actions">
+                <button onclick="closeQuestionEditor()">Cancel</button>
+                <button onclick="saveQuestion()">💾 Save Question</button>
+            </div>
+        </div>
+    </div>
+
     <script>
 
         const token = localStorage.getItem("adminToken");
@@ -703,6 +833,9 @@ td span{
 
             document.getElementById("totalQuestions").innerHTML =
                 Number(data.totalQuestionsAnswered || 0);
+
+            document.getElementById("questionBankTotal").innerHTML =
+                Number(data.questionBankTotal || 0);
 
             document.getElementById("withdraw").innerHTML =
                 Number(data.pendingWithdraw || 0);
@@ -797,7 +930,11 @@ ${user.isBlocked
 <td>
 
 <button onclick="editWallet('${user._id}',${user.wallet || 0})">
-Edit
+💰 Wallet
+</button>
+
+<button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})">
+📈 Total Earn
 </button>
 
 <button onclick="deleteUser('${user._id}')">
@@ -885,6 +1022,194 @@ Unblock
 
             loadDashboard();
 
+        }
+
+        //==========================
+        // Edit Total Earn
+        //==========================
+
+        async function editTotalEarn(id, currentTotalEarn) {
+            const amount = prompt("Enter New Total Earn", Number(currentTotalEarn || 0).toFixed(2));
+            if (amount == null) return;
+
+            const value = Number(amount);
+            if (!Number.isFinite(value) || value < 0) {
+                alert("Enter Valid Number");
+                return;
+            }
+
+            const res = await fetch("/api/admin/total-earn/" + id, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({ totalEarn: value })
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Total Earn update failed");
+                return;
+            }
+
+            await loadUsers();
+            await loadDashboard();
+        }
+
+        //==========================
+        // Question Bank
+        //==========================
+
+        let questionPage = 1;
+        const questionLimit = 20;
+        let questionTotalPages = 1;
+        const questionCache = {};
+
+        async function loadQuestions() {
+            const search = document.getElementById("questionSearch").value.trim();
+            const res = await fetch(
+                "/api/questions/admin?page=" + questionPage +
+                "&limit=" + questionLimit +
+                "&search=" + encodeURIComponent(search),
+                { headers: { Authorization: "Bearer " + token } }
+            );
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Could not load questions");
+                return;
+            }
+
+            questionTotalPages = Number(data.totalPages || 1);
+            const startNumber = (questionPage - 1) * questionLimit;
+
+            document.getElementById("questionInfo").innerText =
+                `Showing ${data.questions.length ? startNumber + 1 : 0}-${startNumber + data.questions.length} of ${data.total} questions | Page ${questionPage}/${questionTotalPages}`;
+
+            const html = (data.questions || []).map((question, index) => {
+                questionCache[question._id] = question;
+                const options = (question.options || []).map((option, i) =>
+                    `<div style="${i === Number(question.correct) ? 'font-weight:800;text-decoration:underline;' : ''}">${i + 1}. ${escapeHtml(option)}</div>`
+                ).join("");
+
+                return `<tr>
+                    <td>${startNumber + index + 1}</td>
+                    <td style="min-width:280px;max-width:500px;white-space:normal;">${escapeHtml(question.q)}</td>
+                    <td style="min-width:220px;white-space:normal;">${options}</td>
+                    <td>Option ${Number(question.correct) + 1}</td>
+                    <td>
+                        <button onclick="openQuestionEditorById('${question._id}')">✏️ Edit</button>
+                        <button onclick="deleteQuestion('${question._id}')" style="background:#ef4444;">🗑️ Delete</button>
+                    </td>
+                </tr>`;
+            }).join("");
+
+            document.getElementById("questionTable").innerHTML = html ||
+                `<tr><td colspan="5">No questions found.</td></tr>`;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function changeQuestionPage(direction) {
+            const next = questionPage + direction;
+            if (next < 1 || next > questionTotalPages) return;
+            questionPage = next;
+            loadQuestions();
+        }
+
+        function openQuestionEditorById(id) {
+            openQuestionEditor(questionCache[id] || null);
+        }
+
+        function openQuestionEditor(question = null) {
+            document.getElementById("questionModalTitle").innerText = question ? "Edit Question" : "Add Question";
+            document.getElementById("editQuestionId").value = question?._id || "";
+            document.getElementById("questionText").value = question?.q || "";
+
+            for (let i = 0; i < 4; i++) {
+                document.getElementById("option" + i).value = question?.options?.[i] || "";
+            }
+
+            const correct = Number(question?.correct ?? 0);
+            document.querySelectorAll('input[name="correctOption"]').forEach(radio => {
+                radio.checked = Number(radio.value) === correct;
+            });
+
+            document.getElementById("questionModal").classList.add("show");
+        }
+
+        function closeQuestionEditor(event) {
+            if (event && event.target !== document.getElementById("questionModal")) return;
+            document.getElementById("questionModal").classList.remove("show");
+        }
+
+        async function saveQuestion() {
+            const id = document.getElementById("editQuestionId").value.trim();
+            const q = document.getElementById("questionText").value.trim();
+            const options = [0, 1, 2, 3]
+                .map(i => document.getElementById("option" + i).value.trim())
+                .filter(Boolean);
+            const selected = document.querySelector('input[name="correctOption"]:checked');
+            const correct = selected ? Number(selected.value) : 0;
+
+            if (!q || options.length < 2) {
+                alert("Question and at least 2 options are required.");
+                return;
+            }
+
+            if (correct >= options.length) {
+                alert("Please select a correct option that has text.");
+                return;
+            }
+
+            const url = id ? "/api/questions/admin/" + id : "/api/questions/admin";
+            const method = id ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({ q, options, correct })
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Question save failed");
+                return;
+            }
+
+            document.getElementById("questionModal").classList.remove("show");
+            await loadQuestions();
+            await loadDashboard();
+            alert(id ? "Question updated successfully." : "Question added successfully.");
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm("Delete this question?")) return;
+
+            const res = await fetch("/api/questions/admin/" + id, {
+                method: "DELETE",
+                headers: { Authorization: "Bearer " + token }
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Question delete failed");
+                return;
+            }
+
+            await loadQuestions();
+            await loadDashboard();
         }
 
         //==========================
@@ -1262,6 +1587,7 @@ ${w.status === "Approved" ? `
         loadDashboard();
         loadUsers();
         loadWithdraws();
+        loadQuestions();
 
 
         //==========================

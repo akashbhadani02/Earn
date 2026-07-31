@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 
 const Admin = require("../models/Admin");
 const User = require("../models/User");
+const Question = require("../models/Question");
+const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
 
 // ===========================
@@ -71,7 +73,9 @@ router.get("/dashboard", adminAuth, async (req, res) => {
 
     try {
 
+        await ensureQuestionsSeeded();
         const users = await User.find();
+        const questionBankTotal = await Question.countDocuments();
 
         let totalWallet = 0;
         let totalEarn = 0;
@@ -109,6 +113,10 @@ router.get("/dashboard", adminAuth, async (req, res) => {
             totalWallet,
 
             totalEarn,
+
+            totalQuestionsAnswered,
+
+            questionBankTotal,
 
             pendingWithdraw
 
@@ -234,6 +242,53 @@ router.put("/wallet/:id", adminAuth, async (req, res) => {
 
             message: err.message
 
+        });
+
+    }
+
+});
+
+// ===========================
+// Update Total Earn
+// ===========================
+
+router.put("/total-earn/:id", adminAuth, async (req, res) => {
+
+    try {
+
+        const totalEarn = Number(req.body.totalEarn);
+
+        if (!Number.isFinite(totalEarn) || totalEarn < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Enter a valid non-negative Total Earn amount"
+            });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { totalEarn },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: "Total Earn Updated",
+            totalEarn: Number(user.totalEarn || 0)
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
         });
 
     }

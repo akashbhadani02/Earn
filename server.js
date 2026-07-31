@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth");
 const walletRoutes = require("./routes/wallet");
 const profileRoutes = require("./routes/profile");
 const adminRoutes=require("./routes/admin");
+const questionRoutes = require("./routes/questions");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/admin",adminRoutes);
+app.use("/api/questions", questionRoutes.router);
 
 app.use(express.static(path.join(__dirname, "public")));
 
