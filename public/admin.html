@@ -737,6 +737,7 @@ td span{
             <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
             <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
             <button onclick="deleteAllQuestions()" style="background:#dc2626;">🗑️ Delete All Questions</button>
+            <button id="downloadBtn">Download Questions JSON</button>
         </div>
         <div class="page-info" id="repeatInfo"></div>
         <div class="page-info" id="questionInfo">Loading questions...</div>
@@ -1815,6 +1816,35 @@ ${w.status === "Approved" ? `
         );
 
     }
+}
+
+document
+  .getElementById("downloadBtn")
+  .addEventListener("click", downloadQuestions);
+
+async function downloadQuestions() {
+  try {
+    const response = await fetch("/api/questions/download");
+
+    const blob = await response.blob();
+
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "questions.json";
+
+    document.body.appendChild(a);
+    a.click();
+
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.log(err);
+    alert("Download Failed");
+  }
 }
     </script>
 

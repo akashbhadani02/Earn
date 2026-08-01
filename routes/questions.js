@@ -138,6 +138,25 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
     }
 });
 
+router.get("/download", async (req, res) => {
+  try {
+    const questions = await Question.find();
+
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=questions.json"
+    );
+    res.setHeader("Content-Type", "application/json");
+
+    res.status(200).send(JSON.stringify(questions, null, 2));
+  } catch (err) {
+    res.status(500).json({
+      message: "Download failed",
+      error: err.message,
+    });
+  }
+});
+
 // Admin: remove repeated questions and keep the first copy of each question.
 router.delete("/admin/repeated/remove", adminAuth, async (req, res) => {
     try {
