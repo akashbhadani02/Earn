@@ -271,6 +271,26 @@ router.delete("/admin/:id", adminAuth, async (req, res) => {
     }
 });
 
+// Admin: Delete ALL Questions
+router.delete("/admin/all", adminAuth, async (req, res) => {
+    try {
+        const result = await Question.deleteMany({});
+
+        return res.json({
+            success: true,
+            deleted: Number(result.deletedCount || 0),
+            message: `${result.deletedCount || 0} question(s) deleted successfully.`
+        });
+
+    } catch (err) {
+        console.error("Delete All Questions Error:", err);
+
+        return res.status(500).json({
+            success: false,
+            message: err.message || "Could not delete all questions"
+        });
+    }
+});
 
 // Admin: import questions from the project's questions.json file.
 // Existing questions are detected by normalized question text, so duplicates are skipped.

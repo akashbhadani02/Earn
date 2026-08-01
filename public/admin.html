@@ -736,6 +736,7 @@ td span{
             <button onclick="loadQuestions()" style="background-color: #2563eb;">🔄 All Questions</button>
             <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
             <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
+            <button onclick="deleteAllQuestions()" style="background:#dc2626;">🗑️ Delete All Questions</button>
         </div>
         <div class="page-info" id="repeatInfo"></div>
         <div class="page-info" id="questionInfo">Loading questions...</div>
@@ -1758,6 +1759,63 @@ ${w.status === "Approved" ? `
             loadUsers();
 
         }, 1000);
+
+        async function deleteAllQuestions() {
+
+    const firstConfirm = confirm(
+        "⚠️ WARNING!\n\n" +
+        "Are you sure you want to DELETE ALL QUESTIONS?\n\n" +
+        "This action cannot be undone."
+    );
+
+    if (!firstConfirm) return;
+
+    const secondConfirm = confirm(
+        "FINAL CONFIRMATION!\n\n" +
+        "All questions will be permanently deleted.\n\n" +
+        "Click OK to delete ALL questions."
+    );
+
+    if (!secondConfirm) return;
+
+    try {
+
+        const res = await fetch("/api/questions/admin/all", {
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + token
+            }
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+            alert(data.message || "Could not delete all questions");
+            return;
+        }
+
+        alert(
+            "✅ Successfully deleted " +
+            data.deleted +
+            " question(s)."
+        );
+
+        questionPage = 1;
+
+        await loadQuestions();
+        await loadDashboard();
+
+    } catch (err) {
+
+        console.error("Delete All Questions Error:", err);
+
+        alert(
+            "❌ Error deleting questions.\n\n" +
+            err.message
+        );
+
+    }
+}
     </script>
 
 </body>
