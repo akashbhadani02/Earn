@@ -139,24 +139,30 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
 });
 
 router.get("/download", async (req, res) => {
-  try {
-    const questions = await Question.find();
+    try {
+        const questions = await Question.find().lean();
 
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=questions.json"
-    );
-    res.setHeader("Content-Type", "application/json");
+        const jsonData = questions.map(q => ({
+            q: q.q,
+            options: q.options,
+            correct: q.correct
+        }));
 
-    res.status(200).send(JSON.stringify(questions, null, 2));
-  } catch (err) {
-    res.status(500).json({
-      message: "Download failed",
-      error: err.message,
-    });
-  }
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=questions.json"
+        );
+        res.setHeader("Content-Type", "application/json");
+
+        res.send(JSON.stringify(jsonData, null, 2));
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: "Download failed"
+        });
+    }
 });
-
 // Admin: remove repeated questions and keep the first copy of each question.
 router.delete("/admin/repeated/remove", adminAuth, async (req, res) => {
     try {
