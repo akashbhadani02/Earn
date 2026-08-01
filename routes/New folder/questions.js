@@ -255,6 +255,22 @@ router.put("/admin/:id", adminAuth, async (req, res) => {
     }
 });
 
+// Admin can delete a question.
+router.delete("/admin/:id", adminAuth, async (req, res) => {
+    try {
+        const question = await Question.findByIdAndDelete(req.params.id);
+
+        if (!question) {
+            return res.status(404).json({ success: false, message: "Question Not Found" });
+        }
+
+        return res.json({ success: true, message: "Question Deleted" });
+    } catch (err) {
+        console.error("Delete Question Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // Admin: Delete ALL Questions
 router.delete("/admin/all", adminAuth, async (req, res) => {
     try {
@@ -273,23 +289,6 @@ router.delete("/admin/all", adminAuth, async (req, res) => {
             success: false,
             message: err.message || "Could not delete all questions"
         });
-    }
-});
-
-
-// Admin can delete a question.
-router.delete("/admin/:id", adminAuth, async (req, res) => {
-    try {
-        const question = await Question.findByIdAndDelete(req.params.id);
-
-        if (!question) {
-            return res.status(404).json({ success: false, message: "Question Not Found" });
-        }
-
-        return res.json({ success: true, message: "Question Deleted" });
-    } catch (err) {
-        console.error("Delete Question Error:", err);
-        return res.status(500).json({ success: false, message: err.message });
     }
 });
 
