@@ -8,6 +8,3794 @@
     ],
     "correct": 1
   },
+    {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "She don't like coffee.",
+      "She doesn't likes coffee.",
+      "She doesn't like coffee."
+    ],
+    "correct": 2
+  },
+  {
+    "q": "He ___ his homework before dinner yesterday.",
+    "options": [
+      "finished",
+      "finish",
+      "finishing"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Which word is a synonym of 'Ancient'?",
+    "options": [
+      "Modern",
+      "Old",
+      "Future"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "They ___ to the airport by 8 p.m.",
+    "options": [
+      "reach",
+      "reached",
+      "will have reached"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct article: He bought ___ umbrella.",
+    "options": [
+      "an",
+      "a",
+      "the"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "The opposite of 'Expand' is ___.",
+    "options": [
+      "Contract",
+      "Increase",
+      "Develop"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "She has lived here ___ 2018.",
+    "options": [
+      "for",
+      "since",
+      "from"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "If I had studied harder, I ___ the exam.",
+    "options": [
+      "pass",
+      "passed",
+      "would have passed"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct spelling.",
+    "options": [
+      "Beautiful",
+      "Beutiful",
+      "Beautifull"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "He ___ TV when his friend arrived.",
+    "options": [
+      "watched",
+      "was watching",
+      "watch"
+    ],
+    "correct": 1
+  },
+  {
+  "q": "Choose the correct preposition: She is good ___ English.",
+  "options": ["at", "in", "on"],
+  "correct": 0
+},
+{
+  "q": "The opposite of 'Victory' is ___.",
+  "options": ["Success", "Defeat", "Win"],
+  "correct": 1
+},
+{
+  "q": "By next year, they ___ a new factory.",
+  "options": ["build", "built", "will have built"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I have a car.", "I has a car.", "I having a car."],
+  "correct": 0
+},
+{
+  "q": "He ___ in Surat since 2019.",
+  "options": ["lived", "has lived", "living"],
+  "correct": 1
+},
+{
+  "q": "If she had left early, she ___ the train.",
+  "options": ["caught", "catches", "would have caught"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Necessary", "Necessery", "Necesary"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Rapid' is ___.",
+  "options": ["Slow", "Fast", "Late"],
+  "correct": 1
+},
+{
+  "q": "By the time we arrived, the movie ___.",
+  "options": ["starts", "started", "had started"],
+  "correct": 2
+},
+{
+  "q": "She ___ breakfast every morning.",
+  "options": ["eats", "eat", "eating"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: ___ honest man.",
+  "options": ["a", "an", "the"],
+  "correct": 1
+},
+{
+  "q": "If you study well, you ___ the exam.",
+  "options": ["pass", "passed", "will pass"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["They are playing cricket.", "They is playing cricket.", "They playing cricket."],
+  "correct": 0
+},
+{
+  "q": "The antonym of 'Accept' is ___.",
+  "options": ["Receive", "Reject", "Agree"],
+  "correct": 1
+},
+{
+  "q": "Before the teacher entered, the students ___ quietly.",
+  "options": ["sit", "sat", "had sat"],
+  "correct": 2
+},
+{
+  "q": "He always ___ the truth.",
+  "options": ["speaks", "speak", "speaking"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The cat is ___ the table.",
+  "options": ["under", "between", "during"],
+  "correct": 0
+},
+{
+  "q": "She ___ her work already.",
+  "options": ["finished", "has finished", "finish"],
+  "correct": 1
+},
+{
+  "q": "By tomorrow evening, I ___ the assignment.",
+  "options": ["complete", "completed", "will have completed"],
+  "correct": 2
+},
+{
+  "q": "The Earth ___ around the Sun.",
+  "options": ["moves", "move", "moving"],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Honest'.",
+  "options": ["False", "Truthful", "Cruel"],
+  "correct": 1
+},
+{
+  "q": "If they had invited me, I ___ there.",
+  "options": ["went", "go", "would have gone"],
+  "correct": 2
+},
+{
+  "q": "She ___ a blue dress yesterday.",
+  "options": ["wore", "wear", "wearing"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It is ___ European country.",
+  "options": ["an", "a", "the"],
+  "correct": 1
+},
+{
+  "q": "By next month, he ___ the course.",
+  "options": ["finish", "finished", "will have finished"],
+  "correct": 2
+},
+{
+  "q": "Water ___ at 100°C.",
+  "options": ["boils", "boil", "boiled"],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Generous'.",
+  "options": ["Kind", "Selfish", "Helpful"],
+  "correct": 1
+},
+{
+  "q": "Before she reached home, it ___.",
+  "options": ["rains", "rained", "had rained"],
+  "correct": 2
+},
+{
+  "q": "He ___ to work by bus every day.",
+  "options": ["goes", "go", "going"],
+  "correct": 0
+},
+{
+  "q": "She ___ English very fluently.",
+  "options": ["speaking", "speaks", "speak"],
+  "correct": 1
+},
+{
+  "q": "By this time tomorrow, we ___ Ahmedabad.",
+  "options": ["reach", "reached", "will have reached"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I enjoy reading books.", "I enjoys reading books.", "I enjoying reading books."],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Tiny' is ___.",
+  "options": ["Huge", "Small", "Heavy"],
+  "correct": 1
+},
+{
+  "q": "Before the police arrived, the thief ___.",
+  "options": ["escapes", "escaped", "had escaped"],
+  "correct": 2
+},
+{
+  "q": "Birds ___ in the sky.",
+  "options": ["fly", "flies", "flying"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is afraid ___ dogs.",
+  "options": ["with", "of", "from"],
+  "correct": 1
+},
+{
+  "q": "By next week, she ___ her new project.",
+  "options": ["start", "started", "will have started"],
+  "correct": 2
+},
+{
+  "q": "He ___ the newspaper every morning.",
+  "options": ["reads", "read", "reading"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Occasion", "Ocassion", "Occassion"],
+  "correct": 0
+},
+{
+  "q": "She ___ to Mumbai last month.",
+  "options": ["go", "went", "gone"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: She is ___ engineer.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "The antonym of 'Increase' is ___.",
+  "options": ["Grow", "Decrease", "Expand"],
+  "correct": 1
+},
+{
+  "q": "By next Friday, they ___ the bridge.",
+  "options": ["build", "built", "will have built"],
+  "correct": 2
+},
+{
+  "q": "He ___ milk every morning.",
+  "options": ["drinks", "drink", "drinking"],
+  "correct": 0
+},
+{
+  "q": "She ___ in Delhi since 2021.",
+  "options": ["lived", "has lived", "living"],
+  "correct": 1
+},
+{
+  "q": "If I had known the truth, I ___ you.",
+  "options": ["tell", "told", "would have told"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Receive", "Recieve", "Receeve"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Brilliant' is ___.",
+  "options": ["Dull", "Intelligent", "Weak"],
+  "correct": 1
+},
+{
+  "q": "Before the bell rang, the students ___.",
+  "options": ["leave", "left", "had left"],
+  "correct": 2
+},
+{
+  "q": "My father ___ a car carefully.",
+  "options": ["drives", "drive", "driving"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is interested ___ music.",
+  "options": ["at", "in", "on"],
+  "correct": 1
+},
+{
+  "q": "By next month, he ___ all the books.",
+  "options": ["read", "reads", "will have read"],
+  "correct": 2
+},
+{
+  "q": "The baby ___ peacefully.",
+  "options": ["sleeps", "sleep", "sleeping"],
+  "correct": 0
+},
+{
+  "q": "She ___ her homework already.",
+  "options": ["did", "has done", "do"],
+  "correct": 1
+},
+{
+  "q": "If they had practiced more, they ___ the match.",
+  "options": ["win", "won", "would have won"],
+  "correct": 2
+},
+{
+  "q": "The sun ___ in the east.",
+  "options": ["rises", "rise", "rising"],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Quick'.",
+  "options": ["Slow", "Fast", "Lazy"],
+  "correct": 1
+},
+{
+  "q": "By the time I reached, they ___.",
+  "options": ["go", "went", "had gone"],
+  "correct": 2
+},
+{
+  "q": "She ___ English every day.",
+  "options": ["studies", "study", "studying"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It is ___ unique idea.",
+  "options": ["an", "a", "the"],
+  "correct": 1
+},
+{
+  "q": "By tomorrow morning, we ___ the work.",
+  "options": ["finish", "finished", "will have finished"],
+  "correct": 2
+},
+{
+  "q": "The teacher ___ the lesson clearly.",
+  "options": ["explains", "explain", "explaining"],
+  "correct": 0
+},
+{
+  "q": "The antonym of 'Strong' is ___.",
+  "options": ["Powerful", "Weak", "Healthy"],
+  "correct": 1
+},
+{
+  "q": "Before she called me, I ___ the message.",
+  "options": ["read", "reads", "had read"],
+  "correct": 2
+},
+{
+  "q": "We ___ dinner at 8 p.m. every day.",
+  "options": ["eat", "eats", "eating"],
+  "correct": 0
+},
+{
+  "q": "He ___ to Jaipur last week.",
+  "options": ["go", "went", "gone"],
+  "correct": 1
+},
+{
+  "q": "By next year, she ___ her MBA.",
+  "options": ["complete", "completed", "will have completed"],
+  "correct": 2
+},
+{
+  "q": "The dog ___ loudly.",
+  "options": ["barks", "bark", "barking"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: Divide the cake ___ four parts.",
+  "options": ["into", "on", "by"],
+  "correct": 0
+},
+{
+  "q": "She ___ this company for five years.",
+  "options": ["worked", "has worked", "working"],
+  "correct": 1
+},
+{
+  "q": "If he had arrived earlier, he ___ the bus.",
+  "options": ["catch", "caught", "would have caught"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Knowledge", "Knowlege", "Knowlidge"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Begin' is ___.",
+  "options": ["Finish", "Start", "Stop"],
+  "correct": 1
+},
+{
+  "q": "Before lunch, she ___ all the emails.",
+  "options": ["answers", "answered", "had answered"],
+  "correct": 2
+},
+{
+  "q": "My sister ___ tea every evening.",
+  "options": ["drinks", "drink", "drinking"],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Rich'.",
+  "options": ["Wealthy", "Poor", "Luxury"],
+  "correct": 1
+},
+{
+  "q": "By next Sunday, they ___ the house.",
+  "options": ["paint", "painted", "will have painted"],
+  "correct": 2
+},
+{
+  "q": "The children ___ happily in the park.",
+  "options": ["play", "plays", "playing"],
+  "correct": 0
+},
+{
+  "q": "He ___ his wallet yesterday.",
+  "options": ["lose", "lost", "losing"],
+  "correct": 1
+},
+{
+  "q": "Before the guests arrived, we ___ the room.",
+  "options": ["decorate", "decorated", "had decorated"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: She adopted ___ orphan child.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "The antonym of 'Victory' is ___.",
+  "options": ["Success", "Defeat", "Achievement"],
+  "correct": 1
+},
+{
+  "q": "By next Monday, he ___ the report.",
+  "options": ["submit", "submitted", "will have submitted"],
+  "correct": 2
+},
+{
+  "q": "The birds ___ in the morning.",
+  "options": ["sing", "sings", "singing"],
+  "correct": 0
+},
+{
+  "q": "She ___ her grandparents every weekend.",
+  "options": ["visited", "visits", "visit"],
+  "correct": 1
+},
+{
+  "q": "If they had left earlier, they ___ on time.",
+  "options": ["arrive", "arrived", "would have arrived"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Government", "Goverment", "Governmant"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Silent' is ___.",
+  "options": ["Noisy", "Quiet", "Loud"],
+  "correct": 1
+},
+{
+  "q": "Before I reached the office, the meeting ___.",
+  "options": ["starts", "started", "had started"],
+  "correct": 2
+},
+{
+  "q": "My mother ___ delicious food.",
+  "options": ["cooks", "cook", "cooking"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He depends ___ his parents.",
+  "options": ["on", "at", "with"],
+  "correct": 0
+},
+{
+  "q": "She ___ in this school since 2022.",
+  "options": ["worked", "has worked", "working"],
+  "correct": 1
+},
+{
+  "q": "By this evening, they ___ the work.",
+  "options": ["complete", "completed", "will have completed"],
+  "correct": 2
+},
+{
+  "q": "The train ___ at 7 o'clock every day.",
+  "options": ["arrives", "arrive", "arriving"],
+  "correct": 0
+},
+{
+  "q": "The antonym of 'Ancient' is ___.",
+  "options": ["Old", "Modern", "Historic"],
+  "correct": 1
+},
+{
+  "q": "Before the guests came, she ___ dinner.",
+  "options": ["cooks", "cooked", "had cooked"],
+  "correct": 2
+},
+{
+  "q": "He ___ football every Sunday.",
+  "options": ["plays", "play", "playing"],
+  "correct": 0
+},
+{
+  "q": "She ___ the movie yesterday.",
+  "options": ["watch", "watched", "watching"],
+  "correct": 1
+},
+{
+  "q": "If I had seen him, I ___ hello.",
+  "options": ["say", "said", "would have said"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: It is ___ useful book.",
+  "options": ["a", "an", "the"],
+  "correct": 0
+},
+{
+  "q": "The Earth ___ around the Sun.",
+  "options": ["moves", "move", "moving"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Happy' is ___.",
+  "options": ["Sad", "Joyful", "Angry"],
+  "correct": 1
+},
+{
+  "q": "By next year, she ___ her degree.",
+  "options": ["finish", "finished", "will have finished"],
+  "correct": 2
+},
+{
+  "q": "He ___ tea every morning.",
+  "options": ["drinks", "drink", "drinking"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She arrived ___ the station on time.",
+  "options": ["at", "for", "into"],
+  "correct": 0
+},
+{
+  "q": "My brother ___ in Mumbai for three years.",
+  "options": ["lived", "has lived", "living"],
+  "correct": 1
+},
+{
+  "q": "Before the bell rang, the students ___ quietly.",
+  "options": ["sit", "sat", "had sat"],
+  "correct": 2
+},
+{
+  "q": "The baby ___ peacefully.",
+  "options": ["sleeps", "sleep", "sleeping"],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Cheap'.",
+  "options": ["Low", "Expensive", "Affordable"],
+  "correct": 1
+},
+{
+  "q": "By tomorrow, I ___ this chapter.",
+  "options": ["read", "reads", "will have read"],
+  "correct": 2
+},
+{
+  "q": "The doctor ___ patients every day.",
+  "options": ["treats", "treat", "treating"],
+  "correct": 0
+},
+{
+  "q": "She ___ a new dress last week.",
+  "options": ["buy", "bought", "buying"],
+  "correct": 1
+},
+{
+  "q": "If he had studied well, he ___ first rank.",
+  "options": ["gets", "got", "would have got"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Environment", "Enviroment", "Environmant"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Dangerous' is ___.",
+  "options": ["Safe", "Risky", "Easy"],
+  "correct": 1
+},
+{
+  "q": "Before the rain started, they ___ home.",
+  "options": ["return", "returned", "had returned"],
+  "correct": 2
+},
+{
+  "q": "He ___ his bicycle to school.",
+  "options": ["rides", "ride", "riding"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ MBA graduate.",
+  "options": ["a", "an", "the"],
+  "correct": 1
+},
+{
+  "q": "By next month, we ___ all the lessons.",
+  "options": ["complete", "completed", "will have completed"],
+  "correct": 2
+},
+{
+  "q": "The students ___ their homework daily.",
+  "options": ["do", "does", "doing"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She apologized ___ her mistake.",
+  "options": ["for", "to", "with"],
+  "correct": 0
+},
+{
+  "q": "The antonym of 'Generous' is ___.",
+  "options": ["Helpful", "Selfish", "Kind"],
+  "correct": 1
+},
+{
+  "q": "By next weekend, they ___ the entire project.",
+  "options": ["finish", "finished", "will have finished"],
+  "correct": 2
+},
+{
+  "q": "The moon ___ around the Earth.",
+  "options": ["revolves", "revolve", "revolving"],
+  "correct": 0
+},
+{
+  "q": "She ___ her homework before going outside.",
+  "options": ["did", "has done", "doing"],
+  "correct": 1
+},
+{
+  "q": "If you had invited me, I ___ the party.",
+  "options": ["join", "joined", "would have joined"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Discipline", "Disciplinee", "Disipline"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Difficult' is ___.",
+  "options": ["Easy", "Hard", "Simple"],
+  "correct": 1
+},
+{
+  "q": "Before I woke up, my father ___ for work.",
+  "options": ["leaves", "left", "had left"],
+  "correct": 2
+},
+{
+  "q": "My uncle ___ newspapers every morning.",
+  "options": ["reads", "read", "reading"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ honest officer.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "She ___ here for five years.",
+  "options": ["worked", "has worked", "working"],
+  "correct": 1
+},
+{
+  "q": "By this time next year, I ___ my training.",
+  "options": ["complete", "completed", "will have completed"],
+  "correct": 2
+},
+{
+  "q": "The baby ___ all night.",
+  "options": ["cries", "cry", "crying"],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Brave'.",
+  "options": ["Strong", "Cowardly", "Bold"],
+  "correct": 1
+},
+{
+  "q": "Before the manager arrived, everyone ___.",
+  "options": ["sit", "sat", "had sat"],
+  "correct": 2
+},
+{
+  "q": "The farmer ___ crops every season.",
+  "options": ["grows", "grow", "growing"],
+  "correct": 0
+},
+{
+  "q": "He ___ the exam last month.",
+  "options": ["write", "wrote", "writing"],
+  "correct": 1
+},
+{
+  "q": "If she had called me, I ___ her.",
+  "options": ["help", "helped", "would have helped"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is famous ___ his paintings.",
+  "options": ["for", "on", "at"],
+  "correct": 0
+},
+{
+  "q": "The train ___ on time every day.",
+  "options": ["arrives", "arrive", "arriving"],
+  "correct": 0
+},
+{
+  "q": "The synonym of 'Careful' is ___.",
+  "options": ["Careless", "Cautious", "Rough"],
+  "correct": 1
+},
+{
+  "q": "By tomorrow afternoon, she ___ the presentation.",
+  "options": ["prepare", "prepared", "will have prepared"],
+  "correct": 2
+},
+{
+  "q": "My sister ___ milk every morning.",
+  "options": ["drinks", "drink", "drinking"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": ["Restaurant", "Restaurent", "Restorant"],
+  "correct": 0
+},
+{
+  "q": "He ___ his work already.",
+  "options": ["finished", "has finished", "finish"],
+  "correct": 1
+},
+{
+  "q": "Before the movie began, we ___ our seats.",
+  "options": ["take", "took", "had taken"],
+  "correct": 2
+},
+{
+  "q": "The teacher ___ grammar every day.",
+  "options": ["teaches", "teach", "teaching"],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Early'.",
+  "options": ["Fast", "Late", "Soon"],
+  "correct": 1
+},
+{
+  "q": "By next Friday, he ___ all the files.",
+  "options": ["check", "checked", "will have checked"],
+  "correct": 2
+},
+{
+  "q": "Birds ___ nests on trees.",
+  "options": ["build", "builds", "building"],
+  "correct": 0
+},
+{
+  "q": "She ___ a new phone yesterday.",
+  "options": ["buy", "bought", "buying"],
+  "correct": 1
+},
+{
+  "q": "If they had listened carefully, they ___ the answer.",
+  "options": ["know", "knew", "would have known"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: He is ___ university student.",
+  "options": ["a", "an", "the"],
+  "correct": 0
+},
+{
+  "q": "The doctor ___ many patients daily.",
+  "options": ["examines", "examine", "examining"],
+  "correct": 0
+},
+{
+  "q": "She ___ English since childhood.",
+  "options": ["learned", "has learned", "learning"],
+  "correct": 1
+},
+{
+  "q": "Before I entered the room, they ___.",
+  "options": ["leave", "left", "had left"],
+  "correct": 2
+},
+{
+  "q": "The bus ___ at 6 a.m. every day.",
+  "options": ["starts", "start", "starting"],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Polite'.",
+  "options": ["Rude", "Courteous", "Angry"],
+  "correct": 1
+},
+{
+  "q": "By the end of this month, we ___ the building.",
+  "options": ["paint", "painted", "will have painted"],
+  "correct": 2
+},
+{
+  "q": "Which sentence is grammatically correct?",
+  "options": [
+    "She don't like mangoes.",
+    "She doesn't like mangoes.",
+    "She doesn't likes mangoes."
+  ],
+  "correct": 1
+},
+{
+  "q": "Why do we use 'an' before 'hour'?",
+  "options": [
+    "Because 'h' is silent.",
+    "Because 'h' is a consonant.",
+    "Because 'hour' is plural."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He go to school every day.",
+    "He goes to school every day.",
+    "He going to school every day."
+  ],
+  "correct": 1
+},
+{
+  "q": "Which sentence is in the Past Tense?",
+  "options": [
+    "She is cooking food.",
+    "She cooked food yesterday.",
+    "She will cook food tomorrow."
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: I have lived here ___ 2020.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is a noun?",
+  "options": [
+    "Beautiful",
+    "Happiness",
+    "Quickly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: The cat is ___ the table.",
+  "options": [
+    "under",
+    "during",
+    "since"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which sentence uses the Present Continuous Tense?",
+  "options": [
+    "She reads a book.",
+    "She is reading a book.",
+    "She read a book."
+  ],
+  "correct": 1
+},
+{
+  "q": "Identify the adjective.",
+  "options": [
+    "Beautiful",
+    "Run",
+    "Quickly"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They has completed the work.",
+    "They have completed the work.",
+    "They have completes the work."
+  ],
+  "correct": 1
+},
+{
+  "q": "Which sentence is correct?",
+  "options": [
+    "He don't play cricket.",
+    "He doesn't play cricket.",
+    "He doesn't plays cricket."
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'He doesn't play' correct?",
+  "options": [
+    "Because after 'doesn't' we always use the base form of the verb.",
+    "Because 'plays' is always wrong.",
+    "Because 'He' is plural."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: She ___ to school every day.",
+  "options": [
+    "go",
+    "goes",
+    "going"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'goes' correct?",
+  "options": [
+    "Because 'She' is singular, so the verb takes 's/es' in the Simple Present Tense.",
+    "Because every verb ends with 'es'.",
+    "Because it is Past Tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: ___ honest man.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why do we use 'an' before 'honest'?",
+  "options": [
+    "Because 'h' is silent, so the word begins with a vowel sound.",
+    "Because all adjectives use 'an'.",
+    "Because 'honest' is plural."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "I have lived here for five years.",
+    "I am living here since five years.",
+    "I live here from five years."
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'for' used in 'I have lived here for five years'?",
+  "options": [
+    "'For' is used to show a period of time.",
+    "'For' is used only with places.",
+    "'For' means starting time."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She can speaks English.",
+    "She can speak English.",
+    "She can speaking English."
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'speak' correct after 'can'?",
+  "options": [
+    "Because after a modal verb, we always use the base form of the verb.",
+    "Because 'can' is a past tense verb.",
+    "Because 'speaks' is used only with 'I'."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: They ___ football every Sunday.",
+  "options": [
+    "plays",
+    "play",
+    "playing"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'play' correct?",
+  "options": [
+    "'They' is singular.",
+    "'They' is plural, so we use the base verb.",
+    "Because Sunday is singular."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: She bought ___ apple.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Why do we use 'an' before 'apple'?",
+  "options": [
+    "Because 'apple' begins with a vowel sound.",
+    "Because every fruit uses 'an'.",
+    "Because 'apple' is plural."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The children are playing outside.",
+    "The children is playing outside.",
+    "The children plays outside."
+  ],
+  "correct": 0
+},
+{
+  "q": "Why do we use 'are' with 'children'?",
+  "options": [
+    "'Children' is a plural noun.",
+    "'Children' is singular.",
+    "'Are' is used only in the past tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: He ___ to school by bus every day.",
+  "options": [
+    "go",
+    "goes",
+    "going"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'goes' correct?",
+  "options": [
+    "Because 'He' is singular in the Simple Present Tense.",
+    "Because every verb ends with 'es'.",
+    "Because it is Past Tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The keys are ___ the table.",
+  "options": [
+    "on",
+    "at",
+    "from"
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'on' correct?",
+  "options": [
+    "Because the keys are resting on the surface of the table.",
+    "Because 'on' means inside.",
+    "Because 'on' is used only for time."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She was watching TV when I called.",
+    "She watched TV when I was call.",
+    "She watching TV when I called."
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is Past Continuous used here?",
+  "options": [
+    "To show an action that was in progress when another action happened.",
+    "To show a future action.",
+    "To show a habit."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word.",
+  "options": [
+    "Honest",
+    "Honnist",
+    "Onest"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is the opposite of 'Borrow'?",
+  "options": [
+    "Lend",
+    "Take",
+    "Keep"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Everyone has finished the work.",
+    "Everyone have finished the work.",
+    "Everyone finish the work."
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'has' correct?",
+  "options": [
+    "'Everyone' is treated as singular.",
+    "'Everyone' is plural.",
+    "'Has' is always used with all nouns."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He don't like tea.",
+    "He doesn't like tea.",
+    "He doesn't likes tea."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: ___ umbrella",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Fill in the blank: They ___ football every day.",
+  "options": [
+    "play",
+    "plays",
+    "playing"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is good ___ Maths.",
+  "options": [
+    "on",
+    "at",
+    "in"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Enviroment",
+    "Environmant",
+    "Environment"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She don't eat rice.",
+    "She doesn't eats rice.",
+    "She doesn't eat rice."
+  ],
+  "correct": 2
+},
+{
+  "q": "Why is 'doesn't eat' correct?",
+  "options": [
+    "Because after 'doesn't' we always use the base form of the verb.",
+    "Because 'eat' is a noun.",
+    "Because 'doesn't' is used only in the past tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: We ___ to school every day.",
+  "options": [
+    "go",
+    "goes",
+    "going"
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'go' correct?",
+  "options": [
+    "Because 'We' is singular.",
+    "Because 'We' is plural, so we use the base verb.",
+    "Because 'goes' is always wrong."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: ___ elephant is a huge animal.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Why do we use 'an' before 'elephant'?",
+  "options": [
+    "Because it starts with a vowel sound.",
+    "Because it is a big animal.",
+    "Because all animals use 'an'."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They has completed the task.",
+    "They have completed the task.",
+    "They have completes the task."
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'have' correct?",
+  "options": [
+    "Because 'They' is plural.",
+    "Because 'They' is singular.",
+    "Because 'have' is used only in the past tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: He ___ a letter yesterday.",
+  "options": [
+    "writes",
+    "writing",
+    "wrote"
+  ],
+  "correct": 2
+},
+{
+  "q": "Why is 'wrote' correct?",
+  "options": [
+    "Because yesterday shows Past Simple Tense.",
+    "Because 'wrote' is a future verb.",
+    "Because 'writes' is always wrong."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The picture is ___ the wall.",
+  "options": [
+    "on",
+    "under",
+    "between"
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'on' correct?",
+  "options": [
+    "Because the picture is attached to the surface of the wall.",
+    "Because 'on' means inside.",
+    "Because walls always use 'under'."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Begin'.",
+  "options": [
+    "Start",
+    "Stop",
+    "Finish"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Beautiful'.",
+  "options": [
+    "Pretty",
+    "Ugly",
+    "Lovely"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Accomodation",
+    "Accommodation",
+    "Acommodation"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: I have known him ___ 2018.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'since' correct?",
+  "options": [
+    "'Since' is used with a starting point in time.",
+    "'Since' means a period of time.",
+    "'Since' is used only with places."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The children is playing.",
+    "The children are playing.",
+    "The children am playing."
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'are' correct?",
+  "options": [
+    "Because 'children' is a plural noun.",
+    "Because 'children' is singular.",
+    "Because 'are' is used only with adults."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He has gone to school.",
+    "He have gone to school.",
+    "He has went to school."
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'has gone' correct?",
+  "options": [
+    "Because 'gone' is used with has/have in the Present Perfect Tense.",
+    "Because 'went' is always used after 'has'.",
+    "Because 'gone' is a noun."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: My father ___ a newspaper every morning.",
+  "options": [
+    "read",
+    "reads",
+    "reading"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'reads' correct?",
+  "options": [
+    "Because 'My father' is plural.",
+    "Because a singular subject takes the verb with 's/es' in the Simple Present Tense.",
+    "Because 'reading' cannot be used in English."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ orange.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Why do we use 'an' before 'orange'?",
+  "options": [
+    "Because it is a fruit.",
+    "Because it is singular.",
+    "Because 'orange' begins with a vowel sound."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They was happy.",
+    "They were happy.",
+    "They is happy."
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'were' correct?",
+  "options": [
+    "Because 'They' is plural.",
+    "Because 'They' is singular.",
+    "Because 'were' is a future tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: I ___ my homework yesterday.",
+  "options": [
+    "did",
+    "do",
+    "doing"
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'did' correct?",
+  "options": [
+    "Because 'yesterday' shows Past Simple Tense.",
+    "Because 'did' is Present Perfect.",
+    "Because 'do' is always wrong."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The boy jumped ___ the river.",
+  "options": [
+    "into",
+    "on",
+    "since"
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'into' correct?",
+  "options": [
+    "Because it shows movement from outside to inside.",
+    "Because 'into' means on top of.",
+    "Because 'into' is used only for time."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Rich'.",
+  "options": [
+    "Poor",
+    "Wealthy",
+    "Hungry"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the antonym of 'Clean'.",
+  "options": [
+    "Dirty",
+    "Fresh",
+    "Bright"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Succesful",
+    "Successfull",
+    "Successful"
+  ],
+  "correct": 2
+},
+{
+  "q": "Fill in the blank: We have been friends ___ childhood.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Why is 'since childhood' incorrect here?",
+  "options": [
+    "Because 'childhood' is a period, so 'for' is always used.",
+    "Because 'childhood' refers to the starting point of the friendship.",
+    "Because 'since' is used only with places."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The sun rises in the east.",
+    "The sun rise in the east.",
+    "The sun rising in the east."
+  ],
+  "correct": 0
+},
+{
+  "q": "Why is 'rises' correct?",
+  "options": [
+    "Because it is a universal truth in the Simple Present Tense.",
+    "Because it happened yesterday.",
+    "Because it is Future Tense."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She don't like milk.",
+    "She doesn't like milk.",
+    "She doesn't likes milk."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Brave'.",
+  "options": [
+    "Coward",
+    "Fearful",
+    "Courageous"
+  ],
+  "correct": 2
+},
+{
+  "q": "Fill in the blank: I ___ my homework yesterday.",
+  "options": [
+    "did",
+    "do",
+    "done"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ honest man.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the opposite of 'Ancient'.",
+  "options": [
+    "Modern",
+    "Historic",
+    "Old"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is good ___ English.",
+  "options": [
+    "in",
+    "at",
+    "on"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is spelled correctly?",
+  "options": [
+    "Accomodation",
+    "Acommodation",
+    "Accommodation"
+  ],
+  "correct": 2
+},
+{
+  "q": "If I ___ rich, I would help everyone.",
+  "options": [
+    "were",
+    "am",
+    "was"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They has finished the work.",
+    "They have finished the work.",
+    "They have finish the work."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Tiny'.",
+  "options": [
+    "Small",
+    "Huge",
+    "Tall"
+  ],
+  "correct": 0
+},
+{
+  "q": "She has lived here ___ 2019.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Succesful",
+    "Successfull",
+    "Successful"
+  ],
+  "correct": 2
+},
+{
+  "q": "Which sentence is in Present Continuous Tense?",
+  "options": [
+    "She is reading a book.",
+    "She read a book.",
+    "She reads a book."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Victory'.",
+  "options": [
+    "Success",
+    "Defeat",
+    "Prize"
+  ],
+  "correct": 1
+},
+{
+  "q": "The letter ___ by Riya yesterday.",
+  "options": [
+    "writes",
+    "was written",
+    "is written"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ European country.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the adjective.",
+  "options": [
+    "Quickly",
+    "Beautiful",
+    "Run"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He go to school every day.",
+    "He going to school every day.",
+    "He goes to school every day."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Begin'.",
+  "options": [
+    "Start",
+    "End",
+    "Stop"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The cat is ___ the table.",
+  "options": [
+    "under",
+    "during",
+    "since"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "I have seen that movie.",
+    "I has seen that movie.",
+    "I have saw that movie."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Expand'.",
+  "options": [
+    "Increase",
+    "Contract",
+    "Develop"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: She ___ her homework before dinner yesterday.",
+  "options": [
+    "finish",
+    "finished",
+    "finishing"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ umbrella.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Which word is a verb?",
+  "options": [
+    "Run",
+    "Beautiful",
+    "Happiness"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is afraid ___ dogs.",
+  "options": [
+    "with",
+    "of",
+    "on"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Intelligent'.",
+  "options": [
+    "Wise",
+    "Lazy",
+    "Weak"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Definately",
+    "Definitely",
+    "Definetly"
+  ],
+  "correct": 1
+},
+{
+  "q": "If she studied harder, she ___ the exam.",
+  "options": [
+    "would pass",
+    "passes",
+    "passing"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The news are interesting.",
+    "The news is interesting.",
+    "The news were interesting."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the opposite of 'Accept'.",
+  "options": [
+    "Receive",
+    "Reject",
+    "Allow"
+  ],
+  "correct": 1
+},
+{
+  "q": "Identify the noun.",
+  "options": [
+    "Quickly",
+    "School",
+    "Beautiful"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: She bought ___ egg.",
+  "options": [
+    "the",
+    "an",
+    "a"
+  ],
+  "correct": 1
+},
+{
+  "q": "He ___ to Mumbai last year.",
+  "options": [
+    "goes",
+    "went",
+    "gone"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Honest'.",
+  "options": [
+    "Truthful",
+    "Cruel",
+    "Selfish"
+  ],
+  "correct": 0
+},
+{
+  "q": "The meeting ___ by the manager tomorrow.",
+  "options": [
+    "will conduct",
+    "will be conducted",
+    "is conducting"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each student has a notebook.",
+    "Each student have a notebook.",
+    "Each students has a notebook."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Generous'.",
+  "options": [
+    "Kind",
+    "Helpful",
+    "Selfish"
+  ],
+  "correct": 2
+},
+{
+  "q": "Fill in the blank: They have lived here ___ ten years.",
+  "options": [
+    "since",
+    "for",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the boys are absent.",
+    "Neither of the boys is absent.",
+    "Neither of the boys were absent."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has completed her work.",
+    "She have completed her work.",
+    "She has complete her work."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Ancient'.",
+  "options": [
+    "Modern",
+    "Old",
+    "Future"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: He ___ cricket every Sunday.",
+  "options": [
+    "play",
+    "plays",
+    "playing"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: ___ hour ago.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the adjective.",
+  "options": [
+    "Slowly",
+    "Strong",
+    "Walk"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the opposite of 'Victory'.",
+  "options": [
+    "Defeat",
+    "Win",
+    "Success"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is fond ___ music.",
+  "options": [
+    "for",
+    "of",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Restarant",
+    "Restaurent",
+    "Restaurant"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "There are many books on the table.",
+    "There is many books on the table.",
+    "There were many book on the table."
+  ],
+  "correct": 0
+},
+{
+  "q": "The opposite of 'Honest' is ___.",
+  "options": [
+    "Kind",
+    "Dishonest",
+    "Helpful"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: They ___ to school yesterday.",
+  "options": [
+    "go",
+    "gone",
+    "went"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He doesn't like coffee.",
+    "He doesn't likes coffee.",
+    "He don't like coffee."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Quick'.",
+  "options": [
+    "Fast",
+    "Late",
+    "Lazy"
+  ],
+  "correct": 0
+},
+{
+  "q": "Identify the pronoun.",
+  "options": [
+    "Beautiful",
+    "They",
+    "Running"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ MBA course.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: The train arrived ___ time.",
+  "options": [
+    "on",
+    "at",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Business",
+    "Bussiness",
+    "Busines"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Expand'.",
+  "options": [
+    "Develop",
+    "Contract",
+    "Increase"
+  ],
+  "correct": 1
+},
+{
+  "q": "If I had more money, I ___ a new car.",
+  "options": [
+    "buy",
+    "bought",
+    "would buy"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each player has a bat.",
+    "Each player have a bat.",
+    "Each players has a bat."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She enjoys reading books.",
+    "She enjoy reading books.",
+    "She enjoying reading books."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Huge'.",
+  "options": [
+    "Tiny",
+    "Large",
+    "Weak"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: We ___ dinner at 8 p.m. yesterday.",
+  "options": [
+    "eat",
+    "eaten",
+    "ate"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: He is ___ engineer.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Cheap'.",
+  "options": [
+    "Expensive",
+    "Low",
+    "Small"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is interested ___ music.",
+  "options": [
+    "of",
+    "in",
+    "on"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Tommorow",
+    "Tomarrow",
+    "Tomorrow"
+  ],
+  "correct": 2
+},
+{
+  "q": "Identify the adverb.",
+  "options": [
+    "Quickly",
+    "Quick",
+    "Speed"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He have finished the work.",
+    "He has finished the work.",
+    "He has finish the work."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Happy'.",
+  "options": [
+    "Sad",
+    "Joyful",
+    "Angry"
+  ],
+  "correct": 1
+},
+{
+  "q": "If they had worked harder, they ___ the project.",
+  "options": [
+    "would finish",
+    "finished",
+    "would have finished"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "I am writing a letter.",
+    "I writing a letter.",
+    "I am write a letter."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Victory'.",
+  "options": [
+    "Prize",
+    "Defeat",
+    "Success"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ honest mistake.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Identify the verb.",
+  "options": [
+    "Beautiful",
+    "Run",
+    "Quickly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: The cat jumped ___ the wall.",
+  "options": [
+    "over",
+    "inside",
+    "during"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Begining",
+    "Beginning",
+    "Beggining"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the answers is correct.",
+    "Neither of the answers are correct.",
+    "Neither of the answer are correct."
+  ],
+  "correct": 0
+},
+{
+  "q": "The passive voice of 'Riya wrote a letter.' is:",
+  "options": [
+    "A letter wrote by Riya.",
+    "A letter was written by Riya.",
+    "A letter is written by Riya."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Smart'.",
+  "options": [
+    "Lazy",
+    "Intelligent",
+    "Weak"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The teacher gave us homework.",
+    "The teacher give us homework.",
+    "The teacher giving us homework."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Ancient'.",
+  "options": [
+    "Historic",
+    "Modern",
+    "Old"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: She ___ to the market every Sunday.",
+  "options": [
+    "go",
+    "goes",
+    "going"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ interesting book.",
+  "options": [
+    "the",
+    "an",
+    "a"
+  ],
+  "correct": 1
+},
+{
+  "q": "Identify the noun.",
+  "options": [
+    "Honesty",
+    "Honest",
+    "Honestly"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Easy'.",
+  "options": [
+    "Hard",
+    "Simple",
+    "Weak"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He arrived ___ the airport at 7 a.m.",
+  "options": [
+    "at",
+    "on",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Recieve",
+    "Receive",
+    "Receeve"
+  ],
+  "correct": 1
+},
+{
+  "q": "If I were you, I ___ this job.",
+  "options": [
+    "accept",
+    "accepted",
+    "would accept"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Everyone is ready.",
+    "Everyone are ready.",
+    "Everyone were ready."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Strong'.",
+  "options": [
+    "Weak",
+    "Heavy",
+    "Tall"
+  ],
+  "correct": 0
+},
+{
+  "q": "Identify the adjective.",
+  "options": [
+    "Run",
+    "Beautiful",
+    "Quickly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: He bought ___ orange.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They were playing football.",
+    "They was playing football.",
+    "They were play football."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Silent'.",
+  "options": [
+    "Quiet",
+    "Loud",
+    "Noisy"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The dog is ___ the chair.",
+  "options": [
+    "under",
+    "during",
+    "since"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Separate",
+    "Seperate",
+    "Seperete"
+  ],
+  "correct": 0
+},
+{
+  "q": "The passive voice of 'They clean the room.' is:",
+  "options": [
+    "The room is cleaned by them.",
+    "The room cleaned by them.",
+    "The room was cleaned by them."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has been waiting for an hour.",
+    "She have been waiting for an hour.",
+    "She has waiting for an hour."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Success'.",
+  "options": [
+    "Achievement",
+    "Failure",
+    "Victory"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Easy) Choose the correct article: ___ apple",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Medium) Find the error: She don't like coffee.",
+  "options": [
+    "She",
+    "don't",
+    "coffee"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Hard) Choose the correct indirect speech: He said, 'I am busy.'",
+  "options": [
+    "He said that he is busy.",
+    "He said that he was busy.",
+    "He says that he was busy."
+  ],
+  "correct": 1
+},
+{
+  "q": "(Easy) Fill in the blank: She ___ a doctor.",
+  "options": [
+    "is",
+    "are",
+    "am"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Medium) Choose the correct sentence.",
+  "options": [
+    "He don't play football.",
+    "He doesn't play football.",
+    "He doesn't plays football."
+  ],
+  "correct": 1
+},
+{
+  "q": "(Hard) Change into Passive Voice: 'The police caught the thief.'",
+  "options": [
+    "The thief catches the police.",
+    "The thief was caught by the police.",
+    "The thief is caught by the police."
+  ],
+  "correct": 1
+},
+{
+  "q": "(Easy) Choose the correct article: ___ egg",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Medium) Choose the synonym of 'Quick'.",
+  "options": [
+    "Slow",
+    "Fast",
+    "Late"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Hard) Choose the correct indirect speech: She said, 'I can swim.'",
+  "options": [
+    "She said that she could swim.",
+    "She said that she can swim.",
+    "She said she could swims."
+  ],
+  "correct": 0
+},
+{
+  "q": "(Easy) Which word is a noun?",
+  "options": [
+    "School",
+    "Quickly",
+    "Beautiful"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Medium) Choose the correct preposition: He is good ___ Mathematics.",
+  "options": [
+    "at",
+    "on",
+    "from"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Hard) Choose the correct phrasal verb: Never ___ your dreams.",
+  "options": [
+    "give up",
+    "look after",
+    "take off"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Easy) She ___ tea every morning.",
+  "options": [
+    "drink",
+    "drinks",
+    "drinking"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Medium) Choose the antonym of 'Honest'.",
+  "options": [
+    "Kind",
+    "Dishonest",
+    "Friendly"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Hard) One Word Substitution: A person who cannot read or write.",
+  "options": [
+    "Scholar",
+    "Educated",
+    "Illiterate"
+  ],
+  "correct": 2
+},
+{
+  "q": "(Easy) Birds ___ in the sky.",
+  "options": [
+    "fly",
+    "flies",
+    "flying"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Medium) Choose the correct spelling.",
+  "options": [
+    "Beautifull",
+    "Beautiful",
+    "Beutiful"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Hard) Choose the idiom meaning of 'Once in a blue moon'.",
+  "options": [
+    "Every day",
+    "Very rarely",
+    "At night"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Easy) Choose the correct pronoun.",
+  "options": [
+    "They",
+    "Beautiful",
+    "Quickly"
+  ],
+  "correct": 0
+},
+{
+  "q": "(Medium) Fill in the blank: I have lived here ___ 2022.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Hard) Choose the correct conditional sentence.",
+  "options": [
+    "If I were rich, I would help the poor.",
+    "If I was rich, I will help the poor.",
+    "If I am rich, I would help the poor."
+  ],
+  "correct": 0
+},
+{
+  "q": "(Easy) Which word is an adjective?",
+  "options": [
+    "Run",
+    "Happy",
+    "Slowly"
+  ],
+  "correct": 1
+},
+{
+  "q": "(Medium) Choose the correct sentence.",
+  "options": [
+    "Each student have a pen.",
+    "Each student has a pen.",
+    "Each students has a pen."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She is my best friend.",
+    "She are my best friend.",
+    "She am my best friend."
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: He ___ to school every day.",
+  "options": [
+    "go",
+    "goes",
+    "going"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: She bought ___ umbrella.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Honest'.",
+  "options": [
+    "Truthful",
+    "Cruel",
+    "Lazy"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Victory'.",
+  "options": [
+    "Success",
+    "Defeat",
+    "Prize"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Enviroment",
+    "Environmant",
+    "Environment"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is interested ___ music.",
+  "options": [
+    "in",
+    "on",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Identify the error: She don't know the answer.",
+  "options": [
+    "She",
+    "don't",
+    "answer"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the passive voice of: 'They built a bridge.'",
+  "options": [
+    "A bridge built by them.",
+    "A bridge is built by them.",
+    "A bridge was built by them."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Everyone likes good news.",
+    "Everyone like good news.",
+    "Everyone liking good news."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the meaning of the idiom 'Break the ice'.",
+  "options": [
+    "Start a friendly conversation.",
+    "Break something cold.",
+    "Win a competition."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Please ___ your shoes before entering.",
+  "options": [
+    "put off",
+    "take off",
+    "give off"
+  ],
+  "correct": 1
+},
+{
+  "q": "If I had enough money, I ___ a new laptop.",
+  "options": [
+    "buy",
+    "bought",
+    "would buy"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The children are playing outside.",
+    "The children is playing outside.",
+    "The children was playing outside."
+  ],
+  "correct": 0
+},
+{
+  "q": "One Word Substitution: A place where books are kept.",
+  "options": [
+    "Museum",
+    "Library",
+    "Laboratory"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: He is ___ MBA graduate.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Rapid'.",
+  "options": [
+    "Fast",
+    "Late",
+    "Weak"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: They have lived here ___ 2018.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct indirect speech: He said, 'I am busy.'",
+  "options": [
+    "He said that he is busy.",
+    "He said he busy.",
+    "He said that he was busy."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the answers is correct.",
+    "Neither of the answers are correct.",
+    "Neither of the answer are correct."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has finished her homework.",
+    "She have finished her homework.",
+    "She has finish her homework."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Ancient'.",
+  "options": [
+    "Old",
+    "Modern",
+    "Historic"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: We ___ to the park yesterday.",
+  "options": [
+    "go",
+    "went",
+    "gone"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: It is ___ honest opinion.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Tiny'.",
+  "options": [
+    "Small",
+    "Huge",
+    "Heavy"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is responsible ___ the project.",
+  "options": [
+    "for",
+    "at",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Calender",
+    "Calendar",
+    "Calandar"
+  ],
+  "correct": 1
+},
+{
+  "q": "Identify the error: They was playing cricket.",
+  "options": [
+    "They",
+    "was",
+    "cricket"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the passive voice: 'She writes a letter.'",
+  "options": [
+    "A letter wrote by her.",
+    "A letter is written by her.",
+    "A letter was written by her."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the meaning of the idiom 'A blessing in disguise'.",
+  "options": [
+    "A problem with no solution.",
+    "A hidden gift.",
+    "Something good that first seemed bad."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Either Ram or Shyam is coming.",
+    "Either Ram or Shyam are coming.",
+    "Either Ram or Shyam have come."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the phrasal verb that means 'continue'.",
+  "options": [
+    "Carry on",
+    "Give away",
+    "Take off"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: If I ___ you, I would apologize.",
+  "options": [
+    "am",
+    "were",
+    "was"
+  ],
+  "correct": 1
+},
+{
+  "q": "One Word Substitution: A person who loves books.",
+  "options": [
+    "Bibliophile",
+    "Photographer",
+    "Scientist"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ MLA.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Abundant'.",
+  "options": [
+    "Plentiful",
+    "Scarce",
+    "Rare"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: She has been waiting ___ two hours.",
+  "options": [
+    "since",
+    "for",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct indirect speech: Riya said, 'I will help you.'",
+  "options": [
+    "Riya said that she will help me.",
+    "Riya said that she would help me.",
+    "Riya said she would helped me."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the opposite of 'Generous'.",
+  "options": [
+    "Kind",
+    "Selfish",
+    "Friendly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No news is good news.",
+    "No news are good news.",
+    "No news have good news."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She doesn't likes coffee.",
+    "She doesn't like coffee.",
+    "She don't like coffee."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Brilliant'.",
+  "options": [
+    "Dull",
+    "Intelligent",
+    "Weak"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: They ___ TV when I arrived.",
+  "options": [
+    "were watching",
+    "watched",
+    "are watching"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ European citizen.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the opposite of 'Ancient'.",
+  "options": [
+    "Historic",
+    "Modern",
+    "Traditional"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: The meeting starts ___ 9:00 a.m.",
+  "options": [
+    "at",
+    "on",
+    "in"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Occasion",
+    "Ocassion",
+    "Occassion"
+  ],
+  "correct": 0
+},
+{
+  "q": "Identify the error: He don't understand English.",
+  "options": [
+    "He",
+    "don't",
+    "English"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the passive voice: 'The chef cooked the meal.'",
+  "options": [
+    "The meal cooked by the chef.",
+    "The meal is cooked by the chef.",
+    "The meal was cooked by the chef."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the meaning of the idiom 'Under the weather'.",
+  "options": [
+    "Feeling sick",
+    "Working outside",
+    "Feeling excited"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each of the books are useful.",
+    "Each of the books is useful.",
+    "Each of the book are useful."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the phrasal verb that means 'discover'.",
+  "options": [
+    "Find out",
+    "Give in",
+    "Break down"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: If she ___ harder, she would succeed.",
+  "options": [
+    "studies",
+    "studied",
+    "will study"
+  ],
+  "correct": 1
+},
+{
+  "q": "One Word Substitution: A person who designs buildings.",
+  "options": [
+    "Engineer",
+    "Architect",
+    "Mechanic"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: He bought ___ hourglass.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Assist'.",
+  "options": [
+    "Help",
+    "Ignore",
+    "Refuse"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: We have known each other ___ five years.",
+  "options": [
+    "since",
+    "for",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct indirect speech: Ravi said, 'I cannot swim.'",
+  "options": [
+    "Ravi said that he cannot swim.",
+    "Ravi said that he could not swim.",
+    "Ravi said he not swim."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the antonym of 'Expand'.",
+  "options": [
+    "Contract",
+    "Develop",
+    "Increase"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the girls have arrived.",
+    "Neither of the girls has arrived.",
+    "Neither of the girls were arrived."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She goes to school every day.",
+    "She go to school every day.",
+    "She going to school every day."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Happy'.",
+  "options": [
+    "Sad",
+    "Joyful",
+    "Angry"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: I have known him ___ 2020.",
+  "options": [
+    "for",
+    "from",
+    "since"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: He is ___ honest person.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Accept'.",
+  "options": [
+    "Reject",
+    "Receive",
+    "Allow"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The train arrived ___ time.",
+  "options": [
+    "at",
+    "on",
+    "in"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Business",
+    "Bussiness",
+    "Busines"
+  ],
+  "correct": 0
+},
+{
+  "q": "Identify the error: He don't like coffee.",
+  "options": [
+    "He",
+    "don't",
+    "coffee"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the passive voice of 'The teacher praised Riya.'",
+  "options": [
+    "Riya praised by the teacher.",
+    "Riya was praised by the teacher.",
+    "Riya is praised by the teacher."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the meaning of the idiom 'Once in a blue moon'.",
+  "options": [
+    "Very often",
+    "Every week",
+    "Very rarely"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each student has a bag.",
+    "Each student have a bag.",
+    "Each students have a bag."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the phrasal verb that means 'continue'.",
+  "options": [
+    "Carry on",
+    "Give in",
+    "Take off"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: If I ___ rich, I would help the poor.",
+  "options": [
+    "am",
+    "were",
+    "will be"
+  ],
+  "correct": 1
+},
+{
+  "q": "One Word Substitution: A person who cannot read or write.",
+  "options": [
+    "Teacher",
+    "Scholar",
+    "Illiterate"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: She is ___ MBA student.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the synonym of 'Rapid'.",
+  "options": [
+    "Fast",
+    "Late",
+    "Slow"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: They were waiting ___ two hours.",
+  "options": [
+    "since",
+    "for",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct indirect speech: He said, 'I am tired.'",
+  "options": [
+    "He said that he was tired.",
+    "He said that he is tired.",
+    "He said he tired."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Expand'.",
+  "options": [
+    "Increase",
+    "Develop",
+    "Contract"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The news is interesting.",
+    "The news are interesting.",
+    "The news have interesting."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct question.",
+  "options": [
+    "Where do you live?",
+    "Where you do live?",
+    "Where does you live?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Brave'.",
+  "options": [
+    "Coward",
+    "Fearless",
+    "Weak"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: ___ hour is enough.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has completed the work.",
+    "She have completed the work.",
+    "She has complete the work."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is good ___ English.",
+  "options": [
+    "in",
+    "at",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They has completed the project.",
+    "They have completed the project.",
+    "They have complete the project."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the synonym of 'Honest'.",
+  "options": [
+    "Truthful",
+    "Cruel",
+    "Selfish"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: She ___ a letter yesterday.",
+  "options": [
+    "writes",
+    "writing",
+    "wrote"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: It is ___ useful book.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Victory'.",
+  "options": [
+    "Prize",
+    "Defeat",
+    "Success"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She is afraid ___ dogs.",
+  "options": [
+    "at",
+    "of",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Separate",
+    "Seperate",
+    "Seperete"
+  ],
+  "correct": 0
+},
+{
+  "q": "Identify the error: We was happy.",
+  "options": [
+    "We",
+    "was",
+    "happy"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the passive voice of 'Riya cleaned the room.'",
+  "options": [
+    "The room cleaned by Riya.",
+    "The room is cleaned by Riya.",
+    "The room was cleaned by Riya."
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the meaning of the idiom 'Piece of cake'.",
+  "options": [
+    "Very easy",
+    "Very difficult",
+    "Very expensive"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the boys has arrived.",
+    "Neither of the boys have arrived.",
+    "Neither of the boys are arrived."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the phrasal verb that means 'remove'.",
+  "options": [
+    "Take off",
+    "Look after",
+    "Carry on"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: If she ___ harder, she would pass.",
+  "options": [
+    "studies",
+    "studied",
+    "will study"
+  ],
+  "correct": 1
+},
+{
+  "q": "One Word Substitution: A person who flies an aircraft.",
+  "options": [
+    "Driver",
+    "Sailor",
+    "Pilot"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: He is ___ MLA.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Ancient'.",
+  "options": [
+    "Old",
+    "Modern",
+    "Future"
+  ],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: We have lived here ___ 2015.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the indirect speech: She said, 'I can drive.'",
+  "options": [
+    "She said that she can drive.",
+    "She said that she could drive.",
+    "She said she could drove."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the antonym of 'Increase'.",
+  "options": [
+    "Reduce",
+    "Improve",
+    "Expand"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The furniture is expensive.",
+    "The furniture are expensive.",
+    "The furnitures are expensive."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct question.",
+  "options": [
+    "What is your name?",
+    "What your name is?",
+    "What are your name?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Dangerous'.",
+  "options": [
+    "Safe",
+    "Risky",
+    "Gentle"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: ___ honest mistake should be forgiven.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He doesn't watch TV.",
+    "He don't watches TV.",
+    "He doesn't watches TV."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the preposition: The cat is hiding ___ the bed.",
+  "options": [
+    "under",
+    "on",
+    "over"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "My brother lives in Surat.",
+    "My brother live in Surat.",
+    "My brother living in Surat."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the antonym of 'Brave'.",
+  "options": [
+    "Fearless",
+    "Cowardly",
+    "Strong"
+  ],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: They have been friends ___ childhood.",
+  "options": [
+    "for",
+    "at",
+    "since"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: He is ___ engineer.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the synonym of 'Begin'.",
+  "options": [
+    "Start",
+    "Stop",
+    "Finish"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is good ___ drawing.",
+  "options": [
+    "with",
+    "at",
+    "on"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Succesful",
+    "Successfull",
+    "Successful"
+  ],
+  "correct": 2
+},
+{
+  "q": "Identify the error: She were absent yesterday.",
+  "options": [
+    "She",
+    "were",
+    "yesterday"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the passive voice: 'The mechanic repaired the car.'",
+  "options": [
+    "The car was repaired by the mechanic.",
+    "The car repaired by the mechanic.",
+    "The car is repaired by the mechanic."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the meaning of 'Beat around the bush'.",
+  "options": [
+    "Speak directly",
+    "Avoid the main topic",
+    "Work in a garden"
+  ],
+  "correct": 1
+},
   {
     "q": "They ___ football yesterday.",
     "options": [
