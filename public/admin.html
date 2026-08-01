@@ -623,14 +623,26 @@ td span{
 
     </style>
 
+
 <style>
-:root{--primary:#2563eb;--success:#10b981;--bg:#f8fafc}
-body{background:var(--bg);font-family:Arial,sans-serif}
-button{border:none;border-radius:12px;padding:12px 18px;font-weight:600;cursor:pointer;transition:.25s;box-shadow:0 6px 14px rgba(0,0,0,.12);margin:6px}
+:root{
+--bg:#020617;--panel:#111827;--panel2:#1f2937;--text:#f8fafc;
+--border:#334155;--blue:#3b82f6;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;
+}
+body{background:radial-gradient(circle at top,#1e293b,#020617 70%)!important;color:var(--text)!important;font-family:Segoe UI,Arial,sans-serif!important}
+.container,.card,.panel,.admin-panel,.login-box{
+background:rgba(17,24,39,.92)!important;border:1px solid var(--border)!important;
+border-radius:18px!important;box-shadow:0 12px 30px rgba(0,0,0,.45)!important}
+button{border:none!important;border-radius:12px!important;padding:12px 18px!important;
+font-weight:700!important;color:#fff!important;transition:.25s!important;cursor:pointer}
 button:hover{transform:translateY(-2px)}
-#downloadBtn,.download-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
-#downloadBtn:hover,.download-btn:hover{background:linear-gradient(135deg,#059669,#047857)}
-</style></head>
+#downloadBtn,.download-btn{background:linear-gradient(135deg,#10b981,#059669)!important}
+#downloadBtn:hover,.download-btn:hover{background:linear-gradient(135deg,#059669,#047857)!important}
+input,select,textarea{background:#0f172a!important;color:#fff!important;border:1px solid #334155!important;border-radius:10px!important}
+h1,h2,h3,h4,label,p,span,td,th{color:#f8fafc!important}
+table{background:#111827!important}
+</style>
+</head>
 
 <body>
 
