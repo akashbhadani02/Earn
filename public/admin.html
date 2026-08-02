@@ -942,7 +942,6 @@
 
                 <th>Name</th>
                 <th>Mobile</th>
-                <th>Status</th>
                 <th>Last Seen</th>
                 <th>Wallet</th>
                 <th>Total Earn</th>
@@ -1119,27 +1118,35 @@
         //==========================
         // last seen format
         //==========================
-function formatLastSeen(lastSeen) {
+        function formatLastSeen(lastSeen) {
 
-    if (!lastSeen) {
-        return "Never";
-    }
+            if (!lastSeen) {
+                return "Never";
+            }
 
-    const diff = Date.now() - new Date(lastSeen).getTime();
+            const diff = Date.now() - new Date(lastSeen).getTime();
 
-    const minutes = Math.floor(diff / 60000);
+            const minutes = Math.floor(diff / 60000);
 
-    if (minutes < 2) {
-        return "🟢 Active Now";
-    }
+            if (minutes < 2) {
+                return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
+            }
 
-    if (minutes < 60) {
-        return "🟠 " + minutes + " min ago";
-    }
+            if (minutes < 60) {
+                return "<span style='color:#f59e0b;font-weight:bold;'>🟠 " + minutes + " min ago</span>";
+            }
 
-    return "🔴 " + new Date(lastSeen).toLocaleString();
+            return "<span style='color:#dc2626;font-weight:bold;'>🔴 " +
+                new Date(lastSeen).toLocaleString() +
+                "</span>";
 
-}
+            if (minutes < 60) {
+                return "🟠 " + minutes + " min ago";
+            }
+
+            return "🔴 " + new Date(lastSeen).toLocaleString();
+
+        }
         //==========================
         // Show Users
         //==========================
@@ -1150,46 +1157,21 @@ function formatLastSeen(lastSeen) {
 
             users.forEach(user => {
 
-                // Online / Offline Status
-                const statusHTML = user.isOnline
-                    ? `<span style="
-                color: #16a34a;
-                font-weight: bold;
-                background: #dcfce7;
-                padding: 5px 10px;
-                border-radius: 20px;
-                display: inline-block;
-              ">🟢 Online</span>`
-                    : `<span style="
-                color: #dc2626;
-                font-weight: bold;
-                background: #fee2e2;
-                padding: 5px 10px;
-                border-radius: 20px;
-                display: inline-block;
-              ">🔴 Offline</span>`;
 
                 html += `
 
 <tr>
+    <td>${user.name}</td>
 
-<td>${user.name}</td>
+    <td>${user.mobile}</td>
 
-<td>${user.mobile}</td>
+    <td>${formatLastSeen(user.lastSeen)}</td>
 
-<td>
-${user.isBlocked
-    ? '🚫 Blocked'
-    : statusHTML}
-</td>
+    <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
 
-<td>${formatLastSeen(user.lastSeen)}</td>
+    <td>₹${Number(user.totalEarn || 0).toFixed(2)}</td>
 
-<td>${Number(user.wallet || 0).toFixed(2)}</td>
-
-<td>${Number(user.totalEarn || 0).toFixed(2)}</td>
-
-<td>${Number(user.totalQuestionsAnswered || 0)}</td>
+    <td>${user.questionsAnswered || 0}</td>
 
 <td>
     <span style="
