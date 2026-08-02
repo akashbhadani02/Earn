@@ -1340,15 +1340,39 @@
                         return;
                     }
 
-                    if (isCorrect) {
-                        startWarningMonitor();
-                        alert("સાચો! +₹0.20");
-                    } else {
-                        startWarningMonitor();
-                        alert("ખોટો! -₹0.30");
-                    }
+                    const buttons = optDiv.querySelectorAll(".option-btn");
 
-                    loadQuiz();
+                    // બધા Button Disable
+                    buttons.forEach(btn => btn.disabled = true);
+
+                    // Answer બતાવો
+                    buttons.forEach((btn, index) => {
+
+                        // સાચો જવાબ Green
+                        if (index === q.correct) {
+                            btn.style.background = "#22c55e";
+                            btn.style.color = "#fff";
+                            btn.style.border = "3px solid #16a34a";
+                            btn.innerHTML = "✅ " + q.options[index];
+                        }
+
+                        // ખોટો પસંદ કર્યો હોય તો Red
+                        if (index === i && !isCorrect) {
+                            btn.style.background = "#ef4444";
+                            btn.style.color = "#fff";
+                            btn.style.border = "3px solid #dc2626";
+                            btn.innerHTML = "❌ " + q.options[index];
+                        }
+
+                    });
+
+                    // Warning Monitor
+                    startWarningMonitor();
+
+                    // 1.5 Second પછી Next Question
+                    setTimeout(() => {
+                        loadQuiz();
+                    }, 1500);
                 };
                 optDiv.appendChild(b);
             });
