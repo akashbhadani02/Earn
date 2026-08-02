@@ -809,7 +809,20 @@
     </div>
 
     <div id="quiz" class="card hidden">
+
+        <div style="text-align:center;
+                margin-bottom:15px;
+                padding:12px;
+                background:linear-gradient(135deg,#4facfe,#00c6fb);
+                color:white;
+                border-radius:12px;
+                font-size:20px;
+                font-weight:bold;">
+            💰 Wallet Balance : ₹<span id="quizWallet">0.00</span>
+        </div>
+
         <h3 id="question">Loading...</h3>
+
         <div id="options"></div>
         <button class="btn" style="background:#a048bb;" onclick="showScreen('dashboard')">Back to Dashboard</button>
         <p id="message" style="color:#000000;"><br>સવાલ વાંચવો પછી જવાબ આપવો નહીંતર બ્લોક થઇ જશો.</p>
@@ -1076,6 +1089,10 @@
                     dailyQuestionsDate = data.dailyQuestionsDate || "";
 
                     document.getElementById("wallet").innerText = wallet.toFixed(2);
+                    const quizWallet = document.getElementById("quizWallet");
+                    if (quizWallet) {
+                        quizWallet.innerText = wallet.toFixed(2);
+                    }
 
                     checkWithdrawStatus();
                     updateQuestionProgress();
@@ -1191,7 +1208,12 @@
         function showScreen(id) {
             document.getElementById('dashboard').classList.toggle('hidden', id !== 'dashboard');
             document.getElementById('quiz').classList.toggle('hidden', id !== 'quiz');
-            if (id === 'quiz') loadQuiz();
+            if (id === 'quiz') {
+
+                document.getElementById("quizWallet").innerText = wallet.toFixed(2);
+
+                loadQuiz();
+            }
         }
 
 
