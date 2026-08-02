@@ -1,1444 +1,6952 @@
 [
    {
-  "q": "How do you ask someone to switch off the light?",
-  "option1": "Please switch off the light.",
-  "option2": "Please switches off the light.",
-  "option3": "Switching off light.",
+    "q": "She ___ to school every day.",
+    "options": ["go", "goes", "going"],
+    "correct": 1
+  },
+  {
+    "q": "They ___ playing football now.",
+    "options": ["are", "is", "was"],
+    "correct": 0
+  },
+  {
+    "q": "I ___ my homework yesterday.",
+    "options": ["do", "did", "done"],
+    "correct": 1
+  },
+  {
+    "q": "He ___ a doctor.",
+    "options": ["am", "is", "are"],
+    "correct": 1
+  },
+  {
+    "q": "We ___ English every day.",
+    "options": ["practice", "practices", "practicing"],
+    "correct": 0
+  },
+  {
+    "q": "She has ___ her work.",
+    "options": ["finish", "finished", "finishing"],
+    "correct": 1
+  },
+  {
+    "q": "They ___ to Surat last week.",
+    "options": ["go", "went", "gone"],
+    "correct": 1
+  },
+  {
+    "q": "I ___ watching TV now.",
+    "options": ["am", "is", "are"],
+    "correct": 0
+  },
+  {
+    "q": "He ___ coffee every morning.",
+    "options": ["drink", "drinks", "drinking"],
+    "correct": 1
+  },
+  {
+    "q": "The children ___ in the garden.",
+    "options": ["play", "plays", "playing"],
+    "correct": 0
+  },
+  {
+    "q": "She ___ her keys yesterday.",
+    "options": ["lose", "lost", "loses"],
+    "correct": 1
+  },
+  {
+    "q": "We ___ dinner at 8 PM yesterday.",
+    "options": ["had", "have", "has"],
+    "correct": 0
+  },
+  {
+    "q": "I have ___ this movie before.",
+    "options": ["see", "seen", "saw"],
+    "correct": 1
+  },
+  {
+    "q": "He ___ his bike every Sunday.",
+    "options": ["wash", "washes", "washing"],
+    "correct": 1
+  },
+  {
+    "q": "They ___ already finished the project.",
+    "options": ["has", "have", "had"],
+    "correct": 1
+  },
+  {
+    "q": "She ___ singing beautifully.",
+    "options": ["is", "are", "am"],
+    "correct": 0
+  },
+  {
+    "q": "I ___ him at the station yesterday.",
+    "options": ["meet", "met", "meeting"],
+    "correct": 1
+  },
+  {
+    "q": "We ___ to the market tomorrow.",
+    "options": ["go", "went", "will go"],
+    "correct": 2
+  },
+  {
+    "q": "He ___ breakfast before leaving home.",
+    "options": ["eat", "eats", "ate"],
+    "correct": 1
+  },
+  {
+    "q": "The train ___ at 6 o'clock every morning.",
+    "options": ["arrive", "arrives", "arriving"],
+    "correct": 1
+  },
+  {
+    "q": "She ___ a letter now.",
+    "options": ["writes", "is writing", "wrote"],
+    "correct": 1
+  },
+  {
+    "q": "I ___ my parents every weekend.",
+    "options": ["visit", "visits", "visited"],
+    "correct": 0
+  },
+  {
+    "q": "They ___ lunch when I called.",
+    "options": ["were having", "had", "have"],
+    "correct": 0
+  },
+  {
+    "q": "He ___ the answer correctly.",
+    "options": ["know", "knows", "knowing"],
+    "correct": 1
+  },
+  {
+    "q": "She ___ to Mumbai next month.",
+    "options": ["go", "goes", "will go"],
+    "correct": 2
+  },
+   {
+  "q": "I ___ to the gym every morning.",
+  "options": ["go", "goes", "going"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone if they can drive?",
-  "option1": "Can drive you?",
-  "option2": "Can you drive?",
-  "option3": "Driving you can?",
+  "q": "She ___ her homework before dinner.",
+  "options": ["finish", "finished", "finishes"],
   "correct": 1
 },
 {
-  "q": "What do you say after someone says 'Take care'?",
-  "option1": "Good morning.",
-  "option2": "Never mind.",
-  "option3": "You too!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to come early?",
-  "option1": "Please come early.",
-  "option2": "Please comes early.",
-  "option3": "Coming early.",
+  "q": "They ___ cricket every Sunday.",
+  "options": ["play", "plays", "playing"],
   "correct": 0
 },
 {
-  "q": "How do you ask where the bus stop is?",
-  "option1": "Bus stop where?",
-  "option2": "Where is the bus stop?",
-  "option3": "Bus stop is where?",
+  "q": "He ___ a new phone yesterday.",
+  "options": ["buy", "bought", "buys"],
   "correct": 1
 },
 {
-  "q": "What do you say after winning a competition?",
-  "option1": "I'm sorry.",
-  "option2": "Maybe next time.",
-  "option3": "I'm very happy!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to wait here?",
-  "option1": "Please wait here.",
-  "option2": "Please waits here.",
-  "option3": "Waiting here.",
+  "q": "We ___ watching a movie now.",
+  "options": ["are", "is", "am"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone where they work?",
-  "option1": "Where working?",
-  "option2": "Where do you work?",
-  "option3": "Work where are?",
+  "q": "She ___ tea every morning.",
+  "options": ["drink", "drinks", "drank"],
   "correct": 1
 },
 {
-  "q": "What do you say after receiving help?",
-  "option1": "See you.",
-  "option2": "Goodbye.",
-  "option3": "Thanks a lot.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to answer the phone?",
-  "option1": "Please answer the phone.",
-  "option2": "Please answers the phone.",
-  "option3": "Answering phone.",
+  "q": "I ___ English for two years.",
+  "options": ["have learned", "learn", "learned"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone is tired?",
-  "option1": "You tired?",
-  "option2": "Are you tired?",
-  "option3": "Tired are?",
-  "correct": 1
-},
-{
-  "q": "What do you say after someone does a good job?",
-  "option1": "Sorry.",
-  "option2": "Never mind.",
-  "option3": "Excellent work!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to be quiet?",
-  "option1": "Please be quiet.",
-  "option2": "Please is quiet.",
-  "option3": "Being quiet.",
+  "q": "The boy ___ in the park yesterday.",
+  "options": ["played", "play", "plays"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone is coming with you?",
-  "option1": "Coming you?",
-  "option2": "Are you coming with me?",
-  "option3": "You come with?",
+  "q": "My father ___ a newspaper daily.",
+  "options": ["read", "reads", "reading"],
   "correct": 1
 },
 {
-  "q": "How do you politely accept an invitation?",
-  "option1": "Maybe.",
-  "option2": "Not now.",
-  "option3": "I'd love to.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to show you the way?",
-  "option1": "Please show me the way.",
-  "option2": "Please shows me the way.",
-  "option3": "Showing way.",
+  "q": "They ___ dinner when I arrived.",
+  "options": ["were having", "have", "had"],
   "correct": 0
 },
 {
-  "q": "How do you ask what someone wants?",
-  "option1": "Want what?",
-  "option2": "What do you want?",
-  "option3": "You want where?",
+  "q": "She ___ to London next year.",
+  "options": ["goes", "will go", "went"],
   "correct": 1
 },
 {
-  "q": "What do you say after someone welcomes you?",
-  "option1": "See you.",
-  "option2": "Bye.",
-  "option3": "Thank you.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to send a message?",
-  "option1": "Please send me a message.",
-  "option2": "Please sends me a message.",
-  "option3": "Sending message.",
+  "q": "I ___ my friend last night.",
+  "options": ["met", "meet", "meeting"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone's hobby?",
-  "option1": "Your hobby?",
-  "option2": "What is your hobby?",
-  "option3": "Hobby where?",
+  "q": "He ___ his work already.",
+  "options": ["finished", "has finished", "finish"],
   "correct": 1
 },
 {
-  "q": "What do you say after someone says 'See you soon'?",
-  "option1": "Sorry.",
-  "option2": "Good night.",
-  "option3": "See you soon.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to stop talking?",
-  "option1": "Please stop talking.",
-  "option2": "Please stops talking.",
-  "option3": "Stopping talking.",
+  "q": "The students ___ quietly in the class.",
+  "options": ["sit", "sits", "sat"],
   "correct": 0
 },
 {
-  "q": "How do you ask where someone studied?",
-  "option1": "Study where?",
-  "option2": "Where did you study?",
-  "option3": "Where you study?",
+  "q": "We ___ to music now.",
+  "options": ["listen", "are listening", "listened"],
   "correct": 1
 },
 {
-  "q": "What do you say after hearing good news?",
-  "option1": "Never mind.",
-  "option2": "Too bad.",
-  "option3": "That's wonderful!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to try again?",
-  "option1": "Please try again.",
-  "option2": "Please tries again.",
-  "option3": "Trying again.",
+  "q": "She ___ a beautiful song yesterday.",
+  "options": ["sang", "sing", "sings"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone likes music?",
-  "option1": "Music like?",
-  "option2": "Do you like music?",
-  "option3": "Music you are?",
+  "q": "He ___ his room every Saturday.",
+  "options": ["clean", "cleans", "cleaned"],
   "correct": 1
 },
 {
-  "q": "How do you respond to 'Best of luck'?",
-  "option1": "Goodbye.",
-  "option2": "Later.",
-  "option3": "Thank you very much.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to read this?",
-  "option1": "Please read this.",
-  "option2": "Please reads this.",
-  "option3": "Reading this.",
+  "q": "I ___ breakfast at 8 AM every day.",
+  "options": ["have", "has", "had"],
   "correct": 0
 },
 {
-  "q": "How do you ask what someone is looking for?",
-  "option1": "Looking what?",
-  "option2": "What are you looking for?",
-  "option3": "You looking where?",
-  "correct": 1
-},
-{
-  "q": "How do you praise a nice idea?",
-  "option1": "Not good.",
-  "option2": "Maybe.",
-  "option3": "That's a great idea!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to take a seat?",
-  "option1": "Please take a seat.",
-  "option2": "Please takes a seat.",
-  "option3": "Taking seat.",
+  "q": "They ___ the match last week.",
+  "options": ["won", "win", "winning"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone has a question?",
-  "option1": "Question you?",
-  "option2": "Do you have any questions?",
-  "option3": "Question have?",
+  "q": "She ___ a letter right now.",
+  "options": ["writes", "is writing", "wrote"],
   "correct": 1
 },
 {
-  "q": "How do you end a formal conversation?",
-  "option1": "Bye.",
-  "option2": "See ya.",
-  "option3": "It was a pleasure talking to you.",
-  "correct": 2
+  "q": "We ___ our grandparents every month.",
+  "options": ["visit", "visited", "visits"],
+  "correct": 0
+},
+{
+  "q": "He ___ to work by bus.",
+  "options": ["go", "goes", "going"],
+  "correct": 1
+},
+{
+  "q": "I ___ my keys yesterday.",
+  "options": ["lose", "lost", "loses"],
+  "correct": 1
+},
+{
+  "q": "They ___ football now.",
+  "options": ["are playing", "play", "played"],
+  "correct": 0
+},
+{
+  "q": "She ___ her mother every evening.",
+  "options": ["calls", "call", "called"],
+  "correct": 0
 },
    {
-  "q": "How do you ask someone to slow down while driving?",
-  "option1": "Please slow down.",
-  "option2": "Please slows down.",
-  "option3": "Slowing down please.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone is feeling better?",
-  "option1": "Feeling better you?",
-  "option2": "Are you feeling better?",
-  "option3": "You are better feeling?",
+  "q": "She ___ to the office every weekday.",
+  "options": ["drive", "drives", "driving"],
   "correct": 1
 },
 {
-  "q": "What do you say when someone says 'See you tomorrow'?",
-  "option1": "Good morning.",
-  "option2": "Take care.",
-  "option3": "See you tomorrow.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to lock the door?",
-  "option1": "Please lock the door.",
-  "option2": "Please locks the door.",
-  "option3": "Locking the door.",
-  "correct": 0
-},
-{
-  "q": "How do you ask someone where they bought something?",
-  "option1": "Where bought?",
-  "option2": "Where did you buy it?",
-  "option3": "Where buying it?",
+  "q": "I ___ my homework before going to bed.",
+  "options": ["finish", "finished", "finishing"],
   "correct": 1
 },
 {
-  "q": "How do you respond to 'Congratulations on your promotion'?",
-  "option1": "Never mind.",
-  "option2": "Maybe later.",
-  "option3": "Thank you so much.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to wait for you?",
-  "option1": "Please wait for me.",
-  "option2": "Please waits for me.",
-  "option3": "Waiting for me.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone is ready to start?",
-  "option1": "Ready start?",
-  "option2": "Are you ready to start?",
-  "option3": "Start ready are?",
+  "q": "They ___ a new car last month.",
+  "options": ["buy", "bought", "buys"],
   "correct": 1
 },
 {
-  "q": "What do you say when someone says 'Drive safely'?",
-  "option1": "Sorry.",
-  "option2": "Goodbye.",
-  "option3": "Thank you!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to speak clearly?",
-  "option1": "Please speak clearly.",
-  "option2": "Please speaks clearly.",
-  "option3": "Speaking clearly.",
+  "q": "He ___ TV at the moment.",
+  "options": ["is watching", "watch", "watched"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone's favorite food?",
-  "option1": "Food favorite?",
-  "option2": "What is your favorite food?",
-  "option3": "Favorite food where?",
-  "correct": 1
-},
-{
-  "q": "How do you react to a funny joke?",
-  "option1": "I'm sorry.",
-  "option2": "Never mind.",
-  "option3": "That's hilarious!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to open the window?",
-  "option1": "Please open the window.",
-  "option2": "Please opens the window.",
-  "option3": "Opening the window.",
+  "q": "We ___ breakfast together every Sunday.",
+  "options": ["have", "has", "having"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone if they are busy now?",
-  "option1": "Busy now?",
-  "option2": "Are you busy now?",
-  "option3": "Busy you are now?",
-  "correct": 1
-},
-{
-  "q": "What do you say after receiving a compliment?",
-  "option1": "It's okay.",
-  "option2": "Never mind.",
-  "option3": "Thank you, I appreciate it.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to write slowly?",
-  "option1": "Please write slowly.",
-  "option2": "Please writes slowly.",
-  "option3": "Writing slowly.",
+  "q": "She ___ her homework yesterday.",
+  "options": ["did", "does", "doing"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone understands the question?",
-  "option1": "Understand question?",
-  "option2": "Do you understand the question?",
-  "option3": "Question understand you?",
-  "correct": 1
-},
-{
-  "q": "How do you wish someone before an exam?",
-  "option1": "Happy Birthday.",
-  "option2": "Good evening.",
-  "option3": "All the best!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to check the answer?",
-  "option1": "Please check the answer.",
-  "option2": "Please checks the answer.",
-  "option3": "Checking answer.",
+  "q": "I ___ English with my friends every day.",
+  "options": ["speak", "speaks", "spoken"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone where they are going?",
-  "option1": "Going where?",
-  "option2": "Where are you going?",
-  "option3": "Where you going are?",
+  "q": "The baby ___ peacefully now.",
+  "options": ["sleeps", "is sleeping", "slept"],
   "correct": 1
 },
 {
-  "q": "How do you respond to 'Have a safe journey'?",
-  "option1": "See you.",
-  "option2": "Goodbye.",
-  "option3": "Thank you very much.",
-  "correct": 2
+  "q": "He ___ his wallet on the bus yesterday.",
+  "options": ["lose", "lost", "loses"],
+  "correct": 1
 },
 {
-  "q": "How do you ask someone to send the file?",
-  "option1": "Please send the file.",
-  "option2": "Please sends the file.",
-  "option3": "Sending the file.",
+  "q": "They ___ to school by bicycle.",
+  "options": ["go", "goes", "went"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone if they have eaten?",
-  "option1": "You eaten?",
-  "option2": "Have you eaten?",
-  "option3": "Eaten have you?",
+  "q": "She ___ her best friend last weekend.",
+  "options": ["meet", "met", "meeting"],
   "correct": 1
 },
 {
-  "q": "How do you react after hearing excellent news?",
-  "option1": "Too bad.",
-  "option2": "Never mind.",
-  "option3": "That's fantastic!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to be patient?",
-  "option1": "Please be patient.",
-  "option2": "Please is patient.",
-  "option3": "Being patient.",
+  "q": "We ___ dinner when the phone rang.",
+  "options": ["were having", "have", "had"],
   "correct": 0
 },
 {
-  "q": "How do you ask someone if they need anything?",
-  "option1": "Need anything?",
-  "option2": "Do you need anything?",
-  "option3": "Anything need you?",
+  "q": "He ___ his room every morning.",
+  "options": ["clean", "cleans", "cleaned"],
   "correct": 1
 },
 {
-  "q": "How do you thank someone for their time?",
-  "option1": "See you.",
-  "option2": "Bye.",
-  "option3": "Thank you for your time.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to come tomorrow?",
-  "option1": "Please come tomorrow.",
-  "option2": "Please comes tomorrow.",
-  "option3": "Coming tomorrow.",
+  "q": "I ___ never visited Delhi before.",
+  "options": ["have", "has", "had"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone is interested?",
-  "option1": "Interested you?",
-  "option2": "Are you interested?",
-  "option3": "Interest are you?",
+  "q": "She ___ a cup of coffee every morning.",
+  "options": ["drink", "drinks", "drank"],
   "correct": 1
 },
 {
-  "q": "How do you politely end a phone call?",
-  "option1": "Good luck.",
-  "option2": "See you yesterday.",
-  "option3": "Talk to you later. Goodbye.",
-  "correct": 2
+  "q": "The students ___ for the exam now.",
+  "options": ["study", "are studying", "studied"],
+  "correct": 1
 },
 {
-  "q": "How do you ask someone to keep in touch?",
-  "option1": "Please keep in touch.",
-  "option2": "Please keeps in touch.",
-  "option3": "Keeping in touch.",
+  "q": "They ___ the match easily yesterday.",
+  "options": ["win", "won", "wins"],
+  "correct": 1
+},
+{
+  "q": "He ___ a letter to his friend every month.",
+  "options": ["writes", "write", "writing"],
   "correct": 0
 },
 {
-  "q": "How do you ask if someone enjoyed the trip?",
-  "option1": "Trip enjoyed?",
-  "option2": "Did you enjoy the trip?",
-  "option3": "Enjoy trip you?",
+  "q": "I ___ my grandparents every vacation.",
+  "options": ["visit", "visited", "visits"],
+  "correct": 0
+},
+{
+  "q": "She ___ her bag before leaving home.",
+  "options": ["checks", "check", "checked"],
+  "correct": 0
+},
+{
+  "q": "We ___ a movie tomorrow evening.",
+  "options": ["watch", "watched", "will watch"],
+  "correct": 2
+},
+{
+  "q": "He ___ lunch at 1 PM every day.",
+  "options": ["eat", "eats", "ate"],
   "correct": 1
 },
 {
-  "q": "How do you wish someone a happy holiday?",
-  "option1": "Good morning.",
-  "option2": "Congratulations.",
-  "option3": "Have a wonderful holiday!",
-  "correct": 2
+  "q": "They ___ in the garden now.",
+  "options": ["play", "are playing", "played"],
+  "correct": 1
+},
+{
+  "q": "She ___ the truth yesterday.",
+  "options": ["tell", "told", "telling"],
+  "correct": 1
+},
+{
+  "q": "I ___ to music before sleeping.",
+  "options": ["listen", "listens", "listening"],
+  "correct": 0
 },
    {
-  "q": "How do you ask someone to turn off the TV?",
-  "option1": "Please turn off the TV.",
-  "option2": "Please turns off the TV.",
-  "option3": "Turning off the TV.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone is available this evening?",
-  "option1": "Available this evening?",
-  "option2": "Are you available this evening?",
-  "option3": "You available evening are?",
+  "q": "She ___ her room every Sunday.",
+  "options": ["clean", "cleans", "cleaning"],
   "correct": 1
 },
 {
-  "q": "What do you say after someone says 'Happy New Year'?",
-  "option1": "Good night.",
-  "option2": "See you tomorrow.",
-  "option3": "Happy New Year to you too!",
+  "q": "I ___ a new book last week.",
+  "options": ["buy", "bought", "buying"],
+  "correct": 1
+},
+{
+  "q": "They ___ English at the moment.",
+  "options": ["study", "are studying", "studied"],
+  "correct": 1
+},
+{
+  "q": "He ___ milk every morning.",
+  "options": ["drink", "drinks", "drank"],
+  "correct": 1
+},
+{
+  "q": "We ___ to Jaipur next month.",
+  "options": ["go", "went", "will go"],
   "correct": 2
 },
 {
-  "q": "How do you ask someone to bring a chair?",
-  "option1": "Please bring a chair.",
-  "option2": "Please brings a chair.",
-  "option3": "Bringing a chair.",
-  "correct": 0
-},
-{
-  "q": "How do you ask where the nearest ATM is?",
-  "option1": "Nearest ATM where?",
-  "option2": "Where is the nearest ATM?",
-  "option3": "ATM is nearest where?",
+  "q": "She ___ her grandmother yesterday.",
+  "options": ["visit", "visited", "visiting"],
   "correct": 1
 },
 {
-  "q": "How do you respond after receiving a compliment on your work?",
-  "option1": "Never mind.",
-  "option2": "Maybe.",
-  "option3": "Thank you. I'm glad you liked it.",
+  "q": "I ___ breakfast before going to college.",
+  "options": ["have", "has", "having"],
+  "correct": 0
+},
+{
+  "q": "The boys ___ cricket every evening.",
+  "options": ["play", "plays", "played"],
+  "correct": 0
+},
+{
+  "q": "He ___ his homework now.",
+  "options": ["does", "is doing", "did"],
+  "correct": 1
+},
+{
+  "q": "They ___ a new house last year.",
+  "options": ["build", "built", "building"],
+  "correct": 1
+},
+{
+  "q": "She ___ very fast.",
+  "options": ["run", "runs", "ran"],
+  "correct": 1
+},
+{
+  "q": "I ___ this song many times.",
+  "options": ["heard", "have heard", "hear"],
+  "correct": 1
+},
+{
+  "q": "We ___ lunch when our friends arrived.",
+  "options": ["were having", "had", "have"],
+  "correct": 0
+},
+{
+  "q": "He ___ his father every weekend.",
+  "options": ["helps", "help", "helped"],
+  "correct": 0
+},
+{
+  "q": "She ___ a blue dress yesterday.",
+  "options": ["wear", "wore", "wears"],
+  "correct": 1
+},
+{
+  "q": "I ___ my mobile on the table.",
+  "options": ["keep", "keeps", "kept"],
+  "correct": 0
+},
+{
+  "q": "They ___ football yesterday evening.",
+  "options": ["play", "played", "playing"],
+  "correct": 1
+},
+{
+  "q": "He ___ in Ahmedabad since 2022.",
+  "options": ["lives", "has lived", "lived"],
+  "correct": 1
+},
+{
+  "q": "We ___ to the market every Friday.",
+  "options": ["go", "goes", "went"],
+  "correct": 0
+},
+{
+  "q": "She ___ dinner right now.",
+  "options": ["cooks", "is cooking", "cooked"],
+  "correct": 1
+},
+{
+  "q": "I ___ my friend an email yesterday.",
+  "options": ["send", "sent", "sending"],
+  "correct": 1
+},
+{
+  "q": "The sun ___ in the east.",
+  "options": ["rise", "rises", "rose"],
+  "correct": 1
+},
+{
+  "q": "He ___ a movie every Saturday.",
+  "options": ["watch", "watches", "watched"],
+  "correct": 1
+},
+{
+  "q": "They ___ their project tomorrow.",
+  "options": ["finish", "finished", "will finish"],
   "correct": 2
 },
 {
-  "q": "How do you ask someone to wait inside?",
-  "option1": "Please wait inside.",
-  "option2": "Please waits inside.",
-  "option3": "Waiting inside.",
+  "q": "She ___ the answer correctly.",
+  "options": ["knows", "know", "knew"],
   "correct": 0
-},
-{
-  "q": "How do you ask if someone has finished lunch?",
-  "option1": "Finished lunch?",
-  "option2": "Have you finished your lunch?",
-  "option3": "Lunch finished have?",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone wishes you good luck?",
-  "option1": "Sorry.",
-  "option2": "Good evening.",
-  "option3": "Thanks! I appreciate it.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to write their phone number?",
-  "option1": "Please write your phone number.",
-  "option2": "Please writes your phone number.",
-  "option3": "Writing phone number.",
-  "correct": 0
-},
-{
-  "q": "How do you ask someone if they have any siblings?",
-  "option1": "Siblings you have?",
-  "option2": "Do you have any brothers or sisters?",
-  "option3": "Brother sister have?",
-  "correct": 1
-},
-{
-  "q": "What do you say after someone helps you carry a bag?",
-  "option1": "See you.",
-  "option2": "Goodbye.",
-  "option3": "Thank you for your help.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to check the door?",
-  "option1": "Please check the door.",
-  "option2": "Please checks the door.",
-  "option3": "Checking the door.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone remembers you?",
-  "option1": "Remember me?",
-  "option2": "Do you remember me?",
-  "option3": "You remember are?",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone gives you a gift?",
-  "option1": "Maybe later.",
-  "option2": "No thanks.",
-  "option3": "That's very kind of you. Thank you!",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to call you tomorrow?",
-  "option1": "Please call me tomorrow.",
-  "option2": "Please calls me tomorrow.",
-  "option3": "Calling tomorrow.",
-  "correct": 0
-},
-{
-  "q": "How do you ask where someone learned English?",
-  "option1": "English where learned?",
-  "option2": "Where did you learn English?",
-  "option3": "Learn English where are?",
-  "correct": 1
-},
-{
-  "q": "How do you respond when someone says 'Have a great weekend'?",
-  "option1": "Good morning.",
-  "option2": "See you.",
-  "option3": "You too! Have a great weekend.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to speak one more time?",
-  "option1": "Please say that again.",
-  "option2": "Please says that again.",
-  "option3": "Saying again.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone needs a ride home?",
-  "option1": "Ride home need?",
-  "option2": "Do you need a ride home?",
-  "option3": "Need ride are?",
-  "correct": 1
 },
    {
-  "q": "How do you ask someone to keep the door open?",
-  "option1": "Please keep the door open.",
-  "option2": "Please keeps the door open.",
-  "option3": "Keeping the door open.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone has a driving license?",
-  "option1": "Driving license you have?",
-  "option2": "Do you have a driving license?",
-  "option3": "License have driving?",
+  "q": "Choose the correct article: ___ umbrella is on the table.",
+  "options": ["A", "An", "The"],
   "correct": 1
-},
-{
-  "q": "What do you say when someone invites you for dinner?",
-  "option1": "Never mind.",
-  "option2": "Maybe not.",
-  "option3": "Thank you for inviting me.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to send an email?",
-  "option1": "Please send me an email.",
-  "option2": "Please sends me an email.",
-  "option3": "Sending email.",
-  "correct": 0
-},
-{
-  "q": "How do you ask where the supermarket is?",
-  "option1": "Supermarket where?",
-  "option2": "Where is the supermarket?",
-  "option3": "Supermarket is where?",
-  "correct": 1
-},
-{
-  "q": "How do you respond after receiving birthday wishes?",
-  "option1": "See you.",
-  "option2": "Goodbye.",
-  "option3": "Thank you for your wishes.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to sit next to you?",
-  "option1": "Please sit next to me.",
-  "option2": "Please sits next to me.",
-  "option3": "Sitting next to me.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone is ready for the meeting?",
-  "option1": "Meeting ready?",
-  "option2": "Are you ready for the meeting?",
-  "option3": "Ready meeting are?",
-  "correct": 1
-},
-{
-  "q": "What do you say after someone gives you useful advice?",
-  "option1": "Maybe.",
-  "option2": "Not now.",
-  "option3": "Thank you for your advice.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to check the message?",
-  "option1": "Please check the message.",
-  "option2": "Please checks the message.",
-  "option3": "Checking message.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone likes traveling?",
-  "option1": "Traveling you like?",
-  "option2": "Do you like traveling?",
-  "option3": "Like traveling are?",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone says 'Welcome to our home'?",
-  "option1": "Good morning.",
-  "option2": "Never mind.",
-  "option3": "Thank you for having me.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to answer honestly?",
-  "option1": "Please answer honestly.",
-  "option2": "Please answers honestly.",
-  "option3": "Answering honestly.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone has seen your keys?",
-  "option1": "Seen keys?",
-  "option2": "Have you seen my keys?",
-  "option3": "Keys seen you?",
-  "correct": 1
-},
-{
-  "q": "How do you respond when someone says 'Take your time'?",
-  "option1": "Goodbye.",
-  "option2": "See you later.",
-  "option3": "Thank you. I will.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to wait a few minutes?",
-  "option1": "Please wait a few minutes.",
-  "option2": "Please waits a few minutes.",
-  "option3": "Waiting few minutes.",
-  "correct": 0
-},
-{
-  "q": "How do you ask where the hospital is?",
-  "option1": "Hospital where?",
-  "option2": "Where is the hospital?",
-  "option3": "Hospital is where?",
-  "correct": 1
-},
-{
-  "q": "How do you thank someone for their kindness?",
-  "option1": "See you.",
-  "option2": "Good night.",
-  "option3": "Thank you for your kindness.",
-  "correct": 2
-},
-{
-  "q": "How do you ask someone to speak into the microphone?",
-  "option1": "Please speak into the microphone.",
-  "option2": "Please speaks into the microphone.",
-  "option3": "Speaking microphone.",
-  "correct": 0
-},
-{
-  "q": "How do you ask if someone is coming tomorrow?",
-  "option1": "Coming tomorrow?",
-  "option2": "Are you coming tomorrow?",
-  "option3": "Tomorrow coming are?",
-  "correct": 1
-},
-   {
-  "q": "Choose the correct sentence.",
-  "option1": "She doesn't like coffee.",
-  "option2": "She don't like coffee.",
-  "option3": "She doesn't likes coffee.",
-  "correct": 0
-},
-{
-  "q": "Choose the correct article.",
-  "option1": "a umbrella",
-  "option2": "an umbrella",
-  "option3": "the umbrella",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone thanks you?",
-  "option1": "Goodbye.",
-  "option2": "See you later.",
-  "option3": "You're welcome.",
-  "correct": 2
 },
 {
   "q": "Choose the correct preposition: She is good ___ English.",
-  "option1": "at",
-  "option2": "on",
-  "option3": "for",
+  "options": ["at", "on", "for"],
   "correct": 0
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "He go to school every day.",
-  "option2": "He goes to school every day.",
-  "option3": "He going to school every day.",
+  "q": "Choose the correct word: I have lived here ___ 2019.",
+  "options": ["since", "for", "from"],
+  "correct": 0
+},
+{
+  "q": "Which sentence is correct?",
+  "options": ["He don't like tea.", "He doesn't like tea.", "He not likes tea."],
   "correct": 1
 },
 {
-  "q": "What do you say before leaving?",
-  "option1": "Good morning.",
-  "option2": "Excuse me.",
-  "option3": "See you later.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct pronoun: This gift is for ___.",
-  "option1": "her",
-  "option2": "she",
-  "option3": "hers",
+  "q": "Choose the correct modal: You ___ wear a helmet while riding.",
+  "options": ["must", "may", "can"],
   "correct": 0
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "I has a car.",
-  "option2": "I have a car.",
-  "option3": "I having a car.",
-  "correct": 1
-},
-{
-  "q": "How do you politely ask for water?",
-  "option1": "Bring water.",
-  "option2": "Water please now.",
-  "option3": "May I have some water, please?",
-  "correct": 2
-},
-{
-  "q": "Choose the correct tense: They ___ football now.",
-  "option1": "are playing",
-  "option2": "play",
-  "option3": "played",
+  "q": "What is the opposite of 'Borrow'?",
+  "options": ["Lend", "Keep", "Take"],
   "correct": 0
 },
 {
-  "q": "Choose the correct modal.",
-  "option1": "He can to swim.",
-  "option2": "He can swim.",
-  "option3": "He cans swim.",
-  "correct": 1
-},
-{
-  "q": "How do you respond to 'Good luck'?",
-  "option1": "Sorry.",
-  "option2": "Never mind.",
-  "option3": "Thank you!",
-  "correct": 2
-},
-{
-  "q": "Choose the correct article.",
-  "option1": "an hour",
-  "option2": "a hour",
-  "option3": "the hour",
+  "q": "Choose the correct pronoun: This book belongs to ___.",
+  "options": ["me", "I", "my"],
   "correct": 0
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "She have finished her work.",
-  "option2": "She has finished her work.",
-  "option3": "She has finish her work.",
-  "correct": 1
-},
-{
-  "q": "What do you say when you make a mistake?",
-  "option1": "Thank you.",
-  "option2": "Welcome.",
-  "option3": "I'm sorry.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct preposition: The book is ___ the table.",
-  "option1": "on",
-  "option2": "at",
-  "option3": "into",
-  "correct": 0
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "We was happy.",
-  "option2": "We were happy.",
-  "option3": "We is happy.",
-  "correct": 1
-},
-{
-  "q": "How do you greet someone in the morning?",
-  "option1": "Good night.",
-  "option2": "Good evening.",
-  "option3": "Good morning.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct verb.",
-  "option1": "She writes very well.",
-  "option2": "She write very well.",
-  "option3": "She writing very well.",
-  "correct": 0
-},
-{
-  "q": "Choose the correct question.",
-  "option1": "Where you live?",
-  "option2": "Where do you live?",
-  "option3": "Where are live you?",
-  "correct": 1
-},
-{
-  "q": "How do you reply when someone says 'See you tomorrow'?",
-  "option1": "Good night.",
-  "option2": "I'm sorry.",
-  "option3": "See you tomorrow.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "My father drives to work every day.",
-  "option2": "My father drive to work every day.",
-  "option3": "My father driving to work every day.",
-  "correct": 0
-},
-{
-  "q": "Choose the correct preposition: She arrived ___ the airport early.",
-  "option1": "in",
-  "option2": "at",
-  "option3": "on",
+  "q": "Fill in the blank: If I ___ rich, I would travel the world.",
+  "options": ["am", "were", "was"],
   "correct": 1
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "He don't know me.",
-  "option2": "He doesn't knows me.",
-  "option3": "He doesn't know me.",
-  "correct": 2
+  "options": ["She can speaks English.", "She can speak English.", "She can speaking English."],
+  "correct": 1
 },
 {
-  "q": "Choose the correct article.",
-  "option1": "an honest man",
-  "option2": "a honest man",
-  "option3": "the honest man",
+  "q": "What is the synonym of 'Quick'?",
+  "options": ["Fast", "Slow", "Weak"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct question: ___ do you live?",
+  "options": ["Where", "Which", "Whose"],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: I am looking ___ my keys.",
+  "options": ["for", "at", "to"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: She ___ dinner when I called.",
+  "options": ["was cooking", "cooks", "has cooked"],
+  "correct": 0
+},
+{
+  "q": "What is the plural of 'Child'?",
+  "options": ["Childs", "Children", "Childes"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: He is ___ honest man.",
+  "options": ["a", "an", "the"],
+  "correct": 1
+},
+{
+  "q": "Fill in the blank: They arrived ___ the airport on time.",
+  "options": ["at", "in", "for"],
+  "correct": 0
+},
+{
+  "q": "Which sentence is grammatically correct?",
+  "options": ["Each student has a book.", "Each students have a book.", "Each student have a book."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct verb: The news ___ surprising.",
+  "options": ["is", "are", "were"],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Accept'?",
+  "options": ["Reject", "Receive", "Allow"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is afraid ___ dogs.",
+  "options": ["of", "from", "with"],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: Neither Ram nor his friends ___ coming.",
+  "options": ["is", "are", "was"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I have been to Delhi.", "I has been to Delhi.", "I have went to Delhi."],
+  "correct": 0
+},
+{
+  "q": "Fill in the blank: He apologized ___ being late.",
+  "options": ["for", "to", "with"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct WH word: ___ bag is this?",
+  "options": ["Whose", "Who", "Whom"],
+  "correct": 0
+},
+{
+  "q": "Which spoken English sentence is natural?",
+  "options": ["Could you please help me?", "Help me now only.", "You help me?"],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct phrasal verb: Please ___ the lights before leaving.",
+  "options": ["turn off", "turn on", "turn into"],
+  "correct": 0
+},
+{
+  "q": "What does 'Break the ice' mean?",
+  "options": ["Start a conversation", "Break something", "Feel cold"],
+  "correct": 0
+},
+{
+  "q": "Find the incorrect word: She don't like coffee.",
+  "options": ["She", "don't", "coffee"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["He is good in Maths.", "He is good at Maths.", "He is good on Maths."],
+  "correct": 1
+},
+{
+  "q": "Complete the sentence: I am looking forward ___ meeting you.",
+  "options": ["to", "for", "at"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct expression for answering a phone call.",
+  "options": ["Speaking.", "I am hearing.", "Tell quickly."],
+  "correct": 0
+},
+{
+  "q": "What does 'Once in a blue moon' mean?",
+  "options": ["Very rarely", "Every month", "At night"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: Divide the cake ___ four pieces.",
+  "options": ["into", "in", "by"],
+  "correct": 0
+},
+{
+  "q": "Which sentence is correct?",
+  "options": ["Neither of them know me.", "Neither of them knows me.", "Neither of them knowing me."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: She insisted ___ paying the bill.",
+  "options": ["on", "to", "for"],
+  "correct": 0
+},
+{
+  "q": "What does 'Call off' mean?",
+  "options": ["Cancel", "Telephone", "Shout loudly"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ MBA graduate.",
+  "options": ["a", "an", "the"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'Would you like some coffee?'",
+  "options": ["Yes, please.", "I liking coffee.", "Coffee yes take."],
+  "correct": 0
+},
+{
+  "q": "Find the error: Everyone have completed the task.",
+  "options": ["Everyone", "have", "task"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct phrasal verb: Never ___ your dreams.",
+  "options": ["give up", "give in", "give away"],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Piece of cake'?",
+  "options": ["Very easy", "A dessert", "Very costly"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is capable ___ solving this problem.",
+  "options": ["of", "to", "for"],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: Hardly had I reached the station ___ the train left.",
+  "options": ["when", "than", "then"],
+  "correct": 0
+},
+{
+  "q": "Choose the natural spoken English sentence.",
+  "options": ["What do you do?", "What are you doing for job?", "What job you do?"],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "They has completed the work.",
-  "option2": "They have completed the work.",
-  "option3": "They have complete the work.",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone says 'Happy Birthday'?",
-  "option1": "Good luck.",
-  "option2": "See you.",
-  "option3": "Thank you!",
-  "correct": 2
-},
-{
-  "q": "Choose the correct pronoun.",
-  "option1": "This pen is mine.",
-  "option2": "This pen is my.",
-  "option3": "This pen is me.",
+  "options": ["No sooner did he arrive than it started raining.", "No sooner he arrived than it started raining.", "No sooner did he arrived than it started raining."],
   "correct": 0
 },
 {
-  "q": "Choose the correct tense.",
-  "option1": "I am knowing the answer.",
-  "option2": "I know the answer.",
-  "option3": "I knowing the answer.",
-  "correct": 1
+  "q": "What does 'Look after' mean?",
+  "options": ["Take care of", "Search for", "Look behind"],
+  "correct": 0
 },
 {
-  "q": "How do you politely ask someone to repeat?",
-  "option1": "Repeat now.",
-  "option2": "Say again.",
-  "option3": "Could you repeat that, please?",
-  "correct": 2
+  "q": "Choose the correct preposition: She apologized ___ her mistake.",
+  "options": ["for", "about", "with"],
+  "correct": 0
 },
 {
-  "q": "Choose the correct preposition: He is interested ___ music.",
-  "option1": "in",
-  "option2": "on",
-  "option3": "at",
+  "q": "Choose the correct word: The meeting has been postponed ___ Monday.",
+  "options": ["until", "since", "from"],
+  "correct": 0
+},
+{
+  "q": "Which sentence is grammatically correct?",
+  "options": ["One of the boys is absent.", "One of the boys are absent.", "One of boys is absent."],
+  "correct": 0
+},
+{
+  "q": "Choose the best response: 'Thank you very much.'",
+  "options": ["You're welcome.", "Mention not.", "No mention please."],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct word: She is interested ___ learning English.",
+  "options": ["in", "on", "at"],
+  "correct": 0
+},
+{
+  "q": "What does 'Hit the nail on the head' mean?",
+  "options": ["Say exactly the right thing", "Hit someone", "Do carpentry"],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "She can sings well.",
-  "option2": "She can sing well.",
-  "option3": "She can singing well.",
-  "correct": 1
-},
-{
-  "q": "How do you answer 'How are you?'",
-  "option1": "Good night.",
-  "option2": "See you later.",
-  "option3": "I'm fine, thank you.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "There are many books on the shelf.",
-  "option2": "There is many books on the shelf.",
-  "option3": "There many books are on the shelf.",
+  "options": ["He has been working here for five years.", "He is working here since five years.", "He has working here for five years."],
   "correct": 0
 },
 {
-  "q": "Choose the correct article.",
-  "option1": "a MBA student",
-  "option2": "an MBA student",
-  "option3": "the MBA student",
-  "correct": 1
-},
-{
-  "q": "How do you thank someone for helping you?",
-  "option1": "Excuse me.",
-  "option2": "Goodbye.",
-  "option3": "Thank you for your help.",
+  "q": "Find the error: My brother, along with his friends, are coming.",
+  "options": ["brother", "along with", "are"],
   "correct": 2
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "If I were you, I would study harder.",
-  "option2": "If I was you, I will study harder.",
-  "option3": "If I am you, I would study harder.",
+  "q": "Choose the correct preposition: The manager is responsible ___ the project.",
+  "options": ["for", "of", "with"],
   "correct": 0
 },
 {
-  "q": "Choose the correct preposition: We are waiting ___ the bus.",
-  "option1": "at",
-  "option2": "for",
-  "option3": "to",
-  "correct": 1
+  "q": "What is the meaning of 'Under the weather'?",
+  "options": ["Feeling sick", "Standing outside", "Enjoying rain"],
+  "correct": 0
 },
 {
-  "q": "How do you greet someone in the evening?",
-  "option1": "Good morning.",
-  "option2": "Good afternoon.",
-  "option3": "Good evening.",
-  "correct": 2
+  "q": "Choose the correct article: She adopted ___ European child.",
+  "options": ["a", "an", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: We should ___ the meeting until tomorrow.",
+  "options": ["put off", "put on", "put up"],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'How have you been?'",
+  "options": ["I've been great, thanks.", "I am from India.", "Very yesterday."],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: The teacher congratulated me ___ my success.",
+  "options": ["on", "for", "to"],
+  "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "Neither of the boys is absent.",
-  "option2": "Neither of the boys are absent.",
-  "option3": "Neither boys is absent.",
+  "options": ["Each of the players has a jersey.", "Each of the players have a jersey.", "Each players has a jersey."],
+  "correct": 0
+},
+{
+  "q": "What does 'Run into' mean?",
+  "options": ["Meet unexpectedly", "Run fast", "Enter a race"],
+  "correct": 0
+},
+{
+  "q": "Find the error: Neither the teacher nor the students was ready.",
+  "options": ["Neither", "students", "was"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct word: I prefer tea ___ coffee.",
+  "options": ["to", "than", "over"],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Brave'?",
+  "options": ["Courageous", "Coward", "Lazy"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": ["May I come in?", "Can I entering?", "May I entered?"],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: Scarcely had we reached ___ it started raining.",
+  "options": ["when", "than", "then"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She suffers ___ asthma.",
+  "options": ["from", "by", "with"],
+  "correct": 0
+},
+{
+  "q": "What does 'Back out' mean?",
+  "options": ["Withdraw from an agreement", "Drive backwards", "Leave home"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["The police are investigating the case.", "The police is investigating the case.", "The police was investigating the case."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is senior ___ me.",
+  "options": ["to", "than", "from"],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Burn the midnight oil'?",
+  "options": ["Study or work late at night", "Light a lamp", "Cook food"],
+  "correct": 0
+},
+{
+  "q": "Find the error: One of my friend is a doctor.",
+  "options": ["One", "friend", "doctor"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct phrasal verb: Don't ___ your parents when they are talking.",
+  "options": ["cut in on", "cut off", "cut down"],
+  "correct": 0
+},
+{
+  "q": "Choose the best response: 'Could you do me a favor?'",
+  "options": ["Sure, what do you need?", "No, I am favor.", "Favor is good."],
   "correct": 0
 },
    {
   "q": "Choose the correct sentence.",
-  "option1": "She has went to school.",
-  "option2": "She has gone to school.",
-  "option3": "She have gone to school.",
+  "options": [
+    "She is married to a doctor.",
+    "She is married with a doctor.",
+    "She is married by a doctor."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Bring up' mean?",
+  "options": [
+    "Raise a child",
+    "Carry upstairs",
+    "Wake up"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He succeeded ___ passing the exam.",
+  "options": [
+    "in",
+    "at",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Everybody have their own opinion.",
+  "options": [
+    "Everybody",
+    "have",
+    "opinion"
+  ],
   "correct": 1
 },
 {
-  "q": "What do you say when someone says 'Have a nice day'?",
-  "option1": "Good night.",
-  "option2": "See you yesterday.",
-  "option3": "You too!",
-  "correct": 2
+  "q": "What is the meaning of 'Beat around the bush'?",
+  "options": [
+    "Avoid the main topic",
+    "Work in a garden",
+    "Fight with someone"
+  ],
+  "correct": 0
 },
 {
-  "q": "Choose the correct preposition: The cat is ___ the chair.",
-  "option1": "under",
-  "option2": "on",
-  "option3": "at",
+  "q": "Choose the correct article: It was ___ unique opportunity.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the natural spoken English response: 'Excuse me, is this seat taken?'",
+  "options": [
+    "No, please have a seat.",
+    "Seat is taking.",
+    "You can sat."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is addicted ___ online games.",
+  "options": [
+    "to",
+    "with",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Carry on' mean?",
+  "options": [
+    "Continue",
+    "Carry a bag",
+    "Stop working"
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "I didn't went there.",
-  "option2": "I didn't go there.",
-  "option3": "I don't went there.",
+  "options": [
+    "Neither answer is correct.",
+    "Neither answers are correct.",
+    "Neither answer are correct."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She insisted ___ coming with us.",
+  "options": [
+    "on",
+    "to",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The furniture are very expensive.",
+  "options": [
+    "furniture",
+    "are",
+    "expensive"
+  ],
   "correct": 1
 },
 {
-  "q": "Choose the correct response.",
-  "option1": "Never mind.",
-  "option2": "Good evening.",
-  "option3": "My pleasure.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct article.",
-  "option1": "an engineer",
-  "option2": "a engineer",
-  "option3": "the engineer",
+  "q": "What is the synonym of 'Generous'?",
+  "options": [
+    "Kind",
+    "Selfish",
+    "Cruel"
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "Each students has a book.",
-  "option2": "Each student has a book.",
-  "option3": "Each student have a book.",
-  "correct": 1
+  "options": [
+    "I would rather stay home.",
+    "I would rather to stay home.",
+    "I rather stay home."
+  ],
+  "correct": 0
 },
 {
-  "q": "How do you respond when someone apologizes?",
-  "option1": "Goodbye.",
-  "option2": "Thank you.",
-  "option3": "That's okay.",
-  "correct": 2
+  "q": "Choose the correct word: She is proud ___ her son.",
+  "options": [
+    "of",
+    "on",
+    "for"
+  ],
+  "correct": 0
 },
 {
-  "q": "Choose the correct preposition: He was born ___ 2005.",
-  "option1": "in",
-  "option2": "on",
-  "option3": "at",
+  "q": "What does 'Make up' mean?",
+  "options": [
+    "Become friends again",
+    "Apply makeup only",
+    "Wake up"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'I'm sorry I'm late.'",
+  "options": [
+    "That's okay.",
+    "You are late yesterday.",
+    "Sorry is late."
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "She don't like tea.",
-  "option2": "She doesn't like tea.",
-  "option3": "She doesn't likes tea.",
-  "correct": 1
-},
-{
-  "q": "What do you say before asking a question politely?",
-  "option1": "Sorry.",
-  "option2": "Listen.",
-  "option3": "Excuse me.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct verb.",
-  "option1": "The sun rises in the east.",
-  "option2": "The sun rise in the east.",
-  "option3": "The sun rising in the east.",
-  "correct": 0
-},
-{
-  "q": "Choose the correct modal sentence.",
-  "option1": "You must to wear a helmet.",
-  "option2": "You must wear a helmet.",
-  "option3": "You must wearing a helmet.",
-  "correct": 1
-},
-{
-  "q": "How do you congratulate someone on passing an exam?",
-  "option1": "Better luck next time.",
-  "option2": "Good night.",
-  "option3": "Congratulations!",
-  "correct": 2
-},
-{
-  "q": "Choose the correct pronoun.",
-  "option1": "They invited us to the party.",
-  "option2": "They invited we to the party.",
-  "option3": "They invited our to the party.",
-  "correct": 0
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "Has he finished his homework?",
-  "option2": "Did he has finished his homework?",
-  "option3": "Has he finish his homework?",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone offers you tea and you accept?",
-  "option1": "No, thanks.",
-  "option2": "Maybe tomorrow.",
-  "option3": "Yes, please.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct preposition: She is afraid ___ dogs.",
-  "option1": "of",
-  "option2": "from",
-  "option3": "with",
-  "correct": 0
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "There isn't some milk.",
-  "option2": "There isn't any milk.",
-  "option3": "There aren't any milk.",
-  "correct": 1
-},
-{
-  "q": "What do you say when ending a formal email?",
-  "option1": "Good morning.",
-  "option2": "See ya.",
-  "option3": "Kind regards.",
-  "correct": 2
-},
-   {
-  "q": "Choose the correct sentence.",
-  "option1": "She enjoys reading books.",
-  "option2": "She enjoy reading books.",
-  "option3": "She enjoying reading books.",
+  "options": [
+    "The committee has made its decision.",
+    "The committee have made its decision.",
+    "The committee making its decision."
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct preposition: He is famous ___ his honesty.",
-  "option1": "for",
-  "option2": "of",
-  "option3": "with",
+  "options": [
+    "for",
+    "from",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'On cloud nine'?",
+  "options": [
+    "Extremely happy",
+    "Flying in the sky",
+    "Feeling sleepy"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: She enjoys to read novels.",
+  "options": [
+    "enjoys",
+    "to read",
+    "novels"
+  ],
   "correct": 1
 },
 {
-  "q": "What do you say when someone says 'Welcome'?",
-  "option1": "Good night.",
-  "option2": "See you.",
-  "option3": "Thank you.",
-  "correct": 2
+  "q": "Choose the correct phrasal verb: Please ___ your shoes before entering.",
+  "options": [
+    "take off",
+    "take over",
+    "take after"
+  ],
+  "correct": 0
 },
 {
-  "q": "Choose the correct article.",
-  "option1": "an orange",
-  "option2": "a orange",
-  "option3": "the orange",
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you repeat that, please?",
+    "Repeat again.",
+    "Speak one more."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is capable ___ doing the job alone.",
+  "options": [
+    "of",
+    "to",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Pull someone's leg' mean?",
+  "options": [
+    "Tease someone jokingly",
+    "Help someone walk",
+    "Fight with someone"
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She bought ___ orange from the market.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He apologized ___ his behavior.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Look up to' mean?",
+  "options": [
+    "Respect and admire",
+    "Search on Google",
+    "Look at the sky"
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "They was playing cricket.",
-  "option2": "They were playing cricket.",
-  "option3": "They is playing cricket.",
+  "options": [
+    "I have known him for ten years.",
+    "I am knowing him for ten years.",
+    "I know him since ten years."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: One of the student is absent today.",
+  "options": [
+    "One",
+    "student",
+    "today"
+  ],
   "correct": 1
 },
 {
-  "q": "How do you reply to 'See you soon'?",
-  "option1": "Good morning.",
-  "option2": "Never mind.",
-  "option3": "See you soon.",
-  "correct": 2
+  "q": "Choose the correct word: She is married ___ an engineer.",
+  "options": [
+    "to",
+    "with",
+    "by"
+  ],
+  "correct": 0
 },
 {
-  "q": "Choose the correct pronoun.",
-  "option1": "This is our house.",
-  "option2": "This is we house.",
-  "option3": "This is us house.",
+  "q": "What is the meaning of 'By heart'?",
+  "options": [
+    "From memory",
+    "With love",
+    "By chance"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best response: 'How's everything going?'",
+  "options": [
+    "Everything is going well.",
+    "Everything go.",
+    "Everything gone."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Please ___ the form carefully.",
+  "options": [
+    "fill out",
+    "fill up with",
+    "fill over"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ MLA.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She is afraid ___ heights.",
+  "options": [
+    "of",
+    "from",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The sceneries of Kashmir are beautiful.",
+  "options": [
+    "sceneries",
+    "Kashmir",
+    "beautiful"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Cut down on' mean?",
+  "options": [
+    "Reduce",
+    "Cut a tree",
+    "Stop completely"
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "He can to drive.",
-  "option2": "He can drive.",
-  "option3": "He can driving.",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone asks 'How's everything?'",
-  "option1": "Goodbye.",
-  "option2": "Excuse me.",
-  "option3": "Everything is going well.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct preposition: We walked ___ the bridge.",
-  "option1": "across",
-  "option2": "between",
-  "option3": "among",
+  "options": [
+    "The information is useful.",
+    "The informations are useful.",
+    "Informations is useful."
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "She have two brothers.",
-  "option2": "She has two brothers.",
-  "option3": "She having two brothers.",
-  "correct": 1
-},
-{
-  "q": "How do you politely decline an invitation?",
-  "option1": "I will come.",
-  "option2": "Maybe never.",
-  "option3": "I'm sorry, I can't make it.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "I have never seen snow.",
-  "option2": "I never have seen snow.",
-  "option3": "I has never seen snow.",
+  "q": "Choose the correct word: I am accustomed ___ waking up early.",
+  "options": [
+    "to",
+    "for",
+    "with"
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct article.",
-  "option1": "a honest person",
-  "option2": "an honest person",
-  "option3": "the honest person",
-  "correct": 1
-},
-{
-  "q": "How do you wish someone before a journey?",
-  "option1": "Good evening.",
-  "option2": "Happy Birthday.",
-  "option3": "Have a safe trip!",
-  "correct": 2
-},
-{
-  "q": "Choose the correct preposition: The meeting starts ___ 9 a.m.",
-  "option1": "at",
-  "option2": "on",
-  "option3": "in",
+  "q": "What is the antonym of 'Expand'?",
+  "options": [
+    "Reduce",
+    "Increase",
+    "Develop"
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "Does she likes coffee?",
-  "option2": "Does she like coffee?",
-  "option3": "Do she like coffee?",
-  "correct": 1
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could I have the bill, please?",
+    "Give me bill.",
+    "Bill bring."
+  ],
+  "correct": 0
 },
 {
-  "q": "How do you thank someone for a gift?",
-  "option1": "Good luck.",
-  "option2": "Never mind.",
-  "option3": "Thank you. I really love it.",
+  "q": "Choose the correct preposition: He is addicted ___ smoking.",
+  "options": [
+    "to",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Turn up' mean?",
+  "options": [
+    "Appear",
+    "Rotate",
+    "Turn right"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Neither of the answers are correct.",
+  "options": [
+    "Neither",
+    "answers",
+    "are"
+  ],
   "correct": 2
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "Neither answer is correct.",
-  "option2": "Neither answers are correct.",
-  "option3": "Neither answer are correct.",
+  "options": [
+    "She is fond of dancing.",
+    "She is fond to dance.",
+    "She is fond for dancing."
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct question.",
-  "option1": "What time it is?",
-  "option2": "What time is it?",
-  "option3": "What is time it?",
+  "q": "Choose the correct word: The train arrived ___ time.",
+  "options": [
+    "on",
+    "in",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Get over' mean?",
+  "options": [
+    "Recover from",
+    "Jump over",
+    "Cross the road"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Have a nice day!'",
+  "options": [
+    "You too!",
+    "Nice day.",
+    "Yes, day."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Much progress has been made.",
+    "Many progress has been made.",
+    "Much progresses have been made."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: He is ___ honest man.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Give up' mean?",
+  "options": [
+    "Continue",
+    "Stop trying",
+    "Speed up"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She is good ___ Mathematics.",
+  "options": [
+    "at",
+    "on",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He don't play cricket.",
+    "He doesn't plays cricket.",
+    "He doesn't play cricket."
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the synonym of 'Ancient'?",
+  "options": [
+    "Modern",
+    "Old",
+    "Future"
+  ],
   "correct": 1
 },
    {
-  "q": "Choose the correct response to 'How do you do?'",
-  "option1": "How do you do?",
-  "option2": "I'm sleeping.",
-  "option3": "Good night.",
+  "q": "Choose the correct article: She is ___ university student.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is familiar ___ this software.",
+  "options": [
+    "to",
+    "with",
+    "at"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Come across' mean?",
+  "options": [
+    "Cross a road",
+    "Meet by chance",
+    "Come quickly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the books are mine.",
+    "Neither of the books is mine.",
+    "Neither books is mine."
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: The quality of these apples are excellent.",
+  "options": [
+    "quality",
+    "these",
+    "are"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'In hot water'?",
+  "options": [
+    "Taking a bath",
+    "In trouble",
+    "Feeling warm"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: She is famous ___ her paintings.",
+  "options": [
+    "with",
+    "at",
+    "for"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the natural reply: 'Can I borrow your pen?'",
+  "options": [
+    "Sure, here you are.",
+    "I am pen.",
+    "Pen is there only."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Don't ___ your dreams.",
+  "options": [
+    "give up on",
+    "give away",
+    "give back"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It took me ___ hour to finish the work.",
+  "options": [
+    "the",
+    "an",
+    "a"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She was absent ___ school yesterday.",
+  "options": [
+    "from",
+    "at",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: One of the girls have won the prize.",
+  "options": [
+    "One",
+    "girls",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Turn down' mean?",
+  "options": [
+    "Reject",
+    "Sit down",
+    "Look down"
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "He don't eat meat.",
-  "option2": "He doesn't eat meat.",
-  "option3": "He doesn't eats meat.",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone says 'Congratulations'?",
-  "option1": "Never mind.",
-  "option2": "See you later.",
-  "option3": "Thank you very much.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct preposition: The children are ___ the playground.",
-  "option1": "in",
-  "option2": "on",
-  "option3": "at",
+  "options": [
+    "She speaks English fluently.",
+    "She speak English fluently.",
+    "She speaking English fluently."
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct article.",
-  "option1": "a eagle",
-  "option2": "an eagle",
-  "option3": "the eagle",
-  "correct": 1
+  "q": "Choose the correct word: I am grateful ___ your help.",
+  "options": [
+    "with",
+    "for",
+    "to"
+  ],
+  "correct": 2
 },
 {
-  "q": "How do you politely ask someone to close the window?",
-  "option1": "Close the window now!",
-  "option2": "Window close.",
-  "option3": "Could you please close the window?",
-  "correct": 2
+  "q": "What is the antonym of 'Generous'?",
+  "options": [
+    "Selfish",
+    "Helpful",
+    "Kind"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you speak a little slower?",
+    "Speak slowly little.",
+    "You slow speak."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We congratulated him ___ his success.",
+  "options": [
+    "on",
+    "for",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Take after' mean?",
+  "options": [
+    "Run behind",
+    "Resemble a family member",
+    "Take something later"
+  ],
+  "correct": 1
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "My mother cooks delicious food.",
-  "option2": "My mother cooks delicious foods.",
-  "option3": "My mother cook delicious food.",
+  "options": [
+    "The furniture is very costly.",
+    "The furniture are very costly.",
+    "The furnitures are very costly."
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct modal verb.",
-  "option1": "You should to study harder.",
-  "option2": "You should study harder.",
-  "option3": "You should studying harder.",
-  "correct": 1
-},
-{
-  "q": "What do you say after someone says 'Good luck'?",
-  "option1": "Goodbye.",
-  "option2": "See you.",
-  "option3": "Thanks!",
+  "q": "Choose the correct word: He insisted ___ paying the bill himself.",
+  "options": [
+    "at",
+    "for",
+    "on"
+  ],
   "correct": 2
 },
 {
-  "q": "Choose the correct preposition: She is married ___ a doctor.",
-  "option1": "to",
-  "option2": "with",
-  "option3": "at",
+  "q": "Find the error: Every students must wear an ID card.",
+  "options": [
+    "Every",
+    "students",
+    "must"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'The last straw'?",
+  "options": [
+    "The final problem that causes someone to lose patience",
+    "The last piece of grass",
+    "A farming tool"
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct sentence.",
-  "option1": "The news are interesting.",
-  "option2": "The news is interesting.",
-  "option3": "The news were interesting.",
-  "correct": 1
-},
-{
-  "q": "How do you respond when someone says 'Have a good weekend'?",
-  "option1": "I'm busy.",
-  "option2": "Not today.",
-  "option3": "You too!",
-  "correct": 2
-},
-{
-  "q": "Choose the correct pronoun.",
-  "option1": "Everyone should bring their ID.",
-  "option2": "Everyone should bring hisselves ID.",
-  "option3": "Everyone should bring them ID.",
-  "correct": 0
-},
-{
-  "q": "Choose the correct sentence.",
-  "option1": "She has wrote a letter.",
-  "option2": "She has written a letter.",
-  "option3": "She have written a letter.",
-  "correct": 1
-},
-{
-  "q": "What do you say when someone offers you help?",
-  "option1": "Go away.",
-  "option2": "Maybe.",
-  "option3": "Yes, please. Thank you.",
-  "correct": 2
-},
-{
-  "q": "Choose the correct preposition: I have lived here ___ five years.",
-  "option1": "for",
-  "option2": "since",
-  "option3": "from",
+  "q": "Choose the best reply: 'Would you mind opening the window?'",
+  "options": [
+    "Not at all.",
+    "I mind it.",
+    "Window is open yesterday."
+  ],
   "correct": 0
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "Did you saw him yesterday?",
-  "option2": "Did you see him yesterday?",
-  "option3": "Did you seen him yesterday?",
+  "options": [
+    "Hardly had I sat down when the phone rang.",
+    "Hardly I had sat down when the phone rang.",
+    "Hardly had I sat down than the phone rang."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: It was ___ one-time opportunity.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She is capable ___ solving difficult problems.",
+  "options": [
+    "of",
+    "for",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Bring about' mean?",
+  "options": [
+    "Delay something",
+    "Cause to happen",
+    "Bring home"
+  ],
   "correct": 1
 },
 {
-  "q": "How do you politely interrupt someone?",
-  "option1": "Move aside.",
-  "option2": "Stop talking.",
-  "option3": "Excuse me, may I say something?",
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each employee has an ID card.",
+    "Each employee have an ID card.",
+    "Each employees has an ID card."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Mathematics are my favorite subject.",
+  "options": [
+    "Mathematics",
+    "are",
+    "favorite"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Spill the beans'?",
+  "options": [
+    "Cook food",
+    "Reveal a secret",
+    "Drop vegetables"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: He is jealous ___ his brother.",
+  "options": [
+    "of",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Could you help me with this bag?'",
+  "options": [
+    "Certainly.",
+    "I am bag.",
+    "Bag is helping."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: We need to ___ the meeting until Monday.",
+  "options": [
+    "put off",
+    "put away",
+    "put aside"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ MP.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is different ___ his brother.",
+  "options": [
+    "than",
+    "from",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: The cattle is grazing in the field.",
+  "options": [
+    "cattle",
+    "is",
+    "field"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Pass away' mean?",
+  "options": [
+    "Travel away",
+    "Die",
+    "Pass an exam"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has little knowledge of computers.",
+    "She has few knowledge of computers.",
+    "She have little knowledge of computers."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: We arrived ___ the station early.",
+  "options": [
+    "at",
+    "on",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Expand'?",
+  "options": [
+    "Increase",
+    "Contract",
+    "Improve"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you like to join us?",
+    "You like join us?",
+    "Join us you?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She has been working here ___ 2021.",
+  "options": [
+    "for",
+    "since",
+    "from"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Break down' mean?",
+  "options": [
+    "Stop working",
+    "Build something",
+    "Start moving"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the answers is correct.",
+    "Neither of the answers are correct.",
+    "Neither answers is correct."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He was accused ___ stealing money.",
+  "options": [
+    "for",
+    "of",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: She is one of the best player in the team.",
+  "options": [
+    "one",
+    "player",
+    "team"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Face the music'?",
+  "options": [
+    "Sing a song",
+    "Accept the consequences",
+    "Listen to music"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Do you mind if I sit here?'",
+  "options": [
+    "Not at all. Please do.",
+    "Yes, you sit yesterday.",
+    "I mind chair."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No sooner had she arrived than it started raining.",
+    "No sooner she had arrived than it started raining.",
+    "No sooner had she arrived when it started raining."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: He bought ___ used car yesterday.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She is interested ___ photography.",
+  "options": [
+    "in",
+    "on",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Carry out' mean?",
+  "options": [
+    "Throw away",
+    "Perform or complete",
+    "Carry a bag"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Every member was present.",
+    "Every members were present.",
+    "Every member were present."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The police has arrested the thief.",
+  "options": [
+    "police",
+    "has",
+    "thief"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'A blessing in disguise'?",
+  "options": [
+    "A hidden problem",
+    "Something good that seemed bad at first",
+    "A lucky dress"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: He is ashamed ___ his mistake.",
+  "options": [
+    "of",
+    "for",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best response: 'Could you repeat that?'",
+  "options": [
+    "Certainly.",
+    "I repeated yesterday.",
+    "Repeat is done."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Don't ___ your parents.",
+  "options": [
+    "talk back to",
+    "talk over",
+    "talk down"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ honest employee.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He insisted ___ going alone.",
+  "options": [
+    "with",
+    "on",
+    "to"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: Neither of the boys have arrived.",
+  "options": [
+    "Neither",
+    "boys",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Look into' mean?",
+  "options": [
+    "Investigate",
+    "Look inside a mirror",
+    "Watch carefully"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The advice was useful.",
+    "The advices were useful.",
+    "The advice were useful."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is married ___ a businessman.",
+  "options": [
+    "to",
+    "with",
+    "by"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Permanent'?",
+  "options": [
+    "Strong",
+    "Temporary",
+    "Modern"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you mind closing the door?",
+    "Close the door, no?",
+    "Door close please now."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We are proud ___ our country.",
+  "options": [
+    "for",
+    "of",
+    "to"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Call back' mean?",
+  "options": [
+    "Return a phone call",
+    "Call loudly",
+    "Invite someone"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Either answer is acceptable.",
+    "Either answers are acceptable.",
+    "Either answer are acceptable."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She apologized ___ being late.",
+  "options": [
+    "for",
+    "with",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The news are very shocking.",
+  "options": [
+    "news",
+    "are",
+    "shocking"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Hit the sack'?",
+  "options": [
+    "Start working",
+    "Go to bed",
+    "Pack a bag"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Would you like some tea?'",
+  "options": [
+    "Yes, I'd love some.",
+    "Tea is good yesterday.",
+    "I am tea."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Not only did he apologize, but he also paid for the damage.",
+    "Not only he apologized, but also paid for the damage.",
+    "Not only did he apologized, but he also paid."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She adopted ___ eight-year-old boy.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is opposed ___ the new policy.",
+  "options": [
+    "to",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Figure out' mean?",
+  "options": [
+    "Draw a figure",
+    "Understand or solve",
+    "Stand outside"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Everybody likes honesty.",
+    "Everybody like honesty.",
+    "Everybody liking honesty."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: One of the books were missing.",
+  "options": [
+    "One",
+    "books",
+    "were"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Cost an arm and a leg'?",
+  "options": [
+    "Very expensive",
+    "Very dangerous",
+    "Very comfortable"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is keen ___ learning new languages.",
+  "options": [
+    "on",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Thanks for your help.'",
+  "options": [
+    "You're most welcome.",
+    "Help is thanks.",
+    "Welcome helped."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Please ___ your shoes before entering the temple.",
+  "options": [
+    "take off",
+    "take up",
+    "take over"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ FBI officer.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She suffers ___ migraine.",
+  "options": [
+    "from",
+    "of",
+    "by"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The jury has given their decision.",
+  "options": [
+    "jury",
+    "their",
+    "decision"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Run out of' mean?",
+  "options": [
+    "Escape",
+    "Have no more left",
+    "Run very fast"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Little did I know what would happen.",
+    "Little I did know what would happen.",
+    "Little did know I what would happen."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is grateful ___ his parents.",
+  "options": [
+    "to",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Artificial'?",
+  "options": [
+    "Natural",
+    "Plastic",
+    "Modern"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please explain it again?",
+    "Explain again once.",
+    "Again explain you."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is known ___ his kindness.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Hold on' mean?",
+  "options": [
+    "Wait",
+    "Catch someone",
+    "Climb up"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The audience was excited.",
+    "The audience were exciting.",
+    "The audiences was excited."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is aware ___ the risks.",
+  "options": [
+    "of",
+    "about",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Ten kilometers are a long distance to walk.",
+  "options": [
+    "Ten kilometers",
+    "are",
+    "distance"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Miss the boat'?",
+  "options": [
+    "Travel by ship",
+    "Lose an opportunity",
+    "Go fishing"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Can I ask you a question?'",
+  "options": [
+    "Of course.",
+    "Question is asking.",
+    "You asked yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Only after the meeting did I understand the issue.",
+    "Only after the meeting I understood the issue.",
+    "Only after the meeting did I understood the issue."
+  ],
+  "correct": 0
+},
+  {
+  "q": "Choose the correct article: He is ___ heir to the property.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: The teacher was pleased ___ my performance.",
+  "options": [
+    "with",
+    "to",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Go through' mean?",
+  "options": [
+    "Examine carefully",
+    "Walk around",
+    "Travel abroad"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "None of the students were absent.",
+    "None of the students was absent.",
+    "None students was absent."
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: Every boy and every girl were given a prize.",
+  "options": [
+    "Every boy",
+    "every girl",
+    "were"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Keep an eye on'?",
+  "options": [
+    "Watch carefully",
+    "Close your eyes",
+    "Wear glasses"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is addicted ___ social media.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Would you like to have lunch with us?'",
+  "options": [
+    "Yes, I'd be happy to.",
+    "Lunch is good.",
+    "I already lunch."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Never ___ a good opportunity.",
+  "options": [
+    "pass up",
+    "pass away",
+    "pass by"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She received ___ SMS from her friend.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is famous ___ his inventions.",
+  "options": [
+    "for",
+    "by",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The number of applicants have increased.",
+  "options": [
+    "number",
+    "applicants",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Take over' mean?",
+  "options": [
+    "Gain control of",
+    "Take a break",
+    "Carry something"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Few people know the truth.",
+    "Few people knows the truth.",
+    "Few peoples know the truth."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is anxious ___ the result.",
+  "options": [
+    "about",
+    "with",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Victory'?",
+  "options": [
+    "Success",
+    "Defeat",
+    "Prize"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you tell me the way to the station?",
+    "Tell station way.",
+    "Where station is tell?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is satisfied ___ her exam results.",
+  "options": [
+    "with",
+    "by",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Back up' mean?",
+  "options": [
+    "Support",
+    "Move forward",
+    "Wake up"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The staff are working hard.",
+    "The staff is working hard.",
+    "The staffs are working hard."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: He is eligible ___ the scholarship.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Physics are an interesting subject.",
+  "options": [
+    "Physics",
+    "are",
+    "interesting"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Turn a deaf ear'?",
+  "options": [
+    "Ignore someone",
+    "Listen carefully",
+    "Become deaf"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Could I use your phone for a minute?'",
+  "options": [
+    "Sure, go ahead.",
+    "Phone is using.",
+    "One minute phone."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Seldom do we see such talent.",
+    "Seldom we see such talent.",
+    "Seldom do we saw such talent."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She is ___ NCC cadet.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is tired ___ waiting.",
+  "options": [
+    "of",
+    "from",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Cut off' mean?",
+  "options": [
+    "Disconnect",
+    "Continue",
+    "Repair"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Either of these plans is acceptable.",
+    "Either of these plans are acceptable.",
+    "Either these plans is acceptable."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The list of items are on the table.",
+  "options": [
+    "list",
+    "items",
+    "are"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Bite off more than you can chew'?",
+  "options": [
+    "Eat quickly",
+    "Take on more responsibility than you can handle",
+    "Waste food"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: She is familiar ___ the new rules.",
+  "options": [
+    "with",
+    "to",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'May I join you?'",
+  "options": [
+    "Of course, please do.",
+    "You joined yesterday.",
+    "Join is okay."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: We need to ___ the problem immediately.",
+  "options": [
+    "deal with",
+    "deal over",
+    "deal off"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ X-ray technician.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: They congratulated her ___ winning the competition.",
+  "options": [
+    "on",
+    "at",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: One of the teachers were absent today.",
+  "options": [
+    "One",
+    "teachers",
+    "were"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Set up' mean?",
+  "options": [
+    "Establish",
+    "Sit down",
+    "Break apart"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Many a student has failed this test.",
+    "Many a student have failed this test.",
+    "Many students has failed this test."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is fond ___ classical music.",
+  "options": [
+    "of",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Optimistic'?",
+  "options": [
+    "Confident",
+    "Pessimistic",
+    "Hopeful"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you mind waiting for a moment?",
+    "You wait one moment?",
+    "Wait one moment only."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She apologized ___ the inconvenience.",
+  "options": [
+    "for",
+    "with",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Look down on' mean?",
+  "options": [
+    "Respect someone",
+    "Despise someone",
+    "Watch from above"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The equipment is expensive.",
+    "The equipments are expensive.",
+    "Equipments is expensive."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is qualified ___ this position.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Five thousand rupees are a large amount.",
+  "options": [
+    "Five thousand rupees",
+    "are",
+    "amount"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'At the drop of a hat'?",
+  "options": [
+    "Without hesitation",
+    "After thinking",
+    "Wearing a hat"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Would you please close the window?'",
+  "options": [
+    "Certainly.",
+    "Window closed yesterday.",
+    "I closing window."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Rarely have I seen such a beautiful place.",
+    "Rarely I have seen such a beautiful place.",
+    "Rarely have I saw such a beautiful place."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She is ___ M.A. student.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is responsible ___ maintaining the records.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Hand in' mean?",
+  "options": [
+    "Submit",
+    "Shake hands",
+    "Receive"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of my sisters likes coffee.",
+    "Neither of my sisters like coffee.",
+    "Neither my sisters likes coffee."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: A pair of shoes were lying outside.",
+  "options": [
+    "pair",
+    "were",
+    "outside"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Cross your fingers'?",
+  "options": [
+    "Wish for good luck",
+    "Fold your hands",
+    "Hide your fingers"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is confident ___ her abilities.",
+  "options": [
+    "of",
+    "in",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Could you speak a bit louder?'",
+  "options": [
+    "Certainly.",
+    "Louder yesterday.",
+    "I louder speak."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Never ___ a promise.",
+  "options": [
+    "break",
+    "break down",
+    "break off"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He works as ___ engineer in Japan.",
+  "options": [
+    "the",
+    "an",
+    "a"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She was angry ___ me.",
+  "options": [
+    "with",
+    "to",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The cost of vegetables have increased.",
+  "options": [
+    "cost",
+    "vegetables",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Run into' mean?",
+  "options": [
+    "Meet unexpectedly",
+    "Run inside",
+    "Win a race"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Much of the work has been completed.",
+    "Much of the work have been completed.",
+    "Many of the work has been completed."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is famous ___ his courage.",
+  "options": [
+    "for",
+    "to",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Ancient'?",
+  "options": [
+    "Historic",
+    "Modern",
+    "Traditional"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you do me a favor?",
+    "You do favor?",
+    "Favor do me."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She succeeded ___ convincing everyone.",
+  "options": [
+    "in",
+    "on",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Show up' mean?",
+  "options": [
+    "Appear",
+    "Show a picture",
+    "Hide"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "None of the information is useful.",
+    "None of the information are useful.",
+    "None information is useful."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is married ___ an architect.",
+  "options": [
+    "with",
+    "to",
+    "by"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: The luggage are kept in the hall.",
+  "options": [
+    "luggage",
+    "are",
+    "hall"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Keep your word'?",
+  "options": [
+    "Remember a word",
+    "Fulfill a promise",
+    "Speak politely"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Could you open the door, please?'",
+  "options": [
+    "Sure, no problem.",
+    "Door was open yesterday.",
+    "Open is door."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Only then did he realize his mistake.",
+    "Only then he realized his mistake.",
+    "Only then did he realized his mistake."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She bought ___ umbrella yesterday.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is afraid ___ public speaking.",
+  "options": [
+    "of",
+    "from",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Call off' mean?",
+  "options": [
+    "Cancel",
+    "Call loudly",
+    "Visit someone"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Everyone has completed the assignment.",
+    "Everyone have completed the assignment.",
+    "Everyone completed have the assignment."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The bouquet of flowers were beautiful.",
+  "options": [
+    "bouquet",
+    "were",
+    "beautiful"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Hit the books'?",
+  "options": [
+    "Throw books",
+    "Study seriously",
+    "Buy books"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: She is married ___ an army officer.",
+  "options": [
+    "with",
+    "to",
+    "by"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Could you wait for five minutes?'",
+  "options": [
+    "Sure, I can wait.",
+    "Five minutes waited.",
+    "I waiting already."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Please ___ your jacket before entering the lab.",
+  "options": [
+    "take off",
+    "take over",
+    "take after"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ MLA from Gujarat.",
+  "options": [
+    "an",
+    "the",
+    "a"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The train departed ___ Platform 2.",
+  "options": [
+    "from",
+    "at",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Each of the players have received a medal.",
+  "options": [
+    "Each",
+    "players",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Look forward to' mean?",
+  "options": [
+    "Expect with excitement",
+    "Look straight",
+    "Move ahead"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No news is good news.",
+    "No news are good news.",
+    "No news were good news."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is proud ___ his achievements.",
+  "options": [
+    "of",
+    "with",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Permanent'?",
+  "options": [
+    "Temporary",
+    "Regular",
+    "Strong"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please write it down?",
+    "Write down it.",
+    "You write this."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is excellent ___ drawing.",
+  "options": [
+    "at",
+    "in",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Work out' mean?",
+  "options": [
+    "Exercise or find a solution",
+    "Go to work",
+    "Leave work"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The scenery is beautiful.",
+    "The sceneries are beautiful.",
+    "Sceneries is beautiful."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is addicted ___ mobile games.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: Bread and butter are my favorite breakfast.",
+  "options": [
+    "Bread",
+    "are",
+    "breakfast"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'In black and white'?",
+  "options": [
+    "Written clearly",
+    "Old photograph",
+    "Colorless"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'May I use your charger?'",
+  "options": [
+    "Of course, here you go.",
+    "Charger is using.",
+    "Use yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Not until yesterday did I know the truth.",
+    "Not until yesterday I knew the truth.",
+    "Not until yesterday did I knew the truth."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: He is ___ honest judge.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She apologized ___ the delay.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Turn down' mean?",
+  "options": [
+    "Reject an offer",
+    "Increase volume",
+    "Turn right"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The majority of the students are present.",
+    "The majority of the students is present.",
+    "The majority students are present."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The committee have submitted its report.",
+  "options": [
+    "committee",
+    "have",
+    "its"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'A storm in a teacup'?",
+  "options": [
+    "A small issue made to seem important",
+    "Heavy rain",
+    "A broken cup"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is curious ___ ancient history.",
+  "options": [
+    "about",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Could you pass me the salt?'",
+  "options": [
+    "Certainly. Here you are.",
+    "Salt is there.",
+    "Passed yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: We must ___ the new rules.",
+  "options": [
+    "abide by",
+    "abide with",
+    "abide on"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ IAS officer.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: The cat jumped ___ the wall.",
+  "options": [
+    "over",
+    "at",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Neither of these books belong to me.",
+  "options": [
+    "Neither",
+    "books",
+    "belong"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Put up with' mean?",
+  "options": [
+    "Decorate",
+    "Tolerate",
+    "Build a house"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "A little knowledge is a dangerous thing.",
+    "A few knowledge is dangerous.",
+    "Little knowledges are dangerous."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is famous ___ singing folk songs.",
+  "options": [
+    "for",
+    "to",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Scarce'?",
+  "options": [
+    "Rare",
+    "Abundant",
+    "Small"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you mind repeating that?",
+    "Repeat that again.",
+    "You repeat now."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He has confidence ___ his team.",
+  "options": [
+    "in",
+    "on",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Break into' mean?",
+  "options": [
+    "Enter by force",
+    "Repair a lock",
+    "Open politely"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The data are being analyzed.",
+    "The data is being analyzed.",
+    "The datas are analyzed."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is absent ___ today's meeting.",
+  "options": [
+    "from",
+    "of",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Each of the questions have been answered.",
+  "options": [
+    "Each",
+    "questions",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Go the extra mile'?",
+  "options": [
+    "Travel farther",
+    "Do more than expected",
+    "Go for a walk"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Would you like another cup of coffee?'",
+  "options": [
+    "No, thank you.",
+    "Coffee was nice.",
+    "Another yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Only after reading the instructions did she start the test.",
+    "Only after reading the instructions she started the test.",
+    "Only after reading the instructions did she started the test."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She is ___ MBA student.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is addicted ___ gambling.",
+  "options": [
+    "to",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Give in' mean?",
+  "options": [
+    "Surrender",
+    "Distribute",
+    "Donate"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Every one of the answers is correct.",
+    "Every one of the answers are correct.",
+    "Every one answers is correct."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The quality of these products have improved.",
+  "options": [
+    "quality",
+    "products",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Out of the blue'?",
+  "options": [
+    "Unexpectedly",
+    "From the sky",
+    "Very happily"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is thankful ___ your support.",
+  "options": [
+    "for",
+    "with",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Could you tell me the time, please?'",
+  "options": [
+    "It's half past three.",
+    "Time is clock.",
+    "I told yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Don't ___ your responsibilities.",
+  "options": [
+    "run away from",
+    "run into",
+    "run across"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ European citizen.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She is good ___ solving puzzles.",
+  "options": [
+    "at",
+    "with",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Either of the two boys are guilty.",
+  "options": [
+    "Either",
+    "boys",
+    "are"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Make out' mean?",
+  "options": [
+    "Understand",
+    "Create",
+    "Improve"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The furniture was delivered yesterday.",
+    "The furnitures were delivered yesterday.",
+    "Furniture were delivered yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is famous ___ his honesty.",
+  "options": [
+    "for",
+    "with",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Expand'?",
+  "options": [
+    "Extend",
+    "Contract",
+    "Spread"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please explain this again?",
+    "Explain this once more again.",
+    "Again explain this."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The patient is suffering ___ a high fever.",
+  "options": [
+    "from",
+    "by",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Put off' mean?",
+  "options": [
+    "Postpone",
+    "Wear",
+    "Remove"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "One-third of the work is complete.",
+    "One-third of the work are complete.",
+    "One-third work are complete."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is interested ___ classical music.",
+  "options": [
+    "in",
+    "on",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: The team are winning because it is playing well.",
+  "options": [
+    "team",
+    "are",
+    "it"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Burn bridges'?",
+  "options": [
+    "Destroy future relationships",
+    "Build a bridge",
+    "Travel by road"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Would you mind helping me for a minute?'",
+  "options": [
+    "Not at all.",
+    "Minute is enough.",
+    "Helped yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Hardly had the train left when it started raining.",
+    "Hardly the train had left when it started raining.",
+    "Hardly had the train left than it started raining."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She is ___ LLB graduate.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He believes ___ hard work.",
+  "options": [
+    "in",
+    "on",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Look after' mean?",
+  "options": [
+    "Search for",
+    "Take care of",
+    "Look behind"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each of the girls has a bicycle.",
+    "Each of the girls have a bicycle.",
+    "Each girls has a bicycle."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: My family are going on a trip next week.",
+  "options": [
+    "family",
+    "are",
+    "next week"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'Once in a blue moon'?",
+  "options": [
+    "Every day",
+    "Very rarely",
+    "At night"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: She is disappointed ___ the result.",
+  "options": [
+    "with",
+    "for",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Can you help me carry these bags?'",
+  "options": [
+    "Sure, I'd be happy to.",
+    "Bags are heavy.",
+    "I carried yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Please ___ the lights before leaving.",
+  "options": [
+    "turn off",
+    "turn into",
+    "turn over"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ NGO volunteer.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She is worried ___ her son's health.",
+  "options": [
+    "about",
+    "for",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Every one of the players were ready.",
+  "options": [
+    "Every one",
+    "players",
+    "were"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Get along with' mean?",
+  "options": [
+    "Travel together",
+    "Have a good relationship",
+    "Walk slowly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The luggage is ready.",
+    "The luggage are ready.",
+    "The luggages are ready."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is famous ___ writing novels.",
+  "options": [
+    "for",
+    "with",
+    "by"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Accept'?",
+  "options": [
+    "Receive",
+    "Reject",
+    "Agree"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "May I leave early today?",
+    "I leave early?",
+    "Leave today early."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He succeeded ___ finding the solution.",
+  "options": [
+    "at",
+    "in",
+    "on"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Come up with' mean?",
+  "options": [
+    "Invent or think of",
+    "Walk upstairs",
+    "Meet someone"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The machinery is working properly.",
+    "The machineries are working properly.",
+    "Machineries is working properly."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is capable ___ speaking three languages.",
+  "options": [
+    "for",
+    "of",
+    "to"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: The amount of books are insufficient.",
+  "options": [
+    "amount",
+    "books",
+    "are"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'A piece of cake'?",
+  "options": [
+    "A delicious dessert",
+    "Very easy",
+    "A birthday gift"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Would you mind opening the door?'",
+  "options": [
+    "Not at all.",
+    "Door is open yesterday.",
+    "Mind opening."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Only after the bell rang did the students leave.",
+    "Only after the bell rang the students left.",
+    "Only after the bell rang did the students left."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct article: She is ___ M.Sc. student.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is looking forward ___ meeting you.",
+  "options": [
+    "to",
+    "for",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Turn up' mean?",
+  "options": [
+    "Reduce volume",
+    "Appear unexpectedly",
+    "Turn around"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each child has a toy.",
+    "Each child have a toy.",
+    "Each children has a toy."
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Neither of the players has scored their goal.",
+  "options": [
+    "Neither",
+    "players",
+    "their"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the meaning of 'Under the weather'?",
+  "options": [
+    "Feeling sick",
+    "Working outside",
+    "Enjoying rain"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is famous ___ her beautiful voice.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the best reply: 'Could you give me a hand?'",
+  "options": [
+    "Sure, what do you need?",
+    "I have two hands.",
+    "Hand is there."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct phrasal verb: Don't ___ your studies.",
+  "options": [
+    "fall behind in",
+    "fall over",
+    "fall across"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He bought ___ SUV last month.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She is married ___ a pilot.",
+  "options": [
+    "to",
+    "with",
+    "by"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Every teacher and every student were invited.",
+  "options": [
+    "Every teacher",
+    "Every student",
+    "were"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Break out' mean?",
+  "options": [
+    "Escape suddenly",
+    "Break a glass",
+    "Repair something"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The news was surprising.",
+    "The news were surprising.",
+    "The news are surprising."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is proud ___ being an Indian.",
+  "options": [
+    "of",
+    "with",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Increase'?",
+  "options": [
+    "Grow",
+    "Decrease",
+    "Improve"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you please repeat your name?",
+    "Repeat your name.",
+    "Your name repeat."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The train arrived ___ time.",
+  "options": [
+    "on",
+    "in",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Run out' mean?",
+  "options": [
+    "Leave quickly",
+    "Become exhausted or finish",
+    "Run fast"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Much time has been wasted.",
+    "Many time has been wasted.",
+    "Much times have been wasted."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is afraid ___ spiders.",
+  "options": [
+    "from",
+    "of",
+    "at"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: The furniture are made of wood.",
+  "options": [
+    "furniture",
+    "are",
+    "wood"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the meaning of 'On the same page'?",
+  "options": [
+    "Reading together",
+    "In agreement",
+    "Writing a book"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the best reply: 'Can you explain this question?'",
+  "options": [
+    "Yes, of course.",
+    "Question explained yesterday.",
+    "This question."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No sooner had we reached home than it started raining.",
+    "No sooner we reached home than it started raining.",
+    "No sooner had we reached home when it started raining."
+  ],
+  "correct": 0
+},
+    {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "I have been waiting for you since 8 o'clock.",
+      "I am waiting for you since 8 o'clock.",
+      "I have waiting for you since 8 o'clock."
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Which sentence is grammatically correct?",
+    "options": [
+      "She don't like coffee.",
+      "She doesn't like coffee.",
+      "She not likes coffee."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Choose the correct article: He is ___ MLA.",
+    "options": [
+      "a",
+      "the",
+      "an"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "What does 'Break the ice' mean?",
+    "options": [
+      "Break frozen water",
+      "Start a friendly conversation",
+      "Go skating"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Choose the correct preposition: She is interested ___ painting.",
+    "options": [
+      "in",
+      "at",
+      "for"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "Neither of the boys are ready.",
+      "Neither of the boys is ready.",
+      "Neither boys is ready."
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Find the error: Every student have submitted the assignment.",
+    "options": [
+      "Every",
+      "have",
+      "assignment"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "What is the meaning of 'Hit the nail on the head'?",
+    "options": [
+      "Hit someone",
+      "Repair furniture",
+      "Say exactly the right thing"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct article: She adopted ___ orphan.",
+    "options": [
+      "the",
+      "a",
+      "an"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct spoken English reply: 'Thanks a lot!'",
+    "options": [
+      "You're welcome!",
+      "Welcome thanks.",
+      "Thank you only."
+    ],
+    "correct": 0
+  },
+  {
+    "q": "What does 'Take up' mean?",
+    "options": [
+      "Start a hobby or activity",
+      "Sit down",
+      "Throw away"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Choose the correct word: She is afraid ___ dogs.",
+    "options": [
+      "with",
+      "at",
+      "of"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "The police have arrested the thief.",
+      "The police has arrested the thief.",
+      "The polices have arrested the thief."
+    ],
+    "correct": 0
+  },
+  {
+    "q": "What is the synonym of 'Rapid'?",
+    "options": [
+      "Slow",
+      "Fast",
+      "Weak"
+    ],
+    "correct": 1
+  },
+  {
+    "q": "Choose the correct preposition: He is good ___ English.",
+    "options": [
+      "at",
+      "in",
+      "with"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Find the error: One of the players are injured.",
+    "options": [
+      "One",
+      "players",
+      "are"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "Could you please help me?",
+      "Please could help me?",
+      "Help me could you?"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "What does 'Give away' mean?",
+    "options": [
+      "Donate",
+      "Purchase",
+      "Borrow"
+    ],
+    "correct": 0
+  },
+  {
+    "q": "Choose the correct article: It was ___ unforgettable experience.",
+    "options": [
+      "a",
+      "the",
+      "an"
+    ],
+    "correct": 2
+  },
+  {
+    "q": "Choose the correct sentence.",
+    "options": [
+      "Hardly had I reached the station when the train left.",
+      "Hardly I had reached the station when the train left.",
+      "Hardly had I reached the station than the train left."
+    ],
+    "correct": 0
+  },
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has finished her homework.",
+    "She have finished her homework.",
+    "She has finish her homework."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Piece of mind' mean?",
+  "options": [
+    "A small idea",
+    "Mental peace",
+    "A broken thought"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: He is ___ honest politician.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She depends ___ her parents.",
+  "options": [
+    "on",
+    "at",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Everybody know the answer.",
+  "options": [
+    "Everybody",
+    "know",
+    "answer"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English response: 'How have you been?'",
+  "options": [
+    "I've been doing well, thanks.",
+    "I am fine yesterday.",
+    "Doing good before."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Turn in' mean?",
+  "options": [
+    "Submit",
+    "Turn around",
+    "Drive inside"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each student was given a certificate.",
+    "Each student were given a certificate.",
+    "Each students was given a certificate."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is interested ___ science.",
+  "options": [
+    "at",
+    "in",
+    "for"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the opposite of 'Generous'?",
+  "options": [
+    "Kind",
+    "Selfish",
+    "Helpful"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: She is ___ MBA graduate.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: The list of names are very long.",
+  "options": [
+    "list",
+    "are",
+    "long"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Look out' mean?",
+  "options": [
+    "Be careful",
+    "Look outside",
+    "Search everywhere"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No one was absent today.",
+    "No one were absent today.",
+    "No one are absent today."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She apologized ___ her mistake.",
+  "options": [
+    "to",
+    "for",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Back out' mean?",
+  "options": [
+    "Support someone",
+    "Withdraw from an agreement",
+    "Move backward"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "May I ask you something?",
+    "Can ask something?",
+    "I asking you?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is proud ___ her achievements.",
+  "options": [
+    "to",
+    "with",
+    "of"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: One of the answers were correct.",
+  "options": [
+    "One",
+    "answers",
+    "were"
+  ],
   "correct": 2
 },
 {
   "q": "Choose the correct sentence.",
-  "option1": "One of my friends lives in Delhi.",
-  "option2": "One of my friends live in Delhi.",
-  "option3": "One of my friend live in Delhi.",
+  "options": [
+    "Seldom do we get such opportunities.",
+    "Seldom we get such opportunities.",
+    "Seldom do we got such opportunities."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "I have never seen such a beautiful place.",
+    "I never have seen such a beautiful place.",
+    "I has never seen such a beautiful place."
+  ],
   "correct": 0
 },
 {
-  "q": "Choose the correct question.",
-  "option1": "Why you are late?",
-  "option2": "Why are you late?",
-  "option3": "Why late you are?",
+  "q": "Choose the correct preposition: She is famous ___ her kindness.",
+  "options": [
+    "for",
+    "by",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Blow up' mean?",
+  "options": [
+    "Become angry or explode",
+    "Fly a kite",
+    "Clean something"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ European businessman.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
   "correct": 1
+},
+{
+  "q": "Find the error: The information were very useful.",
+  "options": [
+    "information",
+    "were",
+    "useful"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'How was your weekend?'",
+  "options": [
+    "It was great, thanks!",
+    "Weekend is gone.",
+    "Very weekend."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Cold feet'?",
+  "options": [
+    "Feeling very cold",
+    "Losing confidence before doing something",
+    "Walking barefoot"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "There is a book on the table.",
+    "There are a book on the table.",
+    "There is books on the table."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is jealous ___ his friend's success.",
+  "options": [
+    "of",
+    "at",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She bought ___ apple pie.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: Neither of the girls have arrived yet.",
+  "options": [
+    "Neither",
+    "girls",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Speak up' mean?",
+  "options": [
+    "Talk more quietly",
+    "Speak more loudly",
+    "Stop talking"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She enjoys reading novels.",
+    "She enjoys to read novels.",
+    "She enjoy reading novels."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We arrived ___ the airport early.",
+  "options": [
+    "at",
+    "in",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Brave'?",
+  "options": [
+    "Cowardly",
+    "Fearless",
+    "Lazy"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please send me the details?",
+    "Send details me.",
+    "You send details now."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It was ___ unforgettable journey.",
+  "options": [
+    "the",
+    "a",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: Every child and every parent were excited.",
+  "options": [
+    "Every child",
+    "Every parent",
+    "were"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Catch up' mean?",
+  "options": [
+    "Reach the same level",
+    "Catch a ball",
+    "Wake up"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Had I known the truth, I would have helped.",
+    "Had I knew the truth, I would have helped.",
+    "Had I known the truth, I would helped."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He has lived here for five years.",
+    "He is living here since five years.",
+    "He has been living here since five years ago."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ honest lawyer.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Get by' mean?",
+  "options": [
+    "Manage with difficulty",
+    "Pass someone",
+    "Become rich"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He is grateful ___ his teachers.",
+  "options": [
+    "to",
+    "with",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Each of the boys have completed the task.",
+  "options": [
+    "Each",
+    "boys",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spoken English reply: 'Can I call you later?'",
+  "options": [
+    "Sure, no problem.",
+    "Later is call.",
+    "You called yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'On thin ice'?",
+  "options": [
+    "In a risky situation",
+    "Walking on snow",
+    "Feeling cold"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The furniture is made of wood.",
+    "The furniture are made of wood.",
+    "The furnitures are made of wood."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She succeeded ___ getting the job.",
+  "options": [
+    "in",
+    "at",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ SP officer.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: The number of cars have increased rapidly.",
+  "options": [
+    "number",
+    "cars",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Bring back' mean?",
+  "options": [
+    "Return something",
+    "Carry forward",
+    "Throw away"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "One of my friends is a doctor.",
+    "One of my friends are a doctor.",
+    "One of my friend is a doctor."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She believes ___ herself.",
+  "options": [
+    "on",
+    "in",
+    "at"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the synonym of 'Tiny'?",
+  "options": [
+    "Huge",
+    "Small",
+    "Heavy"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please wait outside?",
+    "You wait outside.",
+    "Outside wait please."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It was ___ unusual incident.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: Bread and jam is my favorite breakfast.",
+  "options": [
+    "Bread",
+    "is",
+    "favorite"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Settle down' mean?",
+  "options": [
+    "Become calm or start a stable life",
+    "Sit on the floor",
+    "Travel abroad"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Scarcely had he entered when the lights went out.",
+    "Scarcely he had entered when the lights went out.",
+    "Scarcely had he entered than the lights went out."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has already completed the project.",
+    "She already has complete the project.",
+    "She have already completed the project."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ FBI agent.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Pass out' mean?",
+  "options": [
+    "Faint",
+    "Pass an exam",
+    "Go outside"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is annoyed ___ the noise.",
+  "options": [
+    "with",
+    "by",
+    "at"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: Every one of these books are interesting.",
+  "options": [
+    "Every one",
+    "books",
+    "are"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spoken English reply: 'Could you please slow down?'",
+  "options": [
+    "Sure, I will.",
+    "Slow already.",
+    "I slowed yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Keep in touch'?",
+  "options": [
+    "Stay connected",
+    "Touch something",
+    "Shake hands"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither answer is correct.",
+    "Neither answer are correct.",
+    "Neither answers is correct."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is famous ___ his inventions.",
+  "options": [
+    "for",
+    "with",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It is ___ honor to meet you.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: The furniture were delivered yesterday.",
+  "options": [
+    "furniture",
+    "were",
+    "yesterday"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Look over' mean?",
+  "options": [
+    "Inspect carefully",
+    "Jump over",
+    "Look outside"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "One of the girls sings very well.",
+    "One of the girls sing very well.",
+    "One of the girl sings very well."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We are excited ___ the trip.",
+  "options": [
+    "about",
+    "with",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Success'?",
+  "options": [
+    "Achievement",
+    "Failure",
+    "Victory"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please speak more slowly?",
+    "Speak slow.",
+    "Slow speak you."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ M.Phil. student.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: Ten thousand rupees are enough for the trip.",
+  "options": [
+    "Ten thousand rupees",
+    "are",
+    "trip"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Come out' mean?",
+  "options": [
+    "Appear or be published",
+    "Enter a room",
+    "Sleep early"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Only after the movie ended did we leave.",
+    "Only after the movie ended we left.",
+    "Only after the movie ended did we left."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She didn't go anywhere yesterday.",
+    "She didn't went anywhere yesterday.",
+    "She not go anywhere yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ MBA holder.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Cut back on' mean?",
+  "options": [
+    "Increase something",
+    "Reduce something",
+    "Throw away something"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: She is worried ___ her exams.",
+  "options": [
+    "about",
+    "with",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Neither of the girls have finished her work.",
+  "options": [
+    "Neither",
+    "girls",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct spoken English reply: 'Would you like some water?'",
+  "options": [
+    "Yes, please.",
+    "Water is good.",
+    "I drank yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Go with the flow'?",
+  "options": [
+    "Swim in a river",
+    "Adapt to the situation",
+    "Walk quickly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The milk is in the fridge.",
+    "The milk are in the fridge.",
+    "The milks are in the fridge."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is good ___ solving problems.",
+  "options": [
+    "at",
+    "on",
+    "for"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She gave me ___ useful suggestion.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Every member of the team have arrived.",
+  "options": [
+    "member",
+    "team",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Run across' mean?",
+  "options": [
+    "Cross the road",
+    "Meet by chance",
+    "Run very fast"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She can speak French fluently.",
+    "She can speaks French fluently.",
+    "She can speaking French fluently."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We congratulated him ___ his promotion.",
+  "options": [
+    "for",
+    "on",
+    "at"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the antonym of 'Ancient'?",
+  "options": [
+    "Modern",
+    "Old",
+    "Historic"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you help me find this address?",
+    "Help find address.",
+    "Find this address you."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It took ___ hour to complete the test.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Find the error: One of the teachers are absent today.",
+  "options": [
+    "One",
+    "teachers",
+    "are"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Take off' mean?",
+  "options": [
+    "Remove",
+    "Put on",
+    "Sit down"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Not only did she sing, but she also danced.",
+    "Not only she sang, but she also danced.",
+    "Not only did she sang, but she also danced."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct word: She always ___ the truth.",
+  "options": [
+    "speak",
+    "speaks",
+    "speaking"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Pull over' mean?",
+  "options": [
+    "Stop a vehicle at the side of the road",
+    "Push a vehicle",
+    "Drive faster"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "There are fewer students today.",
+    "There is less students today.",
+    "There are less student today."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She bought ___ orange dress.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: My brother don't like spicy food.",
+  "options": [
+    "brother",
+    "don't",
+    "spicy"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: We divided the cake ___ four pieces.",
+  "options": [
+    "into",
+    "in",
+    "between"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Spill the beans'?",
+  "options": [
+    "Cook food",
+    "Reveal a secret",
+    "Waste money"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'Could I borrow your pen?'",
+  "options": [
+    "Of course. Here you are.",
+    "My pen is blue.",
+    "Borrow yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has less work than yesterday.",
+    "She has fewer work than yesterday.",
+    "She have less work than yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ heir to the throne.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Brush up on' mean?",
+  "options": [
+    "Improve knowledge or skills",
+    "Clean a brush",
+    "Paint a wall"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She insisted ___ paying the bill.",
+  "options": [
+    "on",
+    "at",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Mathematics are my favorite subject.",
+  "options": [
+    "Mathematics",
+    "are",
+    "subject"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He rarely makes mistakes.",
+    "He rarely make mistakes.",
+    "He rare makes mistakes."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Polite'?",
+  "options": [
+    "Gentle",
+    "Rude",
+    "Kind"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you like to join us for dinner?",
+    "You like join dinner?",
+    "Join us dinner."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ university professor.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Keep up with' mean?",
+  "options": [
+    "Stay at the same level",
+    "Stop working",
+    "Walk behind"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He apologized ___ being late.",
+  "options": [
+    "for",
+    "to",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Unless you study, you won't pass.",
+    "Unless you don't study, you won't pass.",
+    "Unless you studied, you won't pass."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The baby is sleeping peacefully.",
+    "The baby are sleeping peacefully.",
+    "The baby sleep peacefully."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Carry on' mean?",
+  "options": [
+    "Continue",
+    "Carry a bag",
+    "Stop working"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She smiled ___ me.",
+  "options": [
+    "at",
+    "on",
+    "into"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He bought ___ old bicycle.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: She enjoy reading novels every evening.",
+  "options": [
+    "She",
+    "enjoy",
+    "reading"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'Can you hear me clearly?'",
+  "options": [
+    "Yes, I can hear you clearly.",
+    "Hear clearly yesterday.",
+    "You are hearing."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Face the music'?",
+  "options": [
+    "Sing a song",
+    "Accept the consequences",
+    "Listen to music"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She knows how to swim.",
+    "She knows how swimming.",
+    "She know how to swim."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is famous ___ his paintings.",
+  "options": [
+    "for",
+    "from",
+    "with"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It is ___ one-time opportunity.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: One of the books have been lost.",
+  "options": [
+    "One",
+    "books",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Figure out' mean?",
+  "options": [
+    "Solve or understand",
+    "Draw a picture",
+    "Measure height"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He was absent ___ school yesterday.",
+  "options": [
+    "from",
+    "of",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "My father drives carefully.",
+    "My father drive carefully.",
+    "My father driving carefully."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Honest'?",
+  "options": [
+    "Truthful",
+    "Lazy",
+    "Cruel"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please repeat the question?",
+    "Repeat question.",
+    "Question repeat now."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She adopted ___ European child.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Put away' mean?",
+  "options": [
+    "Store in the proper place",
+    "Throw outside",
+    "Give to someone"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: They laughed ___ the joke.",
+  "options": [
+    "at",
+    "for",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "If I were you, I would accept the offer.",
+    "If I was you, I will accept the offer.",
+    "If I am you, I would accept the offer."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He usually gets up at 6 a.m.",
+    "He usually get up at 6 a.m.",
+    "He usually getting up at 6 a.m."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Hold on' mean?",
+  "options": [
+    "Wait for a short time",
+    "Catch something",
+    "Run away"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ engineer.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He succeeded ___ the examination.",
+  "options": [
+    "at",
+    "in",
+    "with"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: She don't understand the question.",
+  "options": [
+    "She",
+    "don't",
+    "question"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'Could you open the window?'",
+  "options": [
+    "Certainly.",
+    "Window is open.",
+    "Opened yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Cost an arm and a leg'?",
+  "options": [
+    "Very expensive",
+    "Very dangerous",
+    "Very comfortable"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The children are playing in the park.",
+    "The children is playing in the park.",
+    "The childrens are playing in the park."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is capable ___ solving difficult problems.",
+  "options": [
+    "to",
+    "of",
+    "for"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: He waited for ___ hour.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Find the error: Neither of the answers are correct.",
+  "options": [
+    "Neither",
+    "answers",
+    "are"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Call back' mean?",
+  "options": [
+    "Telephone again",
+    "Shout loudly",
+    "Come home"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has been working here since 2022.",
+    "She is working here since 2022.",
+    "She has working here since 2022."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: They agreed ___ my proposal.",
+  "options": [
+    "to",
+    "with",
+    "on"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the antonym of 'Expand'?",
+  "options": [
+    "Increase",
+    "Shrink",
+    "Develop"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Would you like a cup of tea?",
+    "You like tea?",
+    "Tea you like?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She adopted ___ eight-year-old puppy.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "What does 'Drop by' mean?",
+  "options": [
+    "Visit casually",
+    "Fall down",
+    "Throw away"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He insisted ___ going alone.",
+  "options": [
+    "on",
+    "for",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Unless you hurry, you'll miss the bus.",
+    "Unless you don't hurry, you'll miss the bus.",
+    "Unless you hurried, you'll miss the bus."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The train leaves at 7:30 every morning.",
+    "The train leave at 7:30 every morning.",
+    "The train leaving at 7:30 every morning."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Go through' mean?",
+  "options": [
+    "Examine carefully",
+    "Walk around",
+    "Throw away"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ air hostess.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He apologized ___ his rude behavior.",
+  "options": [
+    "for",
+    "to",
+    "about"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Everybody like to receive compliments.",
+  "options": [
+    "Everybody",
+    "like",
+    "compliments"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'Can I sit here?'",
+  "options": [
+    "Yes, please.",
+    "Here chair.",
+    "Sit yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Hit the sack'?",
+  "options": [
+    "Go to bed",
+    "Punch a bag",
+    "Win a match"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "My mother cooks delicious food.",
+    "My mother cook delicious food.",
+    "My mother cooking delicious food."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: She is proud ___ her son.",
+  "options": [
+    "of",
+    "to",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He bought ___ umbrella.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: One of the students have won the prize.",
+  "options": [
+    "One",
+    "students",
+    "have"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Look up to' mean?",
+  "options": [
+    "Admire and respect",
+    "Search online",
+    "Look upward"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They were watching television.",
+    "They was watching television.",
+    "They watching television."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is married ___ a businessman.",
+  "options": [
+    "to",
+    "with",
+    "by"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Begin'?",
+  "options": [
+    "Start",
+    "Finish",
+    "Close"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you please tell me the way to the station?",
+    "Tell station way.",
+    "Way to station tell."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It was ___ unusual story.",
+  "options": [
+    "a",
+    "an",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Bring up' mean?",
+  "options": [
+    "Mention a topic",
+    "Carry upstairs",
+    "Throw away"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We arrived ___ the station on time.",
+  "options": [
+    "at",
+    "in",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "If she studies hard, she will pass.",
+    "If she will study hard, she will pass.",
+    "If she study hard, she pass."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She always arrives on time.",
+    "She always arrive on time.",
+    "She always arriving on time."
+  ],
+  "correct": 0
+},
+{
+  "q": "What does 'Check in' mean?",
+  "options": [
+    "Register at a hotel or airport",
+    "Look inside a box",
+    "Return home"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ MP.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She congratulated me ___ my success.",
+  "options": [
+    "on",
+    "for",
+    "at"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Every player have a unique talent.",
+  "options": [
+    "Every",
+    "have",
+    "unique"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct spoken English reply: 'Could you lend me ₹100?'",
+  "options": [
+    "Sure, here you are.",
+    "Money is expensive.",
+    "Yesterday I lent."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'By heart'?",
+  "options": [
+    "With emotions",
+    "From memory",
+    "By love"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The sun rises in the east.",
+    "The sun rise in the east.",
+    "The sun rising in the east."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct word: He is responsible ___ this project.",
+  "options": [
+    "for",
+    "of",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She saw ___ elephant in the zoo.",
+  "options": [
+    "an",
+    "a",
+    "the"
+  ],
+  "correct": 0
+},
+{
+  "q": "Find the error: Neither the teacher nor the students was ready.",
+  "options": [
+    "teacher",
+    "students",
+    "was"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Fill out' mean?",
+  "options": [
+    "Complete a form",
+    "Empty a bottle",
+    "Leave a place"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He has visited Delhi twice.",
+    "He have visited Delhi twice.",
+    "He has visit Delhi twice."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: They apologized ___ being late.",
+  "options": [
+    "for",
+    "at",
+    "of"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Smart'?",
+  "options": [
+    "Intelligent",
+    "Weak",
+    "Careless"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spoken English sentence.",
+  "options": [
+    "Could you repeat that once again?",
+    "Repeat again that.",
+    "Again repeat."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ honest employee.",
+  "options": [
+    "a",
+    "the",
+    "an"
+  ],
+  "correct": 2
+},
+{
+  "q": "What does 'Put back' mean?",
+  "options": [
+    "Return to its original place",
+    "Push someone",
+    "Move forward"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She believes ___ hard work.",
+  "options": [
+    "in",
+    "at",
+    "to"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "As soon as he arrived, the meeting started.",
+    "As soon as he had arrived, the meeting had started.",
+    "As soon as he arrive, the meeting started."
+  ],
+  "correct": 0
+},
+   {
+  "q": "Which word is the odd one out?",
+  "options": [
+    "Apple",
+    "Banana",
+    "Car"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correctly spelled word.",
+  "options": [
+    "Recieve",
+    "Receive",
+    "Receeve"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is a verb?",
+  "options": [
+    "Beautiful",
+    "Quickly",
+    "Jump"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the plural form of 'Child'.",
+  "options": [
+    "Childs",
+    "Children",
+    "Childes"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word means 'Happy'?",
+  "options": [
+    "Joyful",
+    "Angry",
+    "Weak"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Rich'.",
+  "options": [
+    "Poor",
+    "Wealthy",
+    "Lucky"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which sentence is a question?",
+  "options": [
+    "Where are you going?",
+    "I am going home.",
+    "Please sit down."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct greeting for 8:00 AM.",
+  "options": [
+    "Good Night",
+    "Good Morning",
+    "Good Evening"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is a noun?",
+  "options": [
+    "School",
+    "Run",
+    "Quickly"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'How old are you?'",
+  "options": [
+    "I am 20 years old.",
+    "I am fine.",
+    "Thank you."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an adjective?",
+  "options": [
+    "Beautiful",
+    "Walk",
+    "Slowly"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Succesful",
+    "Successful",
+    "Succesfull"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which sentence is in the future tense?",
+  "options": [
+    "I played cricket.",
+    "I play cricket.",
+    "I will play cricket."
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the synonym of 'Begin'?",
+  "options": [
+    "Start",
+    "Stop",
+    "End"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'Nice to meet you.'",
+  "options": [
+    "Nice to meet you too.",
+    "Good night.",
+    "See you yesterday."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a pronoun?",
+  "options": [
+    "He",
+    "Teacher",
+    "Table"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Environment",
+    "Enviroment",
+    "Envirenment"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which sentence is polite?",
+  "options": [
+    "Move!",
+    "Could you please move?",
+    "You move."
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct opposite of 'Fast'.",
+  "options": [
+    "Quick",
+    "Rapid",
+    "Slow"
+  ],
+  "correct": 2
+},
+{
+  "q": "Which word is an adverb?",
+  "options": [
+    "Carefully",
+    "Careful",
+    "Care"
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct meaning of the word 'Generous'.",
+  "options": [
+    "Kind and willing to give",
+    "Very lazy",
+    "Always angry"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a conjunction?",
+  "options": [
+    "Quickly",
+    "And",
+    "Beautiful"
+  ],
+  "correct": 1
+},
+{
+  "q": "Complete the sentence: Birds ___ in the sky.",
+  "options": [
+    "swim",
+    "fly",
+    "drive"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is spelled correctly?",
+  "options": [
+    "Accomodation",
+    "Accommodation",
+    "Acommodation"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the opposite of 'Ancient'.",
+  "options": [
+    "Old",
+    "Historic",
+    "Modern"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the past tense of 'Catch'?",
+  "options": [
+    "Caught",
+    "Catched",
+    "Catches"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'What's your hobby?'",
+  "options": [
+    "I enjoy reading books.",
+    "I'm from India.",
+    "I'm twenty years old."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an interjection?",
+  "options": [
+    "Wow!",
+    "Table",
+    "Quickly"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She sings beautifully.",
+    "She sing beautifully.",
+    "She singing beautifully."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Silent'?",
+  "options": [
+    "Quiet",
+    "Loud",
+    "Fast"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Neccessary",
+    "Necessary",
+    "Necassary"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is a preposition?",
+  "options": [
+    "Under",
+    "Happy",
+    "Jump"
+  ],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: Water ___ at 100°C.",
+  "options": [
+    "boils",
+    "boil",
+    "boiling"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Win'.",
+  "options": [
+    "Gain",
+    "Lose",
+    "Achieve"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which sentence is in the present continuous tense?",
+  "options": [
+    "She is studying now.",
+    "She studied yesterday.",
+    "She studies every day."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'Excuse me, where is the bank?'",
+  "options": [
+    "It's next to the post office.",
+    "I'm fine, thank you.",
+    "I like banking."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a common noun?",
+  "options": [
+    "River",
+    "Amazon",
+    "India"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Honest'?",
+  "options": [
+    "Truthful",
+    "Lazy",
+    "Cruel"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Can you help me, please?",
+    "You can help me please?",
+    "Help me can you?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a modal verb?",
+  "options": [
+    "Can",
+    "Running",
+    "Quickly"
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Privilege",
+    "Priviledge",
+    "Privelege"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Tiny'?",
+  "options": [
+    "Huge",
+    "Small",
+    "Heavy"
+  ],
+  "correct": 1
+},
+{
+  "q": "Complete the sentence: The sun ___ in the east.",
+  "options": [
+    "rise",
+    "rises",
+    "rising"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is an adjective?",
+  "options": [
+    "Friendly",
+    "Friend",
+    "Friendship"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Dangerous'.",
+  "options": [
+    "Risky",
+    "Unsafe",
+    "Safe"
+  ],
+  "correct": 2
+},
+{
+  "q": "What is the past participle of 'Write'?",
+  "options": [
+    "Written",
+    "Wrote",
+    "Writing"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'Where do you work?'",
+  "options": [
+    "I work at a software company.",
+    "I'm working yesterday.",
+    "My office blue."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a pronoun?",
+  "options": [
+    "They",
+    "Teacher",
+    "Market"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He doesn't eat meat.",
+    "He don't eat meat.",
+    "He isn't eat meat."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Curious'?",
+  "options": [
+    "Eager to know",
+    "Very sleepy",
+    "Always silent"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correctly spelled word.",
+  "options": [
+    "Occasion",
+    "Ocassion",
+    "Occassion"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an adverb?",
+  "options": [
+    "Carefully",
+    "Careful",
+    "Care"
+  ],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: We ___ football every Sunday.",
+  "options": [
+    "play",
+    "plays",
+    "playing"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Accept'.",
+  "options": [
+    "Reject",
+    "Approve",
+    "Allow"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which sentence is in the past tense?",
+  "options": [
+    "She visited Jaipur last year.",
+    "She visits Jaipur every year.",
+    "She will visit Jaipur next year."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'What does your father do?'",
+  "options": [
+    "He is a doctor.",
+    "He is 50 years old.",
+    "He is at home."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an abstract noun?",
+  "options": [
+    "Honesty",
+    "Chair",
+    "Bottle"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Quick'?",
+  "options": [
+    "Fast",
+    "Slow",
+    "Weak"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Could I use your phone for a minute?",
+    "Could I using your phone?",
+    "I could use your phone is?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a helping verb?",
+  "options": [
+    "Have",
+    "Read",
+    "Happy"
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Embarrass",
+    "Embarass",
+    "Embarras"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Wealthy'?",
+  "options": [
+    "Poor",
+    "Rich",
+    "Weak"
+  ],
+  "correct": 1
+},
+{
+  "q": "Complete the sentence: My sister ___ to school every day.",
+  "options": [
+    "go",
+    "goes",
+    "going"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is a collective noun?",
+  "options": [
+    "Team",
+    "Player",
+    "Game"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Empty'.",
+  "options": [
+    "Vacant",
+    "Full",
+    "Open"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the past tense of 'Teach'?",
+  "options": [
+    "Teached",
+    "Teaching",
+    "Taught"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct response: 'How do you go to work?'",
+  "options": [
+    "By bus.",
+    "At 9 o'clock.",
+    "Very well."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a proper noun?",
+  "options": [
+    "City",
+    "London",
+    "Country"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "They were happy with the results.",
+    "They was happy with the results.",
+    "They is happy with the results."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Brilliant'?",
+  "options": [
+    "Very intelligent",
+    "Very weak",
+    "Very noisy"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correctly spelled word.",
+  "options": [
+    "Definately",
+    "Definitely",
+    "Definetly"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is an adverb?",
+  "options": [
+    "Loudly",
+    "Loud",
+    "Loudness"
+  ],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: She ___ coffee every morning.",
+  "options": [
+    "drink",
+    "drinks",
+    "drinking"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the opposite of 'Borrow'.",
+  "options": [
+    "Take",
+    "Lend",
+    "Keep"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which sentence is in the future tense?",
+  "options": [
+    "We will travel tomorrow.",
+    "We travelled yesterday.",
+    "We travel every week."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'What time is it?'",
+  "options": [
+    "It's half past five.",
+    "It's Monday.",
+    "It's my watch."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an uncountable noun?",
+  "options": [
+    "Rice",
+    "Apple",
+    "Chair"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Difficult'?",
+  "options": [
+    "Easy",
+    "Hard",
+    "Simple"
+  ],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "May I come in?",
+    "Can I comes in?",
+    "May I coming in?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a modal auxiliary verb?",
+  "options": [
+    "Should",
+    "Walking",
+    "Teacher"
+  ],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct spelling.",
+  "options": [
+    "Questionnaire",
+    "Questionare",
+    "Questionaire"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Ancient'?",
+  "options": [
+    "Modern",
+    "Old",
+    "Young"
+  ],
+  "correct": 1
+},
+{
+  "q": "Complete the sentence: The teacher ___ us English.",
+  "options": [
+    "teach",
+    "teaches",
+    "teaching"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which word is a concrete noun?",
+  "options": [
+    "Table",
+    "Love",
+    "Honesty"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Increase'.",
+  "options": [
+    "Grow",
+    "Decrease",
+    "Rise"
+  ],
+  "correct": 1
+},
+{
+  "q": "What is the past tense of 'Drive'?",
+  "options": [
+    "Drive",
+    "Driven",
+    "Drove"
+  ],
+  "correct": 2
+},
+{
+  "q": "Choose the correct response: 'What do you usually do on weekends?'",
+  "options": [
+    "I usually play cricket.",
+    "I played yesterday.",
+    "I am weekend."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a possessive pronoun?",
+  "options": [
+    "Mine",
+    "Me",
+    "My"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She doesn't like spicy food.",
+    "She don't like spicy food.",
+    "She not likes spicy food."
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the meaning of 'Patient'?",
+  "options": [
+    "Able to wait calmly",
+    "Always late",
+    "Very nervous"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correctly spelled word.",
+  "options": [
+    "Millennium",
+    "Millenium",
+    "Milennium"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an adjective?",
+  "options": [
+    "Careless",
+    "Carelessly",
+    "Care"
+  ],
+  "correct": 0
+},
+{
+  "q": "Complete the sentence: My parents ___ TV every evening.",
+  "options": [
+    "watch",
+    "watches",
+    "watching"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the opposite of 'Accept'.",
+  "options": [
+    "Approve",
+    "Reject",
+    "Receive"
+  ],
+  "correct": 1
+},
+{
+  "q": "Which sentence is in the present perfect tense?",
+  "options": [
+    "She has finished her homework.",
+    "She finished her homework.",
+    "She is finishing her homework."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: 'How often do you exercise?'",
+  "options": [
+    "Three times a week.",
+    "At the gym.",
+    "Yesterday evening."
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is a countable noun?",
+  "options": [
+    "Book",
+    "Water",
+    "Milk"
+  ],
+  "correct": 0
+},
+{
+  "q": "What is the synonym of 'Calm'?",
+  "options": [
+    "Peaceful",
+    "Angry",
+    "Loud"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Would you mind closing the door?",
+    "Would you mind close the door?",
+    "Would you mind to close the door?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Which word is an irregular verb?",
+  "options": [
+    "Go",
+    "Play",
+    "Talk"
+  ],
+  "correct": 0
 }
 ]
