@@ -1137,13 +1137,10 @@
             }
 
             return "<span style='color:#dc2626;font-weight:bold;'>🔴 " +
-                new Date(lastSeen).toLocaleDateString('en-US', {
+                new Date(lastSeen).toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'short',
-                    day: 'numeric'
-                }) +
-                "<br>" +
-                new Date(lastSeen).toLocaleTimeString('en-US', {
+                    day: 'numeric',
                     hour: 'numeric',
                     minute: '2-digit',
                     second: '2-digit',
