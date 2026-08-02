@@ -27,7 +27,7 @@ function walletResponse(user) {
         lastSpinDate: user.lastSpinDate || "",
         dailyQuestionsAnswered: Number(user.dailyQuestionsAnswered || 0),
         dailyQuestionsDate: user.dailyQuestionsDate || "",
-        totalQuestionsAnswered: Number(user.totalQuestionsAnswered || 0),
+        totalQuestionsAnswered: Number(user.totalQuestionsAnswered += 1),
         canSpinAfterQuestions: Number(user.dailyQuestionsAnswered || 0) >= 100,
         withdrawRequests: user.withdrawRequests || []
     };
