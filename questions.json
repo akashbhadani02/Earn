@@ -1,302 +1,2297 @@
 [
    {
-  "q": "What is the Roman numeral for 41?",
-  "options": ["XLI", "XLV", "XXXXI"],
+  "q": "Choose the correct article: She is ___ MBA graduate.",
+  "options": ["an", "a", "the"],
   "correct": 0
 },
 {
-  "q": "What is the Roman numeral for 44?",
-  "options": ["XXXXIV", "XLIV", "XLVI"],
+  "q": "Choose the correct preposition: The cat is hiding ___ the chair.",
+  "options": ["under", "above", "between"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: We ___ a movie last night.",
+  "options": ["watch", "watched", "watching"],
   "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 49?",
-  "options": ["IL", "XLIX", "XXXXIX"],
+  "q": "Choose the correct pronoun: This gift is for ___.",
+  "options": ["he", "him", "his"],
   "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 54?",
-  "options": ["LXIV", "XLIV", "LIV"],
+  "q": "Choose the correct modal: You ___ finish your homework before playing.",
+  "options": ["must", "may", "could"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["She is reading.", "She are reading.", "She am reading."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct plural.",
+  "options": ["Knifes", "Knives", "Knifees"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct comparative.",
+  "options": ["more beautiful", "beautifuller", "beautifulest"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct superlative.",
+  "options": ["most difficult", "difficultest", "more difficult"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction: I was hungry, ___ I ate a sandwich.",
+  "options": ["so", "but", "because"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: It is ___ honor to meet you.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is interested ___ music.",
+  "options": ["at", "in", "on"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct tense: He ___ in this company since 2020.",
+  "options": ["works", "worked", "has worked"],
   "correct": 2
 },
 {
-  "q": "What is the Roman numeral for 66?",
-  "options": ["LXIV", "LVI", "LXVI"],
+  "q": "Choose the correct pronoun: ___ is your best friend?",
+  "options": ["Who", "Whom", "Whose"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct auxiliary: They ___ playing cricket.",
+  "options": ["is", "are", "am"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I have a pen.", "I has a pen.", "I having a pen."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He bought ___ orange.",
+  "options": ["a", "an", "the"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: We walked ___ the river.",
+  "options": ["along", "inside", "above"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal: ___ I borrow your notebook?",
+  "options": ["May", "Must", "Need"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: They ___ dinner when I arrived.",
+  "options": ["were having", "have", "had"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct possessive pronoun.",
+  "options": ["mine", "my", "me"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct plural.",
+  "options": ["Lives", "Lifes", "Livees"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["careful", "carefully", "carefulness"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction: He is poor ___ honest.",
+  "options": ["but", "or", "because"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: ___ Taj Mahal is in Agra.",
+  "options": ["The", "A", "An"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The ball rolled ___ the table.",
+  "options": ["under", "inside", "between"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: I ___ my homework already.",
+  "options": ["finished", "have finished", "finish"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct pronoun: Riya and I are classmates. ___ study together.",
+  "options": ["We", "They", "Us"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal: You ___ drive carefully in the rain.",
+  "options": ["should", "would", "might"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["He goes to school.", "He go to school.", "He going to school."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: She is ___ IAS officer.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The children are sitting ___ the floor.",
+  "options": ["on", "above", "under"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: She ___ a letter tomorrow.",
+  "options": ["will write", "writes", "wrote"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun: Please give the keys to ___.",
+  "options": ["her", "she", "hers"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct comparative.",
+  "options": ["smarter", "smartest", "smart"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct superlative.",
+  "options": ["oldest", "older", "old"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction: Study hard ___ you will succeed.",
+  "options": ["and", "or", "because"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct auxiliary: I ___ waiting for you.",
+  "options": ["am", "is", "are"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: This is ___ unique opportunity.",
+  "options": ["a", "an", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The train passed ___ the tunnel.",
+  "options": ["through", "above", "beside"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: My father ___ tea every morning.",
+  "options": ["drinks", "drink", "drank"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun: ___ are you crying?",
+  "options": ["Why", "Who", "Where"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal: We ___ help others.",
+  "options": ["should", "could", "might"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["They were late.", "They was late.", "They is late."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: I saw ___ eagle.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She arrived ___ 8 o'clock.",
+  "options": ["at", "on", "in"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: We ___ to Mumbai next week.",
+  "options": ["will travel", "traveled", "traveling"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun: ___ book is this?",
+  "options": ["Whose", "Who", "Whom"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct plural.",
+  "options": ["Men", "Mans", "Mens"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["happy", "happily", "happiness"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: He is ___ honest policeman.",
+  "options": ["an", "a", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She is famous ___ her singing.",
+  "options": ["for", "to", "at"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense: The baby ___ now.",
+  "options": ["is sleeping", "sleep", "slept"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal: You ___ not waste water.",
+  "options": ["should", "can", "may"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction: He is tired ___ he continues working.",
+  "options": ["but", "because", "so"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["She has two brothers.", "She have two brothers.", "She having two brothers."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct comparative.",
+  "options": ["more interesting", "interestinger", "interestingest"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct superlative.",
+  "options": ["most expensive", "expensivest", "more expensive"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: He divided the cake ___ three friends.",
+  "options": ["among", "between", "into"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: ___ Nile is the longest river in Africa.",
+  "options": ["The", "A", "An"],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct preposition: She is sitting ___ the chair.",
+  "options": ["on", "under", "between"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We arrived ___ the airport.",
+  "options": ["on", "at", "in"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: The cat jumped ___ the fence.",
+  "options": ["under", "between", "over"],
   "correct": 2
 },
 {
-  "q": "What is the Roman numeral for 72?",
-  "options": ["LXXII", "XXLII", "LXXI"],
+  "q": "Choose the correct preposition: Rahul lives ___ Surat.",
+  "options": ["in", "at", "on"],
   "correct": 0
 },
 {
-  "q": "What is the Roman numeral for 83?",
-  "options": ["LXXXIII", "LXXIII", "XXXIII"],
-  "correct": 0
+  "q": "Choose the correct preposition: The meeting starts ___ 9:00 a.m.",
+  "options": ["on", "at", "in"],
+  "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 91?",
-  "options": ["IC", "XCIX", "XCI"],
+  "q": "Choose the correct preposition: The train passed ___ the tunnel.",
+  "options": ["over", "under", "through"],
   "correct": 2
 },
 {
-  "q": "What is the Roman numeral for 97?",
-  "options": ["XCVI", "XCVII", "ICVII"],
+  "q": "Choose the correct preposition: She is good ___ Mathematics.",
+  "options": ["at", "on", "with"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The children are ___ the classroom.",
+  "options": ["on", "in", "under"],
   "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 108?",
-  "options": ["CVIII", "CXVIII", "CIX"],
+  "q": "Choose the correct preposition: We walked ___ the bridge.",
+  "options": ["under", "above", "across"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: I agree ___ you.",
+  "options": ["with", "to", "at"],
   "correct": 0
 },
 {
-  "q": "What is the Roman numeral for 149?",
-  "options": ["CXLIX", "CLIX", "CXXXXIX"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 166?",
-  "options": ["CLXIV", "CLXVI", "CLVI"],
+  "q": "Choose the correct preposition: She was born ___ May.",
+  "options": ["on", "in", "at"],
   "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 194?",
-  "options": ["CXCIV", "CXCIV", "CCIV"],
+  "q": "Choose the correct preposition: The dog ran ___ the road.",
+  "options": ["under", "over", "across"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is interested ___ music.",
+  "options": ["in", "on", "at"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: My birthday is ___ Monday.",
+  "options": ["at", "on", "in"],
   "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 222?",
-  "options": ["CCXXII", "CCCXXII", "CCXII"],
+  "q": "Choose the correct preposition: The rabbit disappeared ___ the hole.",
+  "options": ["above", "through", "into"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She depends ___ her parents.",
+  "options": ["on", "at", "with"],
   "correct": 0
 },
 {
-  "q": "What is the Roman numeral for 275?",
-  "options": ["CCLXXV", "CCXXV", "CCLXV"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 333?",
-  "options": ["CCCXXXIII", "CCXXXIII", "CCCCXXXIII"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 388?",
-  "options": ["CCCLXXXVIII", "CCCLXXXII", "CCCLXXVIII"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 444?",
-  "options": ["CDXLIV", "CCCCXLIV", "CDLIV"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 499?",
-  "options": ["CDXCIX", "ID", "CCCCXCIX"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 555?",
-  "options": ["DLV", "DVLV", "DLVV"],
-  "correct": 0
-},
-{
-  "q": "Which number does XCIV represent?",
-  "options": ["96", "94", "104"],
+  "q": "Choose the correct preposition: The bus stopped ___ the station.",
+  "options": ["in", "at", "on"],
   "correct": 1
 },
 {
-  "q": "Which number does CXLVIII represent?",
-  "options": ["138", "148", "158"],
+  "q": "Choose the correct preposition: The bird flew ___ the river.",
+  "options": ["under", "through", "over"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He apologized ___ his mistake.",
+  "options": ["for", "to", "with"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We reached home ___ midnight.",
+  "options": ["on", "at", "in"],
   "correct": 1
 },
 {
-  "q": "Which number does CLXXIX represent?",
-  "options": ["169", "179", "189"],
+  "q": "Choose the correct preposition: The children ran ___ the park.",
+  "options": ["above", "around", "between"],
   "correct": 1
 },
 {
-  "q": "Which number does CCXLIV represent?",
-  "options": ["244", "246", "264"],
+  "q": "Choose the correct preposition: She is married ___ Raj.",
+  "options": ["to", "with", "at"],
   "correct": 0
 },
 {
-  "q": "Which number does CCCXCIX represent?",
-  "options": ["389", "399", "409"],
+  "q": "Choose the correct preposition: He came ___ bus.",
+  "options": ["on", "by", "with"],
   "correct": 1
 },
 {
-  "q": "Which number does CDLXXXVIII represent?",
-  "options": ["478", "488", "498"],
+  "q": "Choose the correct preposition: The ball rolled ___ the bed.",
+  "options": ["above", "between", "under"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: We are proud ___ our country.",
+  "options": ["of", "at", "to"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The picture hangs ___ the wall.",
+  "options": ["at", "on", "in"],
   "correct": 1
 },
 {
-  "q": "Which number does DXLIX represent?",
-  "options": ["539", "549", "559"],
+  "q": "Choose the correct preposition: He climbed ___ the tree.",
+  "options": ["under", "through", "up"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: I borrowed a pen ___ Amit.",
+  "options": ["from", "to", "with"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: She arrived ___ time.",
+  "options": ["in", "on", "at"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: The river flows ___ the city.",
+  "options": ["above", "between", "through"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He laughed ___ the joke.",
+  "options": ["at", "to", "for"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The children are hiding ___ the table.",
+  "options": ["on", "under", "at"],
   "correct": 1
 },
 {
-  "q": "Which number does DCXCIX represent?",
-  "options": ["689", "699", "709"],
+  "q": "Choose the correct preposition: She divided the cake ___ her friends.",
+  "options": ["between", "into", "among"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: I am looking ___ my keys.",
+  "options": ["for", "to", "at"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: We met ___ the evening.",
+  "options": ["at", "in", "on"],
   "correct": 1
 },
 {
-  "q": "Which number does DCCLXV represent?",
-  "options": ["755", "765", "775"],
+  "q": "Choose the correct preposition: The plane flew ___ the clouds.",
+  "options": ["under", "between", "above"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: He is famous ___ his paintings.",
+  "options": ["for", "with", "to"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The keys are ___ my pocket.",
+  "options": ["at", "in", "on"],
   "correct": 1
 },
 {
-  "q": "Which number does DCCCXC represent?",
-  "options": ["880", "890", "900"],
+  "q": "Choose the correct preposition: She walked ___ the room.",
+  "options": ["above", "across", "under"],
   "correct": 1
 },
 {
-  "q": "Which number does CMXLIV represent?",
-  "options": ["934", "944", "954"],
+  "q": "Choose the correct preposition: The teacher is angry ___ him.",
+  "options": ["with", "at", "to"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The train leaves ___ 7 p.m.",
+  "options": ["on", "at", "in"],
   "correct": 1
 },
 {
-  "q": "Which number does CMXCIX represent?",
-  "options": ["989", "999", "1009"],
+  "q": "Choose the correct preposition: The fish swam ___ the bridge.",
+  "options": ["above", "beneath", "between"],
   "correct": 1
 },
 {
-  "q": "Which is the correct Roman numeral for 600?",
-  "options": ["DC", "CD", "DCC"],
+  "q": "Choose the correct preposition: She smiled ___ me.",
+  "options": ["at", "to", "for"],
   "correct": 0
 },
 {
-  "q": "Which is the correct Roman numeral for 700?",
-  "options": ["DCC", "DCCC", "DC"],
-  "correct": 0
-},
-{
-  "q": "Which is the correct Roman numeral for 800?",
-  "options": ["DCC", "DCCC", "CCC"],
+  "q": "Choose the correct preposition: My office is ___ the second floor.",
+  "options": ["at", "on", "in"],
   "correct": 1
 },
 {
-  "q": "Which is the correct Roman numeral for 900?",
-  "options": ["DCCCC", "CM", "XM"],
+  "q": "Choose the correct preposition: The children rushed ___ the classroom.",
+  "options": ["above", "under", "into"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: We listened ___ the teacher carefully.",
+  "options": ["to", "at", "for"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The exam is ___ Friday.",
+  "options": ["in", "on", "at"],
   "correct": 1
 },
 {
-  "q": "Which is the correct Roman numeral for 950?",
-  "options": ["CML", "DCCCCL", "LM"],
+  "q": "Choose the correct preposition: The monkey jumped ___ one tree to another.",
+  "options": ["under", "through", "from"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She suffers ___ fever.",
+  "options": ["from", "at", "on"],
   "correct": 0
 },
 {
-  "q": "Which is the correct Roman numeral for 999?",
-  "options": ["IM", "CMXCIX", "DCCCCLXXXXVIIII"],
+  "q": "Choose the correct preposition: He is waiting ___ the bus stop.",
+  "options": ["on", "at", "in"],
   "correct": 1
 },
 {
-  "q": "What is the Roman numeral for 1000?",
-  "options": ["M", "DM", "CM"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1100?",
-  "options": ["MC", "CM", "MD"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1250?",
-  "options": ["MCCL", "MCL", "MCXL"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1499?",
-  "options": ["MCDXCIX", "MDXCIX", "MCCCCXCIX"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1500?",
-  "options": ["MD", "DM", "MC"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1666?",
-  "options": ["MDCLXVI", "MDCXVI", "MDLXVI"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1776?",
-  "options": ["MDCCLXXVI", "MCCLXXVI", "MDCLXXVI"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1888?",
-  "options": ["MDCCCLXXXVIII", "MDCXXXVIII", "MDCCLXXXVIII"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1947?",
-  "options": ["MCMXLVII", "MCMXVII", "MDCCCCXLVII"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 1999?",
-  "options": ["MCMXCIX", "MDCCCCLXXXXVIIII", "MMI"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 2025?",
-  "options": ["MMXXV", "MMXVV", "MMCXXV"],
-  "correct": 0
-},
-{
-  "q": "What is the Roman numeral for 2026?",
-  "options": ["MMXXVI", "MMXVI", "MMXXIV"],
-  "correct": 0
-},
-{
-  "q": "Which number does MMXXVI represent?",
-  "options": ["2026", "2016", "2024"],
-  "correct": 0
-},
-{
-  "q": "Which number does MCMXCIV represent?",
-  "options": ["1984", "1994", "2004"],
+  "q": "Choose the correct preposition: The cat came ___ the window.",
+  "options": ["above", "through", "between"],
   "correct": 1
 },
 {
-  "q": "Which number does MCMLXXXVII represent?",
-  "options": ["1987", "1977", "1997"],
+  "q": "Choose the correct preposition: He belongs ___ a rich family.",
+  "options": ["to", "with", "at"],
   "correct": 0
 },
 {
-  "q": "Which number does MDCCLXXVI represent?",
-  "options": ["1766", "1776", "1786"],
+  "q": "Choose the correct preposition: We go to school ___ foot.",
+  "options": ["by", "on", "at"],
   "correct": 1
 },
 {
-  "q": "Which number does MCDXLIV represent?",
-  "options": ["1434", "1444", "1454"],
+  "q": "Choose the correct preposition: The ball went ___ the gate.",
+  "options": ["under", "inside", "through"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She is afraid ___ dogs.",
+  "options": ["of", "to", "for"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The shop opens ___ 10 a.m.",
+  "options": ["in", "at", "on"],
   "correct": 1
 },
 {
-  "q": "Which number does MCCCLXXXIX represent?",
-  "options": ["1389", "1399", "1379"],
+  "q": "Choose the correct preposition: We drove ___ the city.",
+  "options": ["between", "through", "above"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He insisted ___ paying the bill.",
+  "options": ["on", "at", "to"],
   "correct": 0
 },
 {
-  "q": "Which number does DCCXLVIII represent?",
-  "options": ["748", "758", "738"],
+  "q": "Choose the correct preposition: The children stood ___ the queue.",
+  "options": ["at", "in", "on"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: The bird flew ___ the mountain.",
+  "options": ["between", "over", "under"],
+  "correct": 1
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": ["I am fine.", "I is fine.", "I are fine."],
   "correct": 0
 },
 {
-  "q": "Which number does CDXCIV represent?",
-  "options": ["494", "484", "504"],
+  "q": "Choose the correct sentence.",
+  "options": ["She have a car.", "She has a car.", "She having a car."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["They goes home.", "They go home.", "They going home."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: I ___ a student.",
+  "options": ["am", "is", "are"],
   "correct": 0
 },
 {
-  "q": "Which number does LXXXIX represent?",
-  "options": ["89", "79", "99"],
+  "q": "Choose the correct word: He ___ my friend.",
+  "options": ["are", "is", "am"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct word: We ___ happy.",
+  "options": ["am", "is", "are"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Can you help me?", "Can you helps me?", "Can you helped me?"],
   "correct": 0
 },
 {
-  "q": "Which number does XLIX represent?",
-  "options": ["39", "49", "59"],
+  "q": "Choose the correct sentence.",
+  "options": ["She can sings.", "She can sing.", "She can singing."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I don't likes tea.", "I doesn't like tea.", "I don't like tea."],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article: He is ___ engineer.",
+  "options": ["a", "an", "the"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article: She has ___ cat.",
+  "options": ["a", "an", "the"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article: ___ Sun rises in the east.",
+  "options": ["A", "An", "The"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct preposition: She is ___ home.",
+  "options": ["at", "in", "on"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition: The book is ___ the table.",
+  "options": ["under", "on", "between"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct preposition: He walked ___ the bridge.",
+  "options": ["through", "over", "under"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct pronoun.",
+  "options": ["Me am ready.", "I am ready.", "Mine am ready."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct pronoun.",
+  "options": ["She", "Her", "Hers"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun: This pen is ___.",
+  "options": ["my", "mine", "me"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["I eat breakfast every day.", "I ate breakfast every day.", "I eating breakfast every day."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["She is cooking now.", "She cooks now.", "She cooked now."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["They went yesterday.", "They go yesterday.", "They goes yesterday."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["You should study.", "You should studies.", "You should studied."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["May I come in?", "May I comes in?", "May I coming in?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["Must I goes?", "Must I go?", "Must I going?"],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Where do you live?", "Where you live?", "Where does you live?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["What is your name?", "What your name is?", "What are your name?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["How old are you?", "How old you are?", "How are old you?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction.",
+  "options": ["I was tired, so I slept.", "I was tired, but I slept.", "I was tired, because I slept."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction.",
+  "options": ["Tea and coffee.", "Tea but coffee.", "Tea because coffee."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction.",
+  "options": ["Study hard or fail.", "Study hard and fail.", "Study hard because fail."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["She is beautiful.", "She is beautifully.", "She is beauty."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["A tall boy.", "A tallly boy.", "A taller boy."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["An honest man.", "An honestly man.", "An honesty man."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adverb.",
+  "options": ["He runs quick.", "He runs quickly.", "He runs quickest."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct adverb.",
+  "options": ["Speak polite.", "Speak politely.", "Speak politeness."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct adverb.",
+  "options": ["Drive careful.", "Drive carefully.", "Drive carefulness."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I have two brothers.", "I has two brothers.", "I having two brothers."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["She has finished.", "She have finished.", "She finishing."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["We have a meeting.", "We has a meeting.", "We having a meeting."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["There is a pen.", "There are a pen.", "There am a pen."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["There are two books.", "There is two books.", "There am two books."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Is there any water?", "Are there any water?", "Am there any water?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: How are you?",
+  "options": ["I am fine.", "I fine.", "Me fine."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct response: Thank you.",
+  "options": ["Welcome.", "You're welcome.", "Good morning."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct response: Good night.",
+  "options": ["Good night.", "Good afternoon.", "Good evening."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Open the door.", "Opens the door.", "Opening the door."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Please sit down.", "Please sits down.", "Please sitting down."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Don't worry.", "Doesn't worry.", "Not worry."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct question.",
+  "options": ["Do you like coffee?", "Does you like coffee?", "Do you likes coffee?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct question.",
+  "options": ["Did she call you?", "Did she called you?", "Did called she you?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct question.",
+  "options": ["Are they ready?", "Is they ready?", "Am they ready?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["My father is a doctor.", "My father are a doctor.", "My father am a doctor."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["We live in India.", "We lives in India.", "We living in India."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["She speaks English well.", "She speak English well.", "She speaking English well."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I want to learn English.", "I wants to learn English.", "I wanting to learn English."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["He works hard.", "He work hard.", "He working hard."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["We are friends.", "We is friends.", "We am friends."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Please help me.", "Please helps me.", "Please helped me."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["See you tomorrow.", "Seeing you tomorrow.", "Saw you tomorrow."],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": ["I am waiting for you.", "I waiting for you.", "I waits for you."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["She don't drive.", "She doesn't drive.", "She doesn't drives."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["They was late.", "They were late.", "They is late."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct article.",
+  "options": ["a umbrella", "the umbrella", "an umbrella"],
+  "correct": 2
+},
+{
+  "q": "Choose the correct article.",
+  "options": ["a university", "an university", "the university"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition.",
+  "options": ["She is interested in music.", "She is interested on music.", "She is interested at music."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition.",
+  "options": ["He arrived in time.", "He arrived on time.", "He arrived at time."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct pronoun.",
+  "options": ["This book is mine.", "This book is my.", "This book is me."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun.",
+  "options": ["Us are friends.", "We are friends.", "Our are friends."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["She is sleeping now.", "She sleep now.", "She slept now."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["I have finished my work.", "I has finished my work.", "I have finish my work."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["You must wear a helmet.", "You must wears a helmet.", "You must wearing a helmet."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["Can she swim?", "Can she swims?", "Can she swimming?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["There is a problem.", "There are a problem.", "There have a problem."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["There are many students.", "There is many students.", "There am many students."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["He is strong.", "He is strongly.", "He is strength."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adverb.",
+  "options": ["She speaks fluent.", "She speaks fluently.", "She speaks fluency."],
+  "correct": 1
+},
+{
+  "q": "Choose the correct conjunction.",
+  "options": ["I was tired, so I slept.", "I was tired, because I slept.", "I was tired, but I slept."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct conjunction.",
+  "options": ["Tea or coffee?", "Tea because coffee?", "Tea but coffee?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Where are you from?", "Where you are from?", "Where are from you?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["What do you do?", "What you do?", "What does you do?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["How far is it?", "How far it is?", "How is far it?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct verb.",
+  "options": ["She makes tea.", "She make tea.", "She making tea."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct verb.",
+  "options": ["They play cricket.", "They plays cricket.", "They playing cricket."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Please close the window.", "Please closes the window.", "Please closing the window."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Don't be late.", "Doesn't be late.", "Not be late."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["He has a bike.", "He have a bike.", "He having a bike."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["We have enough time.", "We has enough time.", "We having enough time."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["She was happy.", "She were happy.", "She be happy."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I will call you.", "I will called you.", "I will calling you."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article.",
+  "options": ["an honest man", "a honest man", "the honest man"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article.",
+  "options": ["a one-eyed man", "an one-eyed man", "the one-eyed man"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition.",
+  "options": ["He is afraid of dogs.", "He is afraid from dogs.", "He is afraid at dogs."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition.",
+  "options": ["She lives with her parents.", "She lives at her parents.", "She lives on her parents."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun.",
+  "options": ["Who is there?", "Whom is there?", "Whose is there?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct pronoun.",
+  "options": ["Please help us.", "Please help we.", "Please help our."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["They have lived here for years.", "They has lived here for years.", "They lived here for years now."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct tense.",
+  "options": ["I saw him yesterday.", "I see him yesterday.", "I seen him yesterday."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["May I sit here?", "May I sits here?", "May I sitting here?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct modal.",
+  "options": ["You should exercise daily.", "You should exercises daily.", "You should exercising daily."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["This is my bag.", "This are my bag.", "This am my bag."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Those are my shoes.", "Those is my shoes.", "Those am my shoes."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adjective.",
+  "options": ["The soup is hot.", "The soup is warmly.", "The soup is heat."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct adverb.",
+  "options": ["He answered politely.", "He answered polite.", "He answered politeness."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Can I help you?", "Can I helps you?", "Can I helped you?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Nice to meet you.", "Nicely to meet you.", "Nice meeting you always."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Excuse me, where is the bank?", "Excuse me, where the bank is?", "Excuse me, where is bank?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["Could you repeat that, please?", "Could you repeated that, please?", "Could you repeats that, please?"],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["I'm learning English.", "I'm learn English.", "I'm learned English."],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": ["We enjoyed the trip.", "We enjoy the trip yesterday.", "We enjoys the trip."],
+  "correct": 0
+},
+   {
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Hardly had I reached the station when the train left.",
+    "Hardly I had reached the station when the train left.",
+    "Hardly had I reached the station than the train left."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No sooner did he arrive than it started raining.",
+    "No sooner had he arrived when it started raining.",
+    "No sooner he arrived than it started raining."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Had I known, I would have helped you.",
+    "If I had knew, I would help you.",
+    "Had I know, I would have helped you."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has been working here for ten years.",
+    "She is working here since ten years.",
+    "She has working here for ten years."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither of the boys has finished the work.",
+    "Neither of the boys have finished the work.",
+    "Neither the boys has finished the work."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Each of the students has a laptop.",
+    "Each of the students have a laptop.",
+    "Each students has a laptop."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Scarcely had she entered when the lights went out.",
+    "Scarcely she had entered when the lights went out.",
+    "Scarcely had she entered than the lights went out."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The news is surprising.",
+    "The news are surprising.",
+    "The news have surprising."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Mathematics is my favorite subject.",
+    "Mathematics are my favorite subject.",
+    "Mathematics have my favorite subject."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The police have arrested the thief.",
+    "The police has arrested the thief.",
+    "The police is arrested the thief."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article.",
+  "options": [
+    "He is an MLA.",
+    "He is a MLA.",
+    "He is the MLA."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct article.",
+  "options": [
+    "She is a European citizen.",
+    "She is an European citizen.",
+    "She is the European citizen."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition.",
+  "options": [
+    "He insisted on paying the bill.",
+    "He insisted to pay the bill.",
+    "He insisted for paying the bill."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct preposition.",
+  "options": [
+    "She is capable of solving the problem.",
+    "She is capable to solve the problem.",
+    "She is capable for solving the problem."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "I wish I had studied harder.",
+    "I wish I studied harder yesterday.",
+    "I wish I have studied harder."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "If I were you, I would accept the offer.",
+    "If I was you, I will accept the offer.",
+    "If I am you, I would accept the offer."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He speaks English more fluently than I do.",
+    "He speaks English more fluent than me.",
+    "He speaks English most fluently than I."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Not only did she sing, but she also danced.",
+    "Not only she sang, but also danced.",
+    "Not only did she sang, but she also danced."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Little did I know about the surprise.",
+    "Little I did know about the surprise.",
+    "Little did I knew about the surprise."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Seldom do we see such honesty.",
+    "Seldom we see such honesty.",
+    "Seldom did we sees such honesty."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He is used to getting up early.",
+    "He is used to get up early.",
+    "He used to getting up early."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "I look forward to meeting you.",
+    "I look forward to meet you.",
+    "I look forward for meeting you."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She denied stealing the money.",
+    "She denied to steal the money.",
+    "She denied steal the money."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He avoided talking about the issue.",
+    "He avoided to talk about the issue.",
+    "He avoided talk about the issue."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The meeting has been postponed.",
+    "The meeting has postponed.",
+    "The meeting have been postponed."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She must have forgotten the meeting.",
+    "She must forgot the meeting.",
+    "She must has forgotten the meeting."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "You needn't have waited for me.",
+    "You needn't waited for me.",
+    "You didn't need have waited."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Would you mind opening the window?",
+    "Would you mind to open the window?",
+    "Would you mind open the window?"
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He was accused of cheating.",
+    "He was accused for cheating.",
+    "He was accused to cheat."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She succeeded in passing the exam.",
+    "She succeeded to pass the exam.",
+    "She succeeded for passing the exam."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The furniture is very expensive.",
+    "The furniture are very expensive.",
+    "The furnitures are very expensive."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Advice is always valuable.",
+    "Advices are always valuable.",
+    "An advice is always valuable."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She has less money than her brother.",
+    "She has lesser money than her brother.",
+    "She has few money than her brother."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "There are fewer students today.",
+    "There are less students today.",
+    "There is fewer students today."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He is one of the best players in the team.",
+    "He is one of the better players in the team.",
+    "He is one of the good players in the team."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "This is the most interesting book I have ever read.",
+    "This is the more interesting book I have ever read.",
+    "This is the most interestinger book I have ever read."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Either Ram or his friends are coming.",
+    "Either Ram or his friends is coming.",
+    "Either Ram or his friends comes."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Either the teachers or the principal is attending.",
+    "Either the teachers or the principal are attending.",
+    "Either the teachers or principal attend."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Bread and butter is my favorite breakfast.",
+    "Bread and butter are my favorite breakfast.",
+    "Bread with butter are my favorite breakfast."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Ten kilometers is a long distance to walk.",
+    "Ten kilometers are a long distance to walk.",
+    "Ten kilometer is a long distance."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "The committee has made its decision.",
+    "The committee have made its decision.",
+    "The committee has made their decision."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He is senior to me.",
+    "He is senior than me.",
+    "He is more senior than me."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "She prefers coffee to tea.",
+    "She prefers coffee than tea.",
+    "She prefers coffee over than tea."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "No one except John was present.",
+    "No one except John were present.",
+    "No one except John have present."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Everyone has completed the task.",
+    "Everyone have completed the task.",
+    "Everyone are completing the task."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Neither the manager nor the employees were informed.",
+    "Neither the manager nor the employees was informed.",
+    "Neither manager nor employees has informed."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "He rarely makes mistakes.",
+    "He rarely make mistakes.",
+    "He rarely making mistakes."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "By the time we arrived, the movie had started.",
+    "By the time we arrived, the movie has started.",
+    "By the time we arrived, the movie started already."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Had they informed us, we could have helped.",
+    "Had they informed us, we could help.",
+    "Had they inform us, we could have helped."
+  ],
+  "correct": 0
+},
+{
+  "q": "Choose the correct sentence.",
+  "options": [
+    "Only after the meeting did I understand the problem.",
+    "Only after the meeting I understood the problem.",
+    "Only after the meeting did I understood the problem."
+  ],
+  "correct": 0
+},
+  {
+    "q": "What do you say when you meet someone in the morning?",
+    "option1": "Good morning.",
+    "option2": "Good night.",
+    "option3": "See you later.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone's name?",
+    "option1": "Where are you?",
+    "option2": "What is your name?",
+    "option3": "How old are you?",
+    "correct": 1
+  },
+  {
+    "q": "Someone says 'Thank you.' What do you reply?",
+    "option1": "Goodbye.",
+    "option2": "See you.",
+    "option3": "You're welcome.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask about someone's health?",
+    "option1": "How are you?",
+    "option2": "Who are you?",
+    "option3": "Where are you?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask for someone's age politely?",
+    "option1": "What is your job?",
+    "option2": "How old are you?",
+    "option3": "Where do you live?",
+    "correct": 1
+  },
+  {
+    "q": "Someone helps you. What do you say?",
+    "option1": "Sorry.",
+    "option2": "Excuse me.",
+    "option3": "Thank you.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask where someone lives?",
+    "option1": "Where do you live?",
+    "option2": "When do you live?",
+    "option3": "Why do you live?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask about someone's job?",
+    "option1": "Where do you work?",
+    "option2": "What do you do?",
+    "option3": "What are you doing?",
+    "correct": 1
+  },
+  {
+    "q": "How do you greet someone at night?",
+    "option1": "Good morning.",
+    "option2": "Good afternoon.",
+    "option3": "Good evening.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask for permission to enter?",
+    "option1": "May I come in?",
+    "option2": "May I goes in?",
+    "option3": "May I coming in?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone to repeat?",
+    "option1": "Can you repeat that?",
+    "option2": "Could you repeat that, please?",
+    "option3": "Repeat you that?",
+    "correct": 1
+  },
+  {
+    "q": "What do you say before leaving?",
+    "option1": "Good morning.",
+    "option2": "Thank you.",
+    "option3": "See you later.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask for help?",
+    "option1": "Can you help me?",
+    "option2": "Can you helps me?",
+    "option3": "Can helping me?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask the time?",
+    "option1": "What day is it?",
+    "option2": "What time is it?",
+    "option3": "Where is the time?",
+    "correct": 1
+  },
+  {
+    "q": "What do you say after making a mistake?",
+    "option1": "Thank you.",
+    "option2": "Welcome.",
+    "option3": "I'm sorry.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask for a glass of water politely?",
+    "option1": "May I have a glass of water?",
+    "option2": "Give me water.",
+    "option3": "Bring water now.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone's phone number?",
+    "option1": "Where is your phone?",
+    "option2": "What is your phone number?",
+    "option3": "Who has your phone?",
+    "correct": 1
+  },
+  {
+    "q": "How do you answer 'How are you?'",
+    "option1": "Good night.",
+    "option2": "Nice to meet you.",
+    "option3": "I'm fine, thank you.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask someone to wait?",
+    "option1": "Please wait a moment.",
+    "option2": "Please waiting.",
+    "option3": "Waiting please.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask for directions?",
+    "option1": "How are you?",
+    "option2": "How can I get to the station?",
+    "option3": "Where you go?",
+    "correct": 1
+  },
+  {
+    "q": "How do you end a phone call politely?",
+    "option1": "Hello.",
+    "option2": "Thank you.",
+    "option3": "Have a nice day.",
+    "correct": 2
+  },
+  {
+    "q": "How do you introduce yourself?",
+    "option1": "My name is Rahul.",
+    "option2": "Your name is Rahul.",
+    "option3": "He is Rahul.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone to speak slowly?",
+    "option1": "Speak loudly.",
+    "option2": "Could you speak slowly, please?",
+    "option3": "Speak fastest.",
+    "correct": 1
+  },
+  {
+    "q": "What do you say when someone sneezes?",
+    "option1": "Good luck.",
+    "option2": "Take care.",
+    "option3": "Bless you.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask if someone is busy?",
+    "option1": "Are you busy?",
+    "option2": "Do you busy?",
+    "option3": "Busy you are?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask for the bill in a restaurant?",
+    "option1": "Give me food.",
+    "option2": "May I have the bill, please?",
+    "option3": "Where is my chair?",
+    "correct": 1
+  },
+  {
+    "q": "What do you say when someone congratulates you?",
+    "option1": "Sorry.",
+    "option2": "Never mind.",
+    "option3": "Thank you.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask if a seat is free?",
+    "option1": "Is this seat free?",
+    "option2": "This seat free?",
+    "option3": "Free seat is?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone to open the door?",
+    "option1": "Door open.",
+    "option2": "Could you open the door, please?",
+    "option3": "Opened the door.",
+    "correct": 1
+  },
+  {
+    "q": "How do you wish someone on their birthday?",
+    "option1": "Good luck.",
+    "option2": "Good morning.",
+    "option3": "Happy Birthday!",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask if someone understands?",
+    "option1": "Do you understand?",
+    "option2": "Understand you?",
+    "option3": "You understanding?",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone to write it down?",
+    "option1": "Read it.",
+    "option2": "Could you write it down, please?",
+    "option3": "Write downing.",
+    "correct": 1
+  },
+  {
+    "q": "What do you say when leaving someone's house?",
+    "option1": "Good morning.",
+    "option2": "Excuse me.",
+    "option3": "Goodbye.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask for silence?",
+    "option1": "Please be quiet.",
+    "option2": "Quiet please be.",
+    "option3": "Be quietly.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone where they are from?",
+    "option1": "Where do you stay?",
+    "option2": "Where are you from?",
+    "option3": "Who are you from?",
+    "correct": 1
+  },
+  {
+    "q": "What do you say when someone says 'Good luck'?",
+    "option1": "Sorry.",
+    "option2": "See you.",
+    "option3": "Thank you.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask someone to sit down?",
+    "option1": "Please have a seat.",
+    "option2": "Please sitting.",
+    "option3": "Seat please.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask someone's email address?",
+    "option1": "Where is your email?",
+    "option2": "What is your email address?",
+    "option3": "Who uses your email?",
+    "correct": 1
+  },
+  {
+    "q": "How do you appreciate good food?",
+    "option1": "I don't like it.",
+    "option2": "It's okay.",
+    "option3": "The food is delicious.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask someone to come inside?",
+    "option1": "Please come in.",
+    "option2": "Please comes in.",
+    "option3": "Coming inside.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask if someone needs help?",
+    "option1": "Help you?",
+    "option2": "Do you need any help?",
+    "option3": "Need helping?",
+    "correct": 1
+  },
+  {
+    "q": "How do you respond to 'See you tomorrow'?",
+    "option1": "Sorry.",
+    "option2": "No problem.",
+    "option3": "See you tomorrow.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask someone to be careful?",
+    "option1": "Please be careful.",
+    "option2": "Be carefully.",
+    "option3": "Careful be.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask if someone is ready?",
+    "option1": "Ready are you?",
+    "option2": "Are you ready?",
+    "option3": "You ready is?",
+    "correct": 1
+  },
+  {
+    "q": "How do you wish someone before a journey?",
+    "option1": "Happy Birthday.",
+    "option2": "Good evening.",
+    "option3": "Have a safe trip.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask someone to slow down?",
+    "option1": "Please slow down.",
+    "option2": "Please slowing down.",
+    "option3": "Slow downing.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask what someone likes?",
+    "option1": "What do you have?",
+    "option2": "What do you like?",
+    "option3": "What liking you?",
+    "correct": 1
+  },
+  {
+    "q": "What do you say after receiving a gift?",
+    "option1": "Goodbye.",
+    "option2": "Excuse me.",
+    "option3": "Thank you very much.",
+    "correct": 2
+  },
+  {
+    "q": "How do you ask someone to call you later?",
+    "option1": "Please call me later.",
+    "option2": "Please calls me later.",
+    "option3": "Calling me later.",
+    "correct": 0
+  },
+  {
+    "q": "How do you ask if someone is free tomorrow?",
+    "option1": "Tomorrow free?",
+    "option2": "Are you free tomorrow?",
+    "option3": "You free tomorrow is?",
+    "correct": 1
+  },
+   {
+  "q": "How do you answer 'Nice to meet you'?",
+  "option1": "Nice to meet you too.",
+  "option2": "Good night.",
+  "option3": "See you yesterday.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone to speak louder?",
+  "option1": "Speak quietly.",
+  "option2": "Could you speak a little louder, please?",
+  "option3": "Louder you speak.",
+  "correct": 1
+},
+{
+  "q": "What do you say when someone says 'Have a nice day'?",
+  "option1": "Goodbye.",
+  "option2": "See you later.",
+  "option3": "You too!",
+  "correct": 2
+},
+{
+  "q": "How do you ask if someone is okay?",
+  "option1": "Are you okay?",
+  "option2": "You okay are?",
+  "option3": "Okay you is?",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone to wait outside?",
+  "option1": "Wait outside.",
+  "option2": "Could you wait outside, please?",
+  "option3": "Outside waiting.",
+  "correct": 1
+},
+{
+  "q": "What do you say after receiving good news?",
+  "option1": "I'm sorry.",
+  "option2": "Never mind.",
+  "option3": "That's great!",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to sit here?",
+  "option1": "Please sit here.",
+  "option2": "Please sits here.",
+  "option3": "Sit here please is.",
+  "correct": 0
+},
+{
+  "q": "How do you ask if someone is available now?",
+  "option1": "You free?",
+  "option2": "Are you free now?",
+  "option3": "Free are now?",
+  "correct": 1
+},
+{
+  "q": "How do you respond to 'Good luck'?",
+  "option1": "Good evening.",
+  "option2": "See you soon.",
+  "option3": "Thank you!",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to close the window?",
+  "option1": "Please close the window.",
+  "option2": "Please closing the window.",
+  "option3": "Close windowing.",
+  "correct": 0
+},
+{
+  "q": "How do you ask where the restroom is?",
+  "option1": "Where restroom?",
+  "option2": "Where is the restroom?",
+  "option3": "Restroom where are?",
+  "correct": 1
+},
+{
+  "q": "What do you say after finishing a meeting?",
+  "option1": "Good morning.",
+  "option2": "Excuse me.",
+  "option3": "It was nice meeting you.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to call you?",
+  "option1": "Please call me.",
+  "option2": "Please calls me.",
+  "option3": "Calling me please.",
+  "correct": 0
+},
+{
+  "q": "How do you ask if someone is hungry?",
+  "option1": "Hungry you?",
+  "option2": "Are you hungry?",
+  "option3": "You hungry is?",
+  "correct": 1
+},
+{
+  "q": "How do you praise someone's work?",
+  "option1": "Not bad.",
+  "option2": "Maybe later.",
+  "option3": "Well done!",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to be careful while driving?",
+  "option1": "Drive carefully.",
+  "option2": "Driving careful.",
+  "option3": "Drive carefulness.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone for their address?",
+  "option1": "Where your home?",
+  "option2": "What is your address?",
+  "option3": "Address where?",
+  "correct": 1
+},
+{
+  "q": "What do you say after someone apologizes?",
+  "option1": "Thank you.",
+  "option2": "Goodbye.",
+  "option3": "That's okay.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to follow you?",
+  "option1": "Please follow me.",
+  "option2": "Please follows me.",
+  "option3": "Following me.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone's favorite color?",
+  "option1": "What color you like?",
+  "option2": "What is your favorite color?",
+  "option3": "Favorite color where?",
+  "correct": 1
+},
+{
+  "q": "How do you congratulate someone on success?",
+  "option1": "Good luck.",
+  "option2": "Sorry.",
+  "option3": "Congratulations!",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to slow down while speaking?",
+  "option1": "Please speak slowly.",
+  "option2": "Please speaks slowly.",
+  "option3": "Slow speaking.",
+  "correct": 0
+},
+{
+  "q": "How do you ask if someone understands English?",
+  "option1": "Understand English?",
+  "option2": "Do you understand English?",
+  "option3": "English understands you?",
+  "correct": 1
+},
+{
+  "q": "What do you say before sleeping?",
+  "option1": "Good afternoon.",
+  "option2": "See you tomorrow.",
+  "option3": "Good night.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to open the door?",
+  "option1": "Please open the door.",
+  "option2": "Please opens the door.",
+  "option3": "Opening door.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone what they are doing?",
+  "option1": "What you do?",
+  "option2": "What are you doing?",
+  "option3": "Doing what you?",
+  "correct": 1
+},
+{
+  "q": "What do you say when you agree completely?",
+  "option1": "Not really.",
+  "option2": "Maybe.",
+  "option3": "Exactly!",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to listen carefully?",
+  "option1": "Please listen carefully.",
+  "option2": "Please listens carefully.",
+  "option3": "Listening carefully.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone's nationality?",
+  "option1": "Who are you?",
+  "option2": "What is your nationality?",
+  "option3": "Where nationality?",
+  "correct": 1
+},
+{
+  "q": "How do you respond to 'Congratulations'?",
+  "option1": "Good luck.",
+  "option2": "Never mind.",
+  "option3": "Thank you very much.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to turn on the fan?",
+  "option1": "Please turn on the fan.",
+  "option2": "Please turns on the fan.",
+  "option3": "Turning on fan.",
+  "correct": 0
+},
+{
+  "q": "How do you ask if someone has finished?",
+  "option1": "Finished you?",
+  "option2": "Have you finished?",
+  "option3": "You have finish?",
+  "correct": 1
+},
+{
+  "q": "What do you say when someone helps you a lot?",
+  "option1": "Excuse me.",
+  "option2": "See you.",
+  "option3": "I really appreciate it.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to come with you?",
+  "option1": "Come with me.",
+  "option2": "Comes with me.",
+  "option3": "Coming me.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone if they are married?",
+  "option1": "Marriage you?",
+  "option2": "Are you married?",
+  "option3": "You marry?",
+  "correct": 1
+},
+{
+  "q": "How do you politely refuse?",
+  "option1": "Never.",
+  "option2": "Impossible.",
+  "option3": "No, thank you.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to be on time?",
+  "option1": "Please be on time.",
+  "option2": "Please are on time.",
+  "option3": "Being on time.",
+  "correct": 0
+},
+{
+  "q": "How do you ask if someone likes coffee?",
+  "option1": "Coffee you like?",
+  "option2": "Do you like coffee?",
+  "option3": "Like coffee are?",
+  "correct": 1
+},
+{
+  "q": "What do you say after someone says 'I'm sorry'?",
+  "option1": "Good morning.",
+  "option2": "You're welcome.",
+  "option3": "No problem.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to write their name?",
+  "option1": "Please write your name.",
+  "option2": "Please writes your name.",
+  "option3": "Writing your name.",
+  "correct": 0
+},
+{
+  "q": "How do you ask when the train arrives?",
+  "option1": "Train when?",
+  "option2": "When does the train arrive?",
+  "option3": "When train arrives is?",
+  "correct": 1
+},
+{
+  "q": "What do you say after a delicious meal?",
+  "option1": "Goodbye.",
+  "option2": "See you.",
+  "option3": "That was delicious.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to check their email?",
+  "option1": "Please check your email.",
+  "option2": "Please checks your email.",
+  "option3": "Checking email.",
+  "correct": 0
+},
+{
+  "q": "How do you ask if the seat is taken?",
+  "option1": "Seat taken?",
+  "option2": "Is this seat taken?",
+  "option3": "Taken seat is?",
+  "correct": 1
+},
+{
+  "q": "How do you compliment someone's dress?",
+  "option1": "Not bad.",
+  "option2": "It's okay.",
+  "option3": "You look beautiful.",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to come again?",
+  "option1": "Please come again.",
+  "option2": "Please comes again.",
+  "option3": "Coming again.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone where they learned English?",
+  "option1": "Where English?",
+  "option2": "Where did you learn English?",
+  "option3": "Learn English where?",
+  "correct": 1
+},
+{
+  "q": "What do you say after someone wishes you Happy Birthday?",
+  "option1": "Good night.",
+  "option2": "Same to you.",
+  "option3": "Thank you!",
+  "correct": 2
+},
+{
+  "q": "How do you ask someone to enjoy their meal?",
+  "option1": "Enjoy your meal.",
+  "option2": "Enjoying your meal.",
+  "option3": "Enjoys your meal.",
+  "correct": 0
+},
+{
+  "q": "How do you ask someone if they are ready to leave?",
+  "option1": "Ready leaving?",
+  "option2": "Are you ready to leave?",
+  "option3": "Leave ready are?",
   "correct": 1
 }
    
