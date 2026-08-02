@@ -810,15 +810,29 @@
 
     <div id="quiz" class="card hidden">
 
-        <div style="text-align:center;
-                margin-bottom:15px;
-                padding:12px;
-                background:linear-gradient(135deg,#b702ee,#a048bb);
-                color:white;
-                border-radius:12px;
-                font-size:20px;
-                font-weight:bold;">
-            💰 Wallet Balance : ₹<span id="quizWallet">0.00</span> 
+        <div style="
+        text-align:center;
+        margin-bottom:10px;
+        padding:10px;
+        background:linear-gradient(135deg,#ff9800,#ff5722);
+        color:white;
+        border-radius:12px;
+        font-size:18px;
+        font-weight:bold;">
+            📚 Remaining Questions :
+            <span id="remainingQuestions">100</span>/100
+        </div>
+
+        <div style="
+        text-align:center;
+        margin-bottom:15px;
+        padding:12px;
+        background:linear-gradient(135deg,#4facfe,#00c6fb);
+        color:white;
+        border-radius:12px;
+        font-size:20px;
+        font-weight:bold;">
+            💰 Wallet Balance : ₹<span id="quizWallet">0.00</span>
         </div>
 
         <h3 id="question">Loading...</h3>
@@ -1182,6 +1196,13 @@
 
         function updateQuestionProgress() {
             const count = Math.min(100, Number(dailyQuestionsAnswered || 0));
+            const remaining = 100 - count;
+
+            const remainBox = document.getElementById("remainingQuestions");
+
+            if (remainBox) {
+                remainBox.innerText = remaining;
+            }
             const progress = document.getElementById("questionProgress");
             const spinBtn = document.getElementById("spinBtn");
 
