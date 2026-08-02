@@ -1120,6 +1120,13 @@
             lastSpin = data.lastSpin || "";
 
             document.getElementById("wallet").innerText = wallet.toFixed(2);
+
+            // Quiz Wallet પણ Update કરો
+            const quizWallet = document.getElementById("quizWallet");
+            if (quizWallet) {
+                quizWallet.innerText = wallet.toFixed(2);
+            }
+
             checkWithdrawStatus();
             updateQuestionProgress();
         }
