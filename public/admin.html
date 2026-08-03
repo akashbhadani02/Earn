@@ -1118,39 +1118,39 @@
         //==========================
         // last seen format
         //==========================
-      function formatLastSeen(lastSeen) {
+        function formatLastSeen(lastSeen) {
 
-    if (!lastSeen) {
-        return "<span style='color:#dc2626;font-weight:bold;'>🔴 Never</span>";
-    }
+            if (!lastSeen) {
+                return "<span style='color:#dc2626;font-weight:bold;'>🔴 Never</span>";
+            }
 
-    const diff = Date.now() - new Date(lastSeen).getTime();
+            const diff = Date.now() - new Date(lastSeen).getTime();
 
-    if (diff <= 5000) {
-        return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
-    }
+            if (diff <= 5000) {
+                return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
+            }
 
-    const date = new Date(lastSeen);
+            const date = new Date(lastSeen);
 
-    const datePart = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-    });
+            const datePart = date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
 
-    const timePart = date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-    });
+            const timePart = date.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true
+            });
 
-    return `
+            return `
         <span style="color:#dc2626;font-weight:bold;">
             🔴 ${datePart}<br>${timePart}
         </span>
     `;
-}
+        }
         //==========================
         // Show Users
         //==========================
@@ -1161,13 +1161,12 @@
 
             users.forEach(user => {
 
-    const isOnline =
-        (Date.now() - new Date(user.lastSeen).getTime()) <= 1000;
+                const isOnline = user.isOnline;
 
-    html += `
+                html += `
 
 <tr style="background:${isOnline ? '#dcfce7' : '#fee2e2'};">
-    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline?'#22c55e':'#ef4444'};"></span>${user.name}</td>
+    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};"></span>${user.name}</td>
     <td>${user.mobile}</td>
 
     <td>${formatLastSeen(user.lastSeen)}</td>
