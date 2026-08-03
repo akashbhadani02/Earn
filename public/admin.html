@@ -1161,12 +1161,13 @@
 
             users.forEach(user => {
 
+    const isOnline =
+        (Date.now() - new Date(user.lastSeen).getTime()) <= 3000;
 
-                html += `
+    html += `
 
-<tr>
+<tr style="background:${isOnline ? '#dcfce7' : '#fee2e2'};">
     <td>${user.name}</td>
-
     <td>${user.mobile}</td>
 
     <td>${formatLastSeen(user.lastSeen)}</td>
