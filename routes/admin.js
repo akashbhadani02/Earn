@@ -162,7 +162,7 @@ router.get("/users", adminAuth, async (req, res) => {
                 const difference =
                     currentTime - lastSeenTime;
 
-                const ONLINE_TIMEOUT = 30000; // 30 seconds
+                const ONLINE_TIMEOUT = 5000; // 5 seconds
 
                 if (difference <= ONLINE_TIMEOUT) {
                     online = true;
