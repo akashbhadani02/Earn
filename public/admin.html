@@ -179,7 +179,7 @@
             right: -75px;
             top: -75px;
             border-radius: 50%;
-            background: rgba(59, 130, 246, .12); 
+            background: rgba(59, 130, 246, .12);
         }
 
         .card::after {
@@ -1126,7 +1126,7 @@
 
     const diff = Date.now() - new Date(lastSeen).getTime();
 
-    if (diff <= 2000) {
+    if (diff <= 5000) {
         return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
     }
 
