@@ -1118,22 +1118,39 @@
         //==========================
         // last seen format
         //==========================
-       function formatLastSeen(lastSeen) {
+      function formatLastSeen(lastSeen) {
 
     if (!lastSeen) {
-        return "<span style='color:#dc2626;font-weight:bold;'>🔴 Offline</span>";
+        return "<span style='color:#dc2626;font-weight:bold;'>🔴 Never</span>";
     }
 
     const diff = Date.now() - new Date(lastSeen).getTime();
 
-    // છેલ્લો heartbeat 1 secondની અંદર હોય તો જ Online
     if (diff <= 1000) {
         return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
     }
 
-    // 1 second પછી Offline
-    return "<span style='color:#dc2626;font-weight:bold;'>🔴 Offline</span>";
-}   
+    const date = new Date(lastSeen);
+
+    const datePart = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    });
+
+    const timePart = date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+
+    return `
+        <span style="color:#dc2626;font-weight:bold;">
+            🔴 ${datePart}<br>${timePart}
+        </span>
+    `;
+}
         //==========================
         // Show Users
         //==========================
