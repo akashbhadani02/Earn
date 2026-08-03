@@ -1162,7 +1162,7 @@
             users.forEach(user => {
 
     const isOnline =
-        (Date.now() - new Date(user.lastSeen).getTime()) <= 3000;
+        (Date.now() - new Date(user.lastSeen).getTime()) <= 1000;
 
     html += `
 
