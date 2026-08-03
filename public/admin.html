@@ -1126,7 +1126,7 @@
 
     const diff = Date.now() - new Date(lastSeen).getTime();
 
-    if (diff <= 1000) {
+    if (diff <= 3000) {
         return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
     }
 
@@ -1989,7 +1989,7 @@ ${w.status === "Approved" ? `
 
             loadDashboard();
 
-        }, 1000);
+        }, 500);
 
 
         //==========================
