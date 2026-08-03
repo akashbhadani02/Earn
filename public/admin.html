@@ -1118,43 +1118,22 @@
         //==========================
         // last seen format
         //==========================
-        function formatLastSeen(lastSeen) {
+       function formatLastSeen(lastSeen) {
 
-            if (!lastSeen) {
-                return "Never";
-            }
+    if (!lastSeen) {
+        return "<span style='color:#dc2626;font-weight:bold;'>🔴 Offline</span>";
+    }
 
-            const diff = Date.now() - new Date(lastSeen).getTime();
+    const diff = Date.now() - new Date(lastSeen).getTime();
 
-            const minutes = Math.floor(diff / 60000);
+    // છેલ્લો heartbeat 1 secondની અંદર હોય તો જ Online
+    if (diff <= 1000) {
+        return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
+    }
 
-            if (minutes < 2) {
-                return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
-            }
-
-            if (minutes < 60) {
-                return "<span style='color:#f59e0b;font-weight:bold;'>🧿 " + minutes + " min ago</span>";
-            }
-
-            return "<span style='color:#dc2626;font-weight:bold;'>🔴 " +
-                new Date(lastSeen).toLocaleString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    hour12: true
-                }) +
-                "</span>";
-
-            if (minutes < 60) {
-                return "🧿 " + minutes + " min ago";
-            }
-
-            return "🔴 " + new Date(lastSeen).toLocaleString();
-
-        }
+    // 1 second પછી Offline
+    return "<span style='color:#dc2626;font-weight:bold;'>🔴 Offline</span>";
+}   
         //==========================
         // Show Users
         //==========================
