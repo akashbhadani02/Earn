@@ -1127,7 +1127,7 @@
     const diff = Date.now() - new Date(lastSeen).getTime();
 
     // 10 seconds સુધી heartbeat મળ્યો હોય તો Online
-    if (diff <= 10000) {
+    if (diff <= 1000) {
         return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
     }
 
