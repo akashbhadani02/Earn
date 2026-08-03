@@ -163,7 +163,7 @@ router.get("/users", adminAuth, async (req, res) => {
                     currentTime - lastSeenTime;
 
                 // છેલ્લો heartbeat 3 secondsની અંદર હોય
-                if (difference <= 1000) {
+                if (difference <= 5000) {
 
                     online = true;
 
