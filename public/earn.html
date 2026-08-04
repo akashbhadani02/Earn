@@ -772,39 +772,6 @@
         .withdraw-buttons button:hover {
             opacity: .9;
         }
-
-        body.dark {
-    background: #121212;
-    color: #ffffff;
-}
-
-body.dark .card {
-    background: #1e1e1e;
-    color: #ffffff;
-    border-color: #333;
-}
-
-body.dark .wallet-box {
-    background: linear-gradient(135deg,#232526,#414345);
-}
-
-body.dark .option-btn {
-    background: #2b2b2b;
-    color: white;
-    border-color: #444;
-}
-
-body.dark .withdraw-box {
-    background: #222;
-    color: white;
-}
-
-body.dark input,
-body.dark select {
-    background: #333;
-    color: white;
-    border-color: #555;
-}
     </style>
 </head>
 
@@ -1533,27 +1500,6 @@ body.dark select {
         function claimBonus() {
             alert("🔥 તમે Bonus થી બસ થોડા જ દૂર છો! 🎁\n\n🎯 વધુ પ્રશ્નો solve કરો અને તમારો સ્કોર વધારો.\n🚀 થોડો વધુ પ્રયત્ન કરો અને Bonus unlock કરો!\n🏆 Top Performer બનવાની તક તમારી છે!");
         }
-
-        // Load saved theme
-if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-    document.getElementById("themeToggle").innerHTML = "☀️ Light Mode";
-}
-
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-
-    const btn = document.getElementById("themeToggle");
-
-    if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-        btn.innerHTML = "☀️ Light Mode";
-    } else {
-        localStorage.setItem("theme", "light");
-        btn.innerHTML = "🌙 Dark Mode";
-    }
-}
-
     </script>
     <!-- Withdraw Popup -->
     <div id="withdrawPopup" class="withdraw-popup">
@@ -1561,11 +1507,6 @@ function toggleTheme() {
         <div class="withdraw-box">
 
             <h2>Withdraw Request</h2>
-            <button id="themeToggle" class="btn"
-    style="margin-bottom:15px;background:#333;"
-    onclick="toggleTheme()"> 
-    🌙 Dark Mode
-</button>
 
             <p id="withdrawAmountText"></p>
 
