@@ -773,25 +773,37 @@
             opacity: .9;
         }
 
-        #quiz.dark {
+        body.dark {
+    background: #121212;
+    color: #ffffff;
+}
+
+body.dark .card {
     background: #1e1e1e;
-    color: #fff;
+    color: #ffffff;
+    border-color: #333;
 }
 
-#quiz.dark #question,
-#quiz.dark #message {
-    color: #fff !important;
+body.dark .wallet-box {
+    background: linear-gradient(135deg,#232526,#414345);
 }
 
-#quiz.dark .option-btn {
+body.dark .option-btn {
+    background: #2b2b2b;
+    color: white;
+    border-color: #444;
+}
+
+body.dark .withdraw-box {
+    background: #222;
+    color: white;
+}
+
+body.dark input,
+body.dark select {
     background: #333;
-    color: #fff;
+    color: white;
     border-color: #555;
-}
-
-#quiz.dark .btn {
-    background: #444 !important;
-    color: #fff;
 }
     </style>
 </head>
@@ -830,8 +842,6 @@
     </div>
 
     <div id="quiz" class="card hidden">
-
-        <div style="text-align:right; margin-bottom:10px;"><button onclick="toggleTheme()" class="btn" style="width:auto;padding:8px 15px;">🌙 / ☀️</button></div>
 
         <div style="
         text-align:center;
@@ -1524,8 +1534,24 @@
             alert("🔥 તમે Bonus થી બસ થોડા જ દૂર છો! 🎁\n\n🎯 વધુ પ્રશ્નો solve કરો અને તમારો સ્કોર વધારો.\n🚀 થોડો વધુ પ્રયત્ન કરો અને Bonus unlock કરો!\n🏆 Top Performer બનવાની તક તમારી છે!");
         }
 
-        function toggleTheme() {
-    document.getElementById("quiz").classList.toggle("dark");
+        // Load saved theme
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    document.getElementById("themeToggle").innerHTML = "☀️ Light Mode";
+}
+
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+
+    const btn = document.getElementById("themeToggle");
+
+    if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        btn.innerHTML = "☀️ Light Mode";
+    } else {
+        localStorage.setItem("theme", "light");
+        btn.innerHTML = "🌙 Dark Mode";
+    }
 }
 
     </script>
@@ -1535,6 +1561,11 @@
         <div class="withdraw-box">
 
             <h2>Withdraw Request</h2>
+            <button id="themeToggle" class="btn"
+    style="margin-bottom:15px;background:#333;"
+    onclick="toggleTheme()">
+    🌙 Dark Mode
+</button>
 
             <p id="withdrawAmountText"></p>
 
