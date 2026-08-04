@@ -772,6 +772,27 @@
         .withdraw-buttons button:hover {
             opacity: .9;
         }
+
+        #quiz.dark {
+    background: #1e1e1e;
+    color: #fff;
+}
+
+#quiz.dark #question,
+#quiz.dark #message {
+    color: #fff !important;
+}
+
+#quiz.dark .option-btn {
+    background: #333;
+    color: #fff;
+    border-color: #555;
+}
+
+#quiz.dark .btn {
+    background: #444 !important;
+    color: #fff;
+}
     </style>
 </head>
 
@@ -809,6 +830,8 @@
     </div>
 
     <div id="quiz" class="card hidden">
+
+        <div style="text-align:right; margin-bottom:10px;"><button onclick="toggleTheme()" class="btn" style="width:auto;padding:8px 15px;">🌙 / ☀️</button></div>
 
         <div style="
         text-align:center;
@@ -1500,6 +1523,11 @@
         function claimBonus() {
             alert("🔥 તમે Bonus થી બસ થોડા જ દૂર છો! 🎁\n\n🎯 વધુ પ્રશ્નો solve કરો અને તમારો સ્કોર વધારો.\n🚀 થોડો વધુ પ્રયત્ન કરો અને Bonus unlock કરો!\n🏆 Top Performer બનવાની તક તમારી છે!");
         }
+
+        function toggleTheme() {
+    document.getElementById("quiz").classList.toggle("dark");
+}
+
     </script>
     <!-- Withdraw Popup -->
     <div id="withdrawPopup" class="withdraw-popup">
