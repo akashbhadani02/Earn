@@ -828,6 +828,8 @@ body.dark .option-btn{
         <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
 
     </div>
+    
+    <button id="themeBtn"onclick="toggleTheme()"style="margin-bottom:15px;padding:10px 15px;background:#222;color:#fff;border:none;border-radius:10px;cursor:pointer;">🌙 Dark Mode</button>
 
     <div id="quiz" class="card hidden">
 
@@ -856,11 +858,6 @@ body.dark .option-btn{
             💰 Wallet Balance : ₹<span id="quizWallet">0.00</span>
         </div>
 
-        <button id="themeBtn"
-    onclick="toggleTheme()"
-    style="margin-bottom:15px;padding:10px 15px;background:#222;color:#fff;border:none;border-radius:10px;cursor:pointer;">
-    🌙 Dark Mode
-</button>
 
         <h3 id="question">Loading...</h3>
 
