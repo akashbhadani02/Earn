@@ -804,7 +804,7 @@
 
         <div class="wallet-box">
             <small>Total Balance</small>
-            <span class="wallet-val">₹<span id="wallet">0.00</span></span>
+            <span class="wallet-val">©<span id="wallet">0.00</span></span>
         </div>
 
         <div class="grid">
@@ -813,7 +813,7 @@
         </div>
 
         <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions
-            (₹1 - ₹150)</button>
+            (©1 - ©150)</button>
 
         <div id="questionProgress" style="text-align:center;margin:8px 0 14px;font-weight:700;color:#6c5ce7;">Today's
             Questions: 0 / 100</div>
@@ -822,10 +822,10 @@
 
         <button class="btn btn-bonus"
             style="text-align:center;margin:8px 0 14px;font-weight:700;background:linear-gradient(135deg,#fa5252,#c73030);color:white;"
-            onclick="claimBonus()">₹500 bonus</button>
+            onclick="claimBonus()">©500 bonus</button>
 
         <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw Now
-            (Min₹500)</button>
+            (Min ©500)</button>
 
         <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
 
@@ -857,7 +857,7 @@
         border-radius:12px;
         font-size:20px;
         font-weight:bold;">
-            💰 Wallet Balance : ₹<span id="quizWallet">0.00</span>
+            💰 Wallet Balance : ©<span id="quizWallet">0.00</span>
         </div>
 
 
@@ -1186,7 +1186,7 @@
                 }
 
                 applyWalletData(data);
-                alert("🎁 Daily Reward મળ્યું! +₹" + Number(data.reward).toFixed(2));
+                alert("🎁 Daily Reward મળ્યું! +©" + Number(data.reward).toFixed(2));
             } catch (err) {
                 console.error("Daily Reward Error:", err);
                 alert("Server સાથે connect થવામાં error આવ્યો.");
@@ -1290,7 +1290,7 @@
 
                 alert(
                     "Congratulations! 🎉\n\n" +
-                    "Spin પર તમને ₹" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
+                    "Spin પર તમને ©" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
                     "Spin #" + Number(data.spinCount || 0) + " complete.\n" +
                     "હવે ફરી 100 પ્રશ્નો પૂરા કરો અને ફરી Spin કરો."
                 );
@@ -1496,7 +1496,7 @@
             document.getElementById("withdrawPopup").style.display = "flex";
 
             document.getElementById("withdrawAmountText").innerText =
-                "Withdraw Amount : ₹" + wallet;
+                "Withdraw Amount : ©" + wallet;
 
             changePaymentMethod();
         }
