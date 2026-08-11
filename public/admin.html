@@ -1198,7 +1198,7 @@
 📈 Total Earn
 </button>
 
-<button onclick="sendNotification('${user._id}', ${JSON.stringify(user.name || "Student")})"
+<button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})'
 style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
 🔔 Notify
 </button>
