@@ -793,6 +793,29 @@
             border: 2px solid #555;
         }
     </style>
+<style>
+
+/* Notification modal typing fix */
+#notificationModal input,
+#notificationModal textarea,
+.notification-modal input,
+.notification-modal textarea,
+#notifyTitle,
+#notifyMessage {
+  pointer-events: auto !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  cursor: text !important;
+  opacity: 1 !important;
+  z-index: 100000 !important;
+  position: relative !important;
+}
+#notificationModal textarea,
+#notifyMessage {
+  resize: vertical !important;
+}
+
+</style>
 </head>
 
 <body>
