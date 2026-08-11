@@ -854,11 +854,196 @@
         table thead th {
             color: #fff !important;
         }
+
+
+        /* ==========================
+           Notification Modal
+           ========================== */
+        #notificationModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(2, 8, 23, .72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        #notificationModal.show {
+            display: flex;
+        }
+
+        .notification-modal-box {
+            width: min(520px, 100%);
+            max-height: calc(100vh - 36px);
+            overflow-y: auto;
+            padding: 24px;
+            border: 1px solid rgba(148, 163, 184, .22);
+            border-radius: 24px;
+            background: linear-gradient(145deg, #101d31, #0b1424);
+            box-shadow: 0 30px 90px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05);
+            animation: notificationModalIn .18s ease-out;
+        }
+
+        @keyframes notificationModalIn {
+            from { opacity: 0; transform: translateY(12px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .notification-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .notification-modal-head h3 {
+            margin: 0;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .notification-modal-close {
+            width: 38px !important;
+            min-width: 38px !important;
+            height: 38px;
+            padding: 0 !important;
+            margin: 0 !important;
+            border: 1px solid rgba(255,255,255,.12) !important;
+            border-radius: 12px !important;
+            background: rgba(255,255,255,.07) !important;
+            color: #fff !important;
+            font-size: 20px !important;
+            box-shadow: none !important;
+        }
+
+        .notification-student {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            color: #bfdbfe;
+            background: rgba(37,99,235,.12);
+            border: 1px solid rgba(59,130,246,.22);
+            font-size: 14px;
+        }
+
+        .notification-field {
+            margin-bottom: 15px;
+        }
+
+        .notification-field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .notification-field input,
+        .notification-field textarea {
+            width: 100%;
+            border: 1px solid rgba(148,163,184,.22);
+            border-radius: 13px;
+            outline: none;
+            padding: 12px 14px;
+            background: rgba(2,8,23,.58);
+            color: #fff;
+            font: inherit;
+            transition: .2s ease;
+        }
+
+        .notification-field input:focus,
+        .notification-field textarea:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+        }
+
+        .notification-field textarea {
+            min-height: 125px;
+            resize: vertical;
+        }
+
+        .notification-actions {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .notification-actions button {
+            width: 100%;
+            min-height: 46px;
+            margin: 0 !important;
+            border: 0 !important;
+            border-radius: 13px !important;
+            cursor: pointer;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        #notificationCancelBtn {
+            background: #334155 !important;
+        }
+
+        #notificationSendBtn {
+            background: linear-gradient(135deg,#2563eb,#7c3aed) !important;
+        }
+
+        #notificationSendBtn:disabled,
+        #notificationCancelBtn:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 520px) {
+            #notificationModal { padding: 10px; }
+            .notification-modal-box { padding: 18px; border-radius: 20px; }
+            .notification-modal-head h3 { font-size: 19px; }
+            .notification-actions { grid-template-columns: 1fr; }
+        }
+
     </style>
 
 </head>
 
 <body>
+
+    <!-- ==========================
+         Admin Notification Modal
+         ========================== -->
+    <div id="notificationModal" aria-hidden="true">
+        <div class="notification-modal-box" role="dialog" aria-modal="true" aria-labelledby="notificationModalTitle">
+            <div class="notification-modal-head">
+                <h3 id="notificationModalTitle">🔔 Send Notification</h3>
+                <button type="button" class="notification-modal-close" onclick="closeNotificationModal()" aria-label="Close">×</button>
+            </div>
+
+            <div class="notification-student">
+                📱 Student: <strong id="notificationStudentName">Student</strong>
+            </div>
+
+            <div class="notification-field">
+                <label for="notificationTitle">Notification Title</label>
+                <input id="notificationTitle" type="text" maxlength="100" placeholder="e.g. New Quiz Available">
+            </div>
+
+            <div class="notification-field">
+                <label for="notificationMessage">Notification Message</label>
+                <textarea id="notificationMessage" maxlength="500" placeholder="Write the message you want to send to this student..."></textarea>
+            </div>
+
+            <div class="notification-actions">
+                <button type="button" id="notificationCancelBtn" onclick="closeNotificationModal()">Cancel</button>
+                <button type="button" id="notificationSendBtn" onclick="submitNotification()">🔔 Send Notification</button>
+            </div>
+        </div>
+    </div>
+
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
         <h2>Admin Dashboard</h2>
@@ -1250,32 +1435,79 @@ Unblock
         //==========================
         // Send Push Notification
         //==========================
-        async function sendNotification(userId, userName) {
-            const title = prompt("Notification Title", "New Notification");
-            if (title === null) return;
+        //==========================
+        // Send Push Notification
+        //==========================
+        let notificationTargetUserId = "";
+        let notificationTargetUserName = "";
 
-            const cleanTitle = title.trim();
+        function sendNotification(userId, userName) {
+            notificationTargetUserId = String(userId || "");
+            notificationTargetUserName = String(userName || "Student");
+
+            const modal = document.getElementById("notificationModal");
+            const studentName = document.getElementById("notificationStudentName");
+            const titleInput = document.getElementById("notificationTitle");
+            const messageInput = document.getElementById("notificationMessage");
+
+            studentName.textContent = notificationTargetUserName;
+            titleInput.value = "";
+            messageInput.value = "";
+
+            modal.classList.add("show");
+            modal.setAttribute("aria-hidden", "false");
+
+            setTimeout(() => titleInput.focus(), 50);
+        }
+
+        function closeNotificationModal() {
+            const modal = document.getElementById("notificationModal");
+            if (!modal) return;
+
+            modal.classList.remove("show");
+            modal.setAttribute("aria-hidden", "true");
+            notificationTargetUserId = "";
+            notificationTargetUserName = "";
+        }
+
+        async function submitNotification() {
+            const titleInput = document.getElementById("notificationTitle");
+            const messageInput = document.getElementById("notificationMessage");
+            const sendBtn = document.getElementById("notificationSendBtn");
+            const cancelBtn = document.getElementById("notificationCancelBtn");
+
+            const cleanTitle = titleInput.value.trim();
+            const cleanMessage = messageInput.value.trim();
+
+            if (!notificationTargetUserId) {
+                alert("❌ Student not selected.");
+                return;
+            }
+
             if (!cleanTitle) {
+                titleInput.focus();
                 alert("Notification title is required.");
                 return;
             }
 
-            const message = prompt("Notification Message for " + userName, "");
-            if (message === null) return;
-
-            const cleanMessage = message.trim();
             if (!cleanMessage) {
+                messageInput.focus();
                 alert("Notification message is required.");
                 return;
             }
 
             if (!confirm(
-                "Send this notification only to " + userName + "?\n\n" +
-                cleanTitle + "\n" + cleanMessage
+                "Send this notification to " + notificationTargetUserName + "?\n\n" +
+                "Title: " + cleanTitle + "\n" +
+                "Message: " + cleanMessage
             )) return;
 
             try {
-                const res = await fetch("/api/admin/notification/send/" + userId, {
+                sendBtn.disabled = true;
+                cancelBtn.disabled = true;
+                sendBtn.textContent = "⏳ Sending...";
+
+                const res = await fetch("/api/admin/notification/send/" + notificationTargetUserId, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -1291,8 +1523,10 @@ Unblock
                 const data = await res.json();
 
                 if (data.success) {
+                    closeNotificationModal();
                     alert(
-                        "✅ Notification sent successfully.\n" +
+                        "✅ Notification sent successfully.\n\n" +
+                        "Student: " + notificationTargetUserName + "\n" +
                         "Devices reached: " + (data.devicesSent || 0)
                     );
                 } else {
@@ -1301,8 +1535,24 @@ Unblock
             } catch (err) {
                 console.error("Notification Error:", err);
                 alert("❌ Server error while sending notification.");
+            } finally {
+                sendBtn.disabled = false;
+                cancelBtn.disabled = false;
+                sendBtn.textContent = "🔔 Send Notification";
             }
         }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeNotificationModal();
+            }
+        });
+
+        document.getElementById("notificationModal")?.addEventListener("click", function (event) {
+            if (event.target === this) {
+                closeNotificationModal();
+            }
+        });
 
         //==========================
         // Edit Wallet
