@@ -112,6 +112,19 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        // Push notification subscriptions for all devices used by this student.
+        // One student can have multiple phones/browsers.
+        pushSubscriptions: [
+            {
+                endpoint: { type: String, required: true },
+                expirationTime: { type: Date, default: null },
+                keys: {
+                    p256dh: { type: String, required: true },
+                    auth: { type: String, required: true },
+                },
+            },
+        ],
+
         withdrawRequests: [
             {
                 amount: {

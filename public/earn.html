@@ -820,6 +820,11 @@
 
         <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Daily Reward</button>
 
+        <button id="notificationBtn" class="btn" onclick="enableNotifications()"
+            style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;margin:10px 0;">
+            🔔 Enable Notifications
+        </button>
+
         <button class="btn btn-bonus"
             style="text-align:center;margin:8px 0 14px;font-weight:700;background:linear-gradient(135deg,#fa5252,#c73030);color:white;"
             onclick="claimBonus()">©500 bonus</button>
@@ -869,6 +874,127 @@
     </div>
 
     <script>
+        // ==========================================
+        // MOBILE PUSH NOTIFICATIONS
+        // ==========================================
+        function urlBase64ToUint8Array(base64String) {
+            const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+            const base64 = (base64String + padding)
+                .replace(/-/g, "+")
+                .replace(/_/g, "/");
+            const rawData = window.atob(base64);
+            return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+        }
+
+        async function enableNotifications() {
+            const button = document.getElementById("notificationBtn");
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                location.href = "login.html";
+                return;
+            }
+
+            if (
+                !("Notification" in window) ||
+                !("serviceWorker" in navigator) ||
+                !("PushManager" in window)
+            ) {
+                alert("આ device/browser Web Push Notification support કરતું નથી. Chrome/Safari અથવા PWA ઉપયોગ કરો.");
+                return;
+            }
+
+            if (!window.isSecureContext) {
+                alert("Notifications માટે HTTPS જરૂરી છે. Localhost પર testing કરી શકાય છે.");
+                return;
+            }
+
+            try {
+                button.disabled = true;
+                button.innerText = "⏳ Enabling...";
+
+                const permission = await Notification.requestPermission();
+                if (permission !== "granted") {
+                    button.disabled = false;
+                    button.innerText = "🔔 Enable Notifications";
+                    alert("Notification permission Allow કરવી જરૂરી છે.");
+                    return;
+                }
+
+                const registration = await navigator.serviceWorker.register("/sw.js", {
+                    scope: "/"
+                });
+                await navigator.serviceWorker.ready;
+
+                const keyResponse = await fetch("/api/notifications/vapid-public-key", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const keyData = await keyResponse.json();
+
+                if (!keyData.success || !keyData.publicKey) {
+                    throw new Error(keyData.message || "VAPID public key not available");
+                }
+
+                let subscription = await registration.pushManager.getSubscription();
+
+                if (!subscription) {
+                    subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(keyData.publicKey)
+                    });
+                }
+
+                const saveResponse = await fetch("/api/notifications/subscribe", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify(subscription.toJSON())
+                });
+                const saveData = await saveResponse.json();
+
+                if (!saveData.success) {
+                    throw new Error(saveData.message || "Subscription save failed");
+                }
+
+                button.disabled = false;
+                button.innerText = "✅ Notifications Enabled";
+                button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                alert("🔔 Notifications successfully enabled on this device!");
+            } catch (error) {
+                console.error("Notification setup error:", error);
+                button.disabled = false;
+                button.innerText = "🔔 Enable Notifications";
+                alert("Notification setup error: " + error.message);
+            }
+        }
+
+        async function checkNotificationStatus() {
+            const button = document.getElementById("notificationBtn");
+            if (
+                !button ||
+                !("serviceWorker" in navigator) ||
+                !("PushManager" in window)
+            ) return;
+
+            try {
+                const registration = await navigator.serviceWorker.getRegistration("/");
+                const subscription = registration
+                    ? await registration.pushManager.getSubscription()
+                    : null;
+
+                if (subscription && "Notification" in window && Notification.permission === "granted") {
+                    button.innerText = "✅ Notifications Enabled";
+                    button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                }
+            } catch (error) {
+                console.log("Notification status check:", error);
+            }
+        }
+
+        checkNotificationStatus();
+
         // =====================
         // Anti Cheating
         // =====================

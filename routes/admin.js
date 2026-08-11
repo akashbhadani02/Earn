@@ -9,6 +9,7 @@ const User = require("../models/User");
 const Question = require("../models/Question");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
+const { webpush, configureWebPush } = require("../services/webPush");
 
 // ===========================
 // Admin Login
@@ -680,5 +681,120 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
 
 });
 
+
+
+// ===========================
+// Send Push Notification to One Student
+// ===========================
+router.post("/notification/send/:userId", adminAuth, async (req, res) => {
+    try {
+        const { title, message, url } = req.body || {};
+
+        const cleanTitle = String(title || "").trim();
+        const cleanMessage = String(message || "").trim();
+
+        if (!cleanTitle) {
+            return res.status(400).json({
+                success: false,
+                message: "Notification title is required"
+            });
+        }
+
+        if (!cleanMessage) {
+            return res.status(400).json({
+                success: false,
+                message: "Notification message is required"
+            });
+        }
+
+        const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        const subscriptions = Array.isArray(user.pushSubscriptions)
+            ? user.pushSubscriptions
+            : [];
+
+        if (!subscriptions.length) {
+            return res.status(400).json({
+                success: false,
+                message: "This student has not enabled notifications on any device."
+            });
+        }
+
+        configureWebPush();
+
+        const payload = JSON.stringify({
+            title: cleanTitle.slice(0, 100),
+            body: cleanMessage.slice(0, 500),
+            url: String(url || "/earn.html"),
+            icon: "/icon-192.png",
+            badge: "/icon-192.png",
+            tag: "admin-notification",
+            requireInteraction: false
+        });
+
+        const results = await Promise.allSettled(
+            subscriptions.map(subscription =>
+                webpush.sendNotification(
+                    subscription.toObject ? subscription.toObject() : subscription,
+                    payload
+                )
+            )
+        );
+
+        const staleEndpoints = [];
+        let sent = 0;
+
+        results.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+                sent++;
+                return;
+            }
+
+            const statusCode = result.reason?.statusCode;
+            if (statusCode === 404 || statusCode === 410) {
+                staleEndpoints.push(subscriptions[index].endpoint);
+            }
+
+            console.error(
+                "Push notification error:",
+                result.reason?.message || result.reason
+            );
+        });
+
+        if (staleEndpoints.length) {
+            user.pushSubscriptions = subscriptions.filter(
+                subscription => !staleEndpoints.includes(subscription.endpoint)
+            );
+            await user.save();
+        }
+
+        if (sent === 0) {
+            return res.status(502).json({
+                success: false,
+                message: "Notification could not be delivered. The saved device subscription may have expired."
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: `Notification sent to ${user.name}`,
+            devicesSent: sent,
+            staleDevicesRemoved: staleEndpoints.length
+        });
+    } catch (err) {
+        console.error("Send notification error:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
 
 module.exports = router;

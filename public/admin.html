@@ -1198,6 +1198,11 @@
 📈 Total Earn
 </button>
 
+<button onclick="sendNotification('${user._id}', ${JSON.stringify(user.name || "Student")})"
+style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
+🔔 Notify
+</button>
+
 <button onclick="deleteUser('${user._id}')">
 Delete
 </button>
@@ -1242,6 +1247,63 @@ Unblock
 
             showUsers(filtered);
         }
+        //==========================
+        // Send Push Notification
+        //==========================
+        async function sendNotification(userId, userName) {
+            const title = prompt("Notification Title", "New Notification");
+            if (title === null) return;
+
+            const cleanTitle = title.trim();
+            if (!cleanTitle) {
+                alert("Notification title is required.");
+                return;
+            }
+
+            const message = prompt("Notification Message for " + userName, "");
+            if (message === null) return;
+
+            const cleanMessage = message.trim();
+            if (!cleanMessage) {
+                alert("Notification message is required.");
+                return;
+            }
+
+            if (!confirm(
+                "Send this notification only to " + userName + "?\n\n" +
+                cleanTitle + "\n" + cleanMessage
+            )) return;
+
+            try {
+                const res = await fetch("/api/admin/notification/send/" + userId, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        title: cleanTitle,
+                        message: cleanMessage,
+                        url: "/earn.html"
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert(
+                        "✅ Notification sent successfully.\n" +
+                        "Devices reached: " + (data.devicesSent || 0)
+                    );
+                } else {
+                    alert("❌ " + (data.message || "Notification failed"));
+                }
+            } catch (err) {
+                console.error("Notification Error:", err);
+                alert("❌ Server error while sending notification.");
+            }
+        }
+
         //==========================
         // Edit Wallet
         //==========================
