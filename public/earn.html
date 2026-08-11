@@ -793,29 +793,77 @@
             border: 2px solid #555;
         }
     </style>
-<style>
 
-/* Notification modal typing fix */
-#notificationModal input,
-#notificationModal textarea,
-.notification-modal input,
-.notification-modal textarea,
-#notifyTitle,
-#notifyMessage {
-  pointer-events: auto !important;
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  cursor: text !important;
-  opacity: 1 !important;
-  z-index: 100000 !important;
-  position: relative !important;
+<style id="notification-required-style">
+#notificationRequiredOverlay{
+    position:fixed;
+    inset:0;
+    z-index:999999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(0,0,0,.72);
+    backdrop-filter:blur(5px);
 }
-#notificationModal textarea,
-#notifyMessage {
-  resize: vertical !important;
+#notificationRequiredBox{
+    width:min(430px,100%);
+    background:#fff;
+    color:#1f2937;
+    border-radius:22px;
+    padding:28px 22px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
 }
-
+#notificationRequiredBox .nr-icon{
+    font-size:52px;
+    margin-bottom:8px;
+}
+#notificationRequiredBox h2{
+    margin:0 0 10px;
+    font-size:24px;
+}
+#notificationRequiredBox p{
+    margin:8px 0;
+    line-height:1.55;
+    color:#4b5563;
+}
+#requiredNotificationBtn{
+    width:100%;
+    border:0;
+    border-radius:13px;
+    padding:14px 18px;
+    margin-top:16px;
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    cursor:pointer;
+}
+#requiredNotificationBtn:disabled{
+    opacity:.7;
+    cursor:wait;
+}
+#notificationRequiredStatus{
+    min-height:22px;
+    margin-top:12px;
+    font-size:14px;
+    font-weight:600;
+}
+#notificationRequiredHelp{
+    display:none;
+    margin-top:12px;
+    padding:10px;
+    border-radius:10px;
+    background:#fff7ed;
+    color:#9a3412;
+    font-size:13px;
+}
+body.notification-locked{
+    overflow:hidden;
+}
 </style>
+
 </head>
 
 <body>
@@ -909,13 +957,21 @@
             return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
         }
 
+
         async function enableNotifications() {
+            return setupNotifications(true);
+        }
+
+        async function setupNotifications(fromUserClick = false) {
             const button = document.getElementById("notificationBtn");
+            const requiredButton = document.getElementById("requiredNotificationBtn");
+            const status = document.getElementById("notificationRequiredStatus");
+            const help = document.getElementById("notificationRequiredHelp");
             const token = localStorage.getItem("token");
 
             if (!token) {
                 location.href = "login.html";
-                return;
+                return false;
             }
 
             if (
@@ -923,25 +979,39 @@
                 !("serviceWorker" in navigator) ||
                 !("PushManager" in window)
             ) {
-                alert("આ device/browser Web Push Notification support કરતું નથી. Chrome/Safari અથવા PWA ઉપયોગ કરો.");
-                return;
+                status.innerText = "❌ આ browser Web Push support કરતું નથી.";
+                return false;
             }
 
             if (!window.isSecureContext) {
-                alert("Notifications માટે HTTPS જરૂરી છે. Localhost પર testing કરી શકાય છે.");
-                return;
+                status.innerText = "❌ Notifications માટે HTTPS જરૂરી છે.";
+                return false;
             }
 
             try {
-                button.disabled = true;
-                button.innerText = "⏳ Enabling...";
+                if (button) {
+                    button.disabled = true;
+                    button.innerText = "⏳ Enabling...";
+                }
+                if (requiredButton) {
+                    requiredButton.disabled = true;
+                    requiredButton.innerText = "⏳ Enabling...";
+                }
+                if (status) status.innerText = "Notification permission ચેક થઈ રહ્યું છે...";
+                if (help) help.style.display = "none";
 
-                const permission = await Notification.requestPermission();
+                let permission = Notification.permission;
+
+                // Browser permission prompt must be triggered by a user gesture.
                 if (permission !== "granted") {
-                    button.disabled = false;
-                    button.innerText = "🔔 Enable Notifications";
-                    alert("Notification permission Allow કરવી જરૂરી છે.");
-                    return;
+                    if (permission === "denied") {
+                        throw new Error("NOTIFICATION_BLOCKED");
+                    }
+                    permission = await Notification.requestPermission();
+                }
+
+                if (permission !== "granted") {
+                    throw new Error("NOTIFICATION_NOT_ALLOWED");
                 }
 
                 const registration = await navigator.serviceWorker.register("/sw.js", {
@@ -954,7 +1024,7 @@
                 });
                 const keyData = await keyResponse.json();
 
-                if (!keyData.success || !keyData.publicKey) {
+                if (!keyResponse.ok || !keyData.success || !keyData.publicKey) {
                     throw new Error(keyData.message || "VAPID public key not available");
                 }
 
@@ -975,31 +1045,81 @@
                     },
                     body: JSON.stringify(subscription.toJSON())
                 });
+
                 const saveData = await saveResponse.json();
 
-                if (!saveData.success) {
+                if (!saveResponse.ok || !saveData.success) {
                     throw new Error(saveData.message || "Subscription save failed");
                 }
 
-                button.disabled = false;
-                button.innerText = "✅ Notifications Enabled";
-                button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
-                alert("🔔 Notifications successfully enabled on this device!");
+                if (button) {
+                    button.disabled = false;
+                    button.innerText = "✅ Notifications Enabled";
+                    button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                }
+
+                hideNotificationRequired();
+
+                if (status) status.innerText = "✅ Notifications Enabled";
+                return true;
+
             } catch (error) {
                 console.error("Notification setup error:", error);
-                button.disabled = false;
-                button.innerText = "🔔 Enable Notifications";
-                alert("Notification setup error: " + error.message);
+
+                if (button) {
+                    button.disabled = false;
+                    button.innerText = "🔔 Enable Notifications";
+                }
+                if (requiredButton) {
+                    requiredButton.disabled = false;
+                    requiredButton.innerText = "🔔 Enable Notifications";
+                }
+
+                if (error.message === "NOTIFICATION_BLOCKED") {
+                    if (status) status.innerText = "❌ Notifications browserમાં Block છે.";
+                    if (help) help.style.display = "block";
+                } else if (error.message === "NOTIFICATION_NOT_ALLOWED") {
+                    if (status) status.innerText = "⚠️ Allow દબાવવું જરૂરી છે.";
+                } else {
+                    if (status) status.innerText = "❌ " + error.message;
+                }
+
+                return false;
             }
+        }
+
+        function showNotificationRequired() {
+            const overlay = document.getElementById("notificationRequiredOverlay");
+            if (overlay) {
+                overlay.style.display = "flex";
+                document.body.classList.add("notification-locked");
+            }
+        }
+
+        function hideNotificationRequired() {
+            const overlay = document.getElementById("notificationRequiredOverlay");
+            if (overlay) {
+                overlay.style.display = "none";
+                document.body.classList.remove("notification-locked");
+            }
+        }
+
+        async function enableRequiredNotifications() {
+            const ok = await setupNotifications(true);
+            if (ok) hideNotificationRequired();
         }
 
         async function checkNotificationStatus() {
             const button = document.getElementById("notificationBtn");
+
             if (
-                !button ||
+                !("Notification" in window) ||
                 !("serviceWorker" in navigator) ||
                 !("PushManager" in window)
-            ) return;
+            ) {
+                showNotificationRequired();
+                return false;
+            }
 
             try {
                 const registration = await navigator.serviceWorker.getRegistration("/");
@@ -1007,16 +1127,34 @@
                     ? await registration.pushManager.getSubscription()
                     : null;
 
-                if (subscription && "Notification" in window && Notification.permission === "granted") {
-                    button.innerText = "✅ Notifications Enabled";
-                    button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                if (subscription && Notification.permission === "granted") {
+                    if (button) {
+                        button.innerText = "✅ Notifications Enabled";
+                        button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                    }
+                    hideNotificationRequired();
+                    return true;
                 }
+
+                // If permission was granted but subscription is missing, repair it.
+                if (Notification.permission === "granted") {
+                    return await setupNotifications(false);
+                }
+
+                showNotificationRequired();
+                return false;
+
             } catch (error) {
                 console.log("Notification status check:", error);
+                showNotificationRequired();
+                return false;
             }
         }
 
-        checkNotificationStatus();
+        // Student must enable notifications before using the dashboard.
+        window.addEventListener("load", function () {
+            setTimeout(checkNotificationStatus, 250);
+        });
 
         // =====================
         // Anti Cheating
