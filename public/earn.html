@@ -868,30 +868,7 @@ body.notification-locked{
 
 <body>
 
-<!-- Student Notification Button -->
-<div id="studentNotificationCard" style="
-    margin:16px 0;
-    padding:16px;
-    border-radius:16px;
-    background:#ffffff;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
-    text-align:center;
-">
-    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">🔔 Notifications</div>
-    <div id="studentNotificationText" style="font-size:13px;color:#6b7280;margin-bottom:12px;">
-        Notifications ચાલુ કરો જેથી Adminના important messages તમને મળી શકે.
-    </div>
-    <button id="studentEnableNotificationBtn" type="button" onclick="enableStudentNotifications()" style="
-        border:0;
-        border-radius:12px;
-        padding:12px 20px;
-        font-size:15px;
-        font-weight:700;
-        color:#fff;
-        background:linear-gradient(135deg,#2563eb,#7c3aed);
-        cursor:pointer;
-    ">🔔 Enable Notifications</button>
-</div>
+
 
 
     <div id="dashboard" class="card">
@@ -930,6 +907,47 @@ body.notification-locked{
             (Min ©500)</button>
 
         <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
+
+        <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
+
+<!-- Student Notification Button -->
+<div id="studentNotificationCard" style="
+    margin:16px 0 0;
+    padding:16px;
+    border-radius:16px;
+    background:#ffffff;
+    box-shadow:0 4px 18px rgba(0,0,0,.08);
+    text-align:center;
+">
+    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">
+        🔔 Notifications
+    </div>
+
+    <div id="studentNotificationText" style="
+        font-size:13px;
+        color:#6b7280;
+        margin-bottom:12px;
+    ">
+        Notifications ચાલુ કરો જેથી Adminના important messages તમને મળી શકે.
+    </div>
+
+    <button id="studentEnableNotificationBtn"
+        type="button"
+        onclick="enableStudentNotifications()"
+        style="
+            width:100%;
+            border:0;
+            border-radius:12px;
+            padding:12px 20px;
+            font-size:15px;
+            font-weight:700;
+            color:#fff;
+            background:linear-gradient(135deg,#2563eb,#7c3aed);
+            cursor:pointer;
+        ">
+        🔔 Enable Notifications
+    </button>
+</div>
 
     </div>
 
