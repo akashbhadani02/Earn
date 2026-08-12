@@ -14,6 +14,7 @@ const questionRoutes = require("./routes/questions");
 const notificationRoutes = require("./routes/notifications");
 
 const app = express();
+app.disable("x-powered-by");
 
 connectDB();
 
