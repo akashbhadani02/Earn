@@ -175,7 +175,7 @@ router.get("/users", adminAuth, async (req, res) => {
                 const difference =
                     currentTime - lastSeenTime;
 
-                const ONLINE_TIMEOUT = 4000; // 4 seconds
+                const ONLINE_TIMEOUT = 120000; // 2 minutes
 
                 if (difference <= ONLINE_TIMEOUT) {
                     online = true;
@@ -898,5 +898,160 @@ router.post("/notification/send/:userId", adminAuth, async (req, res) => {
         });
     }
 });
+
+
+// ===========================
+// Admin Control Center - Real DB Data
+// ===========================
+router.get("/control-center", adminAuth, async (req, res) => {
+    try {
+        const today = todayKey();
+        const users = await User.find({ isDeleted: { $ne: true } })
+            .select("-password")
+            .lean();
+
+        const now = Date.now();
+        const onlineTimeout = 120000;
+
+        const mapped = users.map(u => ({
+            ...u,
+            _id: String(u._id),
+            isOnline: !!u.lastSeen && (now - new Date(u.lastSeen).getTime()) <= onlineTimeout,
+            dailyQuestionsAnswered: u.dailyQuestionsDate === today
+                ? Number(u.dailyQuestionsAnswered || 0)
+                : 0,
+            totalQuestionsAnswered: Number(u.totalQuestionsAnswered || 0),
+            wallet: Number(u.wallet || 0),
+            totalEarn: Number(u.totalEarn || 0),
+            warningCount: Number(u.warningCount || 0),
+            spinEligible: u.dailyQuestionsDate === today &&
+                Number(u.dailyQuestionsAnswered || 0) >= 100
+        }));
+
+        const stats = {
+            students: mapped.length,
+            online: mapped.filter(u => u.isOnline).length,
+            blocked: mapped.filter(u => u.isBlocked).length,
+            warnings: mapped.reduce((n,u) => n + u.warningCount, 0),
+            wallet: mapped.reduce((n,u) => n + u.wallet, 0),
+            questions: mapped.reduce((n,u) => n + u.dailyQuestionsAnswered, 0),
+            totalQuestions: mapped.reduce((n,u) => n + u.totalQuestionsAnswered, 0),
+            totalEarn: mapped.reduce((n,u) => n + u.totalEarn, 0),
+            completed100: mapped.filter(u => u.spinEligible).length,
+            spins: mapped.reduce((n,u) => n + Number(u.spinCount || 0), 0)
+        };
+
+        const withdrawals = [];
+        mapped.forEach(u => (u.withdrawRequests || []).forEach(w => {
+            withdrawals.push({
+                userId: u._id,
+                name: w.fullName || u.name || "-",
+                amount: Number(w.amount || 0),
+                status: w.status || "Pending",
+                date: w.date || u.createdAt
+            });
+        }));
+
+        return res.json({ success: true, stats, users: mapped, withdrawals });
+    } catch (err) {
+        console.error("Control Center Error:", err);
+        return res.status(500).json({ success:false, message:err.message });
+    }
+});
+
+router.get("/control-center/user/:id", adminAuth, async (req,res) => {
+    try {
+        const user = await User.findById(req.params.id).select("-password").lean();
+        if (!user) return res.status(404).json({success:false,message:"User Not Found"});
+        return res.json({success:true,user});
+    } catch(err) {
+        return res.status(500).json({success:false,message:err.message});
+    }
+});
+
+router.put("/control-center/block/:id", adminAuth, async (req,res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+        user.isBlocked = true;
+        user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
+        await user.save();
+        return res.json({success:true,message:"Student blocked"});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+});
+
+router.put("/control-center/unblock/:id", adminAuth, async (req,res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+        user.isBlocked = false;
+        user.blockReason = "";
+        await user.save();
+        return res.json({success:true,message:"Student unblocked"});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+});
+
+router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+        const reason = String(req.body.reason || "Admin warning").slice(0,500);
+        user.warningCount = Number(user.warningCount || 0) + 1;
+        user.warningHistory = user.warningHistory || [];
+        user.warningHistory.push({ time:new Date(), reason });
+        if(user.warningCount >= 3){
+            user.isBlocked = true;
+            user.blockReason = "Automatic block after 3 warnings";
+        }
+        await user.save();
+        return res.json({success:true,message:user.isBlocked?"3 warnings reached: student blocked":"Warning added",warningCount:user.warningCount,isBlocked:user.isBlocked});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+});
+
+router.put("/control-center/wallet/:id", adminAuth, async (req,res) => {
+    try {
+        const amount = Number(req.body.amount);
+        const reason = String(req.body.reason || "Admin wallet adjustment").slice(0,500);
+        if(!Number.isFinite(amount)) return res.status(400).json({success:false,message:"Invalid amount"});
+        const user = await User.findById(req.params.id);
+        if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+        const before = Number(user.wallet || 0);
+        user.wallet = Math.max(0, before + amount);
+        if(amount > 0) user.totalEarn = Number(user.totalEarn || 0) + amount;
+        user.walletTransactions = user.walletTransactions || [];
+        user.walletTransactions.push({
+            time:new Date(),
+            type:amount >= 0 ? "CREDIT" : "DEBIT",
+            amount,
+            reason,
+            adminId:String(req.user?.id || "")
+        });
+        await user.save();
+        return res.json({success:true,message:"Wallet updated",wallet:user.wallet,totalEarn:user.totalEarn});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+});
+
+router.put("/control-center/reset-questions/:id", adminAuth, async (req,res) => {
+    try {
+        const user=await User.findById(req.params.id);
+        if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+        user.dailyQuestionsAnswered=0;
+        user.dailyQuestionsDate=todayKey();
+        await user.save();
+        return res.json({success:true,message:"Today's question count reset"});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+});
+
+router.put("/control-center/reset-spin/:id", adminAuth, async (req,res) => {
+    try {
+        const user=await User.findById(req.params.id);
+        if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+        user.lastSpinDate="";
+        user.lastSpin="";
+        await user.save();
+        return res.json({success:true,message:"Spin reset"});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+});
+
 
 module.exports = router;
