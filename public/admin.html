@@ -2337,6 +2337,164 @@ ${w.status === "Approved" ? `
         }
     </script>
 
+
+<style id="adminProFeatures">
+.admin-pro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
+.admin-pro-card{background:linear-gradient(145deg,#101a2b,#0b1220);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
+.admin-pro-card .pro-icon{font-size:24px;margin-bottom:8px}
+.admin-pro-card .pro-label{font-size:12px;color:#94a3b8}
+.admin-pro-card .pro-value{font-size:26px;font-weight:800;margin-top:4px}
+.admin-pro-section{margin:22px 0;padding:18px;border-radius:18px;background:#08111f;border:1px solid rgba(255,255,255,.07)}
+.admin-pro-section h3{margin:0 0 14px}
+.admin-pro-table{width:100%;border-collapse:collapse}
+.admin-pro-table th,.admin-pro-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:13px}
+.admin-pro-btn{border:0;border-radius:9px;padding:8px 12px;cursor:pointer;font-weight:700;margin:3px;background:#18263b;color:#fff}
+.admin-pro-btn:hover{filter:brightness(1.15)}
+.admin-pro-input{background:#0e1929;border:1px solid #26354c;color:#fff;padding:10px;border-radius:9px;outline:none;width:100%;box-sizing:border-box}
+.admin-pro-flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+@media(max-width:600px){.admin-pro-table{display:block;overflow-x:auto;white-space:nowrap}}
+</style>
+
+<section class="admin-pro-section" id="adminProPanel">
+  <h3>📊 Admin Pro Dashboard</h3>
+  <div class="admin-pro-grid">
+    <div class="admin-pro-card"><div class="pro-icon">👥</div><div class="pro-label">Total Students</div><div class="pro-value" id="proTotalStudents">0</div></div>
+    <div class="admin-pro-card"><div class="pro-icon">🟢</div><div class="pro-label">Online Students</div><div class="pro-value" id="proOnlineStudents">0</div></div>
+    <div class="admin-pro-card"><div class="pro-icon">❓</div><div class="pro-label">Today's Questions</div><div class="pro-value" id="proTodayQuestions">0</div></div>
+    <div class="admin-pro-card"><div class="pro-icon">💰</div><div class="pro-label">Total Earn</div><div class="pro-value" id="proTotalEarn">₹0</div></div>
+    <div class="admin-pro-card"><div class="pro-icon">💸</div><div class="pro-label">Pending Withdrawals</div><div class="pro-value" id="proPendingWithdrawals">0</div></div>
+    <div class="admin-pro-card"><div class="pro-icon">⚠️</div><div class="pro-label">Warnings</div><div class="pro-value" id="proWarnings">0</div></div>
+  </div>
+
+  <div class="admin-pro-section">
+    <h3>📅 Daily Question Report</h3>
+    <div class="admin-pro-flex">
+      <input class="admin-pro-input" id="proStudentSearch" placeholder="Search student..." oninput="proFilterStudents(this.value)">
+      <button class="admin-pro-btn" onclick="proExportStudents()">📤 Export CSV</button>
+      <button class="admin-pro-btn" onclick="proRefresh()">🔄 Refresh</button>
+    </div>
+    <div style="overflow:auto;margin-top:12px">
+      <table class="admin-pro-table">
+        <thead><tr><th>Student</th><th>Questions</th><th>Correct</th><th>Wrong</th><th>Earn</th><th>Progress</th></tr></thead>
+        <tbody id="proStudentRows"><tr><td colspan="6">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="admin-pro-section">
+    <h3>📝 Admin Activity Log</h3>
+    <div style="overflow:auto">
+      <table class="admin-pro-table">
+        <thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead>
+        <tbody id="proActivityRows"><tr><td colspan="3">No activity yet.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const PRO_KEY = "adminProActivityLog";
+  let proStudents = [];
+
+  function getStudents(){
+    // Supports common localStorage names used by the app.
+    const keys = ["students","users","STUDENTS","allStudents"];
+    for(const k of keys){
+      try{
+        const v = JSON.parse(localStorage.getItem(k) || "null");
+        if(Array.isArray(v)) return v;
+      }catch(e){}
+    }
+    return [];
+  }
+
+  function num(o, keys){
+    for(const k of keys){
+      if(o && o[k] !== undefined && o[k] !== null && !isNaN(Number(o[k]))) return Number(o[k]);
+    }
+    return 0;
+  }
+
+  function nameOf(o){
+    return o?.name || o?.fullName || o?.username || o?.student_id || o?.id || "Unknown";
+  }
+
+  function todayQuestions(o){
+    return num(o, ["dailyQuestions","todayQuestions","questionsToday","answeredToday","dailyQuestionCount"]);
+  }
+
+  function correct(o){ return num(o,["todayCorrect","dailyCorrect","correctToday","correct"]); }
+  function wrong(o){ return num(o,["todayWrong","dailyWrong","wrongToday","wrong"]); }
+  function earn(o){ return num(o,["totalEarn","totalEarnings","wallet","balance","walletBalance"]); }
+
+  function render(){
+    proStudents = getStudents();
+    const online = proStudents.filter(s => {
+      const seen = new Date(s.lastSeen || 0).getTime();
+      return seen && Date.now()-seen < 120000;
+    }).length;
+
+    document.getElementById("proTotalStudents").textContent = proStudents.length;
+    document.getElementById("proOnlineStudents").textContent = online;
+    document.getElementById("proTodayQuestions").textContent = proStudents.reduce((a,s)=>a+todayQuestions(s),0);
+    document.getElementById("proTotalEarn").textContent = "₹" + proStudents.reduce((a,s)=>a+earn(s),0).toFixed(2);
+    document.getElementById("proPendingWithdrawals").textContent =
+      proStudents.reduce((a,s)=>a+num(s,["pendingWithdrawals","pendingWithdrawal"]),0);
+    document.getElementById("proWarnings").textContent =
+      proStudents.reduce((a,s)=>a+num(s,["warnings","warningCount"]),0);
+
+    drawRows(proStudents);
+    drawActivity();
+  }
+
+  function drawRows(list){
+    const body=document.getElementById("proStudentRows");
+    if(!list.length){body.innerHTML='<tr><td colspan="6">No students found.</td></tr>';return;}
+    body.innerHTML=list.map(s=>{
+      const q=todayQuestions(s), pct=Math.min(100,Math.round(q/100*100));
+      return '<tr><td>'+escapeHtml(nameOf(s))+'</td><td>'+q+'/100</td><td>'+correct(s)+'</td><td>'+wrong(s)+'</td><td>₹'+earn(s).toFixed(2)+'</td><td>'+pct+'%</td></tr>';
+    }).join("");
+  }
+
+  function drawActivity(){
+    const body=document.getElementById("proActivityRows");
+    let logs=[];
+    try{logs=JSON.parse(localStorage.getItem(PRO_KEY)||"[]")}catch(e){}
+    body.innerHTML=logs.length ? logs.slice(-30).reverse().map(x=>'<tr><td>'+escapeHtml(x.time)+'</td><td>'+escapeHtml(x.action)+'</td><td>'+escapeHtml(x.details||"")+'</td></tr>').join("") : '<tr><td colspan="3">No activity yet.</td></tr>';
+  }
+
+  window.proFilterStudents=function(q){
+    q=(q||"").toLowerCase();
+    drawRows(proStudents.filter(s=>nameOf(s).toLowerCase().includes(q) || String(s.mobile||"").includes(q) || String(s.id||"").toLowerCase().includes(q)));
+  };
+
+  window.proRefresh=function(){ render(); };
+
+  window.proLogAdminAction=function(action,details){
+    let logs=[]; try{logs=JSON.parse(localStorage.getItem(PRO_KEY)||"[]")}catch(e){}
+    logs.push({time:new Date().toLocaleString(),action,details});
+    localStorage.setItem(PRO_KEY,JSON.stringify(logs.slice(-200)));
+    drawActivity();
+  };
+
+  window.proExportStudents=function(){
+    const headers=["Student","Questions","Correct","Wrong","Earn","Progress"];
+    const rows=proStudents.map(s=>[nameOf(s),todayQuestions(s),correct(s),wrong(s),earn(s).toFixed(2),Math.min(100,Math.round(todayQuestions(s)/100*100))+"%"]);
+    const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");
+    const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="daily-student-report.csv"; a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  };
+
+  function escapeHtml(v){
+    return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+  }
+
+  window.addEventListener("load",()=>{setTimeout(render,300);});
+})();
+</script>
+
 </body>
 
 </html>
