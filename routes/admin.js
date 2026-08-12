@@ -75,7 +75,7 @@ router.get("/dashboard", adminAuth, async (req, res) => {
     try {
 
         await ensureQuestionsSeeded();
-        const users = await User.find();
+        const users = await User.find({ isDeleted: { $ne: true } });
         const questionBankTotal = await Question.countDocuments();
 
         let totalWallet = 0;
@@ -158,7 +158,7 @@ router.get("/users", adminAuth, async (req, res) => {
 
     try {
 
-        const users = await User.find().select("-password");
+        const users = await User.find({ isDeleted: { $ne: true } }).select("-password");
 
         const currentTime = Date.now();
 
@@ -330,24 +330,99 @@ router.delete("/user/:id", adminAuth, async (req, res) => {
 
     try {
 
-        await User.findByIdAndDelete(req.params.id);
+        const user = await User.findById(req.params.id);
 
-        res.json({
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
 
+        // Soft delete: keep the complete user data so it can be restored.
+        user.isDeleted = true;
+        user.deletedAt = new Date();
+        user.isOnline = false;
+
+        await user.save();
+
+        return res.json({
             success: true,
-
-            message: "User Deleted"
-
+            message: "User moved to Deleted Users. Data is safe and can be restored."
         });
 
     } catch (err) {
 
-        res.status(500).json({
-
+        return res.status(500).json({
             success: false,
-
             message: err.message
+        });
 
+    }
+
+});
+
+// ===========================
+// Deleted Users
+// ===========================
+
+router.get("/deleted-users", adminAuth, async (req, res) => {
+
+    try {
+
+        const users = await User.find({ isDeleted: true }).select("-password").sort({
+            deletedAt: -1
+        });
+
+        return res.json({
+            success: true,
+            users
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
+});
+
+// ===========================
+// Restore Deleted User
+// ===========================
+
+router.put("/restore-user/:id", adminAuth, async (req, res) => {
+
+    try {
+
+        const user = await User.findById(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        user.isDeleted = false;
+        user.deletedAt = null;
+        user.isOnline = false;
+
+        await user.save();
+
+        return res.json({
+            success: true,
+            message: "User Restored Successfully"
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
         });
 
     }
@@ -356,7 +431,7 @@ router.delete("/user/:id", adminAuth, async (req, res) => {
 
 router.get("/withdraws", adminAuth, async (req, res) => {
     try {
-        const users = await User.find().select("-password");
+        const users = await User.find({ isDeleted: { $ne: true } }).select("-password");
         const withdraws = [];
 
         users.forEach(user => {

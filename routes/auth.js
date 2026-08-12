@@ -64,7 +64,7 @@ router.post("/login", async (req, res) => {
 
         const { mobile, password } = req.body;
 
-        const user = await User.findOne({ mobile });
+        const user = await User.findOne({ mobile, isDeleted: { $ne: true } });
 
         if (!user) {
 

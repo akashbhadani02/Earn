@@ -84,6 +84,17 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        // Soft delete: deleted users are hidden from active lists but can be restored by admin.
+        isDeleted: {
+            type: Boolean,
+            default: false
+        },
+
+        deletedAt: {
+            type: Date,
+            default: null
+        },
+
         isBlocked: {
             type: Boolean,
             default: false

@@ -961,6 +961,34 @@
     </table>
 
 
+    <!-- Deleted Users / Restore -->
+    <section id="deletedUsersSection" style="margin-top:34px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <h2 style="margin-bottom:0;">🗑️ Deleted Users</h2>
+            <button onclick="loadDeletedUsers()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                ♻️ Refresh Deleted Users
+            </button>
+        </div>
+
+        <div class="table-wrap" style="margin-top:15px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Deleted Date</th>
+                        <th>Wallet</th>
+                        <th>Total Earn</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="deletedUserTable">
+                    <tr><td colspan="6">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
     <section style="margin-top:34px;">
         <h2>Question Bank — Add / Edit Questions</h2>
         <div class="question-toolbar">
@@ -1718,24 +1746,132 @@ style="background:#16a34a;">
 
         async function deleteUser(id) {
 
-            if (!confirm("Delete User?")) return;
+            if (!confirm(
+                "Move this user to Deleted Users?\n\n" +
+                "The user's wallet, earnings, questions and all other data will be kept safe.\n" +
+                "You can restore the user later."
+            )) return;
 
-            await fetch("/api/admin/user/" + id, {
-
+            const res = await fetch("/api/admin/user/" + id, {
                 method: "DELETE",
-
                 headers: {
-
                     Authorization: "Bearer " + token
-
                 }
-
             });
 
-            loadUsers();
+            const data = await res.json();
 
-            loadDashboard();
+            if (!res.ok || !data.success) {
+                alert(data.message || "User delete failed");
+                return;
+            }
 
+            alert("✅ User moved to Deleted Users. You can restore it anytime.");
+
+            await loadUsers();
+            await loadDeletedUsers();
+            await loadDashboard();
+        }
+
+        //==========================
+        // Deleted Users
+        //==========================
+
+        async function loadDeletedUsers() {
+
+            const table = document.getElementById("deletedUserTable");
+            if (!table) return;
+
+            try {
+
+                const res = await fetch("/api/admin/deleted-users", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    table.innerHTML = `<tr><td colspan="6">${data.message || "Failed to load deleted users"}</td></tr>`;
+                    return;
+                }
+
+                const users = data.users || [];
+
+                if (!users.length) {
+                    table.innerHTML = `<tr><td colspan="6">No Deleted Users</td></tr>`;
+                    return;
+                }
+
+                table.innerHTML = users.map(user => {
+
+                    const deletedDate = user.deletedAt
+                        ? new Date(user.deletedAt).toLocaleString("en-IN")
+                        : "-";
+
+                    return `
+                        <tr>
+                            <td>${escapeHtml(user.name || "-")}</td>
+                            <td>${escapeHtml(user.mobile || "-")}</td>
+                            <td>${deletedDate}</td>
+                            <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
+                            <td>₹${Number(user.totalEarn || 0).toFixed(2)}</td>
+                            <td>
+                                <button
+                                    onclick="restoreUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#16a34a,#15803d);">
+                                    ♻️ Restore
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+
+            } catch (err) {
+
+                console.error("Deleted Users Error:", err);
+                table.innerHTML = `<tr><td colspan="6">Failed to load deleted users</td></tr>`;
+
+            }
+
+        }
+
+        async function restoreUser(id) {
+
+            if (!confirm(
+                "Restore this user?\n\n" +
+                "The student will appear again in All Users and will be able to login."
+            )) return;
+
+            const res = await fetch("/api/admin/restore-user/" + id, {
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "User restore failed");
+                return;
+            }
+
+            alert("✅ User restored successfully.");
+
+            await loadDeletedUsers();
+            await loadUsers();
+            await loadDashboard();
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
         async function loadWithdraws() {
@@ -2086,6 +2222,7 @@ ${w.status === "Approved" ? `
 
         loadDashboard();
         loadUsers();
+        loadDeletedUsers();
         loadWithdraws();
         loadQuestions();
 
