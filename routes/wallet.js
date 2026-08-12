@@ -9,8 +9,14 @@ const QUIZ_CORRECT_REWARD = 0.20;
 const QUIZ_WRONG_PENALTY = 0.30;
 // No daily spin limit. One spin is earned for every 100 answered questions.
 
+// India (IST) date so "daily questions" follows the student's local day.
 function todayKey() {
-    return new Date().toISOString().split("T")[0];
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }).format(new Date());
 }
 
 function walletResponse(user) {
@@ -27,7 +33,7 @@ function walletResponse(user) {
         lastSpinDate: user.lastSpinDate || "",
         dailyQuestionsAnswered: Number(user.dailyQuestionsAnswered || 0),
         dailyQuestionsDate: user.dailyQuestionsDate || "",
-        totalQuestionsAnswered: Number(user.totalQuestionsAnswered += 1),
+        totalQuestionsAnswered: Number(user.totalQuestionsAnswered || 0),
         canSpinAfterQuestions: Number(user.dailyQuestionsAnswered || 0) >= 100,
         withdrawRequests: user.withdrawRequests || []
     };

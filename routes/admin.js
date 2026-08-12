@@ -138,6 +138,18 @@ router.get("/dashboard", adminAuth, async (req, res) => {
 });
 
 // ===========================
+// India (IST) date helper
+// ===========================
+function todayKey() {
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }).format(new Date());
+}
+
+// ===========================
 // All Users
 // Online / Offline Status
 // ===========================
@@ -171,11 +183,26 @@ router.get("/users", adminAuth, async (req, res) => {
 
             }
 
+            const userData = user.toObject();
+            const today = todayKey();
+
+            // If the student has not answered anything today,
+            // show today's count as 0 without modifying the database.
+            const dailyQuestionsAnswered =
+                userData.dailyQuestionsDate === today
+                    ? Number(userData.dailyQuestionsAnswered || 0)
+                    : 0;
+
             return {
 
-                ...user.toObject(),
+                ...userData,
 
-                isOnline: online
+                isOnline: online,
+
+                // Questions answered today (resets automatically each new day).
+                dailyQuestionsAnswered,
+
+                dailyQuestionsDate: today
 
             };
 
