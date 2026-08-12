@@ -1033,10 +1033,37 @@
         const token = localStorage.getItem("adminToken");
 
         if (!token) {
-
-            location.href = "admin-login.html";
-
+            location.replace("admin-login.html");
         }
+
+        // ==========================================
+        // ADMIN TOKEN / SESSION HANDLER
+        // If the JWT expires or becomes invalid,
+        // do NOT show "Invalid Token" alerts from
+        // every API call. Send admin back to login.
+        // ==========================================
+        let sessionExpiredHandled = false;
+        const originalFetch = window.fetch.bind(window);
+
+        window.fetch = async function (...args) {
+            const response = await originalFetch(...args);
+
+            // Only handle unauthorized API responses.
+            if (response.status === 401 && !sessionExpiredHandled) {
+                sessionExpiredHandled = true;
+
+                localStorage.removeItem("adminToken");
+
+                // Redirect immediately to admin login.
+                location.replace("admin-login.html?session=expired");
+
+                // Stop the current function before it can show
+                // the backend "Invalid Token" alert.
+                return new Promise(() => {});
+            }
+
+            return response;
+        };
 
         let allUsers = [];
 
