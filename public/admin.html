@@ -2603,6 +2603,104 @@ window.addEventListener("load",()=>{af2Refresh();setInterval(af2Refresh,5000);})
 })();
 </script>
 
+
+<style id="adminProV2CSS">
+#adminProV2{margin:24px 0;padding:22px;border-radius:22px;background:#07111f;border:1px solid rgba(255,255,255,.08);color:#fff}
+#adminProV2 *{box-sizing:border-box}.ap2-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+#adminProV2 h2,#adminProV2 h3{margin:0}.ap2-muted{color:#94a3b8;font-size:12px}.ap2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
+.ap2-card{padding:15px;border-radius:15px;background:#0c1727;border:1px solid rgba(255,255,255,.07)}.ap2-val{font-size:25px;font-weight:800;margin-top:5px}.ap2-lbl{font-size:12px;color:#94a3b8}
+.ap2-btn{border:1px solid #26354c;background:#122036;color:#fff;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:700}.ap2-btn:hover{filter:brightness(1.15)}
+.ap2-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.ap2-pane{display:none}.ap2-pane.active{display:block}.ap2-tablewrap{overflow:auto}
+.ap2-table{width:100%;min-width:900px;border-collapse:collapse}.ap2-table th,.ap2-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.07);font-size:12px;text-align:left}
+.ap2-input{padding:10px;border-radius:10px;border:1px solid #26354c;background:#0d1929;color:#fff}.ap2-flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ap2-badge{padding:4px 8px;border-radius:99px;background:#18263b;font-size:11px;font-weight:800}.ap2-green{background:#103b29}.ap2-red{background:#4b1720}.ap2-yellow{background:#4a3711}
+.ap2-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100000;padding:18px}.ap2-modal.show{display:flex}.ap2-box{width:min(950px,100%);max-height:90vh;overflow:auto;background:#091422;border:1px solid #26354c;border-radius:18px;padding:20px}
+.ap2-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:15px 0}.ap2-kv>div{background:#0d1929;border-radius:11px;padding:12px}.ap2-kv b{display:block;color:#94a3b8;font-size:11px}.ap2-kv span{font-weight:800;display:block;margin-top:4px}
+@media(max-width:600px){#adminProV2{padding:14px}.ap2-grid{grid-template-columns:repeat(2,1fr)}.ap2-val{font-size:20px}}
+</style>
+
+<section id="adminProV2">
+ <div class="ap2-head"><div><h2>🛡️ Admin Command Center</h2><div class="ap2-muted">MongoDB-backed • Vercel-ready • Student / Wallet / Security / Reports</div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Refresh()">🔄 Refresh</button><button class="ap2-btn" onclick="ap2Export()">📤 Export CSV</button></div></div>
+ <div class="ap2-grid">
+  <div class="ap2-card"><div class="ap2-lbl">👥 Students</div><div class="ap2-val" id="ap2Students">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">🟢 Online</div><div class="ap2-val" id="ap2Online">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">🚫 Blocked</div><div class="ap2-val" id="ap2Blocked">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">❓ Questions Today</div><div class="ap2-val" id="ap2Q">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">💰 Wallet</div><div class="ap2-val" id="ap2Wallet">₹0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">💵 Total Earn</div><div class="ap2-val" id="ap2Earn">₹0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">⚠️ Warnings</div><div class="ap2-val" id="ap2Warnings">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">🎡 Spin Eligible</div><div class="ap2-val" id="ap2Spin">0</div></div>
+ </div>
+ <div class="ap2-tabs">
+  <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
+  <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
+  <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
+  <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
+  <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
+  <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
+ </div>
+
+ <div class="ap2-pane active" id="ap2-students">
+  <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile" oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button></div>
+  <div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Status</th><th>Questions</th><th>Wallet</th><th>Earn</th><th>Warnings</th><th>Spin</th><th>Actions</th></tr></thead><tbody id="ap2StudentRows"></tbody></table></div>
+ </div>
+
+ <div class="ap2-pane" id="ap2-withdrawals"><h3>💸 Withdrawal Requests</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Mobile</th><th>Amount</th><th>Status</th><th>Transaction ID</th><th>Date</th></tr></thead><tbody id="ap2WithdrawRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-wallet"><h3>💰 Wallet Ledger</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Student</th><th>Type</th><th>Amount</th><th>Reason</th></tr></thead><tbody id="ap2WalletRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-security"><h3>🛡️ Suspicious Activity</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Fast Answers</th><th>Tab Changes</th><th>Devices</th><th>Risk</th></tr></thead><tbody id="ap2SecurityRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-recycle"><h3>🗑️ Deleted Students</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Deleted At</th><th>Reason</th><th>Action</th></tr></thead><tbody id="ap2RecycleRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-reports"><h3>📊 Reports</h3><p class="ap2-muted">Download the current MongoDB student report as CSV.</p><button class="ap2-btn" onclick="ap2Export()">📤 Download Student Report</button></div>
+</section>
+<div class="ap2-modal" id="ap2Modal"><div class="ap2-box"><div class="ap2-head"><h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button></div><div id="ap2Body"></div></div></div>
+
+<script id="adminProV2JS">
+(function(){
+let D={users:[],withdrawals:[],stats:{}};
+const token=()=>localStorage.getItem("adminToken")||"";
+async function api(url,opt={}){
+ opt.headers=Object.assign({"Content-Type":"application/json","Authorization":"Bearer "+token()},opt.headers||{});
+ const r=await fetch("/api/admin"+url,opt),d=await r.json().catch(()=>({}));
+ if(!r.ok||!d.success)throw new Error(d.message||"API error");
+ return d;
+}
+const esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const name=u=>u.name||u.username||u.student_id||u.id||"Unknown", uid=u=>String(u._id||u.id||u.student_id||"");
+const q=u=>u.dailyQuestionsDate===new Date().toISOString().slice(0,10)?Number(u.dailyQuestionsAnswered||0):0;
+const money=x=>"₹"+Number(x||0).toFixed(2);
+
+window.ap2Refresh=async()=>{try{D=await api("/pro/dashboard");ap2Render()}catch(e){console.error(e);}};
+function ap2Render(){
+ const s=D.stats||{}, map={ap2Students:s.students,ap2Online:s.online,ap2Blocked:s.blocked,ap2Q:s.questionsToday,ap2Wallet:money(s.wallet),ap2Earn:money(s.totalEarn),ap2Warnings:s.warnings,ap2Spin:s.spinEligible};
+ Object.keys(map).forEach(k=>{let e=document.getElementById(k);if(e)e.textContent=map[k]??0});
+ ap2RenderStudents();ap2RenderWithdrawals();ap2RenderWallet();ap2RenderSecurity();ap2RenderRecycle();
+}
+window.ap2RenderStudents=()=>{
+ const term=(document.getElementById("ap2Search").value||"").toLowerCase();
+ const list=D.users.filter(u=>(name(u)+" "+uid(u)+" "+(u.mobile||"")).toLowerCase().includes(term));
+ document.getElementById("ap2StudentRows").innerHTML=list.map(u=>`<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile||"")}</td><td>${u.isBlocked?'<span class="ap2-badge ap2-red">Blocked</span>':u.lastSeen&&Date.now()-new Date(u.lastSeen).getTime()<=120000?'<span class="ap2-badge ap2-green">Online</span>':'<span class="ap2-badge">Offline</span>'}</td><td>${q(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered||0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount||0)}</td><td>${q(u)>=100?'<span class="ap2-badge ap2-green">Eligible</span>':'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked?'🟢':'🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("")||'<tr><td colspan="8">No students found.</td></tr>';
+};
+window.ap2Details=async id=>{try{let d=await api("/pro/user/"+encodeURIComponent(id)),u=d.user;document.getElementById("ap2Title").textContent="👤 "+name(u);document.getElementById("ap2Body").innerHTML=`<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile||"-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered||0}</span></div><div><b>Warnings</b><span>${u.warningCount||0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen||"-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory||[]).slice().reverse().map(x=>`<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("")||'<tr><td colspan="2">None</td></tr>'}</table></div>`;document.getElementById("ap2Modal").classList.add("show")}catch(e){alert(e.message)}};
+window.ap2Close=()=>document.getElementById("ap2Modal").classList.remove("show");
+window.ap2Block=async(id,blocked)=>{try{await api("/pro/block/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify({blocked,reason:"Admin action"})});await ap2Refresh()}catch(e){alert(e.message)}};
+window.ap2Warn=async id=>{let reason=prompt("Warning reason:","Please follow the rules.");if(reason===null)return;try{let r=await api("/pro/warning/"+encodeURIComponent(id),{method:"POST",body:JSON.stringify({reason})});alert(r.message);await ap2Refresh()}catch(e){alert(e.message)}};
+window.ap2Wallet=async id=>{let amount=prompt("Wallet adjustment (+ add / - remove):","1");if(amount===null)return;let reason=prompt("Reason:","Admin adjustment");if(reason===null)return;try{await api("/pro/wallet/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify({amount:Number(amount),reason})});await ap2Refresh();alert("Wallet updated")}catch(e){alert(e.message)}};
+window.ap2ResetQ=async id=>{try{await api("/pro/reset-questions/"+encodeURIComponent(id),{method:"PUT"});await ap2Refresh()}catch(e){alert(e.message)}};
+window.ap2ResetSpin=async id=>{try{await api("/pro/reset-spin/"+encodeURIComponent(id),{method:"PUT"});await ap2Refresh()}catch(e){alert(e.message)}};
+window.ap2Tab=t=>{document.querySelectorAll("#adminProV2 .ap2-pane").forEach(x=>x.classList.remove("active"));document.getElementById("ap2-"+t).classList.add("active")};
+function ap2RenderWithdrawals(){document.getElementById("ap2WithdrawRows").innerHTML=D.withdrawals.map(w=>`<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId||"-")}</td><td>${esc(w.date||"-")}</td></tr>`).join("")||'<tr><td colspan="6">No withdrawals.</td></tr>'}
+function ap2RenderWallet(){let a=[];D.users.forEach(u=>(u.walletTransactions||[]).forEach(t=>a.push({student:name(u),...t})));a.sort((x,y)=>new Date(y.time)-new Date(x.time));document.getElementById("ap2WalletRows").innerHTML=a.map(t=>`<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("")||'<tr><td colspan="5">No transactions.</td></tr>'}
+function ap2RenderSecurity(){document.getElementById("ap2SecurityRows").innerHTML=D.users.map(u=>{let f=Number(u.fastAnswers||0),t=Number(u.tabChanges||0),d=Number(u.deviceCount||0),r=f>=10||t>=10||d>=3?"HIGH":f>=5||t>=5||d>=2?"MEDIUM":"LOW";return`<tr><td>${esc(name(u))}</td><td>${f}</td><td>${t}</td><td>${d}</td><td><span class="ap2-badge ${r==="HIGH"?"ap2-red":r==="MEDIUM"?"ap2-yellow":"ap2-green"}">${r}</span></td></tr>`}).join("")||'<tr><td colspan="5">No data.</td></tr>'}
+async function ap2RenderRecycle(){try{let d=await api("/pro/recycle-bin");document.getElementById("ap2RecycleRows").innerHTML=d.users.map(u=>`<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt||"-")}</td><td>${esc(u.deletedReason||"-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("")||'<tr><td colspan="4">Recycle Bin empty.</td></tr>'}catch(e){console.error(e)}}
+window.ap2Restore=async id=>{try{await api("/pro/restore/"+encodeURIComponent(id),{method:"PUT"});await ap2Refresh();alert("Student restored")}catch(e){alert(e.message)}};
+window.ap2Export=async()=>{try{let d=await api("/pro/reports"),rows=[["Name","ID","Mobile","Wallet","Total Earn","Today Questions","Total Questions","Warnings","Blocked","Last Seen"],...d.report.map(x=>[x.name,x.id,x.mobile,x.wallet,x.totalEarn,x.todayQuestions,x.totalQuestions,x.warnings,x.blocked?"Yes":"No",x.lastSeen])];let csv=rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="admin-report.csv";a.click()}catch(e){alert(e.message)}};
+window.addEventListener("load",()=>{ap2Refresh();setInterval(ap2Refresh,10000)});
+})();
+</script>
+
 </body>
 
 </html>

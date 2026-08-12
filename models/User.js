@@ -220,6 +220,40 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
+,
+
+        warningHistory: [
+            { time: { type: Date, default: Date.now }, reason: { type: String, default: "" } }
+        ],
+        walletTransactions: [
+            {
+                time: { type: Date, default: Date.now },
+                type: { type: String, default: "ADJUSTMENT" },
+                amount: { type: Number, default: 0 },
+                reason: { type: String, default: "" },
+                adminId: { type: String, default: "" }
+            }
+        ],
+        adminActivity: [
+            {
+                time: { type: Date, default: Date.now },
+                action: { type: String, default: "" },
+                details: { type: String, default: "" }
+            }
+        ],
+        loginHistory: [
+            {
+                time: { type: Date, default: Date.now },
+                ip: { type: String, default: "" },
+                userAgent: { type: String, default: "" }
+            }
+        ],
+        deviceCount: { type: Number, default: 0 },
+        tabChanges: { type: Number, default: 0 },
+        fastAnswers: { type: Number, default: 0 },
+        isDeleted: { type: Boolean, default: false },
+        deletedAt: { type: Date, default: null },
+        deletedReason: { type: String, default: "" }
     },
     {
         timestamps: true,

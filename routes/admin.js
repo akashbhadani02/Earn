@@ -1054,4 +1054,137 @@ router.put("/control-center/reset-spin/:id", adminAuth, async (req,res) => {
 });
 
 
+
+// ============================================================
+// ADMIN PRO v2 - Vercel/MongoDB compatible APIs
+// ============================================================
+const proTodayKey = () => new Date().toISOString().slice(0,10);
+const proAdminLog = async (user, action, details="") => {
+    try {
+        user.adminActivity = user.adminActivity || [];
+        user.adminActivity.push({ time:new Date(), action, details });
+        if (user.adminActivity.length > 200) user.adminActivity = user.adminActivity.slice(-200);
+        await user.save();
+    } catch(e) { console.error("Admin log:", e.message); }
+};
+
+router.get("/pro/dashboard", adminAuth, async (req,res)=>{
+    try{
+        const today=proTodayKey();
+        const users=await User.find({}).select("-password").lean();
+        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=120000);
+        const stats={
+            students:users.length,
+            online:active.length,
+            blocked:users.filter(u=>u.isBlocked).length,
+            deleted:users.filter(u=>u.isDeleted).length,
+            warnings:users.reduce((n,u)=>n+Number(u.warningCount||0),0),
+            questionsToday:users.reduce((n,u)=>n+(u.dailyQuestionsDate===today?Number(u.dailyQuestionsAnswered||0):0),0),
+            totalQuestions:users.reduce((n,u)=>n+Number(u.totalQuestionsAnswered||0),0),
+            wallet:users.reduce((n,u)=>n+Number(u.wallet||0),0),
+            totalEarn:users.reduce((n,u)=>n+Number(u.totalEarn||0),0),
+            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.dailyQuestionsAnswered||0)>=100).length
+        };
+        const withdrawals=[];
+        users.forEach(u=>(u.withdrawRequests||[]).forEach(w=>withdrawals.push({
+            userId:String(u._id),student:nmPro(u),mobile:u.mobile||"",
+            amount:Number(w.amount||0),status:w.status||"Pending",
+            transactionId:w.transactionId||"",date:w.date||null
+        })));
+        res.json({success:true,stats,users,withdrawals});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+function nmPro(u){return u.name||u.username||u.student_id||u.id||"Unknown";}
+
+router.get("/pro/user/:id", adminAuth, async(req,res)=>{
+    try{
+        const u=await User.findById(req.params.id).select("-password").lean();
+        if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        res.json({success:true,user:u});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
+    try{
+        const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        const reason=String(req.body.reason||"Admin warning").slice(0,500);
+        u.warningCount=Number(u.warningCount||0)+1;
+        u.warningHistory=u.warningHistory||[];
+        u.warningHistory.push({time:new Date(),reason});
+        if(u.warningCount>=3){u.isBlocked=true;u.blockReason="Automatic block after 3 warnings";}
+        await proAdminLog(u,"WARNING",reason); await u.save();
+        res.json({success:true,message:u.isBlocked?"3 warnings reached — student blocked":"Warning added",warningCount:u.warningCount});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/pro/block/:id", adminAuth, async(req,res)=>{
+    try{
+        const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        u.isBlocked=req.body.blocked!==false; u.blockReason=String(req.body.reason||"Admin action");
+        await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason); await u.save();
+        res.json({success:true,blocked:u.isBlocked});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/pro/wallet/:id", adminAuth, async(req,res)=>{
+    try{
+        const amount=Number(req.body.amount);
+        if(!Number.isFinite(amount))return res.status(400).json({success:false,message:"Invalid amount"});
+        const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        const reason=String(req.body.reason||"Admin wallet adjustment").slice(0,500);
+        u.wallet=Math.max(0,Number(u.wallet||0)+amount);
+        if(amount>0)u.totalEarn=Number(u.totalEarn||0)+amount;
+        u.walletTransactions=u.walletTransactions||[];
+        u.walletTransactions.push({time:new Date(),type:amount>=0?"CREDIT":"DEBIT",amount,reason,adminId:String(req.user?.id||"")});
+        await proAdminLog(u,"WALLET",`${amount>=0?"+":""}${amount} — ${reason}`); await u.save();
+        res.json({success:true,wallet:u.wallet,totalEarn:u.totalEarn});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/pro/reset-questions/:id", adminAuth, async(req,res)=>{
+    try{
+        const u=await User.findById(req.params.id);if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        u.dailyQuestionsAnswered=0;u.dailyQuestionsDate=proTodayKey();await proAdminLog(u,"RESET_QUESTIONS","Daily question counter reset");await u.save();
+        res.json({success:true});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/pro/reset-spin/:id", adminAuth, async(req,res)=>{
+    try{
+        const u=await User.findById(req.params.id);if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        u.lastSpinDate="";u.lastSpin="";await proAdminLog(u,"RESET_SPIN","Spin reset");await u.save();
+        res.json({success:true});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.get("/pro/recycle-bin", adminAuth, async(req,res)=>{
+    try{
+        const users=await User.find({isDeleted:true}).select("-password").sort({deletedAt:-1}).lean();
+        res.json({success:true,users});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/pro/restore/:id", adminAuth, async(req,res)=>{
+    try{
+        const u=await User.findById(req.params.id);if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        u.isDeleted=false;u.deletedAt=null;u.deletedReason="";await u.save();res.json({success:true});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.get("/pro/reports", adminAuth, async(req,res)=>{
+    try{
+        const users=await User.find({}).select("-password").lean();
+        const report=users.map(u=>({
+            name:nmPro(u),id:String(u._id),mobile:u.mobile||"",
+            wallet:Number(u.wallet||0),totalEarn:Number(u.totalEarn||0),
+            todayQuestions:u.dailyQuestionsDate===proTodayKey()?Number(u.dailyQuestionsAnswered||0):0,
+            totalQuestions:Number(u.totalQuestionsAnswered||0),
+            warnings:Number(u.warningCount||0),blocked:!!u.isBlocked,
+            lastSeen:u.lastSeen||null
+        }));
+        res.json({success:true,report});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
 module.exports = router;
