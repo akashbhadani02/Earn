@@ -2495,6 +2495,321 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
+
+<style id="adminAllFeaturesV2">
+.af2-wrap{margin:22px 0;padding:20px;border-radius:20px;background:#07111f;border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 50px rgba(0,0,0,.22)}
+.af2-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.af2-head h2{margin:0;font-size:22px}
+.af2-muted{color:#94a3b8;font-size:12px}
+.af2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.af2-card{padding:16px;border-radius:15px;background:#0c1727;border:1px solid rgba(255,255,255,.07)}
+.af2-icon{font-size:22px}.af2-label{color:#94a3b8;font-size:12px;margin-top:6px}.af2-value{font-size:24px;font-weight:800;margin-top:4px}
+.af2-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+.af2-btn{border:1px solid rgba(255,255,255,.08);background:#122036;color:#fff;padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700}
+.af2-btn:hover{filter:brightness(1.15)}
+.af2-btn.danger{background:#4b1720}.af2-btn.success{background:#123d2b}
+.af2-panel{display:none}.af2-panel.active{display:block}
+.af2-table-wrap{overflow:auto;margin-top:12px}.af2-table{width:100%;border-collapse:collapse;min-width:850px}
+.af2-table th,.af2-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:12px;vertical-align:top}
+.af2-input,.af2-select{width:100%;box-sizing:border-box;padding:10px;border-radius:9px;border:1px solid #26354c;background:#0d1929;color:#fff;outline:none}
+.af2-flex{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.af2-badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#18263b}
+.af2-online{background:#103b29}.af2-block{background:#4b1720}.af2-warn{background:#4a3711}
+.af2-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:99999;padding:18px}
+.af2-modal.show{display:flex}.af2-modal-box{width:min(900px,100%);max-height:90vh;overflow:auto;background:#091422;border:1px solid #26354c;border-radius:18px;padding:20px}
+.af2-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:14px 0}
+.af2-kv>div{padding:12px;border-radius:11px;background:#0d1929}.af2-kv b{display:block;font-size:11px;color:#94a3b8}.af2-kv span{display:block;margin-top:4px;font-weight:800}
+.af2-empty{padding:20px;text-align:center;color:#94a3b8}
+</style>
+
+<section class="af2-wrap" id="adminAllFeaturesV2">
+  <div class="af2-head">
+    <div>
+      <h2>🛡️ Admin Control Center</h2>
+      <div class="af2-muted">Student control • Wallet • Spin • Security • Analytics • Notifications</div>
+    </div>
+    <div class="af2-flex">
+      <button class="af2-btn" onclick="af2Refresh()">🔄 Refresh</button>
+      <button class="af2-btn" onclick="af2Export()">📤 Export</button>
+    </div>
+  </div>
+
+  <div class="af2-grid">
+    <div class="af2-card"><div class="af2-icon">👥</div><div class="af2-label">Students</div><div class="af2-value" id="af2Students">0</div></div>
+    <div class="af2-card"><div class="af2-icon">🟢</div><div class="af2-label">Online</div><div class="af2-value" id="af2Online">0</div></div>
+    <div class="af2-card"><div class="af2-icon">🚫</div><div class="af2-label">Blocked</div><div class="af2-value" id="af2Blocked">0</div></div>
+    <div class="af2-card"><div class="af2-icon">⚠️</div><div class="af2-label">Warnings</div><div class="af2-value" id="af2Warnings">0</div></div>
+    <div class="af2-card"><div class="af2-icon">💰</div><div class="af2-label">Wallet Total</div><div class="af2-value" id="af2Wallet">₹0</div></div>
+    <div class="af2-card"><div class="af2-icon">❓</div><div class="af2-label">Today's Questions</div><div class="af2-value" id="af2Questions">0</div></div>
+    <div class="af2-card"><div class="af2-icon">🎡</div><div class="af2-label">Today's Spins</div><div class="af2-value" id="af2Spins">0</div></div>
+    <div class="af2-card"><div class="af2-icon">🔔</div><div class="af2-label">Notifications</div><div class="af2-value" id="af2Notifications">0</div></div>
+  </div>
+
+  <div class="af2-tabs">
+    <button class="af2-btn" onclick="af2Tab('students')">👥 Students</button>
+    <button class="af2-btn" onclick="af2Tab('wallet')">💰 Wallet</button>
+    <button class="af2-btn" onclick="af2Tab('spin')">🎡 Spin</button>
+    <button class="af2-btn" onclick="af2Tab('questions')">❓ Question Analytics</button>
+    <button class="af2-btn" onclick="af2Tab('analytics')">📈 Analytics</button>
+    <button class="af2-btn" onclick="af2Tab('security')">🔐 Security</button>
+    <button class="af2-btn" onclick="af2Tab('notifications')">🔔 Notifications</button>
+    <button class="af2-btn" onclick="af2Tab('logs')">📝 Activity Logs</button>
+  </div>
+
+  <div class="af2-panel active" id="af2-students">
+    <div class="af2-flex">
+      <input class="af2-input" id="af2Search" style="max-width:340px" placeholder="Search name / ID / mobile" oninput="af2RenderStudents()">
+      <select class="af2-select" id="af2Filter" style="max-width:180px" onchange="af2RenderStudents()">
+        <option value="all">All Students</option><option value="online">Online</option><option value="blocked">Blocked</option><option value="warning">Warnings</option>
+      </select>
+    </div>
+    <div class="af2-table-wrap"><table class="af2-table">
+      <thead><tr><th>Student</th><th>Status</th><th>Questions</th><th>Wallet</th><th>Warnings</th><th>Spin</th><th>Actions</th></tr></thead>
+      <tbody id="af2StudentRows"></tbody>
+    </table></div>
+  </div>
+
+  <div class="af2-panel" id="af2-wallet">
+    <h3>💰 Wallet Transaction History</h3>
+    <div class="af2-muted">Admin adjustments are stored locally in this control layer; connect the same actions to your backend API for permanent server-side audit.</div>
+    <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Time</th><th>Student</th><th>Type</th><th>Amount</th><th>Reason</th></tr></thead><tbody id="af2WalletRows"></tbody></table></div>
+  </div>
+
+  <div class="af2-panel" id="af2-spin">
+    <h3>🎡 Spin Control & History</h3>
+    <div class="af2-flex">
+      <input class="af2-input" id="af2SpinSearch" style="max-width:340px" placeholder="Search student">
+      <button class="af2-btn" onclick="af2ResetSpin()">🔄 Reset Selected Student Daily Spin</button>
+    </div>
+    <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Student</th><th>Questions</th><th>Eligible (100)</th><th>Today's Spin</th><th>Reward</th></tr></thead><tbody id="af2SpinRows"></tbody></table></div>
+  </div>
+
+  <div class="af2-panel" id="af2-questions">
+    <h3>❓ Question Analytics</h3>
+    <div class="af2-grid">
+      <div class="af2-card"><div class="af2-label">Total Attempts</div><div class="af2-value" id="af2Attempts">0</div></div>
+      <div class="af2-card"><div class="af2-label">Correct</div><div class="af2-value" id="af2Correct">0</div></div>
+      <div class="af2-card"><div class="af2-label">Wrong</div><div class="af2-value" id="af2Wrong">0</div></div>
+      <div class="af2-card"><div class="af2-label">Accuracy</div><div class="af2-value" id="af2Accuracy">0%</div></div>
+    </div>
+    <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Question ID</th><th>Attempts</th><th>Correct</th><th>Wrong</th><th>Accuracy</th></tr></thead><tbody id="af2QuestionRows"></tbody></table></div>
+  </div>
+
+  <div class="af2-panel" id="af2-analytics">
+    <h3>📈 Activity Analytics</h3>
+    <div class="af2-grid">
+      <div class="af2-card"><div class="af2-label">100+ Question Students</div><div class="af2-value" id="af2Completed100">0</div></div>
+      <div class="af2-card"><div class="af2-label">Total Correct</div><div class="af2-value" id="af2TotalCorrect">0</div></div>
+      <div class="af2-card"><div class="af2-label">Total Wrong</div><div class="af2-value" id="af2TotalWrong">0</div></div>
+      <div class="af2-card"><div class="af2-label">Total Earnings</div><div class="af2-value" id="af2TotalEarnings">₹0</div></div>
+    </div>
+  </div>
+
+  <div class="af2-panel" id="af2-security">
+    <h3>🔐 Security & Suspicious Activity</h3>
+    <div class="af2-muted">Flags students with very fast answers, repeated tab changes, multiple devices, or unusually high activity when those counters exist in the student record.</div>
+    <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Student</th><th>Fast Answers</th><th>Tab Changes</th><th>Devices</th><th>Risk</th></tr></thead><tbody id="af2SecurityRows"></tbody></table></div>
+  </div>
+
+  <div class="af2-panel" id="af2-notifications">
+    <h3>🔔 Real-time Notification Center</h3>
+    <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Time</th><th>Type</th><th>Message</th></tr></thead><tbody id="af2NotificationRows"></tbody></table></div>
+  </div>
+
+  <div class="af2-panel" id="af2-logs">
+    <h3>📝 Admin Activity Log</h3>
+    <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody id="af2LogRows"></tbody></table></div>
+  </div>
+</section>
+
+<div class="af2-modal" id="af2Modal">
+  <div class="af2-modal-box">
+    <div class="af2-head"><h2 id="af2ModalTitle">Student Details</h2><button class="af2-btn" onclick="af2Close()">✕</button></div>
+    <div id="af2ModalBody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const LOG_KEY="adminActivityLogV2", WALLET_KEY="walletTransactionsV2", NOTIFY_KEY="adminNotificationsV2";
+  let students=[], selectedId=null;
+
+  function arr(){
+    const keys=["students","users","STUDENTS","allStudents"];
+    for(const k of keys){try{const x=JSON.parse(localStorage.getItem(k)||"null");if(Array.isArray(x))return x}catch(e){}}
+    return [];
+  }
+  const n=(o,ks)=>{for(const k of ks){if(o&&o[k]!=null&&!isNaN(Number(o[k])))return Number(o[k])}return 0};
+  const name=o=>o?.name||o?.fullName||o?.username||o?.student_id||o?.id||"Unknown";
+  const id=o=>String(o?.id||o?.student_id||o?._id||o?.username||"");
+  const q=o=>n(o,["dailyQuestions","todayQuestions","questionsToday","answeredToday","dailyQuestionCount"]);
+  const correct=o=>n(o,["todayCorrect","dailyCorrect","correctToday","correct"]);
+  const wrong=o=>n(o,["todayWrong","dailyWrong","wrongToday","wrong"]);
+  const wallet=o=>n(o,["wallet","balance","walletBalance","totalEarn"]);
+  const warn=o=>n(o,["warnings","warningCount","warning"]);
+  const blocked=o=>!!(o?.blocked||o?.isBlocked);
+  const online=o=>{const t=new Date(o?.lastSeen||0).getTime();return t&&Date.now()-t<120000};
+  const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+  function save(){localStorage.setItem("students",JSON.stringify(students));}
+  function log(action,details){
+    let x=[];try{x=JSON.parse(localStorage.getItem(LOG_KEY)||"[]")}catch(e){}
+    x.push({time:new Date().toLocaleString(),action,details});localStorage.setItem(LOG_KEY,JSON.stringify(x.slice(-300)));
+    renderLogs();
+  }
+  function notify(type,msg){
+    let x=[];try{x=JSON.parse(localStorage.getItem(NOTIFY_KEY)||"[]")}catch(e){}
+    x.push({time:new Date().toLocaleString(),type,msg});localStorage.setItem(NOTIFY_KEY,JSON.stringify(x.slice(-200)));
+    renderNotifications();
+  }
+
+  window.af2Tab=function(t){
+    document.querySelectorAll(".af2-panel").forEach(x=>x.classList.remove("active"));
+    const p=document.getElementById("af2-"+t);if(p)p.classList.add("active");
+    if(t==="students")af2RenderStudents(); if(t==="wallet")renderWallet(); if(t==="spin")renderSpin();
+    if(t==="questions")renderQuestions(); if(t==="security")renderSecurity(); if(t==="notifications")renderNotifications(); if(t==="logs")renderLogs();
+  };
+
+  window.af2Refresh=function(){students=arr();renderAll();};
+  function renderAll(){
+    document.getElementById("af2Students").textContent=students.length;
+    document.getElementById("af2Online").textContent=students.filter(online).length;
+    document.getElementById("af2Blocked").textContent=students.filter(blocked).length;
+    document.getElementById("af2Warnings").textContent=students.reduce((a,s)=>a+warn(s),0);
+    document.getElementById("af2Wallet").textContent="₹"+students.reduce((a,s)=>a+wallet(s),0).toFixed(2);
+    document.getElementById("af2Questions").textContent=students.reduce((a,s)=>a+q(s),0);
+    document.getElementById("af2Spins").textContent=students.filter(s=>s.spunToday||s.hasSpunToday||s.dailySpinUsed).length;
+    document.getElementById("af2Notifications").textContent=(JSON.parse(localStorage.getItem(NOTIFY_KEY)||"[]")).length;
+    af2RenderStudents();renderWallet();renderSpin();renderQuestions();renderAnalytics();renderSecurity();renderNotifications();renderLogs();
+  }
+
+  window.af2RenderStudents=function(){
+    const term=(document.getElementById("af2Search")?.value||"").toLowerCase(), f=document.getElementById("af2Filter")?.value||"all";
+    const list=students.filter(s=>{
+      const text=(name(s)+" "+id(s)+" "+(s.mobile||"")).toLowerCase();
+      if(term&&!text.includes(term))return false;
+      if(f==="online"&&!online(s))return false;if(f==="blocked"&&!blocked(s))return false;if(f==="warning"&&!warn(s))return false;return true;
+    });
+    document.getElementById("af2StudentRows").innerHTML=list.length?list.map(s=>{
+      const status=blocked(s)?'<span class="af2-badge af2-block">Blocked</span>':online(s)?'<span class="af2-badge af2-online">Online</span>':'<span class="af2-badge">Offline</span>';
+      const sp=q(s)>=100?"Eligible":"Locked";
+      return `<tr><td><b>${esc(name(s))}</b><br><span class="af2-muted">${esc(id(s))}</span></td><td>${status}</td><td>${q(s)}/100</td><td>₹${wallet(s).toFixed(2)}</td><td>${warn(s)}</td><td>${sp}</td><td>
+      <button class="af2-btn" onclick="af2Details('${esc(id(s))}')">👤 Details</button>
+      <button class="af2-btn ${blocked(s)?"success":"danger"}" onclick="af2ToggleBlock('${esc(id(s))}')">${blocked(s)?"Unblock":"Block"}</button>
+      <button class="af2-btn" onclick="af2Warn('${esc(id(s))}')">⚠️ Warn</button></td></tr>`;
+    }).join(""):'<tr><td colspan="7" class="af2-empty">No students found.</td></tr>';
+  };
+
+  window.af2Details=function(sid){
+    const s=students.find(x=>id(x)===String(sid));if(!s)return;
+    selectedId=String(sid);
+    document.getElementById("af2ModalTitle").textContent="👤 "+name(s);
+    document.getElementById("af2ModalBody").innerHTML=`
+      <div class="af2-kv">
+        <div><b>Student ID</b><span>${esc(id(s))}</span></div><div><b>Mobile</b><span>${esc(s.mobile||"-")}</span></div>
+        <div><b>Wallet</b><span>₹${wallet(s).toFixed(2)}</span></div><div><b>Total Earn</b><span>₹${n(s,["totalEarn","totalEarnings"]).toFixed(2)}</span></div>
+        <div><b>Today's Questions</b><span>${q(s)}/100</span></div><div><b>Correct / Wrong</b><span>${correct(s)} / ${wrong(s)}</span></div>
+        <div><b>Warnings</b><span>${warn(s)}</span></div><div><b>Last Seen</b><span>${esc(s.lastSeen||"-")}</span></div>
+      </div>
+      <div class="af2-flex">
+        <button class="af2-btn" onclick="af2WalletAdjust('${esc(id(s))}',1)">➕ Add ₹1</button>
+        <button class="af2-btn" onclick="af2WalletAdjust('${esc(id(s))}',-1)">➖ Remove ₹1</button>
+        <button class="af2-btn" onclick="af2ResetStudentQuestions('${esc(id(s))}')">🔄 Reset Daily Questions</button>
+        <button class="af2-btn" onclick="af2ResetStudentSpin('${esc(id(s))}')">🎡 Reset Spin</button>
+      </div>
+      <h3 style="margin-top:20px">⚠️ Warning History</h3>
+      <div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Time</th><th>Reason</th></tr></thead><tbody>${(s.warningHistory||[]).slice().reverse().map(w=>`<tr><td>${esc(w.time)}</td><td>${esc(w.reason)}</td></tr>`).join("")||'<tr><td colspan="2">No warnings.</td></tr>'}</tbody></table></div>`;
+    document.getElementById("af2Modal").classList.add("show");
+  };
+  window.af2Close=function(){document.getElementById("af2Modal").classList.remove("show")};
+
+  window.af2ToggleBlock=function(sid){
+    const s=students.find(x=>id(x)===String(sid));if(!s)return;
+    s.blocked=!blocked(s);s.isBlocked=s.blocked;save();
+    log(s.blocked?"BLOCK_STUDENT":"UNBLOCK_STUDENT",name(s));notify("Security",name(s)+(s.blocked?" was blocked":" was unblocked"));
+    renderAll();
+  };
+  window.af2Warn=function(sid){
+    const s=students.find(x=>id(x)===String(sid));if(!s)return;
+    const reason=prompt("Warning reason:","Please follow the rules.");
+    if(reason===null)return;
+    s.warnings=warn(s)+1;s.warningHistory=s.warningHistory||[];s.warningHistory.push({time:new Date().toLocaleString(),reason});
+    if(s.warnings>=3){s.blocked=true;s.isBlocked=true;notify("Security",name(s)+" reached 3 warnings and was blocked");}
+    save();log("WARNING",name(s)+": "+reason);renderAll();
+  };
+  window.af2WalletAdjust=function(sid,amount){
+    const s=students.find(x=>id(x)===String(sid));if(!s)return;
+    const reason=prompt("Reason for wallet adjustment:",amount>0?"Admin bonus":"Admin deduction");if(reason===null)return;
+    s.wallet=Math.max(0,wallet(s)+amount);s.balance=s.wallet;save();
+    let x=[];try{x=JSON.parse(localStorage.getItem(WALLET_KEY)||"[]")}catch(e){}
+    x.push({time:new Date().toLocaleString(),student:name(s),type:amount>0?"CREDIT":"DEBIT",amount,reasson:reason,reason});localStorage.setItem(WALLET_KEY,JSON.stringify(x.slice(-500)));
+    log("WALLET_ADJUSTMENT",name(s)+" "+(amount>0?"+":"")+amount+" | "+reason);renderAll();af2Details(sid);
+  };
+  window.af2ResetStudentQuestions=function(sid){
+    const s=students.find(x=>id(x)===String(sid));if(!s)return;
+    ["dailyQuestions","todayQuestions","questionsToday","answeredToday","dailyQuestionCount","todayCorrect","dailyCorrect","correctToday","todayWrong","dailyWrong","wrongToday"].forEach(k=>{if(k in s)s[k]=0});
+    save();log("RESET_DAILY_QUESTIONS",name(s));renderAll();af2Details(sid);
+  };
+  window.af2ResetStudentSpin=function(sid){
+    const s=students.find(x=>id(x)===String(sid));if(!s)return;
+    s.spunToday=false;s.hasSpunToday=false;s.dailySpinUsed=false;s.spinReward=0;save();
+    log("RESET_SPIN",name(s));renderAll();af2Details(sid);
+  };
+  window.af2ResetSpin=function(){
+    if(selectedId)af2ResetStudentSpin(selectedId);else alert("Open a student and use Reset Spin.");
+  };
+
+  function renderWallet(){
+    let x=[];try{x=JSON.parse(localStorage.getItem(WALLET_KEY)||"[]")}catch(e){}
+    document.getElementById("af2WalletRows").innerHTML=x.slice().reverse().map(a=>`<tr><td>${esc(a.time)}</td><td>${esc(a.student)}</td><td>${esc(a.type)}</td><td>₹${Number(a.amount||0).toFixed(2)}</td><td>${esc(a.reason||"")}</td></tr>`).join("")||'<tr><td colspan="5" class="af2-empty">No wallet transactions.</td></tr>';
+  }
+  function renderSpin(){
+    document.getElementById("af2SpinRows").innerHTML=students.map(s=>`<tr><td>${esc(name(s))}</td><td>${q(s)}/100</td><td>${q(s)>=100?"YES":"NO"}</td><td>${(s.spunToday||s.hasSpunToday||s.dailySpinUsed)?"YES":"NO"}</td><td>₹${n(s,["spinReward","lastSpinReward"]).toFixed(2)}</td></tr>`).join("")||'<tr><td colspan="5">No data.</td></tr>';
+  }
+  function renderQuestions(){
+    const a=students.reduce((x,s)=>x+correct(s),0),w=students.reduce((x,s)=>x+wrong(s),0),t=a+w;
+    document.getElementById("af2Attempts").textContent=t;document.getElementById("af2Correct").textContent=a;document.getElementById("af2Wrong").textContent=w;document.getElementById("af2Accuracy").textContent=t?Math.round(a/t*100)+"%":"0%";
+    document.getElementById("af2QuestionRows").innerHTML=`<tr><td>All tracked questions</td><td>${t}</td><td>${a}</td><td>${w}</td><td>${t?Math.round(a/t*100):0}%</td></tr>`;
+  }
+  function renderAnalytics(){
+    document.getElementById("af2Completed100").textContent=students.filter(s=>q(s)>=100).length;
+    document.getElementById("af2TotalCorrect").textContent=students.reduce((a,s)=>a+correct(s),0);
+    document.getElementById("af2TotalWrong").textContent=students.reduce((a,s)=>a+wrong(s),0);
+    document.getElementById("af2TotalEarnings").textContent="₹"+students.reduce((a,s)=>a+n(s,["totalEarn","totalEarnings","wallet"]),0).toFixed(2);
+  }
+  function renderSecurity(){
+    document.getElementById("af2SecurityRows").innerHTML=students.map(s=>{
+      const fast=n(s,["fastAnswers","tooFastAnswers"]),tabs=n(s,["tabChanges","visibilityChanges","tabSwitches"]),devices=n(s,["deviceCount","loginDevices"]);
+      const risk=(fast>=10||tabs>=10||devices>=3)?"HIGH":(fast>=5||tabs>=5||devices>=2)?"MEDIUM":"LOW";
+      return `<tr><td>${esc(name(s))}</td><td>${fast}</td><td>${tabs}</td><td>${devices}</td><td><span class="af2-badge ${risk==="HIGH"?"af2-block":risk==="MEDIUM"?"af2-warn":""}">${risk}</span></td></tr>`;
+    }).join("")||'<tr><td colspan="5">No data.</td></tr>';
+  }
+  function renderNotifications(){
+    let x=[];try{x=JSON.parse(localStorage.getItem(NOTIFY_KEY)||"[]")}catch(e){}
+    document.getElementById("af2NotificationRows").innerHTML=x.slice().reverse().map(a=>`<tr><td>${esc(a.time)}</td><td>${esc(a.type)}</td><td>${esc(a.msg)}</td></tr>`).join("")||'<tr><td colspan="3">No notifications.</td></tr>';
+  }
+  function renderLogs(){
+    let x=[];try{x=JSON.parse(localStorage.getItem(LOG_KEY)||"[]")}catch(e){}
+    document.getElementById("af2LogRows").innerHTML=x.slice().reverse().map(a=>`<tr><td>${esc(a.time)}</td><td>${esc(a.action)}</td><td>${esc(a.details)}</td></tr>`).join("")||'<tr><td colspan="3">No activity.</td></tr>';
+  }
+  window.af2Export=function(){
+    const rows=[["Student","ID","Status","Questions","Wallet","Warnings","Spin"],...students.map(s=>[name(s),id(s),blocked(s)?"Blocked":online(s)?"Online":"Offline",q(s),wallet(s).toFixed(2),warn(s),(s.spunToday||s.hasSpunToday||s.dailySpinUsed)?"Yes":"No"])];
+    const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="admin-student-control-report.csv";a.click();
+  };
+
+  // Catch tab switches for security counters without interrupting the student UI.
+  document.addEventListener("visibilitychange",()=>{
+    if(document.hidden){
+      const s=students.find(x=>String(x.id||x.student_id||"")===String(localStorage.getItem("currentStudentId")||""));
+      if(s){s.tabChanges=n(s,["tabChanges","visibilityChanges","tabSwitches"])+1;save();}
+    }
+  });
+
+  window.addEventListener("load",()=>setTimeout(()=>{students=arr();renderAll()},500));
+})();
+</script>
+
 </body>
 
 </html>
