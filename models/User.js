@@ -220,7 +220,7 @@ const userSchema = new mongoose.Schema(
                 },
             },
         ],
-,
+
 
         warningHistory: [
             { time: { type: Date, default: Date.now }, reason: { type: String, default: "" } }
