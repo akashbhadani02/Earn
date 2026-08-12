@@ -1600,6 +1600,32 @@ body.notification-locked{
             }
         }
 
+        // ==========================================
+        // RELOAD QUESTION WHEN STUDENT CHANGES TAB
+        // ==========================================
+        let tabWasChanged = false;
+
+        document.addEventListener("visibilitychange", async () => {
+            // Student left this tab
+            if (document.hidden) {
+                if (!document.getElementById("quiz").classList.contains("hidden")) {
+                    tabWasChanged = true;
+                }
+                return;
+            }
+
+            // Student came back to this tab
+            if (tabWasChanged && !document.getElementById("quiz").classList.contains("hidden")) {
+                tabWasChanged = false;
+
+                // Remove the old question immediately and load a fresh one.
+                document.getElementById("question").innerText = "Loading new question...";
+                document.getElementById("options").innerHTML = "";
+
+                await loadQuiz();
+            }
+        });
+
 
         async function spinWheel() {
             try {
