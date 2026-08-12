@@ -1212,20 +1212,20 @@
 <td>
 
 <button onclick="editWallet('${user._id}',${user.wallet || 0})">
-💰 Wallet
+💰
 </button>
 
 <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})">
-📈 Total Earn
+📈
 </button>
 
 <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})'
 style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
-🔔 Notify
+🔔
 </button>
 
 <button onclick="deleteUser('${user._id}')">
-Delete
+⛔
 </button>
 
 ${user.isBlocked ? `
