@@ -989,6 +989,48 @@
         </div>
     </section>
 
+
+<section id="adminProV2">
+ <div class="ap2-head"><div><h2>🛡️ Admin Command Center</h2><div class="ap2-muted">MongoDB-backed • Vercel-ready • Student / Wallet / Security / Reports</div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Refresh()">🔄 Refresh</button><button class="ap2-btn" onclick="ap2Export()">📤 Export CSV</button></div></div>
+ <div class="ap2-grid">
+  <div class="ap2-card"><div class="ap2-lbl">👥 Students</div><div class="ap2-val" id="ap2Students">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">🟢 Online</div><div class="ap2-val" id="ap2Online">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">🚫 Blocked</div><div class="ap2-val" id="ap2Blocked">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">❓ Questions Today</div><div class="ap2-val" id="ap2Q">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">💰 Wallet</div><div class="ap2-val" id="ap2Wallet">₹0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">💵 Total Earn</div><div class="ap2-val" id="ap2Earn">₹0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">⚠️ Warnings</div><div class="ap2-val" id="ap2Warnings">0</div></div>
+  <div class="ap2-card"><div class="ap2-lbl">🎡 Spin Eligible</div><div class="ap2-val" id="ap2Spin">0</div></div>
+ </div>
+ <div class="ap2-tabs">
+  <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
+  <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
+  <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
+  <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
+  <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
+  <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
+ </div>
+
+ <div class="ap2-pane active" id="ap2-students">
+  <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile" oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button></div>
+  <div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Status</th><th>Questions</th><th>Wallet</th><th>Earn</th><th>Warnings</th><th>Spin</th><th>Actions</th></tr></thead><tbody id="ap2StudentRows"></tbody></table></div>
+ </div>
+
+ <div class="ap2-pane" id="ap2-withdrawals"><h3>💸 Withdrawal Requests</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Mobile</th><th>Amount</th><th>Status</th><th>Transaction ID</th><th>Date</th></tr></thead><tbody id="ap2WithdrawRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-wallet"><h3>💰 Wallet Ledger</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Student</th><th>Type</th><th>Amount</th><th>Reason</th></tr></thead><tbody id="ap2WalletRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-security"><h3>🛡️ Suspicious Activity</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Fast Answers</th><th>Tab Changes</th><th>Devices</th><th>Risk</th></tr></thead><tbody id="ap2SecurityRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-recycle"><h3>🗑️ Deleted Students</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Deleted At</th><th>Reason</th><th>Action</th></tr></thead><tbody id="ap2RecycleRows"></tbody></table></div></div>
+
+ <div class="ap2-pane" id="ap2-reports"><h3>📊 Reports</h3><p class="ap2-muted">Download the current MongoDB student report as CSV.</p><button class="ap2-btn" onclick="ap2Export()">📤 Download Student Report</button></div>
+</section>
+
+<div class="ap2-modal" id="ap2Modal"><div class="ap2-box"><div class="ap2-head"><h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button></div><div id="ap2Body"></div></div></div>
+
+
+
     <section style="margin-top:34px;">
         <h2>Question Bank — Add / Edit Questions</h2>
         <div class="question-toolbar">
