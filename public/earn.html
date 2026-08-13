@@ -1755,7 +1755,12 @@ body.notification-locked{
 
                     const timeTaken = (Date.now() - questionStartTime) / 1000;
 
-                    if (timeTaken < 3) {
+                    //***********************************
+                    // SECOND BELOW 1: Block the student for answering too quickly (less than 1 second).
+                    //***********************************
+
+
+                    if (timeTaken < 1) {
 
                         await blockStudent("વાંચી ને જવાબ આપવાનો છે ઓછા સમય માં જવાબ આપ્યો છે.");
 
