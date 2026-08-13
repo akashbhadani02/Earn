@@ -699,8 +699,6 @@
             }
         }
 
-
-
         /* Question editor */
         .question-toolbar {
             display: flex;
@@ -868,6 +866,18 @@
         </button>
     </div>
 
+    <div style="
+        margin:-12px 0 18px;
+        padding:10px 14px;
+        border:1px solid rgba(59,130,246,.18);
+        border-radius:12px;
+        background:rgba(15,27,46,.55);
+        color:#94a3b8;
+        font-size:12px;
+    ">
+        🟢 Online status is based on the last 2 minutes • Dashboard updates automatically every 10 seconds
+    </div>
+
     <div class="cards">
 
         <div class="card">
@@ -902,63 +912,65 @@
 
     </div>
     <h2>Withdraw Requests</h2>
+    <div class="table-wrap">
+        <table>
 
-    <table>
+            <thead>
 
-        <thead>
+                <tr>
 
-            <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Payment Details</th>
+                    <th>Status</th>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Paid Date</th>
+                    <th>Action</th>
 
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Amount</th>
-                <th>Payment Method</th>
-                <th>Payment Details</th>
-                <th>Status</th>
-                <th>Transaction ID</th>
-                <th>Date</th>
-                <th>Paid Date</th>
-                <th>Action</th>
+                </tr>
 
-            </tr>
+            </thead>
 
-        </thead>
+            <tbody id="withdrawTable">
 
-        <tbody id="withdrawTable">
+            </tbody>
 
-        </tbody>
-
-    </table>
+        </table>
+    </div>
 
     <input id="search" placeholder="Search User" onkeyup="searchUser()">
 
     <h2>All Users</h2>
+    <div class="table-wrap">
+        <table>
 
-    <table>
+            <thead>
 
-        <thead>
+                <tr>
 
-            <tr>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Last Seen</th>
+                    <th>Wallet</th>
+                    <th>Total Earn</th>
+                    <th>Today Questions</th>
+                    <th>Total Questions</th>
+                    <th>Warnings</th>
+                    <th>Action</th>
 
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Last Seen</th>
-                <th>Wallet</th>
-                <th>Total Earn</th>
-                <th>Today Questions</th>
-                <th>Total Questions</th>
-                <th>Warnings</th>
-                <th>Action</th>
+                </tr>
 
-            </tr>
+            </thead>
 
-        </thead>
+            <tbody id="userTable">
 
-        <tbody id="userTable">
+            </tbody>
 
-        </tbody>
-
-    </table>
+        </table>
+    </div>
 
 
     <!-- Deleted Users / Restore -->
@@ -983,54 +995,180 @@
                     </tr>
                 </thead>
                 <tbody id="deletedUserTable">
-                    <tr><td colspan="6">Loading...</td></tr>
+                    <tr>
+                        <td colspan="6">Loading...</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </section>
 
 
-<section id="adminProV2">
- <div class="ap2-head"><div><h2>🛡️ Admin Command Center</h2><div class="ap2-muted">MongoDB-backed • Vercel-ready • Student / Wallet / Security / Reports</div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Refresh()">🔄 Refresh</button><button class="ap2-btn" onclick="ap2Export()">📤 Export CSV</button></div></div>
- <div class="ap2-grid">
-  <div class="ap2-card"><div class="ap2-lbl">👥 Students</div><div class="ap2-val" id="ap2Students">0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">🟢 Online</div><div class="ap2-val" id="ap2Online">0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">🚫 Blocked</div><div class="ap2-val" id="ap2Blocked">0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">❓ Questions Today</div><div class="ap2-val" id="ap2Q">0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">💰 Wallet</div><div class="ap2-val" id="ap2Wallet">₹0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">💵 Total Earn</div><div class="ap2-val" id="ap2Earn">₹0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">⚠️ Warnings</div><div class="ap2-val" id="ap2Warnings">0</div></div>
-  <div class="ap2-card"><div class="ap2-lbl">🎡 Spin Eligible</div><div class="ap2-val" id="ap2Spin">0</div></div>
- </div>
- <div class="ap2-tabs">
-  <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
-  <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
-  <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
-  <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
-  <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
-  <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
- </div>
+    <!-- ========================= ADMIN COMMAND CENTER ========================= -->
+    <section id="adminProV2">
+        <div class="ap2-head">
+            <div>
+                <h2>🛡️ Admin Command Center</h2>
+                <div class="ap2-muted">MongoDB-backed • Vercel-ready • Student / Wallet / Security / Reports</div>
+            </div>
+            <div class="ap2-flex"><button class="ap2-btn" onclick="ap2Refresh()">🔄 Refresh</button><button
+                    class="ap2-btn" onclick="ap2Export()">📤 Export CSV</button></div>
+        </div>
+        <div class="ap2-grid">
+            <div class="ap2-card">
+                <div class="ap2-lbl">👥 Students</div>
+                <div class="ap2-val" id="ap2Students">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">🟢 Online</div>
+                <div class="ap2-val" id="ap2Online">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">🚫 Blocked</div>
+                <div class="ap2-val" id="ap2Blocked">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">❓ Questions Today</div>
+                <div class="ap2-val" id="ap2Q">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">💰 Wallet</div>
+                <div class="ap2-val" id="ap2Wallet">₹0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">💵 Total Earn</div>
+                <div class="ap2-val" id="ap2Earn">₹0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">⚠️ Warnings</div>
+                <div class="ap2-val" id="ap2Warnings">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">🎡 Spin Eligible</div>
+                <div class="ap2-val" id="ap2Spin">0</div>
+            </div>
+        </div>
+        <div class="ap2-tabs">
+            <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
+            <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
+            <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
+            <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
+            <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
+            <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
+        </div>
 
- <div class="ap2-pane active" id="ap2-students">
-  <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile" oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button></div>
-  <div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Status</th><th>Questions</th><th>Wallet</th><th>Earn</th><th>Warnings</th><th>Spin</th><th>Actions</th></tr></thead><tbody id="ap2StudentRows"></tbody></table></div>
- </div>
+        <div class="ap2-pane active" id="ap2-students">
+            <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile"
+                    oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button>
+            </div>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Status</th>
+                            <th>Questions</th>
+                            <th>Wallet</th>
+                            <th>Earn</th>
+                            <th>Warnings</th>
+                            <th>Spin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2StudentRows"></tbody>
+                </table>
+            </div>
+        </div>
 
- <div class="ap2-pane" id="ap2-withdrawals"><h3>💸 Withdrawal Requests</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Mobile</th><th>Amount</th><th>Status</th><th>Transaction ID</th><th>Date</th></tr></thead><tbody id="ap2WithdrawRows"></tbody></table></div></div>
+        <div class="ap2-pane" id="ap2-withdrawals">
+            <h3>💸 Withdrawal Requests</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Mobile</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Transaction ID</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2WithdrawRows"></tbody>
+                </table>
+            </div>
+        </div>
 
- <div class="ap2-pane" id="ap2-wallet"><h3>💰 Wallet Ledger</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Student</th><th>Type</th><th>Amount</th><th>Reason</th></tr></thead><tbody id="ap2WalletRows"></tbody></table></div></div>
+        <div class="ap2-pane" id="ap2-wallet">
+            <h3>💰 Wallet Ledger</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Student</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2WalletRows"></tbody>
+                </table>
+            </div>
+        </div>
 
- <div class="ap2-pane" id="ap2-security"><h3>🛡️ Suspicious Activity</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Fast Answers</th><th>Tab Changes</th><th>Devices</th><th>Risk</th></tr></thead><tbody id="ap2SecurityRows"></tbody></table></div></div>
+        <div class="ap2-pane" id="ap2-security">
+            <h3>🛡️ Suspicious Activity</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Fast Answers</th>
+                            <th>Tab Changes</th>
+                            <th>Devices</th>
+                            <th>Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2SecurityRows"></tbody>
+                </table>
+            </div>
+        </div>
 
- <div class="ap2-pane" id="ap2-recycle"><h3>🗑️ Deleted Students</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Student</th><th>Deleted At</th><th>Reason</th><th>Action</th></tr></thead><tbody id="ap2RecycleRows"></tbody></table></div></div>
+        <div class="ap2-pane" id="ap2-recycle">
+            <h3>🗑️ Deleted Students</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Deleted At</th>
+                            <th>Reason</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2RecycleRows"></tbody>
+                </table>
+            </div>
+        </div>
 
- <div class="ap2-pane" id="ap2-reports"><h3>📊 Reports</h3><p class="ap2-muted">Download the current MongoDB student report as CSV.</p><button class="ap2-btn" onclick="ap2Export()">📤 Download Student Report</button></div>
-</section>
+        <div class="ap2-pane" id="ap2-reports">
+            <h3>📊 Reports</h3>
+            <p class="ap2-muted">Download the current MongoDB student report as CSV.</p><button class="ap2-btn"
+                onclick="ap2Export()">📤 Download Student Report</button>
+        </div>
+    </section>
 
-<div class="ap2-modal" id="ap2Modal"><div class="ap2-box"><div class="ap2-head"><h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button></div><div id="ap2Body"></div></div></div>
+    <div class="ap2-modal" id="ap2Modal">
+        <div class="ap2-box">
+            <div class="ap2-head">
+                <h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button>
+            </div>
+            <div id="ap2Body"></div>
+        </div>
+    </div>
 
-
-
+    <!-- ========================= QUESTION BANK ========================= -->
     <section style="margin-top:34px;">
         <h2>Question Bank — Add / Edit Questions</h2>
         <div class="question-toolbar">
@@ -1129,7 +1267,7 @@
 
                 // Stop the current function before it can show
                 // the backend "Invalid Token" alert.
-                return new Promise(() => {});
+                return new Promise(() => { });
             }
 
             return response;
@@ -1224,7 +1362,7 @@
 
             const diff = Date.now() - new Date(lastSeen).getTime();
 
-            if (diff <= 5000) {
+            if (diff <= 120000) {
                 return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
             }
 
@@ -2270,27 +2408,18 @@ ${w.status === "Approved" ? `
 
 
         //==========================
-        // Auto Refresh Dashboard
-        // Every 1 Second
+        // Auto Refresh
+        // Dashboard + Users every 10 seconds
         //==========================
 
-        setInterval(() => {
-
-            loadDashboard();
-
-        }, 500);
-
-
-        //==========================
-        // Auto Refresh Users
-        // Every 1 Second
-        //==========================
-
-        setInterval(() => {
-
-            loadUsers();
-
-        }, 1000);
+        setInterval(async () => {
+            try {
+                await loadDashboard();
+                await loadUsers();
+            } catch (err) {
+                console.error("Auto refresh error:", err);
+            }
+        }, 10000);
 
         async function deleteAllQuestions() {
 
@@ -2378,335 +2507,253 @@ ${w.status === "Approved" ? `
             }
         }
     </script>
+    <style id="adminProV2CSS">
+        #adminProV2 {
+            margin: 24px 0;
+            padding: 22px;
+            border-radius: 22px;
+            background: #07111f;
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: #fff
+        }
 
+        #adminProV2 * {
+            box-sizing: border-box
+        }
 
-<style id="adminProFeatures">
-.admin-pro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:18px 0}
-.admin-pro-card{background:linear-gradient(145deg,#101a2b,#0b1220);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
-.admin-pro-card .pro-icon{font-size:24px;margin-bottom:8px}
-.admin-pro-card .pro-label{font-size:12px;color:#94a3b8}
-.admin-pro-card .pro-value{font-size:26px;font-weight:800;margin-top:4px}
-.admin-pro-section{margin:22px 0;padding:18px;border-radius:18px;background:#08111f;border:1px solid rgba(255,255,255,.07)}
-.admin-pro-section h3{margin:0 0 14px}
-.admin-pro-table{width:100%;border-collapse:collapse}
-.admin-pro-table th,.admin-pro-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:13px}
-.admin-pro-btn{border:0;border-radius:9px;padding:8px 12px;cursor:pointer;font-weight:700;margin:3px;background:#18263b;color:#fff}
-.admin-pro-btn:hover{filter:brightness(1.15)}
-.admin-pro-input{background:#0e1929;border:1px solid #26354c;color:#fff;padding:10px;border-radius:9px;outline:none;width:100%;box-sizing:border-box}
-.admin-pro-flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-@media(max-width:600px){.admin-pro-table{display:block;overflow-x:auto;white-space:nowrap}}
-</style>
+        .ap2-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap
+        }
 
+        #adminProV2 h2,
+        #adminProV2 h3 {
+            margin: 0
+        }
 
-<!-- <section class="admin-pro-section" id="adminProPanel">
-  <h3>📊 Admin Pro Dashboard</h3>
-  <div class="admin-pro-grid">
-    <div class="admin-pro-card"><div class="pro-icon">👥</div><div class="pro-label">Total Students</div><div class="pro-value" id="proTotalStudents">0</div></div>
-    <div class="admin-pro-card"><div class="pro-icon">🟢</div><div class="pro-label">Online Students</div><div class="pro-value" id="proOnlineStudents">0</div></div>
-    <div class="admin-pro-card"><div class="pro-icon">❓</div><div class="pro-label">Today's Questions</div><div class="pro-value" id="proTodayQuestions">0</div></div>
-    <div class="admin-pro-card"><div class="pro-icon">💰</div><div class="pro-label">Total Earn</div><div class="pro-value" id="proTotalEarn">₹0</div></div>
-    <div class="admin-pro-card"><div class="pro-icon">💸</div><div class="pro-label">Pending Withdrawals</div><div class="pro-value" id="proPendingWithdrawals">0</div></div>
-    <div class="admin-pro-card"><div class="pro-icon">⚠️</div><div class="pro-label">Warnings</div><div class="pro-value" id="proWarnings">0</div></div>
-  </div>
+        .ap2-muted {
+            color: #94a3b8;
+            font-size: 12px
+        }
 
-  <div class="admin-pro-section">
-    <h3>📅 Daily Question Report</h3>
-    <div class="admin-pro-flex">
-      <input class="admin-pro-input" id="proStudentSearch" placeholder="Search student..." oninput="proFilterStudents(this.value)">
-      <button class="admin-pro-btn" onclick="proExportStudents()">📤 Export CSV</button>
-      <button class="admin-pro-btn" onclick="proRefresh()">🔄 Refresh</button>
-    </div>
-    <div style="overflow:auto;margin-top:12px">
-      <table class="admin-pro-table">
-        <thead><tr><th>Student</th><th>Questions</th><th>Correct</th><th>Wrong</th><th>Earn</th><th>Progress</th></tr></thead>
-        <tbody id="proStudentRows"><tr><td colspan="6">Loading...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
+        .ap2-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin: 18px 0
+        }
 
-  <div class="admin-pro-section">
-    <h3>📝 Admin Activity Log</h3>
-    <div style="overflow:auto">
-      <table class="admin-pro-table">
-        <thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead>
-        <tbody id="proActivityRows"><tr><td colspan="3">No activity yet.</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</section> -->
+        .ap2-card {
+            padding: 15px;
+            border-radius: 15px;
+            background: #0c1727;
+            border: 1px solid rgba(255, 255, 255, .07)
+        }
 
-<script>
-(function(){
-  const PRO_KEY = "adminProActivityLog";
-  let proStudents = [];
+        .ap2-val {
+            font-size: 25px;
+            font-weight: 800;
+            margin-top: 5px
+        }
 
-  function getStudents(){
-    // Supports common localStorage names used by the app.
-    const keys = ["students","users","STUDENTS","allStudents"];
-    for(const k of keys){
-      try{
-        const v = JSON.parse(localStorage.getItem(k) || "null");
-        if(Array.isArray(v)) return v;
-      }catch(e){}
-    }
-    return [];
-  }
+        .ap2-lbl {
+            font-size: 12px;
+            color: #94a3b8
+        }
 
-  function num(o, keys){
-    for(const k of keys){
-      if(o && o[k] !== undefined && o[k] !== null && !isNaN(Number(o[k]))) return Number(o[k]);
-    }
-    return 0;
-  }
+        .ap2-btn {
+            border: 1px solid #26354c;
+            background: #122036;
+            color: #fff;
+            padding: 9px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700
+        }
 
-  function nameOf(o){
-    return o?.name || o?.fullName || o?.username || o?.student_id || o?.id || "Unknown";
-  }
+        .ap2-btn:hover {
+            filter: brightness(1.15)
+        }
 
-  function todayQuestions(o){
-    return num(o, ["dailyQuestions","todayQuestions","questionsToday","answeredToday","dailyQuestionCount"]);
-  }
+        .ap2-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0
+        }
 
-  function correct(o){ return num(o,["todayCorrect","dailyCorrect","correctToday","correct"]); }
-  function wrong(o){ return num(o,["todayWrong","dailyWrong","wrongToday","wrong"]); }
-  function earn(o){ return num(o,["totalEarn","totalEarnings","wallet","balance","walletBalance"]); }
+        .ap2-pane {
+            display: none
+        }
 
-  function render(){
-    proStudents = getStudents();
-    const online = proStudents.filter(s => {
-      const seen = new Date(s.lastSeen || 0).getTime();
-      return seen && Date.now()-seen < 120000;
-    }).length;
+        .ap2-pane.active {
+            display: block
+        }
 
-    document.getElementById("proTotalStudents").textContent = proStudents.length;
-    document.getElementById("proOnlineStudents").textContent = online;
-    document.getElementById("proTodayQuestions").textContent = proStudents.reduce((a,s)=>a+todayQuestions(s),0);
-    document.getElementById("proTotalEarn").textContent = "₹" + proStudents.reduce((a,s)=>a+earn(s),0).toFixed(2);
-    document.getElementById("proPendingWithdrawals").textContent =
-      proStudents.reduce((a,s)=>a+num(s,["pendingWithdrawals","pendingWithdrawal"]),0);
-    document.getElementById("proWarnings").textContent =
-      proStudents.reduce((a,s)=>a+num(s,["warnings","warningCount"]),0);
+        .ap2-tablewrap {
+            overflow: auto
+        }
 
-    drawRows(proStudents);
-    drawActivity();
-  }
+        .ap2-table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse
+        }
 
-  function drawRows(list){
-    const body=document.getElementById("proStudentRows");
-    if(!list.length){body.innerHTML='<tr><td colspan="6">No students found.</td></tr>';return;}
-    body.innerHTML=list.map(s=>{
-      const q=todayQuestions(s), pct=Math.min(100,Math.round(q/100*100));
-      return '<tr><td>'+escapeHtml(nameOf(s))+'</td><td>'+q+'/100</td><td>'+correct(s)+'</td><td>'+wrong(s)+'</td><td>₹'+earn(s).toFixed(2)+'</td><td>'+pct+'%</td></tr>';
-    }).join("");
-  }
+        .ap2-table th,
+        .ap2-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            font-size: 12px;
+            text-align: left
+        }
 
-  function drawActivity(){
-    const body=document.getElementById("proActivityRows");
-    let logs=[];
-    try{logs=JSON.parse(localStorage.getItem(PRO_KEY)||"[]")}catch(e){}
-    body.innerHTML=logs.length ? logs.slice(-30).reverse().map(x=>'<tr><td>'+escapeHtml(x.time)+'</td><td>'+escapeHtml(x.action)+'</td><td>'+escapeHtml(x.details||"")+'</td></tr>').join("") : '<tr><td colspan="3">No activity yet.</td></tr>';
-  }
+        .ap2-input {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #26354c;
+            background: #0d1929;
+            color: #fff
+        }
 
-  window.proFilterStudents=function(q){
-    q=(q||"").toLowerCase();
-    drawRows(proStudents.filter(s=>nameOf(s).toLowerCase().includes(q) || String(s.mobile||"").includes(q) || String(s.id||"").toLowerCase().includes(q)));
-  };
+        .ap2-flex {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
 
-  window.proRefresh=function(){ render(); };
+        .ap2-badge {
+            padding: 4px 8px;
+            border-radius: 99px;
+            background: #18263b;
+            font-size: 11px;
+            font-weight: 800
+        }
 
-  window.proLogAdminAction=function(action,details){
-    let logs=[]; try{logs=JSON.parse(localStorage.getItem(PRO_KEY)||"[]")}catch(e){}
-    logs.push({time:new Date().toLocaleString(),action,details});
-    localStorage.setItem(PRO_KEY,JSON.stringify(logs.slice(-200)));
-    drawActivity();
-  };
+        .ap2-green {
+            background: #103b29
+        }
 
-  window.proExportStudents=function(){
-    const headers=["Student","Questions","Correct","Wrong","Earn","Progress"];
-    const rows=proStudents.map(s=>[nameOf(s),todayQuestions(s),correct(s),wrong(s),earn(s).toFixed(2),Math.min(100,Math.round(todayQuestions(s)/100*100))+"%"]);
-    const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");
-    const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
-    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="daily-student-report.csv"; a.click();
-    setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-  };
+        .ap2-red {
+            background: #4b1720
+        }
 
-  function escapeHtml(v){
-    return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-  }
+        .ap2-yellow {
+            background: #4a3711
+        }
 
-  window.addEventListener("load",()=>{setTimeout(render,300);});
-})();
-</script>
+        .ap2-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+            padding: 18px
+        }
 
+        .ap2-modal.show {
+            display: flex
+        }
 
-<style id="adminAllFeaturesV2">
-.af2-wrap{margin:22px 0;padding:20px;border-radius:20px;background:#07111f;border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 50px rgba(0,0,0,.22)}
-.af2-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.af2-head h2{margin:0;font-size:22px}
-.af2-muted{color:#94a3b8;font-size:12px}.af2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.af2-card{padding:16px;border-radius:15px;background:#0c1727;border:1px solid rgba(255,255,255,.07)}.af2-icon{font-size:22px}
-.af2-label{color:#94a3b8;font-size:12px;margin-top:6px}.af2-value{font-size:24px;font-weight:800;margin-top:4px}
-.af2-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.af2-btn{border:1px solid rgba(255,255,255,.08);background:#122036;color:#fff;padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700}.af2-btn.danger{background:#4b1720}.af2-btn.success{background:#123d2b}
-.af2-panel{display:none}.af2-panel.active{display:block}.af2-table-wrap{overflow:auto;margin-top:12px}.af2-table{width:100%;border-collapse:collapse;min-width:850px}
-.af2-table th,.af2-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left;font-size:12px;vertical-align:top}
-.af2-input,.af2-select{width:100%;box-sizing:border-box;padding:10px;border-radius:9px;border:1px solid #26354c;background:#0d1929;color:#fff;outline:none}
-.af2-flex{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.af2-badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#18263b}.af2-online{background:#44fc01}.af2-block{background:#df5169}.af2-warn{background:#ffaa00}
-.af2-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:99999;padding:18px}.af2-modal.show{display:flex}
-.af2-modal-box{width:min(900px,100%);max-height:90vh;overflow:auto;background:#091422;border:1px solid #26354c;border-radius:18px;padding:20px}
-.af2-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:14px 0}.af2-kv>div{padding:12px;border-radius:11px;background:#0d1929}.af2-kv b{display:block;font-size:11px;color:#94a3b8}.af2-kv span{display:block;margin-top:4px;font-weight:800}.af2-empty{padding:20px;text-align:center;color:#94a3b8}
-</style>
+        .ap2-box {
+            width: min(950px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+            background: #091422;
+            border: 1px solid #26354c;
+            border-radius: 18px;
+            padding: 20px
+        }
 
-<!-- <section class="af2-wrap" id="adminAllFeaturesV2">
-<div class="af2-head"><div><h2>🛡️ Admin Control Center</h2><div class="af2-muted">Live database data • Student control • Wallet • Spin • Security • Analytics</div></div>
-<div class="af2-flex"><button class="af2-btn" onclick="af2Refresh()">🔄 Refresh</button><button class="af2-btn" onclick="af2Export()">📤 Export</button></div></div>
-<div class="af2-grid">
-<div class="af2-card"><div class="af2-icon">👥</div><div class="af2-label">Students</div><div class="af2-value" id="af2Students">0</div></div>
-<div class="af2-card"><div class="af2-icon">🟢</div><div class="af2-label">Online</div><div class="af2-value" id="af2Online">0</div></div>
-<div class="af2-card"><div class="af2-icon">🚫</div><div class="af2-label">Blocked</div><div class="af2-value" id="af2Blocked">0</div></div>
-<div class="af2-card"><div class="af2-icon">⚠️</div><div class="af2-label">Warnings</div><div class="af2-value" id="af2Warnings">0</div></div>
-<div class="af2-card"><div class="af2-icon">💰</div><div class="af2-label">Wallet Total</div><div class="af2-value" id="af2Wallet">₹0</div></div>
-<div class="af2-card"><div class="af2-icon">❓</div><div class="af2-label">Today's Questions</div><div class="af2-value" id="af2Questions">0</div></div>
-<div class="af2-card"><div class="af2-icon">🎡</div><div class="af2-label">Students Eligible for Spin</div><div class="af2-value" id="af2Spins">0</div></div>
-<div class="af2-card"><div class="af2-icon">💵</div><div class="af2-label">Total Earn</div><div class="af2-value" id="af2TotalEarn">₹0</div></div>
-</div>
-<div class="af2-tabs">
-<button class="af2-btn" onclick="af2Tab('students')">👥 Students</button><button class="af2-btn" onclick="af2Tab('wallet')">💰 Wallet</button>
-<button class="af2-btn" onclick="af2Tab('spin')">🎡 Spin</button><button class="af2-btn" onclick="af2Tab('questions')">❓ Question Analytics</button>
-<button class="af2-btn" onclick="af2Tab('analytics')">📈 Analytics</button><button class="af2-btn" onclick="af2Tab('security')">🔐 Security</button>
-<button class="af2-btn" onclick="af2Tab('notifications')">🔔 Notifications</button><button class="af2-btn" onclick="af2Tab('logs')">📝 Activity Logs</button>
-</div>
-<div class="af2-panel active" id="af2-students">
-<div class="af2-flex"><input class="af2-input" id="af2Search" style="max-width:340px" placeholder="Search name / ID / mobile" oninput="af2RenderStudents()">
-<select class="af2-select" id="af2Filter" style="max-width:180px" onchange="af2RenderStudents()"><option value="all">All Students</option><option value="online">Online</option><option value="blocked">Blocked</option><option value="warning">Warnings</option></select></div>
-<div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Student</th><th>Status</th><th>Today Questions</th><th>Total Questions</th><th>Wallet</th><th>Total Earn</th><th>Warnings</th><th>Spin</th><th>Actions</th></tr></thead><tbody id="af2StudentRows"></tbody></table></div>
-</div>
-<div class="af2-panel" id="af2-wallet"><h3>💰 Wallet Transaction History</h3><div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Time</th><th>Student</th><th>Type</th><th>Amount</th><th>Reason</th></tr></thead><tbody id="af2WalletRows"></tbody></table></div></div>
-<div class="af2-panel" id="af2-spin"><h3>🎡 Spin Control & History</h3><div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Student</th><th>Today Questions</th><th>Eligible</th><th>Spin Count</th><th>Last Spin</th></tr></thead><tbody id="af2SpinRows"></tbody></table></div></div>
-<div class="af2-panel" id="af2-questions"><h3>❓ Question Analytics</h3><div class="af2-grid"><div class="af2-card"><div class="af2-label">Attempts Today</div><div class="af2-value" id="af2Attempts">0</div></div><div class="af2-card"><div class="af2-label">Correct</div><div class="af2-value" id="af2Correct">0</div></div><div class="af2-card"><div class="af2-label">Wrong</div><div class="af2-value" id="af2Wrong">0</div></div><div class="af2-card"><div class="af2-label">Accuracy</div><div class="af2-value" id="af2Accuracy">0%</div></div></div></div>
-<div class="af2-panel" id="af2-analytics"><h3>📈 Analytics</h3><div class="af2-grid"><div class="af2-card"><div class="af2-label">100 Question Students</div><div class="af2-value" id="af2Completed100">0</div></div><div class="af2-card"><div class="af2-label">Total Questions</div><div class="af2-value" id="af2TotalQuestions">0</div></div><div class="af2-card"><div class="af2-label">Total Earn</div><div class="af2-value" id="af2AnalyticsEarn">₹0</div></div></div></div>
-<div class="af2-panel" id="af2-security"><h3>🔐 Suspicious Activity</h3><div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Student</th><th>Fast Answers</th><th>Tab Changes</th><th>Devices</th><th>Risk</th></tr></thead><tbody id="af2SecurityRows"></tbody></table></div></div>
-<div class="af2-panel" id="af2-notifications"><h3>🔔 Notifications</h3><div class="af2-muted">Your existing push-notification system remains available in the main Admin Panel.</div></div>
-<div class="af2-panel" id="af2-logs"><h3>📝 Admin Activity Logs</h3><div class="af2-table-wrap"><table class="af2-table"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody id="af2LogRows"></tbody></table></div></div>
-</section> -->
+        .ap2-kv {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin: 15px 0
+        }
 
-<!-- <div class="af2-modal" id="af2Modal"><div class="af2-modal-box"><div class="af2-head"><h2 id="af2ModalTitle">Student Details</h2><button class="af2-btn" onclick="af2Close()">✕</button></div><div id="af2ModalBody"></div></div></div> -->
+        .ap2-kv>div {
+            background: #0d1929;
+            border-radius: 11px;
+            padding: 12px
+        }
 
-<script>
-(function(){
-let data={users:[],stats:{}};
+        .ap2-kv b {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px
+        }
 
-async function api(url,opt={}){
-  opt.headers=Object.assign({"Content-Type":"application/json","Authorization":"Bearer "+(localStorage.getItem("adminToken")||"")},opt.headers||{});
-  const r=await fetch(url,opt); const d=await r.json().catch(()=>({}));
-  if(!r.ok||!d.success) throw new Error(d.message||"Request failed");
-  return d;
-}
-const esc=v=>String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const nm=u=>u.name||u.username||u.student_id||u.id||"Unknown";
-const id=u=>String(u._id||u.id||u.student_id||"");
-const q=u=>Number(u.dailyQuestionsAnswered||0);
-const w=u=>Number(u.wallet||0);
-const earn=u=>Number(u.totalEarn||0);
-const warn=u=>Number(u.warningCount||0);
+        .ap2-kv span {
+            font-weight: 800;
+            display: block;
+            margin-top: 4px
+        }
 
-window.af2Refresh=async function(){
-  try{data=await api("/api/admin/control-center"); renderAll();}
-  catch(e){console.error(e);}
-};
-function renderAll(){
- const s=data.stats||{};
- for(const [id,val] of Object.entries({af2Students:s.students||0,af2Online:s.online||0,af2Blocked:s.blocked||0,af2Warnings:s.warnings||0,af2Questions:s.questions||0,af2Spins:s.completed100||0,af2TotalEarn:"₹"+Number(s.totalEarn||0).toFixed(2),af2Wallet:"₹"+Number(s.wallet||0).toFixed(2),af2Completed100:s.completed100||0,af2TotalQuestions:s.totalQuestions||0,af2AnalyticsEarn:"₹"+Number(s.totalEarn||0).toFixed(2)})){const el=document.getElementById(id);if(el)el.textContent=val}
- renderStudents();renderWallet();renderSpin();renderQuestions();renderSecurity();renderLogs();
-}
-window.af2RenderStudents=function(){
- const term=(document.getElementById("af2Search").value||"").toLowerCase(),f=document.getElementById("af2Filter").value;
- const list=(data.users||[]).filter(u=>{const t=(nm(u)+" "+id(u)+" "+(u.mobile||"")).toLowerCase();if(term&&!t.includes(term))return false;if(f==="online"&&!u.isOnline)return false;if(f==="blocked"&&!u.isBlocked)return false;if(f==="warning"&&!warn(u))return false;return true});
- document.getElementById("af2StudentRows").innerHTML=list.map(u=>`<tr><td><b>${esc(nm(u))}</b><br><span class="af2-muted">${esc(id(u))}</span><br>${esc(u.mobile||"")}</td><td>${u.isBlocked?'<span class="af2-badge af2-block">Blocked</span>':u.isOnline?'<span class="af2-badge af2-online">Online</span>':'<span class="af2-badge">Offline</span>'}</td><td>${q(u)}/100</td><td>${Number(u.totalQuestionsAnswered||0)}</td><td>₹${w(u).toFixed(2)}</td><td>₹${earn(u).toFixed(2)}</td><td>${warn(u)}</td><td>${u.spinEligible?'<span class="af2-badge af2-online">Eligible</span>':'<span class="af2-badge">Locked</span>'}</td><td><button class="af2-btn" onclick="af2Details('${esc(id(u))}')">👤</button><button class="af2-btn" onclick="af2ToggleBlock('${esc(id(u))}')">${u.isBlocked?'🟢':'🚫'}</button><button class="af2-btn" onclick="af2Warn('${esc(id(u))}')">⚠️</button></td></tr>`).join("")||'<tr><td colspan="9" class="af2-empty">No students found.</td></tr>';
-};
-window.af2Tab=function(t){document.querySelectorAll(".af2-panel").forEach(x=>x.classList.remove("active"));document.getElementById("af2-"+t)?.classList.add("active");};
-window.af2Details=async function(uid){
- try{const d=await api("/api/admin/control-center/user/"+encodeURIComponent(uid));const u=d.user;document.getElementById("af2ModalTitle").textContent="👤 "+nm(u);document.getElementById("af2ModalBody").innerHTML=`<div class="af2-kv">
-<div><b>ID</b><span>${esc(id(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile||"-")}</span></div><div><b>Wallet</b><span>₹${w(u).toFixed(2)}</span></div><div><b>Total Earn</b><span>₹${earn(u).toFixed(2)}</span></div><div><b>Today Questions</b><span>${q(u)}/100</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div><div><b>Warnings</b><span>${warn(u)}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen||"-")}</span></div></div>
-<div class="af2-flex"><button class="af2-btn" onclick="af2Wallet('${id(u)}')">💰 Wallet</button><button class="af2-btn" onclick="af2Warn('${id(u)}')">⚠️ Warning</button><button class="af2-btn" onclick="af2ResetQ('${id(u)}')">🔄 Reset Questions</button><button class="af2-btn" onclick="af2ResetSpin('${id(u)}')">🎡 Reset Spin</button></div>
-<h3 style="margin-top:18px">Warning History</h3><div class="af2-table-wrap"><table class="af2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory||[]).slice().reverse().map(x=>`<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("")||'<tr><td colspan="2">No warnings</td></tr>'}</table></div>`;document.getElementById("af2Modal").classList.add("show");}
- catch(e){alert(e.message);}
-};
-window.af2Close=()=>document.getElementById("af2Modal").classList.remove("show");
-window.af2ToggleBlock=async function(uid){try{const u=(data.users||[]).find(x=>id(x)===String(uid));const blocked=!!u?.isBlocked;await api("/api/admin/control-center/"+(blocked?"unblock/":"block/")+encodeURIComponent(uid),{method:"PUT",body:JSON.stringify({reason:"Blocked by admin"})});await af2Refresh();}catch(e){alert(e.message)}};
-window.af2Warn=async function(uid){const reason=prompt("Warning reason:","Please follow the rules.");if(reason===null)return;try{const r=await api("/api/admin/control-center/warning/"+encodeURIComponent(uid),{method:"POST",body:JSON.stringify({reason})});alert(r.message);await af2Refresh();}catch(e){alert(e.message)}};
-window.af2Wallet=async function(uid){const amount=prompt("Enter wallet adjustment amount. Use + to add and - to remove:","1");if(amount===null)return;const reason=prompt("Reason:","Admin adjustment");if(reason===null)return;try{await api("/api/admin/control-center/wallet/"+encodeURIComponent(uid),{method:"PUT",body:JSON.stringify({amount:Number(amount),reason})});await af2Refresh();alert("Wallet updated");}catch(e){alert(e.message)}};
-window.af2ResetQ=async function(uid){try{await api("/api/admin/control-center/reset-questions/"+encodeURIComponent(uid),{method:"PUT"});await af2Refresh();}catch(e){alert(e.message)}};
-window.af2ResetSpin=async function(uid){try{await api("/api/admin/control-center/reset-spin/"+encodeURIComponent(uid),{method:"PUT"});await af2Refresh();}catch(e){alert(e.message)}};
-function renderWallet(){const rows=[];(data.users||[]).forEach(u=>(u.walletTransactions||[]).forEach(t=>rows.push({time:t.time,student:nm(u),type:t.type,amount:t.amount,reason:t.reason})));rows.sort((a,b)=>new Date(b.time)-new Date(a.time));document.getElementById("af2WalletRows").innerHTML=rows.map(x=>`<tr><td>${esc(x.time)}</td><td>${esc(x.student)}</td><td>${esc(x.type)}</td><td>₹${Number(x.amount||0).toFixed(2)}</td><td>${esc(x.reason)}</td></tr>`).join("")||'<tr><td colspan="5" class="af2-empty">No wallet transactions yet.</td></tr>';}
-function renderSpin(){document.getElementById("af2SpinRows").innerHTML=(data.users||[]).map(u=>`<tr><td>${esc(nm(u))}</td><td>${q(u)}/100</td><td>${u.spinEligible?"YES":"NO"}</td><td>${Number(u.spinCount||0)}</td><td>${esc(u.lastSpin||u.lastSpinDate||"-")}</td></tr>`).join("")||'<tr><td colspan="5">No data.</td></tr>'}
-function renderQuestions(){let c=0,w=0;(data.users||[]).forEach(u=>{c+=Number(u.quizScore||0)>0?0:0;});const attempts=(data.stats||{}).questions||0;document.getElementById("af2Attempts").textContent=attempts;document.getElementById("af2Correct").textContent="Use student result data";document.getElementById("af2Wrong").textContent="Use student result data";document.getElementById("af2Accuracy").textContent="—";}
-function renderSecurity(){document.getElementById("af2SecurityRows").innerHTML=(data.users||[]).map(u=>{const fast=Number(u.fastAnswers||u.tooFastAnswers||0),tabs=Number(u.tabChanges||u.visibilityChanges||u.tabSwitches||0),devices=Array.isArray(u.pushSubscriptions)?u.pushSubscriptions.length:Number(u.deviceCount||0);const risk=fast>=10||tabs>=10||devices>=3?"HIGH":fast>=5||tabs>=5||devices>=2?"MEDIUM":"LOW";return `<tr><td>${esc(nm(u))}</td><td>${fast}</td><td>${tabs}</td><td>${devices}</td><td>${risk}</td></tr>`}).join("")||'<tr><td colspan="5">No data.</td></tr>'}
-function renderLogs(){document.getElementById("af2LogRows").innerHTML='<tr><td colspan="3">Server-backed student/wallet/warning data is shown above. Admin activity log can be expanded with a dedicated AuditLog model.</td></tr>';}
-window.af2Export=function(){const rows=[["Name","ID","Mobile","Online","Blocked","Today Questions","Total Questions","Wallet","Total Earn","Warnings"],...(data.users||[]).map(u=>[nm(u),id(u),u.mobile||"",u.isOnline?"Yes":"No",u.isBlocked?"Yes":"No",q(u),u.totalQuestionsAnswered||0,w(u).toFixed(2),earn(u).toFixed(2),warn(u)])];const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="admin-live-student-report.csv";a.click();};
-window.addEventListener("load",()=>{af2Refresh();setInterval(af2Refresh,5000);});
-})();
-</script>
+        @media(max-width:600px) {
+            #adminProV2 {
+                padding: 14px
+            }
 
+            .ap2-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
 
-<style id="adminProV2CSS">
-#adminProV2{margin:24px 0;padding:22px;border-radius:22px;background:#07111f;border:1px solid rgba(255,255,255,.08);color:#fff}
-#adminProV2 *{box-sizing:border-box}.ap2-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
-#adminProV2 h2,#adminProV2 h3{margin:0}.ap2-muted{color:#94a3b8;font-size:12px}.ap2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:18px 0}
-.ap2-card{padding:15px;border-radius:15px;background:#0c1727;border:1px solid rgba(255,255,255,.07)}.ap2-val{font-size:25px;font-weight:800;margin-top:5px}.ap2-lbl{font-size:12px;color:#94a3b8}
-.ap2-btn{border:1px solid #26354c;background:#122036;color:#fff;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:700}.ap2-btn:hover{filter:brightness(1.15)}
-.ap2-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.ap2-pane{display:none}.ap2-pane.active{display:block}.ap2-tablewrap{overflow:auto}
-.ap2-table{width:100%;min-width:900px;border-collapse:collapse}.ap2-table th,.ap2-table td{padding:10px;border-bottom:1px solid rgba(255,255,255,.07);font-size:12px;text-align:left}
-.ap2-input{padding:10px;border-radius:10px;border:1px solid #26354c;background:#0d1929;color:#fff}.ap2-flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.ap2-badge{padding:4px 8px;border-radius:99px;background:#18263b;font-size:11px;font-weight:800}.ap2-green{background:#103b29}.ap2-red{background:#4b1720}.ap2-yellow{background:#4a3711}
-.ap2-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:100000;padding:18px}.ap2-modal.show{display:flex}.ap2-box{width:min(950px,100%);max-height:90vh;overflow:auto;background:#091422;border:1px solid #26354c;border-radius:18px;padding:20px}
-.ap2-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:15px 0}.ap2-kv>div{background:#0d1929;border-radius:11px;padding:12px}.ap2-kv b{display:block;color:#94a3b8;font-size:11px}.ap2-kv span{font-weight:800;display:block;margin-top:4px}
-@media(max-width:600px){#adminProV2{padding:14px}.ap2-grid{grid-template-columns:repeat(2,1fr)}.ap2-val{font-size:20px}}
-</style>
+            .ap2-val {
+                font-size: 20px
+            }
+        }
+    </style>
 
+    <script id="adminProV2JS">
+        (function () {
+            let D = { users: [], withdrawals: [], stats: {} };
+            const token = () => localStorage.getItem("adminToken") || "";
+            async function api(url, opt = {}) {
+                opt.headers = Object.assign({ "Content-Type": "application/json", "Authorization": "Bearer " + token() }, opt.headers || {});
+                const r = await fetch("/api/admin" + url, opt), d = await r.json().catch(() => ({}));
+                if (!r.ok || !d.success) throw new Error(d.message || "API error");
+                return d;
+            }
+            const esc = x => String(x ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
+            const name = u => u.name || u.username || u.student_id || u.id || "Unknown", uid = u => String(u._id || u.id || u.student_id || "");
+            const q = u => u.dailyQuestionsDate === new Date().toISOString().slice(0, 10) ? Number(u.dailyQuestionsAnswered || 0) : 0;
+            const money = x => "₹" + Number(x || 0).toFixed(2);
 
-
-<script id="adminProV2JS">
-(function(){
-let D={users:[],withdrawals:[],stats:{}};
-const token=()=>localStorage.getItem("adminToken")||"";
-async function api(url,opt={}){
- opt.headers=Object.assign({"Content-Type":"application/json","Authorization":"Bearer "+token()},opt.headers||{});
- const r=await fetch("/api/admin"+url,opt),d=await r.json().catch(()=>({}));
- if(!r.ok||!d.success)throw new Error(d.message||"API error");
- return d;
-}
-const esc=x=>String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-const name=u=>u.name||u.username||u.student_id||u.id||"Unknown", uid=u=>String(u._id||u.id||u.student_id||"");
-const q=u=>u.dailyQuestionsDate===new Date().toISOString().slice(0,10)?Number(u.dailyQuestionsAnswered||0):0;
-const money=x=>"₹"+Number(x||0).toFixed(2);
-
-window.ap2Refresh=async()=>{try{D=await api("/pro/dashboard");ap2Render()}catch(e){console.error(e);}};
-function ap2Render(){
- const s=D.stats||{}, map={ap2Students:s.students,ap2Online:s.online,ap2Blocked:s.blocked,ap2Q:s.questionsToday,ap2Wallet:money(s.wallet),ap2Earn:money(s.totalEarn),ap2Warnings:s.warnings,ap2Spin:s.spinEligible};
- Object.keys(map).forEach(k=>{let e=document.getElementById(k);if(e)e.textContent=map[k]??0});
- ap2RenderStudents();ap2RenderWithdrawals();ap2RenderWallet();ap2RenderSecurity();ap2RenderRecycle();
-}
-window.ap2RenderStudents=()=>{
- const term=(document.getElementById("ap2Search").value||"").toLowerCase();
- const list=D.users.filter(u=>(name(u)+" "+uid(u)+" "+(u.mobile||"")).toLowerCase().includes(term));
- document.getElementById("ap2StudentRows").innerHTML=list.map(u=>`<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile||"")}</td><td>${u.isBlocked?'<span class="ap2-badge ap2-red">Blocked</span>':u.lastSeen&&Date.now()-new Date(u.lastSeen).getTime()<=120000?'<span class="ap2-badge ap2-green">Online</span>':'<span class="ap2-badge">Offline</span>'}</td><td>${q(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered||0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount||0)}</td><td>${q(u)>=100?'<span class="ap2-badge ap2-green">Eligible</span>':'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked?'🟢':'🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("")||'<tr><td colspan="8">No students found.</td></tr>';
-};
-window.ap2Details=async id=>{try{let d=await api("/pro/user/"+encodeURIComponent(id)),u=d.user;document.getElementById("ap2Title").textContent="👤 "+name(u);document.getElementById("ap2Body").innerHTML=`<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile||"-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered||0}</span></div><div><b>Warnings</b><span>${u.warningCount||0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen||"-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory||[]).slice().reverse().map(x=>`<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("")||'<tr><td colspan="2">None</td></tr>'}</table></div>`;document.getElementById("ap2Modal").classList.add("show")}catch(e){alert(e.message)}};
-window.ap2Close=()=>document.getElementById("ap2Modal").classList.remove("show");
-window.ap2Block=async(id,blocked)=>{try{await api("/pro/block/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify({blocked,reason:"Admin action"})});await ap2Refresh()}catch(e){alert(e.message)}};
-window.ap2Warn=async id=>{let reason=prompt("Warning reason:","Please follow the rules.");if(reason===null)return;try{let r=await api("/pro/warning/"+encodeURIComponent(id),{method:"POST",body:JSON.stringify({reason})});alert(r.message);await ap2Refresh()}catch(e){alert(e.message)}};
-window.ap2Wallet=async id=>{let amount=prompt("Wallet adjustment (+ add / - remove):","1");if(amount===null)return;let reason=prompt("Reason:","Admin adjustment");if(reason===null)return;try{await api("/pro/wallet/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify({amount:Number(amount),reason})});await ap2Refresh();alert("Wallet updated")}catch(e){alert(e.message)}};
-window.ap2ResetQ=async id=>{try{await api("/pro/reset-questions/"+encodeURIComponent(id),{method:"PUT"});await ap2Refresh()}catch(e){alert(e.message)}};
-window.ap2ResetSpin=async id=>{try{await api("/pro/reset-spin/"+encodeURIComponent(id),{method:"PUT"});await ap2Refresh()}catch(e){alert(e.message)}};
-window.ap2Tab=t=>{document.querySelectorAll("#adminProV2 .ap2-pane").forEach(x=>x.classList.remove("active"));document.getElementById("ap2-"+t).classList.add("active")};
-function ap2RenderWithdrawals(){document.getElementById("ap2WithdrawRows").innerHTML=D.withdrawals.map(w=>`<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId||"-")}</td><td>${esc(w.date||"-")}</td></tr>`).join("")||'<tr><td colspan="6">No withdrawals.</td></tr>'}
-function ap2RenderWallet(){let a=[];D.users.forEach(u=>(u.walletTransactions||[]).forEach(t=>a.push({student:name(u),...t})));a.sort((x,y)=>new Date(y.time)-new Date(x.time));document.getElementById("ap2WalletRows").innerHTML=a.map(t=>`<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("")||'<tr><td colspan="5">No transactions.</td></tr>'}
-function ap2RenderSecurity(){document.getElementById("ap2SecurityRows").innerHTML=D.users.map(u=>{let f=Number(u.fastAnswers||0),t=Number(u.tabChanges||0),d=Number(u.deviceCount||0),r=f>=10||t>=10||d>=3?"HIGH":f>=5||t>=5||d>=2?"MEDIUM":"LOW";return`<tr><td>${esc(name(u))}</td><td>${f}</td><td>${t}</td><td>${d}</td><td><span class="ap2-badge ${r==="HIGH"?"ap2-red":r==="MEDIUM"?"ap2-yellow":"ap2-green"}">${r}</span></td></tr>`}).join("")||'<tr><td colspan="5">No data.</td></tr>'}
-async function ap2RenderRecycle(){try{let d=await api("/pro/recycle-bin");document.getElementById("ap2RecycleRows").innerHTML=d.users.map(u=>`<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt||"-")}</td><td>${esc(u.deletedReason||"-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("")||'<tr><td colspan="4">Recycle Bin empty.</td></tr>'}catch(e){console.error(e)}}
-window.ap2Restore=async id=>{try{await api("/pro/restore/"+encodeURIComponent(id),{method:"PUT"});await ap2Refresh();alert("Student restored")}catch(e){alert(e.message)}};
-window.ap2Export=async()=>{try{let d=await api("/pro/reports"),rows=[["Name","ID","Mobile","Wallet","Total Earn","Today Questions","Total Questions","Warnings","Blocked","Last Seen"],...d.report.map(x=>[x.name,x.id,x.mobile,x.wallet,x.totalEarn,x.todayQuestions,x.totalQuestions,x.warnings,x.blocked?"Yes":"No",x.lastSeen])];let csv=rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="admin-report.csv";a.click()}catch(e){alert(e.message)}};
-window.addEventListener("load",()=>{ap2Refresh();setInterval(ap2Refresh,10000)});
-})();
-</script>
+            window.ap2Refresh = async () => { try { D = await api("/pro/dashboard"); ap2Render() } catch (e) { console.error(e); } };
+            function ap2Render() {
+                const s = D.stats || {}, map = { ap2Students: s.students, ap2Online: s.online, ap2Blocked: s.blocked, ap2Q: s.questionsToday, ap2Wallet: money(s.wallet), ap2Earn: money(s.totalEarn), ap2Warnings: s.warnings, ap2Spin: s.spinEligible };
+                Object.keys(map).forEach(k => { let e = document.getElementById(k); if (e) e.textContent = map[k] ?? 0 });
+                ap2RenderStudents(); ap2RenderWithdrawals(); ap2RenderWallet(); ap2RenderSecurity(); ap2RenderRecycle();
+            }
+            window.ap2RenderStudents = () => {
+                const term = (document.getElementById("ap2Search").value || "").toLowerCase();
+                const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-red">Blocked</span>' : u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 120000 ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge">Offline</span>'}</td><td>${q(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${q(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+            };
+            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
+            window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
+            window.ap2Block = async (id, blocked) => { try { await api("/pro/block/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ blocked, reason: "Admin action" }) }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Wallet = async id => { let amount = prompt("Wallet adjustment (+ add / - remove):", "1"); if (amount === null) return; let reason = prompt("Reason:", "Admin adjustment"); if (reason === null) return; try { await api("/pro/wallet/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ amount: Number(amount), reason }) }); await ap2Refresh(); alert("Wallet updated") } catch (e) { alert(e.message) } };
+            window.ap2ResetQ = async id => { try { await api("/pro/reset-questions/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2ResetSpin = async id => { try { await api("/pro/reset-spin/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Tab = t => { document.querySelectorAll("#adminProV2 .ap2-pane").forEach(x => x.classList.remove("active")); document.getElementById("ap2-" + t).classList.add("active") };
+            function ap2RenderWithdrawals() { document.getElementById("ap2WithdrawRows").innerHTML = D.withdrawals.map(w => `<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId || "-")}</td><td>${esc(w.date || "-")}</td></tr>`).join("") || '<tr><td colspan="6">No withdrawals.</td></tr>' }
+            function ap2RenderWallet() { let a = []; D.users.forEach(u => (u.walletTransactions || []).forEach(t => a.push({ student: name(u), ...t }))); a.sort((x, y) => new Date(y.time) - new Date(x.time)); document.getElementById("ap2WalletRows").innerHTML = a.map(t => `<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("") || '<tr><td colspan="5">No transactions.</td></tr>' }
+            function ap2RenderSecurity() { document.getElementById("ap2SecurityRows").innerHTML = D.users.map(u => { let f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Number(u.deviceCount || 0), r = f >= 10 || t >= 10 || d >= 3 ? "HIGH" : f >= 5 || t >= 5 || d >= 2 ? "MEDIUM" : "LOW"; return `<tr><td>${esc(name(u))}</td><td>${f}</td><td>${t}</td><td>${d}</td><td><span class="ap2-badge ${r === "HIGH" ? "ap2-red" : r === "MEDIUM" ? "ap2-yellow" : "ap2-green"}">${r}</span></td></tr>` }).join("") || '<tr><td colspan="5">No data.</td></tr>' }
+            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("") || '<tr><td colspan="4">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
+            window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
+            window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
+            window.addEventListener("load", () => { ap2Refresh(); setInterval(ap2Refresh, 10000) });
+        })();
+    </script>
 
 </body>
 
