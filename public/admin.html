@@ -2392,6 +2392,8 @@ ${w.status === "Approved" ? `
  <div class="ap2-pane" id="ap2-reports"><h3>📊 Reports</h3><p class="ap2-muted">Download the current MongoDB student report as CSV.</p><button class="ap2-btn" onclick="ap2Export()">📤 Download Student Report</button></div>
 </section>
 
+<div class="ap2-modal" id="ap2Modal"><div class="ap2-box"><div class="ap2-head"><h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button></div><div id="ap2Body"></div></div></div>
+
 
 <!-- <section class="admin-pro-section" id="adminProPanel">
   <h3>📊 Admin Pro Dashboard</h3>
@@ -2658,7 +2660,6 @@ window.addEventListener("load",()=>{af2Refresh();setInterval(af2Refresh,5000);})
 </style>
 
 
-<div class="ap2-modal" id="ap2Modal"><div class="ap2-box"><div class="ap2-head"><h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button></div><div id="ap2Body"></div></div></div>
 
 <script id="adminProV2JS">
 (function(){
