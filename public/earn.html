@@ -1512,7 +1512,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
                     clearInterval(window.__studentHeartbeatTimer);
-                    alert(data.message || "Your session was ended by admin. Please login again.");
+                    alert(data.message || "Your session was ended by app. Please login again.");
                     window.location.replace("login.html");
                     return;
                 }
