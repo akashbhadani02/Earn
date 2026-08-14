@@ -254,39 +254,39 @@ if("Notification" in window && Notification.permission === "granted") return tru
 // The app requires browser notifications before opening the student dashboard.
 if(!("Notification" in window)){
     gate.style.display="block";
-    gate.innerHTML="❌ આ browser notifications support કરતું નથી. Notifications support કરતું browser વાપરો.";
+    gate.innerHTML="❌ આ browser Admin notifications support કરતું નથી. Notifications support કરતું browser વાપરો.";
     return false;
 }
 
 if(!window.isSecureContext){
     gate.style.display="block";
-    gate.innerHTML="❌ Notifications માટે HTTPS જરૂરી છે.";
+    gate.innerHTML="❌ Admin notifications માટે HTTPS જરૂરી છે.";
     return false;
 }
 
 if(Notification.permission === "denied"){
     gate.style.display="block";
-    gate.innerHTML="❌ Notifications Block છે. Browser site settings માં Notifications → Allow કરો, પછી ફરી Login કરો.";
+    gate.innerHTML="❌ Admin notifications Block છે. Browser site settings માં Notifications → Allow કરો, પછી ફરી Login કરો.";
     return false;
 }
 
 try{
     gate.style.display="block";
-    gate.innerHTML="🔔 Login ચાલુ રાખવા માટે Notifications માં <b>Allow</b> દબાવો...";
+    gate.innerHTML="🔔 Admin તરફથી આવતી important notifications મેળવવા માટે Notifications માં <b>Allow</b> દબાવો...";
 
     const permission=await Notification.requestPermission();
 
     if(permission !== "granted"){
-        gate.innerHTML="⚠️ Notifications Allow કર્યા વગર Student Dashboard open નહીં થાય.";
+        gate.innerHTML="⚠️ Admin notifications મેળવવા માટે <b>Allow</b> કરવું જરૂરી છે. Allow કર્યા વગર Student Dashboard open નહીં થાય.";
         return false;
     }
 
-    gate.innerHTML="✅ Notifications allowed. Login થઈ રહ્યું છે...";
+    gate.innerHTML="✅ Admin notifications allowed. Login થઈ રહ્યું છે...";
     return true;
 
 }catch(error){
     console.error("Notification permission error:",error);
-    gate.innerHTML="❌ Notification permission મળી નથી. Please Allow કરો અને ફરી Login કરો.";
+    gate.innerHTML="❌ Admin notification permission મળી નથી. Please Allow કરો અને ફરી Login કરો.";
     return false;
 }
 }
