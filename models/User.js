@@ -76,6 +76,12 @@ const userSchema = new mongoose.Schema(
             default: false
         },
 
+        // Incremented by admin to invalidate all existing student login tokens.
+        sessionVersion: {
+            type: Number,
+            default: 0
+        },
+
         lastSeen: {
             type: Date,
             default: null

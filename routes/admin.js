@@ -67,6 +67,37 @@ router.post("/login", async (req, res) => {
 });
 
 // ===========================
+// Force logout all students
+// ===========================
+router.post("/force-logout-all-users", adminAuth, async (req, res) => {
+
+    try {
+        const result = await User.updateMany(
+            { isDeleted: { $ne: true } },
+            {
+                $inc: { sessionVersion: 1 },
+                $set: {
+                    isOnline: false,
+                    lastSeen: new Date()
+                }
+            }
+        );
+
+        res.json({
+            success: true,
+            message: "All student sessions have been logged out.",
+            affectedUsers: result.modifiedCount ?? result.nModified ?? 0
+        });
+    } catch (err) {
+        console.error("Force Logout All Error:", err);
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
+// ===========================
 // Dashboard
 // ===========================
 

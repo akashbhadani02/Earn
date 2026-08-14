@@ -930,9 +930,14 @@
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
         <h2>Admin Dashboard</h2>
 
-        <button onclick="logout()" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;">
-            Logout
-        </button>
+        <div style="display:flex;gap:8px;align-items:center;">
+            <button onclick="forceLogoutAllUsers()" style="background:#b91c1c;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
+                🚪 Logout All Users
+            </button>
+            <button onclick="logout()" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
+                Logout
+            </button>
+        </div>
     </div>
 
 <div class="admin-main-menu">
@@ -2403,6 +2408,57 @@ ${w.status === "Approved" ? `
 
             await loadWithdraws();
             await loadDashboard();
+        }
+
+        //==========================
+        // Force logout every student currently using the app
+        //==========================
+
+        async function forceLogoutAllUsers() {
+
+            const confirmed = confirm(
+                "⚠️ Logout ALL students?\n\nEvery currently logged-in student will be signed out and must login again."
+            );
+
+            if (!confirmed) return;
+
+            const adminToken = localStorage.getItem("adminToken");
+
+            if (!adminToken) {
+                alert("Admin session expired. Please login again.");
+                window.location.href = "admin-login.html";
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/admin/force-logout-all-users", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + adminToken,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const data = await res.json().catch(() => ({}));
+
+                if (res.status === 401) {
+                    localStorage.removeItem("adminToken");
+                    alert("Admin session expired. Please login again.");
+                    window.location.href = "admin-login.html";
+                    return;
+                }
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.message || "Could not logout all users");
+                }
+
+                alert("✅ All student sessions have been logged out.\n\nAffected users: " + (data.affectedUsers ?? 0));
+                await loadUsers();
+
+            } catch (err) {
+                console.error("Force Logout All Error:", err);
+                alert("❌ Logout all failed: " + err.message);
+            }
         }
 
         //==========================

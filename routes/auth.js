@@ -123,7 +123,8 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
 
             {
-                id: user._id
+                id: user._id,
+                sessionVersion: Number(user.sessionVersion || 0)
             },
 
             process.env.JWT_SECRET,
@@ -191,6 +192,15 @@ router.post("/heartbeat", async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: "User not found"
+            });
+        }
+
+        // Admin can force all existing student sessions to logout by incrementing sessionVersion.
+        if (Number(decoded.sessionVersion ?? 0) !== Number(user.sessionVersion || 0)) {
+            return res.status(401).json({
+                success: false,
+                message: "Session ended by admin. Please login again.",
+                forceLogout: true
             });
         }
 

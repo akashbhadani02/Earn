@@ -1412,7 +1412,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
             try {
 
-                await fetch("/api/auth/heartbeat", {
+                const res = await fetch("/api/auth/heartbeat", {
 
                     method: "POST",
 
@@ -1421,6 +1421,16 @@ body.notification-locked #notificationRequiredOverlay button{
                     }
 
                 });
+
+                if (res.status === 401) {
+                    const data = await res.json().catch(() => ({}));
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    clearInterval(window.__studentHeartbeatTimer);
+                    alert(data.message || "Your session was ended by admin. Please login again.");
+                    window.location.replace("login.html");
+                    return;
+                }
 
                 console.log("Student Online");
 
@@ -1436,7 +1446,7 @@ body.notification-locked #notificationRequiredOverlay button{
         sendHeartbeat();
 
         // દર 1 secondે heartbeat મોકલો
-        setInterval(() => {
+        window.__studentHeartbeatTimer = setInterval(() => {
 
             sendHeartbeat();
 
