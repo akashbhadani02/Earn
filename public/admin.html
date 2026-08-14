@@ -1535,8 +1535,6 @@
 
     <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
 
-    <td>₹${Number(user.totalEarn || 0).toFixed(2)}</td>
-
     <td>
         <span style="
             font-weight:800;
@@ -1574,10 +1572,6 @@
 
 <button onclick="editWallet('${user._id}',${user.wallet || 0})">
 💰
-</button>
-
-<button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})">
-📈
 </button>
 
 <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})'
