@@ -941,6 +941,10 @@
   <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
+<button id="ccTotalEarnEditBtn" type="button" onclick="editCommandCenterTotalEarn()" style="margin-left:8px;">
+  ✏️ Edit Total Earn
+</button>
+
   <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
 </div>
 
@@ -3077,6 +3081,36 @@ ${w.status === "Approved" ? `
         })();
     </script>
 
+
+<script>
+function editCommandCenterTotalEarn() {
+  const current =
+    (typeof totalEarn !== "undefined" ? totalEarn : null) ??
+    (document.querySelector("#totalEarn")?.textContent || "0");
+
+  const value = prompt("Enter Total Earn amount:", String(current).replace(/[^\d.]/g, ""));
+  if (value === null) return;
+
+  const amount = Number(value);
+  if (!Number.isFinite(amount) || amount < 0) {
+    alert("Please enter a valid amount.");
+    return;
+  }
+
+  const el = document.querySelector("#totalEarn");
+  if (el) el.textContent = "₹" + amount.toFixed(2);
+
+  try { localStorage.setItem("commandCenterTotalEarn", String(amount)); } catch(e) {}
+
+  if (typeof updateTotalEarn === "function") {
+    updateTotalEarn(amount);
+  } else if (typeof saveTotalEarn === "function") {
+    saveTotalEarn(amount);
+  } else {
+    alert("Total Earn updated in Command Center.");
+  }
+}
+</script>
 </body>
 
 </html>
