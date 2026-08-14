@@ -2436,62 +2436,110 @@ document.addEventListener('click', function(e){
 
 <script id="activity-answer-fallback">
 (function(){
-  function getQuestion(){
-    if(typeof activityQuestions === 'undefined' || !Array.isArray(activityQuestions)) return null;
-    return activityQuestions[typeof activityIndex === 'number' ? activityIndex : 0] || null;
-  }
+  let locked=false;
 
-  function valueOf(q){
+  function getQ(){
+    if(typeof activityQuestions==='undefined' || !Array.isArray(activityQuestions)) return null;
+    return activityQuestions[typeof activityIndex==='number' ? activityIndex : 0] || null;
+  }
+  function norm(v){
+    return String(v ?? '').trim().toLowerCase().replace(/[.!?]+$/,'').replace(/\s+/g,' ');
+  }
+  function correctValue(q){
     return q && (q.answer ?? q.correctAnswer ?? q.correct ?? q.expected ?? q.correct_answer);
   }
 
-  window.submitLearningAnswer = async function(answer, buttonEl){
-    const q=getQuestion();
+  async function rewardAndNext(answer){
+    if(locked) return;
+    const q=getQ();
     if(!q) return;
+    const correct=correctValue(q);
+    const isCorrect=norm(answer)===norm(correct);
 
-    const correct=valueOf(q);
-    const normalize=v=>String(v ?? '').trim().toLowerCase().replace(/\s+/g,' ');
-    const ok=normalize(answer)===normalize(correct);
+    const fb=document.getElementById('activityFeedback');
+    if(!isCorrect){
+      if(fb){
+        fb.textContent='❌ Wrong answer. Try again.';
+        fb.style.display='block';
+      }
+      return;
+    }
 
-    // If the app already has a reward/submit function, use it.
-    if(typeof submitActivityAnswer === 'function'){
-      try {
-        await submitActivityAnswer(answer);
-        return;
-      } catch(e) {
-        console.error(e);
+    locked=true;
+
+    // Prefer the existing backend reward function, so wallet/server data stays in sync.
+    let rewarded=false;
+    if(typeof submitActivityAnswer==='function'){
+      try{
+        const result=await submitActivityAnswer(answer);
+        rewarded = result !== false;
+      }catch(e){
+        console.error('Reward submit error:',e);
       }
     }
 
-    const fb=document.getElementById('activityFeedback');
+    // Fallback for local/demo activity data.
+    if(!rewarded){
+      const reward=Number(q.reward ?? (typeof activityData!=='undefined' ? activityData.reward : 0) ?? 0);
+      if(typeof wallet!=='undefined' && reward){
+        wallet=Number(wallet)+reward;
+        rewarded=true;
+        if(typeof updateActivityWallet==='function') updateActivityWallet();
+        const w=document.getElementById('walletBalance');
+        if(w) w.textContent='₹'+Number(wallet).toFixed(2);
+      }
+    }
+
     if(fb){
-      fb.textContent=ok ? '✅ Correct! You earned points.' : '❌ Incorrect. Correct answer: '+String(correct);
+      fb.textContent='✅ Correct! Reward added. Next question...';
       fb.style.display='block';
     }
-    if(ok && typeof wallet !== 'undefined'){
-      const reward=Number(q.reward ?? (typeof activityData!=='undefined' && activityData.reward) ?? 0);
-      if(reward) wallet += reward;
-      if(typeof updateActivityWallet==='function') updateActivityWallet();
-    }
+
+    // Move to next question after a short success message.
+    setTimeout(function(){
+      if(typeof activityIndex==='number' && Array.isArray(activityQuestions) && activityQuestions.length){
+        activityIndex=(activityIndex+1)%activityQuestions.length;
+        locked=false;
+        if(typeof arrangeWords!=='undefined') arrangeWords=[];
+        if(typeof renderActivity==='function') renderActivity();
+        if(typeof updateActivityWallet==='function') updateActivityWallet();
+      }else{
+        locked=false;
+      }
+    },650);
+  }
+
+  window.submitLearningAnswer=function(answer){
+    rewardAndNext(answer);
   };
 
-  // Make option buttons, input submit buttons and generated answer controls clickable.
   document.addEventListener('click',function(e){
-    const b=e.target.closest('[data-answer], [data-option], .answer-option, .activity-option');
+    const b=e.target.closest('[data-answer],[data-option],.answer-option,.activity-option,[data-submit-answer],.submit-answer');
     if(!b) return;
+    if(b.dataset.submitAnswer!==undefined || b.classList.contains('submit-answer')){
+      const input=document.querySelector('#activityContent input:not([type="hidden"]),#activityContent textarea');
+      if(input){
+        e.preventDefault();
+        rewardAndNext(input.value);
+      }
+      return;
+    }
     const answer=b.dataset.answer ?? b.dataset.option ?? b.textContent.trim();
     e.preventDefault();
-    window.submitLearningAnswer(answer,b);
+    rewardAndNext(answer);
   });
 
   document.addEventListener('keydown',function(e){
     if(e.key!=='Enter') return;
-    const input=e.target.closest('#activityContent input, #activityContent textarea');
+    const input=e.target.closest('#activityContent input,#activityContent textarea');
     if(!input) return;
-    const submit=document.querySelector('#activityContent [data-submit-answer], #activityContent .submit-answer');
+    const submit=document.querySelector('#activityContent [data-submit-answer],#activityContent .submit-answer');
     if(submit){
       e.preventDefault();
       submit.click();
+    }else{
+      e.preventDefault();
+      rewardAndNext(input.value);
     }
   });
 })();
