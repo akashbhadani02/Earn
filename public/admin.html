@@ -1212,7 +1212,11 @@
                             <th>Fast Answers</th>
                             <th>Tab Changes</th>
                             <th>Devices</th>
+                            <th>Logins</th>
+                            <th>Warnings</th>
+                            <th>Last Seen</th>
                             <th>Risk</th>
+                            <th>Details</th>
                         </tr>
                     </thead>
                     <tbody id="ap2SecurityRows"></tbody>
@@ -2982,7 +2986,73 @@ ${w.status === "Approved" ? `
             };
             function ap2RenderWithdrawals() { document.getElementById("ap2WithdrawRows").innerHTML = D.withdrawals.map(w => `<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId || "-")}</td><td>${esc(w.date || "-")}</td></tr>`).join("") || '<tr><td colspan="6">No withdrawals.</td></tr>' }
             function ap2RenderWallet() { let a = []; D.users.forEach(u => (u.walletTransactions || []).forEach(t => a.push({ student: name(u), ...t }))); a.sort((x, y) => new Date(y.time) - new Date(x.time)); document.getElementById("ap2WalletRows").innerHTML = a.map(t => `<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("") || '<tr><td colspan="5">No transactions.</td></tr>' }
-            function ap2RenderSecurity() { document.getElementById("ap2SecurityRows").innerHTML = D.users.map(u => { let f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Number(u.deviceCount || 0), r = f >= 10 || t >= 10 || d >= 3 ? "HIGH" : f >= 5 || t >= 5 || d >= 2 ? "MEDIUM" : "LOW"; return `<tr><td>${esc(name(u))}</td><td>${f}</td><td>${t}</td><td>${d}</td><td><span class="ap2-badge ${r === "HIGH" ? "ap2-red" : r === "MEDIUM" ? "ap2-yellow" : "ap2-green"}">${r}</span></td></tr>` }).join("") || '<tr><td colspan="5">No data.</td></tr>' }
+            function ap2SecurityRisk(u) {
+                const f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Number(u.deviceCount || 0);
+                const logins = Array.isArray(u.loginHistory) ? u.loginHistory.length : 0;
+                const warns = Number(u.warningCount || 0);
+                const score = (f >= 10 ? 3 : f >= 5 ? 2 : f > 0 ? 1 : 0)
+                    + (t >= 10 ? 3 : t >= 5 ? 2 : t > 0 ? 1 : 0)
+                    + (d >= 3 ? 3 : d >= 2 ? 2 : d > 0 ? 1 : 0)
+                    + (warns >= 3 ? 3 : warns >= 1 ? 1 : 0)
+                    + (logins >= 20 ? 2 : logins >= 10 ? 1 : 0);
+                return score >= 6 ? "HIGH" : score >= 3 ? "MEDIUM" : "LOW";
+            }
+            function ap2SecurityTime(x) { return x ? new Date(x).toLocaleString() : "-"; }
+            function ap2SecurityAgent(x) {
+                const a = String(x || "");
+                if (!a) return "-";
+                if (/Android/i.test(a)) return "📱 Android";
+                if (/iPhone|iPad/i.test(a)) return "📱 iPhone/iPad";
+                if (/Windows/i.test(a)) return "💻 Windows";
+                if (/Macintosh/i.test(a)) return "💻 macOS";
+                return "🌐 Browser";
+            }
+            window.ap2SecurityDetails = id => {
+                const u = D.users.find(x => uid(x) === String(id));
+                if (!u) return;
+                const history = Array.isArray(u.loginHistory) ? u.loginHistory.slice().reverse() : [];
+                const warnings = Array.isArray(u.warningHistory) ? u.warningHistory.slice().reverse() : [];
+                const activity = Array.isArray(u.adminActivity) ? u.adminActivity.slice().reverse() : [];
+                const risk = ap2SecurityRisk(u);
+                document.getElementById("ap2Title").textContent = "🔐 Security — " + name(u);
+                document.getElementById("ap2Body").innerHTML = `
+                    <div class="ap2-kv">
+                        <div><b>Student ID</b><span>${esc(uid(u))}</span></div>
+                        <div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
+                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"ap2-red":risk==="MEDIUM"?"ap2-yellow":"ap2-green"}">${risk}</span></span></div>
+                        <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
+                        <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
+                        <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
+                        <div><b>Devices</b><span>${Number(u.deviceCount||0)}</span></div>
+                        <div><b>Login Records</b><span>${history.length}</span></div>
+                        <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
+                        <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
+                    </div>
+                    <h3>🔑 Login History</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
+                    ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
+                    <h3>⚠️ Warning History</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
+                    ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
+                    <h3>🛡️ Admin Security Activity</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
+                    ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
+                document.getElementById("ap2Modal").classList.add("show");
+            };
+            function ap2RenderSecurity() {
+                const rows = D.users.map(u => {
+                    const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Number(u.deviceCount||0);
+                    const l=Array.isArray(u.loginHistory)?u.loginHistory.length:0, w=Number(u.warningCount||0), r=ap2SecurityRisk(u);
+                    return `<tr>
+                        <td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span></td>
+                        <td>${f}</td><td>${t}</td><td>${d}</td><td>${l}</td><td>${w}</td>
+                        <td>${esc(u.lastSeen ? ap2SecurityTime(u.lastSeen) : "Offline")}</td>
+                        <td><span class="ap2-badge ${r==="HIGH"?"ap2-red":r==="MEDIUM"?"ap2-yellow":"ap2-green"}">${r}</span></td>
+                        <td><button class="ap2-btn" onclick="ap2SecurityDetails('${esc(uid(u))}')">🔍 Details</button></td>
+                    </tr>`;
+                }).join("");
+                document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
+            }
             async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("") || '<tr><td colspan="4">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
             window.ap2LoadReports = async () => {

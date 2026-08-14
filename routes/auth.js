@@ -94,6 +94,18 @@ router.post("/login", async (req, res) => {
             });
         }
 
+        // Security audit: record every successful login.
+        user.loginHistory = Array.isArray(user.loginHistory) ? user.loginHistory : [];
+        user.loginHistory.push({
+            time: new Date(),
+            ip: String(req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "").split(",")[0].trim(),
+            userAgent: String(req.headers["user-agent"] || "")
+        });
+        // Keep the latest 100 login records per student.
+        if (user.loginHistory.length > 100) {
+            user.loginHistory = user.loginHistory.slice(-100);
+        }
+
         // Student ને Online કરો
         user.isOnline = true;
         user.lastSeen = new Date();
