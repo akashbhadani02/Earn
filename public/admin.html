@@ -1040,8 +1040,8 @@
                     <th>Mobile</th>
                     <th>Last Seen</th>
                     <th>Wallet</th>
-                    <th>Today</th>
-                    <th>Total</th>
+                    <th>Questions Answered Today</th>
+                    <th>Total Questions Answered</th>
                     <th>Spin Remaining</th>
                     <th>Warnings</th>
                     <th>Action</th>
@@ -1233,6 +1233,7 @@
                             <th>Deleted At</th>
                             <th>Reason</th>
                             <th>Action</th>
+                            <th>Permanent Delete</th>
                         </tr>
                     </thead>
                     <tbody id="ap2RecycleRows"></tbody>
@@ -3066,8 +3067,16 @@ ${w.status === "Approved" ? `
                 }).join("");
                 document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
             }
-            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("") || '<tr><td colspan="4">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
+            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
+            window.ap2PermanentDelete = async id => {
+                if (!confirm("⚠️ Permanently delete this student?\n\nThis action cannot be undone and all student data will be removed permanently.")) return;
+                try {
+                    await api("/pro/permanent-delete/" + encodeURIComponent(id), { method: "DELETE" });
+                    await ap2Refresh();
+                    alert("✅ Student permanently deleted");
+                } catch (e) { alert(e.message) }
+            };
             window.ap2LoadReports = async () => {
                 const el = document.getElementById("ap2ReportRows");
                 if (!el) return;
