@@ -835,7 +835,17 @@
         #activityContent input,#activityContent textarea{
             pointer-events:auto !important;user-select:text !important;
         }
-    </style>
+    
+#activityContent button,
+#activityContent [role="button"],
+#activityContent input,
+#activityContent textarea{
+  pointer-events:auto !important;
+}
+#activityContent button{
+  cursor:pointer !important;
+}
+</style>
 
 <style id="notification-required-style">
 #notificationRequiredOverlay{
@@ -2434,110 +2444,104 @@ document.addEventListener('click', function(e){
 });
 </script>
 
+
+
 <script id="activity-answer-fallback">
 (function(){
-  let locked=false;
+  let processing=false;
 
-  function getQ(){
-    if(typeof activityQuestions==='undefined' || !Array.isArray(activityQuestions)) return null;
-    return activityQuestions[typeof activityIndex==='number' ? activityIndex : 0] || null;
+  function q(){
+    return (Array.isArray(window.activityQuestions) ? window.activityQuestions[Number(window.activityIndex)||0] : null);
   }
-  function norm(v){
+  function normalize(v){
     return String(v ?? '').trim().toLowerCase().replace(/[.!?]+$/,'').replace(/\s+/g,' ');
   }
-  function correctValue(q){
-    return q && (q.answer ?? q.correctAnswer ?? q.correct ?? q.expected ?? q.correct_answer);
+  function answerOf(x){
+    return x && (x.answer ?? x.correctAnswer ?? x.correct ?? x.expected ?? x.correct_answer);
   }
-  function getReward(q){
-    return Math.max(0, Number(q && q.reward ?? (typeof activityData!=='undefined' ? activityData.reward : 0) ?? 0));
+  function rewardOf(x){
+    return Math.max(0, Number(x?.reward ?? window.activityData?.reward ?? 0));
+  }
+  function updateWalletUI(){
+    if(typeof window.updateActivityWallet==='function') window.updateActivityWallet();
+    if(typeof window.wallet!=='undefined'){
+      document.querySelectorAll('#walletBalance,#activityWalletBalance,#quizWallet').forEach(el=>{
+        el.textContent='₹'+Number(window.wallet).toFixed(2);
+      });
+    }
   }
 
-  async function processAnswer(answer){
-    if(locked) return;
-    const q=getQ();
-    if(!q) return;
+  async function handle(answer){
+    if(processing) return;
+    const question=q();
+    if(!question) return;
 
-    const correct=correctValue(q);
-    const isCorrect=norm(answer)===norm(correct);
-    const reward=getReward(q);
-    const penalty=reward; // wrong answer deducts the same amount
-
-    locked=true;
+    processing=true;
+    const correct=normalize(answer)===normalize(answerOf(question));
+    const amount=rewardOf(question);
     const fb=document.getElementById('activityFeedback');
 
-    if(typeof submitActivityAnswer==='function'){
-      try{
-        // Existing backend may handle reward. We still handle local display/navigation below.
-        await submitActivityAnswer(answer, {correct:isCorrect, reward:reward, penalty:penalty});
-      }catch(e){
-        console.error('Activity submit error:',e);
-      }
+    // Update local wallet immediately.
+    if(typeof window.wallet!=='undefined'){
+      window.wallet=Math.max(0, Number(window.wallet)+(correct ? amount : -amount));
     }
-
-    // Update local wallet immediately. Keep it at zero; never allow negative balance.
-    if(typeof wallet!=='undefined'){
-      if(isCorrect){
-        wallet=Math.max(0, Number(wallet)+reward);
-      }else{
-        wallet=Math.max(0, Number(wallet)-penalty);
-      }
-    }
-
-    if(typeof updateActivityWallet==='function') updateActivityWallet();
-
-    document.querySelectorAll('#walletBalance,#activityWalletBalance,#quizWallet').forEach(el=>{
-      if(typeof wallet!=='undefined') el.textContent='₹'+Number(wallet).toFixed(2);
-    });
+    updateWalletUI();
 
     if(fb){
-      fb.textContent=isCorrect
-        ? '✅ Correct! +'+reward+' points. Next question...'
-        : '❌ Wrong! -'+penalty+' points. Next question...';
+      fb.textContent=correct
+        ? '✅ Correct! +'+amount+' points'
+        : '❌ Wrong! -'+amount+' points';
       fb.style.display='block';
     }
 
-    // Always go to next question for both correct and wrong answers.
-    setTimeout(function(){
-      if(Array.isArray(activityQuestions) && activityQuestions.length){
-        activityIndex=(Number(activityIndex)+1)%activityQuestions.length;
-        if(typeof arrangeWords!=='undefined') arrangeWords=[];
-        locked=false;
-        if(typeof renderActivity==='function') renderActivity();
-        if(typeof updateActivityWallet==='function') updateActivityWallet();
-      }else{
-        locked=false;
+    // Move to next question regardless of result.
+    setTimeout(()=>{
+      if(Array.isArray(window.activityQuestions) && window.activityQuestions.length){
+        window.activityIndex=(Number(window.activityIndex||0)+1)%window.activityQuestions.length;
+        if(typeof window.arrangeWords!=='undefined') window.arrangeWords=[];
+        if(typeof window.renderActivity==='function') window.renderActivity();
+        updateWalletUI();
       }
-    },700);
+      processing=false;
+    },600);
   }
 
-  window.submitLearningAnswer=function(answer){
-    processAnswer(answer);
-  };
+  window.submitLearningAnswer=handle;
 
-  document.addEventListener('click',function(e){
-    const b=e.target.closest('[data-answer],[data-option],.answer-option,.activity-option,[data-submit-answer],.submit-answer');
-    if(!b) return;
+  // One global handler. It handles option buttons AND text-answer submit buttons.
+  document.addEventListener('click', function(e){
+    const el=e.target.closest(
+      '#activityContent [data-answer],'+
+      '#activityContent [data-option],'+
+      '#activityContent .answer-option,'+
+      '#activityContent .activity-option,'+
+      '#activityContent [data-submit-answer],'+
+      '#activityContent .submit-answer'
+    );
+    if(!el) return;
 
     let answer;
-    if(b.dataset.submitAnswer!==undefined || b.classList.contains('submit-answer')){
+    if(el.matches('[data-submit-answer],.submit-answer')){
       const input=document.querySelector('#activityContent input:not([type="hidden"]),#activityContent textarea');
       if(!input) return;
       answer=input.value;
-    }else{
-      answer=b.dataset.answer ?? b.dataset.option ?? b.textContent.trim();
+    } else {
+      answer=el.dataset.answer ?? el.dataset.option ?? el.textContent;
     }
 
     e.preventDefault();
-    processAnswer(answer);
-  });
+    e.stopPropagation();
+    handle(answer);
+  }, true);
 
+  // Enter key for text answers.
   document.addEventListener('keydown',function(e){
     if(e.key!=='Enter') return;
-    const input=e.target.closest('#activityContent input,#activityContent textarea');
+    const input=e.target.closest('#activityContent input:not([type="hidden"]),#activityContent textarea');
     if(!input) return;
     e.preventDefault();
-    processAnswer(input.value);
-  });
+    handle(input.value);
+  }, true);
 })();
 </script>
 </body>
