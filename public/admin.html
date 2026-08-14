@@ -1049,6 +1049,8 @@
                     <th>Total</th>
                     <th>Spin Remaining</th>
                     <th>Warnings</th>
+                    <th>Activity Earn</th>
+                    <th>Activity Deduct</th>
                     <th>Action</th>
 
                 </tr>
@@ -1528,6 +1530,9 @@
             let html = "";
 
             users.forEach(user => {
+                const activityStats = user.activityStats || {};
+                const activityEarn = Object.values(activityStats.earn || {}).reduce((sum, v) => sum + Number(v || 0), 0);
+                const activityDeduct = Object.values(activityStats.deduct || {}).reduce((sum, v) => sum + Number(v || 0), 0);
 
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
                 const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
@@ -1590,6 +1595,34 @@
 </td>
 
 <td>
+    <span style="
+        display:inline-block;
+        min-width:78px;
+        text-align:center;
+        padding:6px 10px;
+        border-radius:10px;
+        font-weight:900;
+        color:#166534;
+        background:#dcfce7;
+        border:1px solid #86efac;
+    ">+₹${activityEarn.toFixed(2)}</span>
+</td>
+
+<td>
+    <span style="
+        display:inline-block;
+        min-width:78px;
+        text-align:center;
+        padding:6px 10px;
+        border-radius:10px;
+        font-weight:900;
+        color:#b91c1c;
+        background:#fee2e2;
+        border:1px solid #fca5a5;
+    ">-₹${activityDeduct.toFixed(2)}</span>
+</td>
+
+<td>
 
 <button onclick="editWallet('${user._id}',${user.wallet || 0})">
 💰
@@ -1648,7 +1681,7 @@ style="background:#16a34a;">
             const rows = keys.map(k => {
                 const count=Number((stats.counts||{})[k]||0), correct=Number((stats.correct||{})[k]||0), wrong=Number((stats.wrong||{})[k]||0);
                 const earn=Number((stats.earn||{})[k]||0), deduct=Number((stats.deduct||{})[k]||0), tabs=Number((stats.tabChanges||{})[k]||0);
-                return `<tr><td>${names[k]}</td><td>${count}</td><td style="color:#15803d;font-weight:700">${correct}</td><td style="color:#dc2626;font-weight:700">${wrong}</td><td>₹${earn.toFixed(2)}</td><td>₹${deduct.toFixed(2)}</td><td>${tabs}</td></tr>`;
+                return `<tr><td>${names[k]}</td><td>${count}</td><td style="color:#15803d;font-weight:700">${correct}</td><td style="color:#dc2626;font-weight:700">${wrong}</td><td><span style="display:inline-block;min-width:70px;text-align:center;padding:4px 8px;border-radius:8px;background:#dcfce7;color:#166534;font-weight:800">+₹${earn.toFixed(2)}</span></td><td><span style="display:inline-block;min-width:70px;text-align:center;padding:4px 8px;border-radius:8px;background:#fee2e2;color:#b91c1c;font-weight:800">-₹${deduct.toFixed(2)}</span></td><td>${tabs}</td></tr>`;
             }).join('');
             const modal=document.createElement('div');
             modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px';
@@ -1656,8 +1689,8 @@ style="background:#16a34a;">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px"><div><h2 style="margin:0">📚 English Learning & Earning</h2><div style="color:#64748b;margin-top:4px">${String(user.name||'Student')} • ${String(user.mobile||'')}</div></div><button id="closeActivityStats" style="font-size:20px">✕</button></div>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
                   <div style="padding:12px;border-radius:12px;background:#eff6ff"><b>Today Activities</b><div style="font-size:22px">${keys.reduce((n,k)=>n+Number((stats.counts||{})[k]||0),0)}</div></div>
-                  <div style="padding:12px;border-radius:12px;background:#ecfdf5"><b>Activity Earn</b><div style="font-size:22px">₹${keys.reduce((n,k)=>n+Number((stats.earn||{})[k]||0),0).toFixed(2)}</div></div>
-                  <div style="padding:12px;border-radius:12px;background:#fef2f2"><b>Activity Deduct</b><div style="font-size:22px">₹${keys.reduce((n,k)=>n+Number((stats.deduct||{})[k]||0),0).toFixed(2)}</div></div>
+                  <div style="padding:12px;border-radius:12px;background:#dcfce7;border:1px solid #86efac;color:#166534"><b>💚 Activity Earn</b><div style="font-size:22px;font-weight:900">+₹${keys.reduce((n,k)=>n+Number((stats.earn||{})[k]||0),0).toFixed(2)}</div></div>
+                  <div style="padding:12px;border-radius:12px;background:#fee2e2;border:1px solid #fca5a5;color:#b91c1c"><b>❤️ Activity Deduct</b><div style="font-size:22px;font-weight:900">-₹${keys.reduce((n,k)=>n+Number((stats.deduct||{})[k]||0),0).toFixed(2)}</div></div>
                 </div>
                 <div style="overflow:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:9px">Activity</th><th>Attempts</th><th>Correct</th><th>Wrong</th><th>Earn</th><th>Deduct</th><th>Tab Changes</th></tr></thead><tbody>${rows}</tbody></table></div>
             </div>`;
