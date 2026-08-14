@@ -911,7 +911,7 @@ body.notification-locked #notificationRequiredOverlay button{
         <div class="grid">
             <button class="btn btn-quiz" onclick="showScreen('quiz')">Start Quiz</button>
             <button class="btn btn-profile" onclick="location.href='profile.html'">👤 Profile</button>
-            <button class="btn" style="background:linear-gradient(135deg,#00b894,#0984e3);color:#fff" onclick="showScreen('activities')">🎮 English Earning Activities</button>
+            <button class="btn" style="background:linear-gradient(135deg,#00b894,#0984e3);color:#fff" onclick="showScreen('activities')">🎮 English Learning & Earning</button>
         </div>
 
         <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions
@@ -1711,12 +1711,24 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         function showScreen(id) {
-            document.getElementById('dashboard').classList.toggle('hidden', id !== 'dashboard');
-            document.getElementById('quiz').classList.toggle('hidden', id !== 'quiz');
+            // Normal screens
+            ['dashboard', 'quiz'].forEach(screenId => {
+                const el = document.getElementById(screenId);
+                if (!el) return;
+                const active = screenId === id;
+                el.classList.toggle('hidden', !active);
+                el.style.visibility = active ? 'visible' : 'hidden';
+                el.setAttribute('aria-hidden', active ? 'false' : 'true');
+            });
+
+            // English Learning / Earning Activities screen
+            if (id === 'activities' || id === 'activityPlay') {
+                showActivityScreen(id);
+                return;
+            }
+
             if (id === 'quiz') {
-
                 document.getElementById("quizWallet").innerText = wallet.toFixed(2);
-
                 loadQuiz();
             }
         }
