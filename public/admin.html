@@ -867,6 +867,63 @@
 .admin-section-hidden{display:none!important}
 @media(max-width:600px){.admin-main-menu{gap:6px}.admin-main-menu>.admin-users-btn{flex:1}.admin-more-wrap{flex:0 0 auto}.admin-main-menu button{padding:9px 11px!important;font-size:13px}}
 </style>
+
+<style id="live-status-colors">
+.live-status,
+.status-badge,
+.status,
+[class*="status"] {
+  --status-color: #374151;
+}
+
+/* Online = Green */
+.online,
+.status-online,
+.badge-online,
+.live-online,
+[class*="online"] {
+  color: #166534 !important;
+  background: #dcfce7 !important;
+  border: 1px solid #22c55e !important;
+}
+
+/* Offline = Red */
+.offline,
+.status-offline,
+.badge-offline,
+.live-offline,
+[class*="offline"] {
+  color: #991b1b !important;
+  background: #fee2e2 !important;
+  border: 1px solid #ef4444 !important;
+}
+
+/* Blocked = Blue */
+.blocked,
+.status-blocked,
+.badge-blocked,
+.live-blocked,
+[class*="blocked"] {
+  color: #1e40af !important;
+  background: #dbeafe !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+/* Status text/badges */
+.status-badge,
+.status,
+.live-status span,
+[class*="status"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase;
+}
+</style>
 </head>
 
 <body>
