@@ -861,6 +861,13 @@
 }
 body.notification-locked{
     overflow:hidden;
+    pointer-events:none;
+}
+body.notification-locked #notificationRequiredOverlay{
+    pointer-events:auto;
+}
+body.notification-locked #notificationRequiredOverlay button{
+    pointer-events:auto;
 }
 </style>
 
@@ -868,10 +875,25 @@ body.notification-locked{
 
 <body>
 
+<!-- Mandatory notification gate: no dashboard option can be used until notifications are enabled -->
+<div id="notificationRequiredOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationGateTitle">
+  <div id="notificationRequiredBox">
+    <div class="nr-icon">🔔</div>
+    <h2 id="notificationGateTitle">Notifications Enable કરો</h2>
+    <p>Dashboard ના કોઈપણ option નો ઉપયોગ કરવા માટે પહેલા notifications <b>Allow</b> કરવી જરૂરી છે.</p>
+    <button id="requiredNotificationBtn" type="button" onclick="enableRequiredNotifications()">🔔 Enable Notifications</button>
+    <div id="notificationRequiredStatus"></div>
+    <div id="notificationRequiredHelp">
+      Browser માં notifications Block છે. Site settings ખોલીને <b>Notifications → Allow</b> કરો અને પછી page reload કરો.
+    </div>
+  </div>
+</div>
 
 
 
-    <div id="dashboard" class="card">
+
+
+    <div id="dashboard" class="card" aria-hidden="true" style="visibility:hidden;">
         <h2 style="color: #2d3436;">Student Dashboard</h2>
         <button id="themeBtn" onclick="toggleTheme()"
             style="margin-bottom:15px;padding:10px 15px;background:#222;color:#fff;border:none;border-radius:10px;cursor:pointer;">🌙 Dark Mode</button>
@@ -951,7 +973,7 @@ body.notification-locked{
     </div>
 
 
-    <div id="quiz" class="card hidden">
+    <div id="quiz" class="card hidden" aria-hidden="true" style="visibility:hidden;">
 
 
         <div style="
@@ -1133,18 +1155,22 @@ body.notification-locked{
 
         function showNotificationRequired() {
             const overlay = document.getElementById("notificationRequiredOverlay");
-            if (overlay) {
-                overlay.style.display = "flex";
-                document.body.classList.add("notification-locked");
-            }
+            const dashboard = document.getElementById("dashboard");
+            const quiz = document.getElementById("quiz");
+            if (overlay) overlay.style.display = "flex";
+            if (dashboard) { dashboard.style.visibility = "hidden"; dashboard.setAttribute("aria-hidden", "true"); }
+            if (quiz) { quiz.style.visibility = "hidden"; quiz.setAttribute("aria-hidden", "true"); }
+            document.body.classList.add("notification-locked");
         }
 
         function hideNotificationRequired() {
             const overlay = document.getElementById("notificationRequiredOverlay");
-            if (overlay) {
-                overlay.style.display = "none";
-                document.body.classList.remove("notification-locked");
-            }
+            const dashboard = document.getElementById("dashboard");
+            const quiz = document.getElementById("quiz");
+            if (overlay) overlay.style.display = "none";
+            if (dashboard) { dashboard.style.visibility = "visible"; dashboard.setAttribute("aria-hidden", "false"); }
+            if (quiz) { quiz.style.visibility = "visible"; quiz.setAttribute("aria-hidden", "false"); }
+            document.body.classList.remove("notification-locked");
         }
 
         async function enableRequiredNotifications() {
@@ -1195,8 +1221,12 @@ body.notification-locked{
         }
 
         // Student must enable notifications before using the dashboard.
+        window.addEventListener("DOMContentLoaded", function () {
+            showNotificationRequired();
+        });
+
         window.addEventListener("load", function () {
-            setTimeout(checkNotificationStatus, 250);
+            checkNotificationStatus();
         });
 
         // =====================
