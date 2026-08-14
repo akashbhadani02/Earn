@@ -835,6 +835,13 @@
         #activityContent input,#activityContent textarea{
             pointer-events:auto !important;user-select:text !important;
         }
+
+#activityContent .activity-option{
+    position:relative;
+    z-index:30;
+    pointer-events:auto !important;
+    touch-action:manipulation;
+}
 </style>
 
 <style id="notification-required-style">
@@ -2144,7 +2151,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 box.innerHTML='<div class="activity-question">Arrange these words:</div><div class="word-bank" id="wordBank"></div><div class="answer-box" id="arranged">Tap words in the correct order</div><button class="activity-action" onclick="submitArrange()">✅ Check Sentence</button><button class="activity-action" style="background:#64748b" onclick="renderActivity()">↻ Reset</button>';
                 const wb=document.getElementById('wordBank'); words.forEach((w,i)=>{const b=document.createElement('button');b.className='word-chip';b.textContent=w;b.onclick=()=>{arrangeWords.push(w);b.disabled=true;document.getElementById('arranged').textContent=arrangeWords.join(' ')};wb.appendChild(b)});
             } else if(activityType==='fill'){
-                box.innerHTML='<div class="activity-question">'+q.prompt+'</div>'+q.options.map(o=>`<button class="activity-option" onclick="submitActivity(${JSON.stringify(o)})">${o}</button>`).join('');
+                box.innerHTML='<div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
             } else if(activityType==='correction'||activityType==='translate'||activityType==='word'){
                 box.innerHTML='<div class="activity-question">'+q.prompt+'</div><input id="activityAnswer" class="activity-input" placeholder="Type your answer here" autocomplete="off"><button class="activity-action" onclick="submitTypedActivity()">💰 Submit & Earn</button>';
             } else if(activityType==='listening'){
@@ -2152,7 +2159,7 @@ body.notification-locked #notificationRequiredOverlay button{
             } else if(activityType==='speaking'){
                 box.innerHTML='<div class="activity-question">🎤 '+q.prompt+'</div><button class="activity-action" onclick="startSpeaking()">🎙️ Start Speaking</button><div class="mic-status" id="micStatus">Microphone permission may be required.</div><button class="activity-action" onclick="submitSpeaking()">💰 Submit & Earn</button>';
             } else if(activityType==='reading'){
-                box.innerHTML='<div class="passage">'+q.passage+'</div><div class="activity-question">'+q.prompt+'</div>'+q.options.map(o=>`<button class="activity-option" onclick="submitActivity(${JSON.stringify(o)})">${o}</button>`).join('');
+                box.innerHTML='<div class="passage">'+q.passage+'</div><div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
             }
         }
         function setFeedback(ok,msg){const e=document.getElementById('activityFeedback');e.textContent=msg;e.style.color=ok?'#16a34a':'#dc2626';}
@@ -2422,6 +2429,31 @@ body.notification-locked #notificationRequiredOverlay button{
 </script>
 
 
-</body>
+<script id="fill-reading-answer-handler">
+document.addEventListener('click', function(e){
+    const btn = e.target.closest('#activityContent .activity-option[data-activity-answer]');
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    if (typeof window.submitActivity !== 'function') {
+        console.error('submitActivity is not available');
+        return;
+    }
+
+    if (btn.disabled) return;
+    btn.disabled = true;
+
+    const answer = decodeURIComponent(btn.getAttribute('data-activity-answer') || '');
+
+    // Use the real server-backed submitActivity function.
+    window.submitActivity(answer).finally(function(){
+        // renderActivity() creates fresh buttons for the next question.
+        // If the server rejects the answer, re-enable this button.
+        if (document.body.contains(btn)) btn.disabled = false;
+    });
+}, true);
+</script></body>
 
 </html>
