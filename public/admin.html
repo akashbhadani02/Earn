@@ -878,7 +878,21 @@
         🟢 Online status is based on the last 3 seconds • Dashboard updates automatically every 3 seconds
     </div>
 
-    <div class="cards">
+    <!-- ========================= ADMIN SECTION NAVIGATION ========================= -->
+    <div id="adminSectionNav" class="admin-section-nav">
+        <button class="admin-nav-btn active" data-section="dashboard" onclick="showAdminSection('dashboard')">🏠 Dashboard</button>
+        <button class="admin-nav-btn" data-section="withdraw" onclick="showAdminSection('withdraw')">💸 Withdraw Requests</button>
+        <button class="admin-nav-btn" data-section="users" onclick="showAdminSection('users')">👥 All Users</button>
+        <button class="admin-nav-btn" data-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
+        <button class="admin-nav-btn" data-section="command" onclick="showAdminSection('command')">🛡️ Admin Command Center</button>
+        <button class="admin-nav-btn" data-section="questions" onclick="showAdminSection('questions')">📚 Question Bank</button>
+    </div>
+
+    <div class="admin-section-note">
+        Select a section above. Only the section you choose will be shown, so the Admin Panel stays clean and easy to manage.
+    </div>
+
+    <div id="adminDashboardSection" class="cards admin-managed-section">
 
         <div class="card">
             <h3>Total Users</h3>
@@ -911,8 +925,8 @@
         </div>
 
     </div>
-    <h2>Withdraw Requests</h2>
-    <div class="table-wrap">
+    <h2 id="withdrawHeading" class="admin-managed-section">Withdraw Requests</h2>
+    <div id="withdrawSection" class="table-wrap admin-managed-section">
         <table>
 
             <thead>
@@ -941,10 +955,10 @@
         </table>
     </div>
 
-    <input id="search" placeholder="Search User" onkeyup="searchUser()">
+    <input id="search" class="admin-managed-section" placeholder="Search User" onkeyup="searchUser()">
 
-    <h2>All Users</h2>
-    <div class="table-wrap">
+    <h2 id="usersHeading" class="admin-managed-section">All Users</h2>
+    <div id="usersSection" class="table-wrap admin-managed-section">
         <table>
 
             <thead>
@@ -974,7 +988,7 @@
 
 
     <!-- Deleted Users / Restore -->
-    <section id="deletedUsersSection" style="margin-top:34px;">
+    <section id="deletedUsersSection" class="admin-managed-section" style="margin-top:34px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
             <h2 style="margin-bottom:0;">🗑️ Deleted Users</h2>
             <button onclick="loadDeletedUsers()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
@@ -1005,7 +1019,7 @@
 
 
     <!-- ========================= ADMIN COMMAND CENTER ========================= -->
-    <section id="adminProV2">
+    <section id="adminProV2" class="admin-managed-section">
         <div class="ap2-head">
             <div>
                 <h2>🛡️ Admin Command Center</h2>
@@ -1169,7 +1183,7 @@
     </div>
 
     <!-- ========================= QUESTION BANK ========================= -->
-    <section style="margin-top:34px;">
+    <section id="questionBankSection" class="admin-managed-section" style="margin-top:34px;">
         <h2>Question Bank — Add / Edit Questions</h2>
         <div class="question-toolbar">
             <input id="questionSearch" placeholder="Search question..." oninput="questionPage=1; loadQuestions();">
@@ -2508,6 +2522,87 @@ ${w.status === "Approved" ? `
             }
         }
     </script>
+    <style id="adminSectionNavigationCSS">
+        .admin-section-nav {
+            position: sticky;
+            top: 10px;
+            z-index: 5000;
+            width: 100%;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 12px;
+            margin: 0 0 10px;
+            border: 1px solid rgba(148,163,184,.18);
+            border-radius: 18px;
+            background: rgba(7,17,31,.94);
+            box-shadow: 0 16px 40px rgba(0,0,0,.28);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .admin-nav-btn {
+            margin: 0 !important;
+            min-height: 42px;
+            padding: 10px 15px !important;
+            border: 1px solid rgba(148,163,184,.18) !important;
+            border-radius: 11px !important;
+            background: #122036 !important;
+            color: #cbd5e1 !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            box-shadow: none !important;
+        }
+
+        .admin-nav-btn:hover {
+            transform: translateY(-1px);
+            background: #1a2d4a !important;
+            color: #fff !important;
+        }
+
+        .admin-nav-btn.active {
+            background: linear-gradient(135deg,#2563eb,#4f46e5) !important;
+            border-color: rgba(147,197,253,.35) !important;
+            color: #fff !important;
+            box-shadow: 0 8px 22px rgba(37,99,235,.25) !important;
+        }
+
+        .admin-section-note {
+            margin: 0 0 18px;
+            padding: 9px 13px;
+            border-radius: 11px;
+            border: 1px solid rgba(148,163,184,.12);
+            background: rgba(15,27,46,.45);
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .admin-managed-section.admin-hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 700px) {
+            .admin-section-nav {
+                position: sticky;
+                top: 5px;
+                padding: 9px;
+                gap: 7px;
+            }
+
+            .admin-nav-btn {
+                flex: 1 1 calc(50% - 7px);
+                min-width: 135px;
+                padding: 10px 8px !important;
+                font-size: 11px !important;
+            }
+
+            .admin-section-note {
+                font-size: 10px;
+            }
+        }
+    </style>
+
     <style id="adminProV2CSS">
         #adminProV2 {
             margin: 24px 0;
@@ -2711,6 +2806,57 @@ ${w.status === "Approved" ? `
             }
         }
     </style>
+
+    <script id="adminSectionNavigationJS">
+        (function () {
+            const sections = {
+                dashboard: ["adminDashboardSection"],
+                withdraw: ["withdrawHeading", "withdrawSection"],
+                users: ["search", "usersHeading", "usersSection"],
+                deleted: ["deletedUsersSection"],
+                command: ["adminProV2"],
+                questions: ["questionBankSection"]
+            };
+
+            window.showAdminSection = function (section) {
+                document.querySelectorAll(".admin-managed-section").forEach(el => {
+                    el.classList.add("admin-hidden");
+                });
+
+                (sections[section] || sections.dashboard).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.remove("admin-hidden");
+                });
+
+                document.querySelectorAll(".admin-nav-btn").forEach(btn => {
+                    btn.classList.toggle("active", btn.dataset.section === section);
+                });
+
+                window.scrollTo({ top: 0, behavior: "smooth" });
+
+                // Refresh the selected area when opened.
+                if (section === "deleted" && typeof loadDeletedUsers === "function") {
+                    loadDeletedUsers();
+                }
+                if (section === "questions" && typeof loadQuestions === "function") {
+                    loadQuestions();
+                }
+                if (section === "withdraw" && typeof loadWithdraws === "function") {
+                    loadWithdraws();
+                }
+                if (section === "users" && typeof loadUsers === "function") {
+                    loadUsers();
+                }
+                if (section === "command" && typeof window.ap2Refresh === "function") {
+                    window.ap2Refresh();
+                }
+            };
+
+            window.addEventListener("load", function () {
+                showAdminSection("dashboard");
+            });
+        })();
+    </script>
 
     <script id="adminProV2JS">
         (function () {
