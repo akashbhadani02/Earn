@@ -1095,8 +1095,6 @@
                     <th>Total</th>
                     <th>Spin Remaining</th>
                     <th>Warnings</th>
-                    <th>Activity Earn</th>
-                    <th>Activity Deduct</th>
                     <th>Action</th>
 
                 </tr>
@@ -1576,10 +1574,6 @@
             let html = "";
 
             users.forEach(user => {
-                const activityStats = user.activityStats || {};
-                const activityEarn = Object.values(activityStats.earn || {}).reduce((sum, v) => sum + Number(v || 0), 0);
-                const activityDeduct = Object.values(activityStats.deduct || {}).reduce((sum, v) => sum + Number(v || 0), 0);
-
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
                 const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
 
@@ -1638,34 +1632,6 @@
         border-radius:12px;
         display:inline-block;
     ">⚠️ ${Number(user.warningCount || 0)}/3</span>
-</td>
-
-<td>
-    <span style="
-        display:inline-block;
-        min-width:78px;
-        text-align:center;
-        padding:6px 10px;
-        border-radius:10px;
-        font-weight:900;
-        color:#166534;
-        background:#dcfce7;
-        border:1px solid #86efac;
-    ">+₹${activityEarn.toFixed(2)}</span>
-</td>
-
-<td>
-    <span style="
-        display:inline-block;
-        min-width:78px;
-        text-align:center;
-        padding:6px 10px;
-        border-radius:10px;
-        font-weight:900;
-        color:#b91c1c;
-        background:#fee2e2;
-        border:1px solid #fca5a5;
-    ">-₹${activityDeduct.toFixed(2)}</span>
 </td>
 
 <td>
