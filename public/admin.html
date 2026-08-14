@@ -382,18 +382,6 @@
             background: #f8fafc;
         }
 
-        /* Today's Activity column */
-        #userTable td:nth-child(5) {
-            text-align: center;
-            background: linear-gradient(180deg, #f0f9ff, #e0f2fe);
-        }
-
-        #userTable td:nth-child(5) .today-activity {
-            color: #075985 !important;
-            background: linear-gradient(135deg, #e0f2fe, #bae6fd) !important;
-            border-color: #38bdf8 !important;
-        }
-
         /* Buttons */
         button {
             border: 1px solid transparent;
@@ -1061,6 +1049,8 @@
                     <th>Total</th>
                     <th>Spin Remaining</th>
                     <th>Warnings</th>
+                    <th>Activity Earn</th>
+                    <th>Activity Deduct</th>
                     <th>Action</th>
 
                 </tr>
@@ -1540,6 +1530,10 @@
             let html = "";
 
             users.forEach(user => {
+                const activityStats = user.activityStats || {};
+                const activityEarn = Object.values(activityStats.earn || {}).reduce((sum, v) => sum + Number(v || 0), 0);
+                const activityDeduct = Object.values(activityStats.deduct || {}).reduce((sum, v) => sum + Number(v || 0), 0);
+
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
                 const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
 
@@ -1555,20 +1549,14 @@
 
     <td>
         <span style="
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            min-width:58px;
-            padding:7px 11px;
+            font-weight:800;
+            color:#0369a1;
+            background:#ffffff;
+            padding:6px 10px;
             border-radius:12px;
-            font-size:14px;
-            font-weight:900;
-            color:#075985;
-            background:linear-gradient(135deg,#e0f2fe,#bae6fd);
-            border:1px solid #38bdf8;
-            box-shadow:0 3px 8px rgba(14,165,233,.18);
-        " class="today-activity">${Number(user.dailyQuestionsAnswered || 0)}</span>
-        <div style="font-size:10px;color:#0369a1;font-weight:800;margin-top:4px;">TODAY</div>
+            display:inline-block;
+        ">${Number(user.dailyQuestionsAnswered || 0)}</span>
+        <div style="font-size:10px;color:#64748b;margin-top:4px;">Today</div>
     </td>
 
     <td>
@@ -1604,6 +1592,34 @@
         border-radius:12px;
         display:inline-block;
     ">⚠️ ${Number(user.warningCount || 0)}/3</span>
+</td>
+
+<td>
+    <span style="
+        display:inline-block;
+        min-width:78px;
+        text-align:center;
+        padding:6px 10px;
+        border-radius:10px;
+        font-weight:900;
+        color:#166534;
+        background:#dcfce7;
+        border:1px solid #86efac;
+    ">+₹${activityEarn.toFixed(2)}</span>
+</td>
+
+<td>
+    <span style="
+        display:inline-block;
+        min-width:78px;
+        text-align:center;
+        padding:6px 10px;
+        border-radius:10px;
+        font-weight:900;
+        color:#b91c1c;
+        background:#fee2e2;
+        border:1px solid #fca5a5;
+    ">-₹${activityDeduct.toFixed(2)}</span>
 </td>
 
 <td>
