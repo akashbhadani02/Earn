@@ -2987,7 +2987,7 @@ ${w.status === "Approved" ? `
             function ap2RenderWithdrawals() { document.getElementById("ap2WithdrawRows").innerHTML = D.withdrawals.map(w => `<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId || "-")}</td><td>${esc(w.date || "-")}</td></tr>`).join("") || '<tr><td colspan="6">No withdrawals.</td></tr>' }
             function ap2RenderWallet() { let a = []; D.users.forEach(u => (u.walletTransactions || []).forEach(t => a.push({ student: name(u), ...t }))); a.sort((x, y) => new Date(y.time) - new Date(x.time)); document.getElementById("ap2WalletRows").innerHTML = a.map(t => `<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("") || '<tr><td colspan="5">No transactions.</td></tr>' }
             function ap2SecurityRisk(u) {
-                const f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Number(u.deviceCount || 0);
+                const f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Array.isArray(u.deviceIds) ? u.deviceIds.length : Number(u.deviceCount || 0);
                 const logins = Array.isArray(u.loginHistory) ? u.loginHistory.length : 0;
                 const warns = Number(u.warningCount || 0);
                 const score = (f >= 10 ? 3 : f >= 5 ? 2 : f > 0 ? 1 : 0)
@@ -3023,7 +3023,7 @@ ${w.status === "Approved" ? `
                         <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
                         <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
                         <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
-                        <div><b>Devices</b><span>${Number(u.deviceCount||0)}</span></div>
+                        <div><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
                         <div><b>Login Records</b><span>${history.length}</span></div>
                         <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
                         <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
@@ -3041,7 +3041,7 @@ ${w.status === "Approved" ? `
             };
             function ap2RenderSecurity() {
                 const rows = D.users.map(u => {
-                    const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Number(u.deviceCount||0);
+                    const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0);
                     const l=Array.isArray(u.loginHistory)?u.loginHistory.length:0, w=Number(u.warningCount||0), r=ap2SecurityRisk(u);
                     return `<tr>
                         <td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span></td>

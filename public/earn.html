@@ -1200,6 +1200,36 @@ body.notification-locked{
         });
 
         // =====================
+        // SECURITY TRACKING
+        // =====================
+        function getSecurityDeviceId() {
+            let id = localStorage.getItem("securityDeviceId");
+            if (!id) {
+                id = "dev-" + (crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + Math.random().toString(36).slice(2));
+                localStorage.setItem("securityDeviceId", id);
+            }
+            return id;
+        }
+
+        async function recordSecurityEvent(type) {
+            try {
+                await fetch("/api/auth/security-event", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({ type, deviceId: getSecurityDeviceId() })
+                });
+            } catch (e) {
+                console.warn("Security event was not recorded:", e);
+            }
+        }
+
+        // Register this browser/device once after login.
+        if (localStorage.getItem("token")) recordSecurityEvent("device");
+
+        // =====================
         // Anti Cheating
         // =====================
         let warningMode = false;
@@ -1610,6 +1640,7 @@ body.notification-locked{
             if (document.hidden) {
                 if (!document.getElementById("quiz").classList.contains("hidden")) {
                     tabWasChanged = true;
+                    recordSecurityEvent("tab_change");
                 }
                 return;
             }
@@ -1757,6 +1788,8 @@ body.notification-locked{
 
                     if (timeTaken < 1.5) {
 
+                        // Count every fast answer in Security before issuing the warning.
+                        await recordSecurityEvent("fast_answer");
                         await blockStudent("વાંચી ને જવાબ આપવાનો છે ઓછા સમય માં જવાબ આપ્યો છે.");
 
                         return;

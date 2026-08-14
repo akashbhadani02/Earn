@@ -249,6 +249,7 @@ const userSchema = new mongoose.Schema(
             }
         ],
         deviceCount: { type: Number, default: 0 },
+        deviceIds: { type: [String], default: [] },
         tabChanges: { type: Number, default: 0 },
         fastAnswers: { type: Number, default: 0 },
         isDeleted: { type: Boolean, default: false },

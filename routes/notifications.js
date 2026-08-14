@@ -72,12 +72,17 @@ router.post("/subscribe", auth, async (req, res) => {
             user.pushSubscriptions.push(cleanSubscription);
         }
 
+        // Keep Security deviceCount based on unique browser/device IDs.
+        // Push subscriptions are separate from security device tracking.
+        if (!Array.isArray(user.deviceIds) || user.deviceIds.length === 0) {
+            user.deviceCount = Math.max(Number(user.deviceCount || 0), user.pushSubscriptions.length);
+        }
         await user.save();
 
         return res.json({
             success: true,
             message: "Notifications enabled on this device",
-            deviceCount: user.pushSubscriptions.length
+            deviceCount: Number(user.deviceCount || 0)
         });
     } catch (err) {
         console.error("Push subscribe error:", err);

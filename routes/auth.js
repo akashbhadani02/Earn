@@ -94,7 +94,15 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        // Security audit: record every successful login.
+        // Security audit: record every successful login and unique device.
+        const clientDeviceId = String(req.headers["x-device-id"] || "").trim().slice(0, 200);
+        user.deviceIds = Array.isArray(user.deviceIds) ? user.deviceIds : [];
+        if (clientDeviceId && !user.deviceIds.includes(clientDeviceId)) {
+            user.deviceIds.push(clientDeviceId);
+            if (user.deviceIds.length > 50) user.deviceIds = user.deviceIds.slice(-50);
+        }
+        user.deviceCount = Math.max(Number(user.deviceCount || 0), user.deviceIds.length);
+
         user.loginHistory = Array.isArray(user.loginHistory) ? user.loginHistory : [];
         user.loginHistory.push({
             time: new Date(),
@@ -248,6 +256,9 @@ router.post("/block-me", auth, async (req, res) => {
         // Increase warning count for every confirmed violation.
         user.warningCount = (user.warningCount || 0) + 1;
         user.blockReason = reason || "Cheating Detected";
+        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
+        user.warningHistory.push({ time: new Date(), reason: user.blockReason });
+        if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
 
         // First 3 violations: warning only.
         if (user.warningCount <= 3) {
@@ -286,6 +297,49 @@ router.post("/block-me", auth, async (req, res) => {
 
     }
 
+});
+
+
+// ==========================
+// Security Event Tracking
+// Tracks tab changes, fast answers and unique devices.
+// ==========================
+router.post("/security-event", auth, async (req, res) => {
+    try {
+        const { type, deviceId } = req.body || {};
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        if (type === "tab_change") {
+            user.tabChanges = Number(user.tabChanges || 0) + 1;
+        } else if (type === "fast_answer") {
+            user.fastAnswers = Number(user.fastAnswers || 0) + 1;
+        } else if (type === "device") {
+            const id = String(deviceId || "").trim().slice(0, 200);
+            if (!id) return res.status(400).json({ success: false, message: "Device ID required" });
+            user.deviceIds = Array.isArray(user.deviceIds) ? user.deviceIds : [];
+            if (!user.deviceIds.includes(id)) {
+                user.deviceIds.push(id);
+                if (user.deviceIds.length > 50) user.deviceIds = user.deviceIds.slice(-50);
+            }
+            user.deviceCount = user.deviceIds.length;
+        } else {
+            return res.status(400).json({ success: false, message: "Unknown security event" });
+        }
+
+        await user.save();
+        return res.json({
+            success: true,
+            fastAnswers: Number(user.fastAnswers || 0),
+            tabChanges: Number(user.tabChanges || 0),
+            deviceCount: Number(user.deviceCount || 0),
+            warningCount: Number(user.warningCount || 0),
+            loginCount: Array.isArray(user.loginHistory) ? user.loginHistory.length : 0
+        });
+    } catch (err) {
+        console.error("Security event error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
 });
 
 module.exports = router;
