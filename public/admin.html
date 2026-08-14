@@ -854,45 +854,78 @@
         }
     </style>
 
+
+<style>
+.admin-main-menu{overflow-x:auto!important;overflow-y:visible!important;position:sticky;top:0;z-index:1000;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;overflow-x:auto;overflow-y:visible;padding:12px;margin:0 0 18px;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,.2);border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.2)}
+.admin-main-menu button{margin:0!important;padding:10px 14px!important;border:0!important;border-radius:9px!important;cursor:pointer!important;font-weight:700!important;background:#334155!important;color:#fff!important}
+.admin-main-menu button.active{background:#2563eb!important}
+.admin-section-hidden{display:none!important}
+@media(max-width:600px){.admin-main-menu{gap:6px}admin-main-menu button{padding:9px 11px!important;font-size:13px}}
+</style>
+
+<style id="live-status-colors">
+.live-status,
+.status-badge,
+.status,
+[class*="status"] {
+  --status-color: #374151;
+}
+
+/* Online = Green */
+.online,
+.status-online,
+.badge-online,
+.live-online,
+[class*="online"] {
+  color: #166534 !important;
+  background: #dcfce7 !important;
+  border: 1px solid #22c55e !important;
+}
+
+/* Offline = Red */
+.offline,
+.status-offline,
+.badge-offline,
+.live-offline,
+[class*="offline"] {
+  color: #991b1b !important;
+  background: #fee2e2 !important;
+  border: 1px solid #ef4444 !important;
+}
+
+/* Blocked = Blue */
+.blocked,
+.status-blocked,
+.badge-blocked,
+.live-blocked,
+[class*="blocked"] {
+  color: #1e40af !important;
+  background: #dbeafe !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+/* Status text/badges */
+.status-badge,
+.status,
+.live-status span,
+[class*="status"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 10px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  text-transform: uppercase;
+}
+</style>
 </head>
 
 <body>
-<div id="admin-main-nav" style="
-  display:flex;
-  flex-wrap:nowrap;
-  gap:8px;
-  align-items:center;
-  overflow-x:auto;
-  overflow-y:hidden;
-  white-space:nowrap;
-  padding:10px 0;
-  scrollbar-width:thin;
-">
-  <button class="admin-nav-btn" onclick="showSection('users')">👥 Users</button>
-  <button class="admin-nav-btn" onclick="showSection('dashboard')">🏠 Dashboard</button>
-  <button class="admin-nav-btn" onclick="showSection('withdrawals')">💸 Withdrawals</button>
-  <button class="admin-nav-btn" onclick="showSection('deleted-users')">🗑️ Deleted Users</button>
-  <button class="admin-nav-btn" onclick="showSection('command-center')">🛡️ Command Center</button>
-  <button class="admin-nav-btn" onclick="showSection('question-bank')">❓ Question Bank</button>
-  <button class="admin-nav-btn" onclick="showSection('wallet-history')">💰 Wallet History</button>
-  <button class="admin-nav-btn" onclick="showSection('activity-log')">📝 Activity Log</button>
-</div>
-<style>
-#admin-main-nav .admin-nav-btn{
-  flex:0 0 auto;
-  border:0;
-  border-radius:9px;
-  padding:9px 13px;
-  font-weight:700;
-  cursor:pointer;
-  background:#2563eb;
-  color:#fff;
-  box-shadow:0 2px 6px rgba(0,0,0,.12);
-}
-#admin-main-nav .admin-nav-btn:hover{filter:brightness(.93);}
-#admin-main-nav .admin-nav-btn:first-child{background:#16a34a;}
-</style>
 
+
+
+</div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
         <h2>Admin Dashboard</h2>
@@ -902,6 +935,17 @@
         </button>
     </div>
 
+<div class="admin-main-menu">
+  <button class="admin-users-btn active" data-admin-section="users" onclick="showAdminSection('users')">👥 Users</button>
+  <button data-admin-section="dashboard" onclick="showAdminSection('dashboard')">🏠 Dashboard</button>
+  <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
+  <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
+  <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
+  <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
+</div>
+
+
+    <section id="adminSectionDashboard">
     <div style="
         margin:-12px 0 18px;
         padding:10px 14px;
@@ -947,17 +991,10 @@
         </div>
 
     </div>
+    </section>
+
+    <section id="adminSectionWithdrawals">
     <h2>Withdraw Requests</h2>
-    <div style="display:flex;gap:8px;align-items:center;white-space:nowrap;overflow-x:auto;margin:8px 0;">
-        <input id="withdrawSearch" placeholder="Search Withdrawal" oninput="filterWithdrawCompact()" style="min-width:180px;">
-        <select id="withdrawStatusFilter" onchange="filterWithdrawCompact()" style="width:auto;">
-            <option value="all">All</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Paid">Paid</option>
-            <option value="Rejected">Rejected</option>
-        </select>
-    </div>
     <div class="table-wrap">
         <table>
 
@@ -986,16 +1023,10 @@
 
         </table>
     </div>
+    </section>
 
-    <div style="display:flex;gap:8px;align-items:center;white-space:nowrap;overflow-x:auto;margin:8px 0;">
-        <input id="search" placeholder="Search User" onkeyup="searchUser()">
-        <select id="userStatusFilter" onchange="searchUser()" style="width:auto;">
-            <option value="all">All</option>
-            <option value="online">🟢 Online</option>
-            <option value="offline">🔴 Offline</option>
-            <option value="blocked">🔵 Blocked</option>
-        </select>
-    </div>
+    <section id="adminSectionUsers">
+    <input id="search" placeholder="Search User" onkeyup="searchUser()">
 
     <h2>All Users</h2>
     <div class="table-wrap">
@@ -1025,10 +1056,11 @@
 
         </table>
     </div>
+    </section>
 
 
     <!-- Deleted Users / Restore -->
-    <section id="deletedUsersSection" style="margin-top:34px;">
+    <section id="adminSectionDeleted" style="margin-top:34px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
             <h2 style="margin-bottom:0;">🗑️ Deleted Users</h2>
             <button onclick="loadDeletedUsers()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
@@ -1059,11 +1091,10 @@
 
 
     <!-- ========================= ADMIN COMMAND CENTER ========================= -->
-    <section id="adminProV2">
+    <section id="adminSectionCommand" class="adminProV2">
         <div class="ap2-head">
             <div>
                 <h2>🛡️ Admin Command Center</h2>
-                <div class="ap2-muted">MongoDB-backed • Vercel-ready • Student / Wallet / Security / Reports</div>
             </div>
             <div class="ap2-flex"><button class="ap2-btn" onclick="ap2Refresh()">🔄 Refresh</button><button
                     class="ap2-btn" onclick="ap2Export()">📤 Export CSV</button></div>
@@ -1109,16 +1140,11 @@
             <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
             <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
             <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
-            <button class="ap2-btn" onclick="ap2Tab('activity')">📝 Admin Activity</button>
         </div>
 
         <div class="ap2-pane active" id="ap2-students">
-            <div class="ap2-flex">
-                <input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile" oninput="ap2RenderStudents()">
-                <select class="ap2-input" id="ap2StatusFilter" onchange="ap2RenderStudents()" style="max-width:180px">
-                    <option value="all">All Status</option><option value="online">Online</option><option value="offline">Offline</option><option value="blocked">Blocked</option>
-                </select>
-                <button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button>
+            <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile"
+                    oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button>
             </div>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -1141,12 +1167,6 @@
 
         <div class="ap2-pane" id="ap2-withdrawals">
             <h3>💸 Withdrawal Requests</h3>
-            <div class="ap2-flex">
-                <input class="ap2-input" id="ap2WithdrawSearch" placeholder="Search student / mobile / transaction" oninput="ap2RenderWithdrawals()">
-                <select class="ap2-input" id="ap2WithdrawStatus" onchange="ap2RenderWithdrawals()" style="max-width:180px">
-                    <option value="all">All Status</option><option>Pending</option><option>Approved</option><option>Paid</option><option>Rejected</option>
-                </select>
-            </div>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
                     <thead>
@@ -1217,20 +1237,6 @@
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-activity">
-            <h3>📝 Admin Activity Log</h3>
-            <div class="ap2-flex">
-                <input class="ap2-input" id="ap2ActivitySearch" placeholder="Search student / action / details" oninput="ap2RenderActivity()">
-                <button class="ap2-btn" onclick="ap2RenderActivity()">🔄 Refresh Log</button>
-            </div>
-            <div class="ap2-tablewrap">
-                <table class="ap2-table">
-                    <thead><tr><th>Time</th><th>Student</th><th>Action</th><th>Details</th></tr></thead>
-                    <tbody id="ap2ActivityRows"></tbody>
-                </table>
-            </div>
-        </div>
-
         <div class="ap2-pane" id="ap2-reports">
             <h3>📊 Reports</h3>
             <p class="ap2-muted">Download the current MongoDB student report as CSV.</p><button class="ap2-btn"
@@ -1248,7 +1254,7 @@
     </div>
 
     <!-- ========================= QUESTION BANK ========================= -->
-    <section style="margin-top:34px;">
+    <section id="adminSectionQuestions" style="margin-top:34px;">
         <h2>Question Bank — Add / Edit Questions</h2>
         <div class="question-toolbar">
             <input id="questionSearch" placeholder="Search question..." oninput="questionPage=1; loadQuestions();">
@@ -1316,6 +1322,30 @@
     </div>
 
     <script>
+
+
+        // ===== Compact Admin Main Menu =====
+        function showAdminSection(name){
+            const map={
+                dashboard:'adminSectionDashboard',
+                users:'adminSectionUsers',
+                withdrawals:'adminSectionWithdrawals',
+                deleted:'adminSectionDeleted',
+                command:'adminSectionCommand',
+                questions:'adminSectionQuestions'
+            };
+            Object.keys(map).forEach(k=>{
+                const el=document.getElementById(map[k]);
+                if(el) el.classList.toggle('admin-section-hidden',k!==name);
+            });
+            document.querySelectorAll('.admin-main-menu button[data-admin-section]').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===name));
+            if(name==='users' && typeof loadUsers==='function') loadUsers();
+            if(name==='withdrawals' && typeof loadWithdraws==='function') loadWithdraws();
+            if(name==='deleted' && typeof loadDeletedUsers==='function') loadDeletedUsers();
+            if(name==='command' && typeof ap2Refresh==='function') ap2Refresh();
+            if(name==='questions' && typeof loadQuestions==='function') loadQuestions();
+        }
+        window.addEventListener('DOMContentLoaded',()=>showAdminSection('users'));
 
         const token = localStorage.getItem("adminToken");
 
@@ -2210,7 +2240,7 @@ ${w.upiId || "-"}
 </td>
 
 <td>
-<strong>${w.status}</strong>
+<span class="status-badge ${String(w.status || "").toLowerCase()}">${w.status}</span>
 </td>   
 
 <td>
@@ -2645,18 +2675,85 @@ ${w.status === "Approved" ? `
         }
 
         .ap2-btn {
-            border: 1px solid #26354c;
-            background: #122036;
+            border: 1px solid #2563eb;
+            background: #2563eb;
             color: #fff;
             padding: 9px 12px;
             border-radius: 10px;
             cursor: pointer;
-            font-weight: 700
+            font-weight: 700;
+            transition: .2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12);
         }
 
         .ap2-btn:hover {
-            filter: brightness(1.15)
+            filter: brightness(1.10);
+            transform: translateY(-1px);
         }
+
+        /* Command Center colorful buttons */
+        .adminProV2 .ap2-head .ap2-btn:first-child {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+        .adminProV2 .ap2-head .ap2-btn:last-child {
+            background: #16a34a;
+            border-color: #16a34a;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(1) {
+            background: #2563eb; border-color: #2563eb;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(2) {
+            background: #16a34a; border-color: #16a34a;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(3) {
+            background: #f59e0b; border-color: #f59e0b; color: #111827;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(4) {
+            background: #dc2626; border-color: #dc2626;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(5) {
+            background: #7c3aed; border-color: #7c3aed;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(6) {
+            background: #0891b2; border-color: #0891b2;
+        }
+        .adminProV2 .ap2-pane .ap2-flex .ap2-btn {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+
+        /* Status + Action colors */
+        .admin-table td strong, .admin-table td .status-badge {
+            display:inline-block; padding:5px 10px; border-radius:999px; font-weight:800; font-size:12px;
+        }
+        .admin-table td strong { background:#334155; color:#fff; }
+        .status-pending, .status-badge.pending { background:#f59e0b !important; color:#111827 !important; }
+        .status-approved, .status-badge.approved { background:#2563eb !important; color:#fff !important; }
+        .status-paid, .status-badge.paid { background:#16a34a !important; color:#fff !important; }
+        .status-rejected, .status-badge.rejected { background:#dc2626 !important; color:#fff !important; }
+        .status-blocked, .status-badge.blocked { background:#7c3aed !important; color:#fff !important; }
+        .status-online, .status-badge.online { background:#16a34a !important; color:#fff !important; }
+        .status-offline, .status-badge.offline { background:#64748b !important; color:#fff !important; }
+
+        #withdrawTable td:last-child button, #usersTable td:last-child button, #userTable td:last-child button {
+            border:0 !important; color:#fff !important; border-radius:8px !important; padding:7px 10px !important; margin:2px !important;
+            font-weight:700; cursor:pointer; transition:.18s ease;
+        }
+        #withdrawTable td:last-child button:hover, #usersTable td:last-child button:hover, #userTable td:last-child button:hover { filter:brightness(1.12); transform:translateY(-1px); }
+        #withdrawTable td:last-child button:nth-child(1) { background:#16a34a !important; }
+        #withdrawTable td:last-child button:nth-child(2) { background:#dc2626 !important; }
+        #withdrawTable td:last-child button:nth-child(3) { background:#2563eb !important; }
+        #withdrawTable td:last-child button:last-child { background:#64748b !important; }
+
+        .action-view { background:#2563eb !important; }
+        .action-edit { background:#f59e0b !important; color:#111827 !important; }
+        .action-success { background:#16a34a !important; }
+        .action-danger { background:#dc2626 !important; }
+        .action-warning { background:#f59e0b !important; color:#111827 !important; }
+        .action-purple { background:#7c3aed !important; }
+        .action-neutral { background:#64748b !important; }
 
         .ap2-tabs {
             display: flex;
@@ -2706,6 +2803,18 @@ ${w.status === "Approved" ? `
             flex-wrap: wrap
         }
 
+        .ap2-table td:last-child .ap2-btn:nth-child(1) { background:#2563eb; border-color:#2563eb; }
+        .ap2-table td:last-child .ap2-btn:nth-child(2) { background:#16a34a; border-color:#16a34a; }
+        .ap2-table td:last-child .ap2-btn:nth-child(3) { background:#f59e0b; border-color:#f59e0b; color:#111827; }
+        .ap2-table td:last-child .ap2-btn:nth-child(4) { background:#7c3aed; border-color:#7c3aed; }
+        .ap2-status-pending { background:#f59e0b !important; color:#111827 !important; }
+        .ap2-status-approved { background:#2563eb !important; color:#fff !important; }
+        .ap2-status-paid { background:#16a34a !important; color:#fff !important; }
+        .ap2-status-rejected { background:#dc2626 !important; color:#fff !important; }
+        .ap2-status-blocked { background:#dc2626 !important; color:#fff !important; }
+        .ap2-status-online { background:#16a34a !important; color:#fff !important; }
+        .ap2-status-offline { background:#64748b !important; color:#fff !important; }
+
         .ap2-badge {
             padding: 4px 8px;
             border-radius: 99px;
@@ -2715,11 +2824,21 @@ ${w.status === "Approved" ? `
         }
 
         .ap2-green {
-            background: #103b29
+            background: #16a34a !important;
+            color: #ffffff !important;
+            border: 1px solid #15803d !important;
         }
 
         .ap2-red {
-            background: #4b1720
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            border: 1px solid #b91c1c !important;
+        }
+
+        .ap2-blue {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            border: 1px solid #1d4ed8 !important;
         }
 
         .ap2-yellow {
@@ -2810,17 +2929,12 @@ ${w.status === "Approved" ? `
             function ap2Render() {
                 const s = D.stats || {}, map = { ap2Students: s.students, ap2Online: s.online, ap2Blocked: s.blocked, ap2Q: s.questionsToday, ap2Wallet: money(s.wallet), ap2Earn: money(s.totalEarn), ap2Warnings: s.warnings, ap2Spin: s.spinEligible };
                 Object.keys(map).forEach(k => { let e = document.getElementById(k); if (e) e.textContent = map[k] ?? 0 });
-                ap2RenderStudents(); ap2RenderWithdrawals(); ap2RenderWallet(); ap2RenderSecurity(); ap2RenderRecycle(); ap2RenderActivity();
+                ap2RenderStudents(); ap2RenderWithdrawals(); ap2RenderWallet(); ap2RenderSecurity(); ap2RenderRecycle();
             }
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
-                const status = document.getElementById("ap2StatusFilter")?.value || "all";
-                const list = D.users.filter(u => {
-                    const online = !!(u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 120000);
-                    const current = u.isBlocked ? "blocked" : (online ? "online" : "offline");
-                    return (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term) && (status === "all" || current === status);
-                });
-                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-red">Blocked</span>' : u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000 ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge">Offline</span>'}</td><td>${q(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${q(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+                const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000 ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${q(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
             window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
             window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
@@ -2830,83 +2944,15 @@ ${w.status === "Approved" ? `
             window.ap2ResetQ = async id => { try { await api("/pro/reset-questions/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2ResetSpin = async id => { try { await api("/pro/reset-spin/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Tab = t => { document.querySelectorAll("#adminProV2 .ap2-pane").forEach(x => x.classList.remove("active")); document.getElementById("ap2-" + t).classList.add("active") };
-            function ap2RenderWithdrawals() {
-                const term=(document.getElementById("ap2WithdrawSearch")?.value||"").toLowerCase();
-                const status=document.getElementById("ap2WithdrawStatus")?.value||"all";
-                const list=D.withdrawals.filter(w => {
-                    const text=(w.student+" "+w.mobile+" "+(w.transactionId||"")).toLowerCase();
-                    return text.includes(term) && (status==="all" || String(w.status||"")===status);
-                });
-                document.getElementById("ap2WithdrawRows").innerHTML=list.map(w=>`<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId||"-")}</td><td>${esc(w.date||"-")}</td></tr>`).join("")||'<tr><td colspan="6">No withdrawals found.</td></tr>';
-            }
+            function ap2RenderWithdrawals() { document.getElementById("ap2WithdrawRows").innerHTML = D.withdrawals.map(w => `<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId || "-")}</td><td>${esc(w.date || "-")}</td></tr>`).join("") || '<tr><td colspan="6">No withdrawals.</td></tr>' }
             function ap2RenderWallet() { let a = []; D.users.forEach(u => (u.walletTransactions || []).forEach(t => a.push({ student: name(u), ...t }))); a.sort((x, y) => new Date(y.time) - new Date(x.time)); document.getElementById("ap2WalletRows").innerHTML = a.map(t => `<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("") || '<tr><td colspan="5">No transactions.</td></tr>' }
             function ap2RenderSecurity() { document.getElementById("ap2SecurityRows").innerHTML = D.users.map(u => { let f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Number(u.deviceCount || 0), r = f >= 10 || t >= 10 || d >= 3 ? "HIGH" : f >= 5 || t >= 5 || d >= 2 ? "MEDIUM" : "LOW"; return `<tr><td>${esc(name(u))}</td><td>${f}</td><td>${t}</td><td>${d}</td><td><span class="ap2-badge ${r === "HIGH" ? "ap2-red" : r === "MEDIUM" ? "ap2-yellow" : "ap2-green"}">${r}</span></td></tr>` }).join("") || '<tr><td colspan="5">No data.</td></tr>' }
-            function ap2RenderActivity(){
-                const term=(document.getElementById("ap2ActivitySearch")?.value||"").toLowerCase();
-                let rows=[];
-                D.users.forEach(u=>(u.adminActivity||[]).forEach(a=>rows.push({student:name(u),time:a.time,action:a.action,details:a.details})));
-                rows.sort((a,b)=>new Date(b.time||0)-new Date(a.time||0));
-                rows=rows.filter(a=>(a.student+" "+a.action+" "+a.details).toLowerCase().includes(term));
-                document.getElementById("ap2ActivityRows").innerHTML=rows.map(a=>`<tr><td>${esc(a.time||"-")}</td><td>${esc(a.student)}</td><td><b>${esc(a.action)}</b></td><td>${esc(a.details||"-")}</td></tr>`).join("")||'<tr><td colspan="4">No admin activity found.</td></tr>';
-            }
             async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("") || '<tr><td colspan="4">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
             window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
             window.addEventListener("load", () => { ap2Refresh(); setInterval(ap2Refresh, 3000) });
         })();
     </script>
-
-
-<script>
-/* ===== 4 compact admin enhancements - original UI preserved ===== */
-(function(){
-  function applyUserStatusFilter(){
-    const status=(document.getElementById("userStatusFilter")?.value||"all").toLowerCase();
-    document.querySelectorAll("#userTable tr").forEach(tr=>{
-      if(status==="all"){tr.style.display="";return;}
-      const t=(tr.innerText||"").toLowerCase();
-      const blocked=t.includes("blocked"), online=t.includes("online"), offline=t.includes("offline");
-      tr.style.display =
-        status==="blocked" ? (blocked?"":"none") :
-        status==="online" ? (online?"":"none") :
-        (offline?"":"none");
-    });
-  }
-
-  window.filterWithdrawCompact=function(){
-    const term=(document.getElementById("withdrawSearch")?.value||"").toLowerCase().trim();
-    const status=(document.getElementById("withdrawStatusFilter")?.value||"all").toLowerCase();
-    document.querySelectorAll("#withdrawTable tr").forEach(tr=>{
-      const t=(tr.innerText||"").toLowerCase();
-      tr.style.display=(!term||t.includes(term)) && (status==="all"||t.includes(status)) ? "" : "none";
-    });
-  };
-
-  const oldSearch=window.searchUser;
-  if(typeof oldSearch==="function"){
-    window.searchUser=function(){
-      oldSearch.apply(this,arguments);
-      setTimeout(applyUserStatusFilter,40);
-    };
-  }
-  const oldLoadUsers=window.loadUsers;
-  if(typeof oldLoadUsers==="function"){
-    window.loadUsers=async function(){
-      const r=await oldLoadUsers.apply(this,arguments);
-      setTimeout(applyUserStatusFilter,40);
-      return r;
-    };
-  }
-  const oldLoadWithdraws=window.loadWithdraws;
-  if(typeof oldLoadWithdraws==="function"){
-    window.loadWithdraws=async function(){
-      const r=await oldLoadWithdraws.apply(this,arguments);
-      setTimeout(window.filterWithdrawCompact,40);
-      return r;
-    };
-  }
-})();
-</script>
 
 </body>
 
