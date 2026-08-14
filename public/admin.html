@@ -2200,7 +2200,7 @@ ${w.upiId || "-"}
 </td>
 
 <td>
-<strong>${w.status}</strong>
+<span class="status-badge ${String(w.status || "").toLowerCase()}">${w.status}</span>
 </td>   
 
 <td>
@@ -2683,6 +2683,38 @@ ${w.status === "Approved" ? `
             border-color: #2563eb;
         }
 
+
+        /* Status + Action colors */
+        .admin-table td strong, .admin-table td .status-badge {
+            display:inline-block; padding:5px 10px; border-radius:999px; font-weight:800; font-size:12px;
+        }
+        .admin-table td strong { background:#334155; color:#fff; }
+        .status-pending, .status-badge.pending { background:#f59e0b !important; color:#111827 !important; }
+        .status-approved, .status-badge.approved { background:#2563eb !important; color:#fff !important; }
+        .status-paid, .status-badge.paid { background:#16a34a !important; color:#fff !important; }
+        .status-rejected, .status-badge.rejected { background:#dc2626 !important; color:#fff !important; }
+        .status-blocked, .status-badge.blocked { background:#7c3aed !important; color:#fff !important; }
+        .status-online, .status-badge.online { background:#16a34a !important; color:#fff !important; }
+        .status-offline, .status-badge.offline { background:#64748b !important; color:#fff !important; }
+
+        #withdrawTable td:last-child button, #usersTable td:last-child button, #userTable td:last-child button {
+            border:0 !important; color:#fff !important; border-radius:8px !important; padding:7px 10px !important; margin:2px !important;
+            font-weight:700; cursor:pointer; transition:.18s ease;
+        }
+        #withdrawTable td:last-child button:hover, #usersTable td:last-child button:hover, #userTable td:last-child button:hover { filter:brightness(1.12); transform:translateY(-1px); }
+        #withdrawTable td:last-child button:nth-child(1) { background:#16a34a !important; }
+        #withdrawTable td:last-child button:nth-child(2) { background:#dc2626 !important; }
+        #withdrawTable td:last-child button:nth-child(3) { background:#2563eb !important; }
+        #withdrawTable td:last-child button:last-child { background:#64748b !important; }
+
+        .action-view { background:#2563eb !important; }
+        .action-edit { background:#f59e0b !important; color:#111827 !important; }
+        .action-success { background:#16a34a !important; }
+        .action-danger { background:#dc2626 !important; }
+        .action-warning { background:#f59e0b !important; color:#111827 !important; }
+        .action-purple { background:#7c3aed !important; }
+        .action-neutral { background:#64748b !important; }
+
         .ap2-tabs {
             display: flex;
             gap: 8px;
@@ -2730,6 +2762,18 @@ ${w.status === "Approved" ? `
             align-items: center;
             flex-wrap: wrap
         }
+
+        .ap2-table td:last-child .ap2-btn:nth-child(1) { background:#2563eb; border-color:#2563eb; }
+        .ap2-table td:last-child .ap2-btn:nth-child(2) { background:#16a34a; border-color:#16a34a; }
+        .ap2-table td:last-child .ap2-btn:nth-child(3) { background:#f59e0b; border-color:#f59e0b; color:#111827; }
+        .ap2-table td:last-child .ap2-btn:nth-child(4) { background:#7c3aed; border-color:#7c3aed; }
+        .ap2-status-pending { background:#f59e0b !important; color:#111827 !important; }
+        .ap2-status-approved { background:#2563eb !important; color:#fff !important; }
+        .ap2-status-paid { background:#16a34a !important; color:#fff !important; }
+        .ap2-status-rejected { background:#dc2626 !important; color:#fff !important; }
+        .ap2-status-blocked { background:#dc2626 !important; color:#fff !important; }
+        .ap2-status-online { background:#16a34a !important; color:#fff !important; }
+        .ap2-status-offline { background:#64748b !important; color:#fff !important; }
 
         .ap2-badge {
             padding: 4px 8px;
