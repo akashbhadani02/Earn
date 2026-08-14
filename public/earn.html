@@ -827,7 +827,15 @@
             pointer-events:auto !important;
             touch-action:manipulation;
         }
-</style>
+
+        .submit-answer{
+            display:block;width:100%;margin-top:12px;padding:12px 16px;
+            border:0;border-radius:10px;cursor:pointer;font-weight:700;
+        }
+        #activityContent input,#activityContent textarea{
+            pointer-events:auto !important;user-select:text !important;
+        }
+    </style>
 
 <style id="notification-required-style">
 #notificationRequiredOverlay{
@@ -2424,6 +2432,69 @@ document.addEventListener('click', function(e){
         openActivity(type);
     }
 });
+</script>
+
+<script id="activity-answer-fallback">
+(function(){
+  function getQuestion(){
+    if(typeof activityQuestions === 'undefined' || !Array.isArray(activityQuestions)) return null;
+    return activityQuestions[typeof activityIndex === 'number' ? activityIndex : 0] || null;
+  }
+
+  function valueOf(q){
+    return q && (q.answer ?? q.correctAnswer ?? q.correct ?? q.expected ?? q.correct_answer);
+  }
+
+  window.submitLearningAnswer = async function(answer, buttonEl){
+    const q=getQuestion();
+    if(!q) return;
+
+    const correct=valueOf(q);
+    const normalize=v=>String(v ?? '').trim().toLowerCase().replace(/\s+/g,' ');
+    const ok=normalize(answer)===normalize(correct);
+
+    // If the app already has a reward/submit function, use it.
+    if(typeof submitActivityAnswer === 'function'){
+      try {
+        await submitActivityAnswer(answer);
+        return;
+      } catch(e) {
+        console.error(e);
+      }
+    }
+
+    const fb=document.getElementById('activityFeedback');
+    if(fb){
+      fb.textContent=ok ? '✅ Correct! You earned points.' : '❌ Incorrect. Correct answer: '+String(correct);
+      fb.style.display='block';
+    }
+    if(ok && typeof wallet !== 'undefined'){
+      const reward=Number(q.reward ?? (typeof activityData!=='undefined' && activityData.reward) ?? 0);
+      if(reward) wallet += reward;
+      if(typeof updateActivityWallet==='function') updateActivityWallet();
+    }
+  };
+
+  // Make option buttons, input submit buttons and generated answer controls clickable.
+  document.addEventListener('click',function(e){
+    const b=e.target.closest('[data-answer], [data-option], .answer-option, .activity-option');
+    if(!b) return;
+    const answer=b.dataset.answer ?? b.dataset.option ?? b.textContent.trim();
+    e.preventDefault();
+    window.submitLearningAnswer(answer,b);
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(e.key!=='Enter') return;
+    const input=e.target.closest('#activityContent input, #activityContent textarea');
+    if(!input) return;
+    const submit=document.querySelector('#activityContent [data-submit-answer], #activityContent .submit-answer');
+    if(submit){
+      e.preventDefault();
+      submit.click();
+    }
+  });
+})();
 </script>
 </body>
 
