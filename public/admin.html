@@ -857,6 +857,42 @@
 </head>
 
 <body>
+<div id="admin-main-nav" style="
+  display:flex;
+  flex-wrap:nowrap;
+  gap:8px;
+  align-items:center;
+  overflow-x:auto;
+  overflow-y:hidden;
+  white-space:nowrap;
+  padding:10px 0;
+  scrollbar-width:thin;
+">
+  <button class="admin-nav-btn" onclick="showSection('users')">👥 Users</button>
+  <button class="admin-nav-btn" onclick="showSection('dashboard')">🏠 Dashboard</button>
+  <button class="admin-nav-btn" onclick="showSection('withdrawals')">💸 Withdrawals</button>
+  <button class="admin-nav-btn" onclick="showSection('deleted-users')">🗑️ Deleted Users</button>
+  <button class="admin-nav-btn" onclick="showSection('command-center')">🛡️ Command Center</button>
+  <button class="admin-nav-btn" onclick="showSection('question-bank')">❓ Question Bank</button>
+  <button class="admin-nav-btn" onclick="showSection('wallet-history')">💰 Wallet History</button>
+  <button class="admin-nav-btn" onclick="showSection('activity-log')">📝 Activity Log</button>
+</div>
+<style>
+#admin-main-nav .admin-nav-btn{
+  flex:0 0 auto;
+  border:0;
+  border-radius:9px;
+  padding:9px 13px;
+  font-weight:700;
+  cursor:pointer;
+  background:#2563eb;
+  color:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+#admin-main-nav .admin-nav-btn:hover{filter:brightness(.93);}
+#admin-main-nav .admin-nav-btn:first-child{background:#16a34a;}
+</style>
+
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
         <h2>Admin Dashboard</h2>
