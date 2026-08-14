@@ -1574,6 +1574,12 @@
 💰
 </button>
 
+<button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})"
+style="background:linear-gradient(135deg,#f59e0b,#d97706);"
+title="Edit Total Earn">
+✏️
+</button>
+
 <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})'
 style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
 🔔
