@@ -163,9 +163,23 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const count=Number(user.activityCounts.get ? user.activityCounts.get(type)||0 : user.activityCounts[type]||0);
     if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
     user.activityCounts.set ? user.activityCounts.set(type,count+1) : user.activityCounts[type]=count+1;
-    if(correct){user.wallet=Number(user.wallet||0)+activity.reward;user.totalEarn=Number(user.totalEarn||0)+activity.reward;}
+    if(correct){
+      user.wallet=Number(user.wallet||0)+activity.reward;
+      user.totalEarn=Number(user.totalEarn||0)+activity.reward;
+    }else{
+      user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
+    }
     await user.save();
-    res.json({success:true,correct,reward:correct?activity.reward:0,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),used:count+1,remaining:Math.max(0,activity.dailyLimit-count-1),correctAnswer:expected});
+    res.json({
+      success:true,
+      correct,
+      reward:correct?activity.reward:-activity.reward,
+      wallet:Number(user.wallet||0),
+      totalEarn:Number(user.totalEarn||0),
+      used:count+1,
+      remaining:Math.max(0,activity.dailyLimit-count-1),
+      correctAnswer:expected
+    });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });
 module.exports=router;

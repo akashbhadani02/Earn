@@ -835,16 +835,6 @@
         #activityContent input,#activityContent textarea{
             pointer-events:auto !important;user-select:text !important;
         }
-    
-#activityContent button,
-#activityContent [role="button"],
-#activityContent input,
-#activityContent textarea{
-  pointer-events:auto !important;
-}
-#activityContent button{
-  cursor:pointer !important;
-}
 </style>
 
 <style id="notification-required-style">
@@ -1674,6 +1664,10 @@ body.notification-locked #notificationRequiredOverlay button{
                 quizWallet.innerText = wallet.toFixed(2);
             }
 
+            document.querySelectorAll("#activityWalletBalance").forEach(el => {
+                el.innerText = "₹" + wallet.toFixed(2);
+            });
+
             checkWithdrawStatus();
             updateQuestionProgress();
         }
@@ -2427,123 +2421,7 @@ body.notification-locked #notificationRequiredOverlay button{
 })();
 </script>
 
-<script id="robust-activity-click">
-document.addEventListener('click', function(e){
-    const el = e.target.closest('[data-activity]');
-    if(!el) return;
 
-    const type = el.getAttribute('data-activity');
-    if(type !== 'fill' && type !== 'reading') return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    if(typeof openActivity === 'function'){
-        openActivity(type);
-    }
-});
-</script>
-
-
-
-<script id="activity-answer-fallback">
-(function(){
-  let processing=false;
-
-  function q(){
-    return (Array.isArray(window.activityQuestions) ? window.activityQuestions[Number(window.activityIndex)||0] : null);
-  }
-  function normalize(v){
-    return String(v ?? '').trim().toLowerCase().replace(/[.!?]+$/,'').replace(/\s+/g,' ');
-  }
-  function answerOf(x){
-    return x && (x.answer ?? x.correctAnswer ?? x.correct ?? x.expected ?? x.correct_answer);
-  }
-  function rewardOf(x){
-    return Math.max(0, Number(x?.reward ?? window.activityData?.reward ?? 0));
-  }
-  function updateWalletUI(){
-    if(typeof window.updateActivityWallet==='function') window.updateActivityWallet();
-    if(typeof window.wallet!=='undefined'){
-      document.querySelectorAll('#walletBalance,#activityWalletBalance,#quizWallet').forEach(el=>{
-        el.textContent='₹'+Number(window.wallet).toFixed(2);
-      });
-    }
-  }
-
-  async function handle(answer){
-    if(processing) return;
-    const question=q();
-    if(!question) return;
-
-    processing=true;
-    const correct=normalize(answer)===normalize(answerOf(question));
-    const amount=rewardOf(question);
-    const fb=document.getElementById('activityFeedback');
-
-    // Update local wallet immediately.
-    if(typeof window.wallet!=='undefined'){
-      window.wallet=Math.max(0, Number(window.wallet)+(correct ? amount : -amount));
-    }
-    updateWalletUI();
-
-    if(fb){
-      fb.textContent=correct
-        ? '✅ Correct! +'+amount+' points'
-        : '❌ Wrong! -'+amount+' points';
-      fb.style.display='block';
-    }
-
-    // Move to next question regardless of result.
-    setTimeout(()=>{
-      if(Array.isArray(window.activityQuestions) && window.activityQuestions.length){
-        window.activityIndex=(Number(window.activityIndex||0)+1)%window.activityQuestions.length;
-        if(typeof window.arrangeWords!=='undefined') window.arrangeWords=[];
-        if(typeof window.renderActivity==='function') window.renderActivity();
-        updateWalletUI();
-      }
-      processing=false;
-    },600);
-  }
-
-  window.submitLearningAnswer=handle;
-
-  // One global handler. It handles option buttons AND text-answer submit buttons.
-  document.addEventListener('click', function(e){
-    const el=e.target.closest(
-      '#activityContent [data-answer],'+
-      '#activityContent [data-option],'+
-      '#activityContent .answer-option,'+
-      '#activityContent .activity-option,'+
-      '#activityContent [data-submit-answer],'+
-      '#activityContent .submit-answer'
-    );
-    if(!el) return;
-
-    let answer;
-    if(el.matches('[data-submit-answer],.submit-answer')){
-      const input=document.querySelector('#activityContent input:not([type="hidden"]),#activityContent textarea');
-      if(!input) return;
-      answer=input.value;
-    } else {
-      answer=el.dataset.answer ?? el.dataset.option ?? el.textContent;
-    }
-
-    e.preventDefault();
-    e.stopPropagation();
-    handle(answer);
-  }, true);
-
-  // Enter key for text answers.
-  document.addEventListener('keydown',function(e){
-    if(e.key!=='Enter') return;
-    const input=e.target.closest('#activityContent input:not([type="hidden"]),#activityContent textarea');
-    if(!input) return;
-    e.preventDefault();
-    handle(input.value);
-  }, true);
-})();
-</script>
 </body>
 
 </html>
