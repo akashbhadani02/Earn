@@ -1648,7 +1648,27 @@ style="background:#16a34a;">
         //==========================
         // Send Push Notification
         //==========================
+        async function checkPushConfiguration() {
+            try {
+                const res = await fetch("/api/admin/notification/status", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+                if (!res.ok || !data.configured) {
+                    alert("❌ Admin notifications are not configured on the server.\n\nVercel Environment Variables માં VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY અને VAPID_SUBJECT add કરો, પછી redeploy કરો.");
+                    return false;
+                }
+                return true;
+            } catch (err) {
+                console.error("Push config check error:", err);
+                alert("❌ Notification server configuration check failed.");
+                return false;
+            }
+        }
+
         async function sendNotification(userId, userName) {
+            if (!(await checkPushConfiguration())) return;
+
             const title = prompt("Notification Title", "New Notification");
             if (title === null) return;
 

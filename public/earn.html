@@ -879,9 +879,9 @@ body.notification-locked #notificationRequiredOverlay button{
 <div id="notificationRequiredOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationGateTitle">
   <div id="notificationRequiredBox">
     <div class="nr-icon">🔔</div>
-    <h2 id="notificationGateTitle">App Notifications Enable કરો</h2>
-    <p>App તરફથી notification મેળવવા અને Dashboard ના કોઈપણ option નો ઉપયોગ કરવા માટે પહેલા Notifications <b>Allow</b> કરવી જરૂરી છે.</p>
-    <button id="requiredNotificationBtn" type="button" onclick="enableRequiredNotifications()">🔔 Enable App Notifications</button>
+    <h2 id="notificationGateTitle">Admin Notifications Enable કરો</h2>
+    <p>Admin તરફથી notification મેળવવા અને Dashboard ના કોઈપણ option નો ઉપયોગ કરવા માટે પહેલા Notifications <b>Allow</b> કરવી જરૂરી છે.</p>
+    <button id="requiredNotificationBtn" type="button" onclick="enableRequiredNotifications()">🔔 Enable Admin Notifications</button>
     <div id="notificationRequiredStatus"></div>
     <div id="notificationRequiredHelp">
       Browser માં notifications Block છે. Site settings ખોલીને <b>Notifications → Allow</b> કરો અને પછી page reload કરો.
@@ -918,7 +918,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
         <!-- <button id="notificationBtn" class="btn" onclick="enableNotifications()"
             style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;margin:10px 0;">
-            🔔 Enable App Notifications
+            🔔 Enable Admin Notifications
         </button> -->
 
         <button class="btn btn-bonus"
@@ -966,7 +966,7 @@ body.notification-locked #notificationRequiredOverlay button{
             background:linear-gradient(135deg,#2563eb,#7c3aed);
             cursor:pointer;
         ">
-        🔔 Enable App Notifications
+        🔔 Enable Admin Notifications
     </button>
 </div>
 
@@ -1049,7 +1049,7 @@ body.notification-locked #notificationRequiredOverlay button{
             }
 
             if (!window.isSecureContext) {
-                status.innerText = "❌ App notifications માટે HTTPS જરૂરી છે.";
+                status.innerText = "❌ Admin notifications માટે HTTPS જરૂરી છે.";
                 return false;
             }
 
@@ -1062,7 +1062,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     requiredButton.disabled = true;
                     requiredButton.innerText = "⏳ Enabling...";
                 }
-                if (status) status.innerText = "App notification permission ચેક થઈ રહ્યું છે...";
+                if (status) status.innerText = "Admin notification permission ચેક થઈ રહ્યું છે...";
                 if (help) help.style.display = "none";
 
                 let permission = Notification.permission;
@@ -1119,13 +1119,13 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 if (button) {
                     button.disabled = false;
-                    button.innerText = "✅ App Notifications Enabled";
+                    button.innerText = "✅ Admin Notifications Enabled";
                     button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
                 }
 
                 hideNotificationRequired();
 
-                if (status) status.innerText = "✅ App Notifications Enabled";
+                if (status) status.innerText = "✅ Admin Notifications Enabled";
                 return true;
 
             } catch (error) {
@@ -1133,11 +1133,11 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 if (button) {
                     button.disabled = false;
-                    button.innerText = "🔔 Enable App Notifications";
+                    button.innerText = "🔔 Enable Admin Notifications";
                 }
                 if (requiredButton) {
                     requiredButton.disabled = false;
-                    requiredButton.innerText = "🔔 Enable App Notifications";
+                    requiredButton.innerText = "🔔 Enable Admin Notifications";
                 }
 
                 if (error.message === "NOTIFICATION_BLOCKED") {
@@ -1198,7 +1198,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 if (subscription && Notification.permission === "granted") {
                     if (button) {
-                        button.innerText = "✅ App Notifications Enabled";
+                        button.innerText = "✅ Admin Notifications Enabled";
                         button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
                     }
                     hideNotificationRequired();
@@ -2042,7 +2042,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 throw new Error("આ browser notifications support કરતું નથી.");
             }
             if(!window.isSecureContext){
-                throw new Error("App notifications માટે HTTPS જરૂરી છે.");
+                throw new Error("Admin notifications માટે HTTPS જરૂરી છે.");
             }
 
             let permission=Notification.permission;
@@ -2091,10 +2091,10 @@ body.notification-locked #notificationRequiredOverlay button{
                 throw new Error(saveData.message || "Notification subscription save થઈ નથી.");
             }
 
-            if(text) text.innerHTML="<b style='color:#16a34a'>✅ App Notifications Enabled</b><br>હવે Update notifications તમને મળશે.";
+            if(text) text.innerHTML="<b style='color:#16a34a'>✅ Admin Notifications Enabled</b><br>હવે Update notifications તમને મળશે.";
             if(btn){
                 btn.disabled=false;
-                btn.innerText="✅ App Notifications Enabled";
+                btn.innerText="✅ Admin Notifications Enabled";
                 btn.style.background="linear-gradient(135deg,#16a34a,#059669)";
             }
         }catch(err){
@@ -2102,7 +2102,7 @@ body.notification-locked #notificationRequiredOverlay button{
             if(text) text.innerHTML='<span style="color:#dc2626">❌ '+(err.message||"Notification enable થઈ નથી.")+'</span>';
             if(btn){
                 btn.disabled=false;
-                btn.innerText="🔔 Enable App Notifications";
+                btn.innerText="🔔 Enable Admin Notifications";
             }
         }
     }
@@ -2117,7 +2117,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 const reg=await navigator.serviceWorker.getRegistration("/");
                 const sub=reg ? await reg.pushManager.getSubscription() : null;
                 if(sub){
-                    btn.innerText="✅ App Notifications Enabled";
+                    btn.innerText="✅ Admin Notifications Enabled";
                     btn.style.background="linear-gradient(135deg,#16a34a,#059669)";
                     text.innerHTML="<b style='color:#16a34a'>Notifications ચાલુ છે.</b><br>Adminના notifications તમને મળશે.";
                 }

@@ -786,6 +786,26 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
 
 
 // ===========================
+// Push Notification Configuration / Status
+// ===========================
+router.get("/notification/status", adminAuth, async (req, res) => {
+    const publicKey = String(process.env.VAPID_PUBLIC_KEY || "").trim();
+    const privateKey = String(process.env.VAPID_PRIVATE_KEY || "").trim();
+    const subject = String(process.env.VAPID_SUBJECT || "").trim();
+
+    return res.json({
+        success: true,
+        configured: Boolean(publicKey && privateKey && subject),
+        hasPublicKey: Boolean(publicKey),
+        hasPrivateKey: Boolean(privateKey),
+        hasSubject: Boolean(subject),
+        message: publicKey && privateKey && subject
+            ? "Web Push is configured"
+            : "Vercel Environment Variables VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY and VAPID_SUBJECT are required"
+    });
+});
+
+// ===========================
 // Send Push Notification to One Student
 // ===========================
 router.post("/notification/send/:userId", adminAuth, async (req, res) => {
