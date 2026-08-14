@@ -921,6 +921,7 @@ router.get("/control-center", adminAuth, async (req, res) => {
                 ? Number(u.dailyQuestionsAnswered || 0)
                 : 0,
             totalQuestionsAnswered: Number(u.totalQuestionsAnswered || 0),
+            spinRemaining: u.dailyQuestionsDate === today ? Math.max(0, 100 - Number(u.dailyQuestionsAnswered || 0)) : 100,
             wallet: Number(u.wallet || 0),
             totalEarn: Number(u.totalEarn || 0),
             warningCount: Number(u.warningCount || 0),
