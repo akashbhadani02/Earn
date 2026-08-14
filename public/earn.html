@@ -1012,14 +1012,14 @@ body.notification-locked #notificationRequiredOverlay button{
 <h2 class="activity-title">🎮 English Earning Zone</h2>
 <p style="text-align:center;color:#64748b;margin-bottom:8px">Learn English, complete tasks and earn points.</p>
 <div class="activity-grid">
-<button class="activity-btn a1" onclick="openActivity('arrange')">🔀 Arrange Sentence<small>+10 points</small></button>
-<button class="activity-btn a2" onclick="openActivity('fill')">🧩 Fill Blank<small>+10 points</small></button>
-<button class="activity-btn a3" onclick="openActivity('correction')">🛠️ Fix Sentence<small>+15 points</small></button>
-<button class="activity-btn a4" onclick="openActivity('translate')">🔄 Translate<small>+15 points</small></button>
-<button class="activity-btn a5" onclick="openActivity('word')">🔤 Word Builder<small>+5 points</small></button>
-<button class="activity-btn a6" onclick="openActivity('listening')">🎧 Listen & Type<small>+15 points</small></button>
-<button class="activity-btn a7" onclick="openActivity('speaking')">🎤 Speak & Earn<small>+20 points</small></button>
-<button class="activity-btn a8" onclick="openActivity('reading')">📖 Reading<small>+15 points</small></button>
+<button type="button" class="activity-btn a1" onclick="openActivity('arrange')">🔀 Arrange Sentence<small>+10 points</small></button>
+<button type="button" class="activity-btn a2" onclick="openActivity('fill')">🧩 Fill Blank<small>+10 points</small></button>
+<button type="button" class="activity-btn a3" onclick="openActivity('correction')">🛠️ Fix Sentence<small>+15 points</small></button>
+<button type="button" class="activity-btn a4" onclick="openActivity('translate')">🔄 Translate<small>+15 points</small></button>
+<button type="button" class="activity-btn a5" onclick="openActivity('word')">🔤 Word Builder<small>+5 points</small></button>
+<button type="button" class="activity-btn a6" onclick="openActivity('listening')">🎧 Listen & Type<small>+15 points</small></button>
+<button type="button" class="activity-btn a7" onclick="openActivity('speaking')">🎤 Speak & Earn<small>+20 points</small></button>
+<button type="button" class="activity-btn a8" onclick="openActivity('reading')">📖 Reading<small>+15 points</small></button>
 </div>
 <button class="btn" style="background:#374151;margin-top:16px" onclick="showScreen('dashboard')">Back to Dashboard</button>
 </div>
@@ -2044,13 +2044,79 @@ body.notification-locked #notificationRequiredOverlay button{
             ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
         }
         async function openActivity(type){
+            // Open the activity screen immediately. Do not wait for the API.
+            activityType = type;
+            activityQuestions = [];
+            activityIndex = 0;
+            arrangeWords = [];
+
+            const titles = {
+                arrange:'🔀 Arrange Sentence',
+                fill:'🧩 Fill in the Blank',
+                correction:'🛠️ Fix the Sentence',
+                translate:'🔄 Translate to English',
+                word:'🔤 Word Builder',
+                listening:'🎧 Listen & Type',
+                speaking:'🎤 Speak & Earn',
+                reading:'📖 Reading Challenge'
+            };
+            const rewards = {
+                arrange:10, fill:10, correction:15, translate:15,
+                word:5, listening:15, speaking:20, reading:15
+            };
+
+            const nameEl=document.getElementById('activityName');
+            const metaEl=document.getElementById('activityMeta');
+            const box=document.getElementById('activityContent');
+            const fb=document.getElementById('activityFeedback');
+
+            if(nameEl) nameEl.textContent=titles[type] || 'English Activity';
+            if(metaEl) metaEl.textContent='💰 Earn up to '+(rewards[type]||10)+' points';
+            if(box) box.innerHTML='<div class="activity-question">⏳ Loading questions...</div>';
+            if(fb) fb.textContent='';
+
+            // Use the normal navigation so mobile/browser Back works.
+            showScreen('activityPlay');
+
             try{
-                const res=await fetch('/api/activities/'+type,{headers:{Authorization:'Bearer '+localStorage.getItem('token')}});
-                const data=await res.json(); if(!data.success) throw new Error(data.message||'Could not load activity');
-                activityType=type; activityQuestions=data.questions||[]; activityData=data; activityIndex=Math.floor(Math.random()*activityQuestions.length); arrangeWords=[];
-                document.getElementById('activityName').textContent=data.title; document.getElementById('activityMeta').textContent='💰 +'+(data.reward*100).toFixed(0)+' points • Today limit '+data.dailyLimit;
-                showActivityScreen('activityPlay'); renderActivity();
-            }catch(e){alert(e.message)}
+                const token=localStorage.getItem('token') || localStorage.getItem('studentToken') || '';
+                const res=await fetch('/api/activities/'+encodeURIComponent(type),{
+                    method:'GET',
+                    headers: token ? {Authorization:'Bearer '+token} : {}
+                });
+
+                let data={};
+                try { data=await res.json(); } catch(e){}
+
+                if(!res.ok || !data.success){
+                    throw new Error(data.message || ('Unable to load '+type+' activity'));
+                }
+
+                activityQuestions=Array.isArray(data.questions)?data.questions:[];
+                activityData=data;
+
+                if(!activityQuestions.length){
+                    throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
+                }
+
+                activityIndex=Math.floor(Math.random()*activityQuestions.length);
+                arrangeWords=[];
+
+                if(nameEl) nameEl.textContent=data.title || titles[type];
+                if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • Today limit '+data.dailyLimit;
+                renderActivity();
+                updateActivityWallet();
+            }catch(e){
+                console.error('Activity load error:',e);
+                if(box){
+                    box.innerHTML=
+                        '<div class="activity-question">⚠️ Questions load થઈ શક્યા નથી.</div>'+
+                        '<p style="text-align:center;color:#64748b">'+
+                        'Please login again and try this activity.</p>'+
+                        '<button class="activity-action" type="button" onclick="openActivity('+JSON.stringify(type)+')">↻ Try Again</button>';
+                }
+                if(fb) fb.textContent=e.message || 'Activity load failed';
+            }
         }
         function nextActivityQuestion(){ if(!activityQuestions.length)return; activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
         function renderActivity(){
@@ -2335,19 +2401,6 @@ body.notification-locked #notificationRequiredOverlay button{
         setTimeout(checkStudentNotificationStatus,300);
     });
 })();
-</script>
-
-
-<script id="activity-card-delegation">
-document.addEventListener('click', function(e){
-    const btn = e.target.closest('[data-activity], .activity-btn, .activity-card');
-    if(!btn) return;
-    const activity = btn.dataset.activity;
-    if(activity && typeof openActivity === 'function'){
-        e.preventDefault();
-        openActivity(activity);
-    }
-});
 </script>
 </body>
 
