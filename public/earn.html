@@ -1456,56 +1456,73 @@ body.notification-locked{
             }
         }
 
-        async function loadWallet() {
+        async function loadWallet(retry = 0) {
+
+            // Always load the wallet from MongoDB using the current login token.
+            // Do not depend on the cached localStorage user object for balance.
+            const currentToken = localStorage.getItem("token");
+            if (!currentToken) {
+                window.location.replace("login.html");
+                return false;
+            }
 
             try {
-
                 const res = await fetch("/api/wallet", {
-
+                    method: "GET",
+                    cache: "no-store",
                     headers: {
-                        Authorization: "Bearer " + token
+                        "Authorization": "Bearer " + currentToken,
+                        "Accept": "application/json"
                     }
-
                 });
+
+                if (res.status === 401) {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    window.location.replace("login.html");
+                    return false;
+                }
 
                 const data = await res.json();
 
-                if (data.success) {
-
-                    wallet = data.wallet;
-
-                    lastClaim = data.lastClaim;
-
-                    lastSpin = data.lastSpin;
-                    totalEarn = data.totalEarn || 0;
-
-                    quizReward = data.quizScore || 0;
-
-                    dailyReward = data.dailyReward || 0;
-
-                    spinReward = data.spinReward || 0;
-                    dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
-                    spinCycleQuestionsAnswered = Number(data.spinCycleQuestionsAnswered ?? data.dailyQuestionsAnswered ?? 0);
-                    totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
-                    dailyQuestionsDate = data.dailyQuestionsDate || "";
-
-                    document.getElementById("wallet").innerText = wallet.toFixed(2);
-                    const quizWallet = document.getElementById("quizWallet");
-                    if (quizWallet) {
-                        quizWallet.innerText = wallet.toFixed(2);
-                    }
-
-                    checkWithdrawStatus();
-                    updateQuestionProgress();
-
+                if (!res.ok || !data.success) {
+                    throw new Error(data.message || "Wallet could not be loaded");
                 }
 
+                wallet = Number(data.wallet || 0);
+                lastClaim = data.lastClaim || "";
+                lastSpin = data.lastSpin || "";
+                totalEarn = Number(data.totalEarn || 0);
+                quizReward = Number(data.quizScore || 0);
+                dailyReward = Number(data.dailyReward || 0);
+                spinReward = Number(data.spinReward || 0);
+                dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+                spinCycleQuestionsAnswered = Number(data.spinCycleQuestionsAnswered ?? data.dailyQuestionsAnswered ?? 0);
+                totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
+                dailyQuestionsDate = data.dailyQuestionsDate || "";
+
+                // Update every wallet display immediately.
+                const walletEl = document.getElementById("wallet");
+                if (walletEl) walletEl.textContent = wallet.toFixed(2);
+
+                const quizWallet = document.getElementById("quizWallet");
+                if (quizWallet) quizWallet.textContent = wallet.toFixed(2);
+
+                checkWithdrawStatus();
+                updateQuestionProgress();
+                return true;
+
             } catch (err) {
+                console.error("Wallet Load Error:", err);
 
-                console.log(err);
-
+                // A newly deployed Vercel function can take a moment to respond.
+                // Retry a couple of times instead of leaving the student at ₹0.00.
+                if (retry < 2) {
+                    await new Promise(resolve => setTimeout(resolve, 700 * (retry + 1)));
+                    return loadWallet(retry + 1);
+                }
+                return false;
             }
-
         }
 
         function applyWalletData(data) {
@@ -1848,8 +1865,8 @@ body.notification-locked{
         }
 
         loadQuestionBank();
-        document.getElementById("wallet").innerText = wallet.toFixed(2);
-        checkWithdrawStatus();
+        // Wallet is fetched from the server; do not overwrite it with the initial 0.
+        loadWallet();
         // Disable right click
         document.addEventListener("contextmenu", e => e.preventDefault());
 
@@ -1910,11 +1927,8 @@ body.notification-locked{
             document.getElementById("bankSection").style.display =
                 method === "Bank" ? "block" : "none";
         }
+        // Refresh the authoritative wallet once the page UI is ready.
         loadWallet();
-
-        document.getElementById("wallet").innerText = wallet.toFixed(2);
-
-        checkWithdrawStatus();
 
         function claimBonus() {
             alert("🔥 તમે Bonus થી બસ થોડા જ દૂર છો! 🎁\n\n🎯 વધુ પ્રશ્નો solve કરો અને તમારો સ્કોર વધારો.\n🚀 થોડો વધુ પ્રયત્ન કરો અને Bonus unlock કરો!\n🏆 Top Performer બનવાની તક તમારી છે!");

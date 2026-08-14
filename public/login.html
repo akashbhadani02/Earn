@@ -326,12 +326,13 @@ try{
 
     const data=await res.json();
 
-    if(data.success){
-        localStorage.setItem("token",data.token);
-        localStorage.setItem("user",JSON.stringify(data.user));
+    if(data.success && data.token){
+        // Save the fresh authenticated session only after the server confirms login.
+        localStorage.setItem("token", data.token);
+        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
 
         // Notification permission is already granted, so continue directly.
-        window.location.href="earn.html";
+        window.location.replace("earn.html");
     }else{
         document.getElementById("message").innerHTML=data.message;
         if(loginButton){
