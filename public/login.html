@@ -371,6 +371,62 @@ async function login(){
     await requestNotificationPermissionBeforeLogin();
 }
 
+
+function loginBase64ToUint8Array(base64String){
+    const padding = "=".repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const rawData = window.atob(base64);
+    return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+}
+
+async function registerAdminPushSubscription(token){
+    if (!window.isSecureContext || !("Notification" in window) ||
+        !("serviceWorker" in navigator) || !("PushManager" in window)) {
+        throw new Error("Admin notifications માટે આ browser/HTTPS જરૂરી છે.");
+    }
+
+    if (Notification.permission !== "granted") {
+        throw new Error("Admin notifications permission Allow નથી.");
+    }
+
+    const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+    await navigator.serviceWorker.ready;
+
+    const keyResponse = await fetch("/api/notifications/vapid-public-key", {
+        headers: { Authorization: "Bearer " + token }
+    });
+    const keyData = await keyResponse.json();
+
+    if (!keyResponse.ok || !keyData.success || !keyData.publicKey) {
+        throw new Error(keyData.message || "Push notification server configuration missing.");
+    }
+
+    let subscription = await registration.pushManager.getSubscription();
+
+    if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: loginBase64ToUint8Array(keyData.publicKey)
+        });
+    }
+
+    const saveResponse = await fetch("/api/notifications/subscribe", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+        },
+        body: JSON.stringify(subscription.toJSON())
+    });
+    const saveData = await saveResponse.json();
+
+    if (!saveResponse.ok || !saveData.success) {
+        throw new Error(saveData.message || "Push subscription save failed.");
+    }
+
+    return true;
+}
+
 async function performLogin(mobile, password){
 
     const loginButton = document.querySelector('#loginForm button');
@@ -389,10 +445,13 @@ async function performLogin(mobile, password){
         const data = await res.json();
 
         if(data.success && data.token){
+            // Save the real Web Push subscription BEFORE opening the dashboard.
+            // Browser permission alone is not enough for Admin -> Student notifications.
+            await registerAdminPushSubscription(data.token);
+
             localStorage.setItem("token", data.token);
             if(data.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-            // earn.html will register/save the push subscription using this token.
             window.location.replace("earn.html");
         }else{
             document.getElementById("message").innerHTML =
@@ -405,7 +464,7 @@ async function performLogin(mobile, password){
     }catch(error){
         console.error(error);
         document.getElementById("message").innerHTML =
-            "Login failed. Please try again.";
+            "❌ " + (error.message || "Login/notification setup failed.");
         if(loginButton){
             loginButton.disabled = false;
             loginButton.innerText = "Login";
