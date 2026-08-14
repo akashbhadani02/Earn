@@ -178,9 +178,28 @@ Already have an account?
 
 </div>
 
+<div id="notificationModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;align-items:center;justify-content:center;padding:20px;">
+  <div style="width:100%;max-width:390px;background:#fff;border-radius:22px;padding:26px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+    <div style="font-size:48px;margin-bottom:8px;">🔔</div>
+    <h3 style="margin-bottom:10px;color:#222;">Admin Notifications Enable કરો</h3>
+    <p style="font-size:14px;line-height:1.6;color:#666;margin-bottom:20px;">
+      Admin તરફથી આવતી મહત્વની notifications મેળવવા માટે Notifications <b>Allow</b> કરવી જરૂરી છે.
+    </p>
+    <button id="notificationAllowBtn" onclick="allowNotificationsAndContinue()" style="width:100%;padding:13px;border:0;border-radius:12px;background:#2563eb;color:#fff;font-size:16px;font-weight:700;cursor:pointer;">
+      🔔 Allow Notifications
+    </button>
+    <button onclick="denyNotificationsAndReturn()" style="width:100%;padding:11px;border:0;background:transparent;color:#777;font-size:14px;cursor:pointer;margin-top:6px;">
+      Cancel / Deny
+    </button>
+    <div id="notificationModalMsg" style="font-size:13px;color:#dc2626;margin-top:10px;"></div>
+  </div>
+</div>
+
 <script>
 
 const API = "/api/auth";
+let pendingLogin = null;
+
 
 function showSignup(){
 
@@ -246,109 +265,152 @@ showLogin();
 
 async function requestNotificationPermissionBeforeLogin(){
 
-const gate=document.getElementById("notificationGate");
+    if ("Notification" in window && Notification.permission === "granted") {
+        return true;
+    }
 
-// If notifications are already allowed, do not ask again.
-if("Notification" in window && Notification.permission === "granted") return true;
-
-// The app requires browser notifications before opening the student dashboard.
-if(!("Notification" in window)){
-    gate.style.display="block";
-    gate.innerHTML="❌ આ browser Admin notifications support કરતું નથી. Notifications support કરતું browser વાપરો.";
-    return false;
-}
-
-if(!window.isSecureContext){
-    gate.style.display="block";
-    gate.innerHTML="❌ Admin notifications માટે HTTPS જરૂરી છે.";
-    return false;
-}
-
-if(Notification.permission === "denied"){
-    gate.style.display="block";
-    gate.innerHTML="❌ Admin notifications Block છે. Browser site settings માં Notifications → Allow કરો, પછી ફરી Login કરો.";
-    return false;
-}
-
-try{
-    gate.style.display="block";
-    gate.innerHTML="🔔 Admin તરફથી આવતી important notifications મેળવવા માટે Notifications માં <b>Allow</b> દબાવો...";
-
-    const permission=await Notification.requestPermission();
-
-    if(permission !== "granted"){
-        gate.innerHTML="⚠️ Admin notifications મેળવવા માટે <b>Allow</b> કરવું જરૂરી છે. Allow કર્યા વગર Student Dashboard open નહીં થાય.";
+    if (!("Notification" in window)) {
+        document.getElementById("message").innerHTML =
+            "❌ આ browser notifications support કરતું નથી.";
         return false;
     }
 
-    gate.innerHTML="✅ Admin notifications allowed. Login થઈ રહ્યું છે...";
-    return true;
+    if (!window.isSecureContext) {
+        document.getElementById("message").innerHTML =
+            "❌ Notifications માટે HTTPS જરૂરી છે.";
+        return false;
+    }
 
-}catch(error){
-    console.error("Notification permission error:",error);
-    gate.innerHTML="❌ Admin notification permission મળી નથી. Please Allow કરો અને ફરી Login કરો.";
+    if (Notification.permission === "denied") {
+        document.getElementById("message").innerHTML =
+            "❌ Notifications Block છે. Browser site settings માં Notifications → Allow કરો અને ફરી Login કરો.";
+        return false;
+    }
+
+    document.getElementById("notificationModal").style.display = "flex";
+    document.getElementById("notificationModalMsg").innerHTML = "";
     return false;
 }
+
+async function allowNotificationsAndContinue(){
+
+    const btn = document.getElementById("notificationAllowBtn");
+    const msg = document.getElementById("notificationModalMsg");
+
+    btn.disabled = true;
+    btn.innerText = "Please wait...";
+    msg.innerHTML = "";
+
+    try {
+        const permission = await Notification.requestPermission();
+
+        if (permission === "granted") {
+            document.getElementById("notificationModal").style.display = "none";
+
+            // Continue the exact login that was waiting for permission.
+            if (pendingLogin) {
+                const credentials = pendingLogin;
+                pendingLogin = null;
+                await performLogin(credentials.mobile, credentials.password);
+            }
+        } else {
+            // Deny = do not login. User must press Login again.
+            pendingLogin = null;
+            document.getElementById("notificationModal").style.display = "none";
+            document.getElementById("loginMobile").value = "";
+            document.getElementById("loginPassword").value = "";
+            document.getElementById("message").innerHTML =
+                "⚠️ Notifications Allow કર્યા વગર Login થઈ શકશે નહીં. ફરી Login કરો.";
+        }
+    } catch (error) {
+        console.error("Notification permission error:", error);
+        pendingLogin = null;
+        document.getElementById("notificationModal").style.display = "none";
+        document.getElementById("message").innerHTML =
+            "❌ Notification permission મળી નથી. ફરી Login કરો.";
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "🔔 Allow Notifications";
+    }
 }
+
+function denyNotificationsAndReturn(){
+    pendingLogin = null;
+    document.getElementById("notificationModal").style.display = "none";
+    document.getElementById("loginMobile").value = "";
+    document.getElementById("loginPassword").value = "";
+    document.getElementById("message").innerHTML =
+        "⚠️ Notifications Allow કર્યા વગર Login થઈ શકશે નહીં. ફરી Login કરો.";
+}
+
 
 async function login(){
 
-const mobile=document.getElementById("loginMobile").value.trim();
+    const mobile = document.getElementById("loginMobile").value.trim();
+    const password = document.getElementById("loginPassword").value;
 
-const password=document.getElementById("loginPassword").value;
+    if(!mobile || !password){
+        document.getElementById("message").innerHTML =
+            "Mobile Number અને Password નાખો.";
+        return;
+    }
 
-if(!mobile || !password){
-    document.getElementById("message").innerHTML="Mobile Number અને Password નાખો.";
-    return;
+    // If already granted, login directly. Otherwise show the permission popup.
+    if ("Notification" in window && Notification.permission === "granted") {
+        await performLogin(mobile, password);
+        return;
+    }
+
+    if ("Notification" in window && Notification.permission === "denied") {
+        document.getElementById("message").innerHTML =
+            "❌ Notifications Block છે. Browser site settings માં Notifications → Allow કરો અને ફરી Login કરો.";
+        return;
+    }
+
+    pendingLogin = { mobile, password };
+    await requestNotificationPermissionBeforeLogin();
 }
 
-// IMPORTANT: Do not open the student dashboard until notification permission is granted.
-const notificationOK=await requestNotificationPermissionBeforeLogin();
-if(!notificationOK) return;
+async function performLogin(mobile, password){
 
-const loginButton=document.querySelector('#loginForm button');
-if(loginButton){
-    loginButton.disabled=true;
-    loginButton.innerText="Logging in...";
-}
+    const loginButton = document.querySelector('#loginForm button');
+    if(loginButton){
+        loginButton.disabled = true;
+        loginButton.innerText = "Logging in...";
+    }
 
-try{
-    const res=await fetch(API+"/login",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            mobile,
-            password
-        })
-    });
+    try{
+        const res = await fetch(API+"/login",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({ mobile, password })
+        });
 
-    const data=await res.json();
+        const data = await res.json();
 
-    if(data.success && data.token){
-        // Save the fresh authenticated session only after the server confirms login.
-        localStorage.setItem("token", data.token);
-        if (data.user) localStorage.setItem("user", JSON.stringify(data.user));
+        if(data.success && data.token){
+            localStorage.setItem("token", data.token);
+            if(data.user) localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Notification permission is already granted, so continue directly.
-        window.location.replace("earn.html");
-    }else{
-        document.getElementById("message").innerHTML=data.message;
+            // earn.html will register/save the push subscription using this token.
+            window.location.replace("earn.html");
+        }else{
+            document.getElementById("message").innerHTML =
+                data.message || "Invalid login details.";
+            if(loginButton){
+                loginButton.disabled = false;
+                loginButton.innerText = "Login";
+            }
+        }
+    }catch(error){
+        console.error(error);
+        document.getElementById("message").innerHTML =
+            "Login failed. Please try again.";
         if(loginButton){
-            loginButton.disabled=false;
-            loginButton.innerText="Login";
+            loginButton.disabled = false;
+            loginButton.innerText = "Login";
         }
     }
-}catch(error){
-    console.error(error);
-    document.getElementById("message").innerHTML="Login failed. Please try again.";
-    if(loginButton){
-        loginButton.disabled=false;
-        loginButton.innerText="Login";
-    }
-}
-
 }
 
 </script>
