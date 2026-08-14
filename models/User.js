@@ -271,7 +271,13 @@ const userSchema = new mongoose.Schema(
 
         // Daily interactive English activity counters.
         activityDate: { type: String, default: "" },
-        activityCounts: { type: Map, of: Number, default: {} }
+        activityCounts: { type: Map, of: Number, default: {} },
+        activityCorrect: { type: Map, of: Number, default: {} },
+        activityWrong: { type: Map, of: Number, default: {} },
+        activityEarn: { type: Map, of: Number, default: {} },
+        activityDeduct: { type: Map, of: Number, default: {} },
+        activityTabChanges: { type: Map, of: Number, default: {} },
+        activityLastQuestion: { type: Map, of: Number, default: {} }
     },
     {
         timestamps: true,

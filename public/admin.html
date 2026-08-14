@@ -1609,6 +1609,9 @@ style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
 <button onclick="deleteUser('${user._id}')">
 ⛔
 </button>
+<button onclick="showActivityStats('${user._id}')" title="English Learning Activity">
+📚
+</button>
 
 ${user.isBlocked ? `
 <button onclick="unblockUser('${user._id}')"
@@ -1627,6 +1630,40 @@ style="background:#16a34a;">
 
             document.getElementById("userTable").innerHTML = html;
 
+        }
+
+        //==========================
+        // English Learning Activity Stats
+        //==========================
+        function showActivityStats(id) {
+            const user = allUsers.find(u => String(u._id) === String(id));
+            if (!user) return;
+            const stats = user.activityStats || {};
+            const names = {
+                arrange:'🔀 Arrange Sentence', fill:'🧩 Fill in the Blank', correction:'🛠️ Fix the Sentence',
+                translate:'🔄 Translate to English', word:'🔤 Word Builder', listening:'🎧 Listen & Type',
+                speaking:'🎤 Speak & Earn', reading:'📖 Reading Challenge'
+            };
+            const keys = Object.keys(names);
+            const rows = keys.map(k => {
+                const count=Number((stats.counts||{})[k]||0), correct=Number((stats.correct||{})[k]||0), wrong=Number((stats.wrong||{})[k]||0);
+                const earn=Number((stats.earn||{})[k]||0), deduct=Number((stats.deduct||{})[k]||0), tabs=Number((stats.tabChanges||{})[k]||0);
+                return `<tr><td>${names[k]}</td><td>${count}</td><td style="color:#15803d;font-weight:700">${correct}</td><td style="color:#dc2626;font-weight:700">${wrong}</td><td>₹${earn.toFixed(2)}</td><td>₹${deduct.toFixed(2)}</td><td>${tabs}</td></tr>`;
+            }).join('');
+            const modal=document.createElement('div');
+            modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px';
+            modal.innerHTML=`<div style="background:#fff;width:min(1000px,96vw);max-height:90vh;overflow:auto;border-radius:18px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.25)">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px"><div><h2 style="margin:0">📚 English Learning & Earning</h2><div style="color:#64748b;margin-top:4px">${String(user.name||'Student')} • ${String(user.mobile||'')}</div></div><button id="closeActivityStats" style="font-size:20px">✕</button></div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+                  <div style="padding:12px;border-radius:12px;background:#eff6ff"><b>Today Activities</b><div style="font-size:22px">${keys.reduce((n,k)=>n+Number((stats.counts||{})[k]||0),0)}</div></div>
+                  <div style="padding:12px;border-radius:12px;background:#ecfdf5"><b>Activity Earn</b><div style="font-size:22px">₹${keys.reduce((n,k)=>n+Number((stats.earn||{})[k]||0),0).toFixed(2)}</div></div>
+                  <div style="padding:12px;border-radius:12px;background:#fef2f2"><b>Activity Deduct</b><div style="font-size:22px">₹${keys.reduce((n,k)=>n+Number((stats.deduct||{})[k]||0),0).toFixed(2)}</div></div>
+                </div>
+                <div style="overflow:auto"><table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left;padding:9px">Activity</th><th>Attempts</th><th>Correct</th><th>Wrong</th><th>Earn</th><th>Deduct</th><th>Tab Changes</th></tr></thead><tbody>${rows}</tbody></table></div>
+            </div>`;
+            document.body.appendChild(modal);
+            modal.querySelector('#closeActivityStats').onclick=()=>modal.remove();
+            modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
         }
 
         //==========================

@@ -1851,27 +1851,57 @@ body.notification-locked #notificationRequiredOverlay button{
         // RELOAD QUESTION WHEN STUDENT CHANGES TAB
         // ==========================================
         let tabWasChanged = false;
+        let tabChangedScreen = null;
 
         document.addEventListener("visibilitychange", async () => {
-            // Student left this tab
             if (document.hidden) {
-                if (!document.getElementById("quiz").classList.contains("hidden")) {
+                const quizOpen = !document.getElementById("quiz")?.classList.contains("hidden");
+                const activityOpen = !document.getElementById("activityPlay")?.classList.contains("hidden");
+                if (quizOpen || activityOpen) {
                     tabWasChanged = true;
+                    tabChangedScreen = activityOpen ? "activity" : "quiz";
                     recordSecurityEvent("tab_change");
+                    if (activityOpen && typeof activityType !== "undefined" && activityType) {
+                        fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {
+                            method:"POST", headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+                        }).catch(()=>{});
+                    }
                 }
                 return;
             }
 
-            // Student came back to this tab
-            if (tabWasChanged && !document.getElementById("quiz").classList.contains("hidden")) {
-                tabWasChanged = false;
+            if (!tabWasChanged) return;
+            tabWasChanged = false;
 
-                // Remove the old question immediately and load a fresh one.
+            if (tabChangedScreen === "quiz" && !document.getElementById("quiz")?.classList.contains("hidden")) {
                 document.getElementById("question").innerText = "Loading new question...";
                 document.getElementById("options").innerHTML = "";
-
                 await loadQuiz();
             }
+
+            if (tabChangedScreen === "activity" && !document.getElementById("activityPlay")?.classList.contains("hidden")) {
+                const oldId = activityQuestions?.[activityIndex]?.id;
+                const res = await fetch("/api/activities/"+encodeURIComponent(activityType), {
+                    headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+                }).catch(()=>null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.questions) && data.questions.length) {
+                        activityQuestions = data.questions;
+                        const candidates = activityQuestions.filter(q => q.id !== oldId);
+                        activityIndex = Math.floor(Math.random() * (candidates.length ? candidates.length : activityQuestions.length));
+                        if (candidates.length) {
+                            const selected = candidates[activityIndex];
+                            const realIndex = activityQuestions.findIndex(q => q.id === selected.id);
+                            activityIndex = realIndex >= 0 ? realIndex : 0;
+                        }
+                        arrangeWords=[];
+                        renderActivity();
+                        updateActivityWallet();
+                    }
+                }
+            }
+            tabChangedScreen = null;
         });
 
 

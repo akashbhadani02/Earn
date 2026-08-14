@@ -1602,11 +1602,44 @@ function publicQuestion(type,q){
   return {prompt:q};
 }
 
+function mapGet(map, key) {
+  if (!map) return 0;
+  if (typeof map.get === 'function') return Number(map.get(key) || 0);
+  return Number(map[key] || 0);
+}
+function mapSet(map, key, value) {
+  if (map && typeof map.set === 'function') map.set(key, value);
+  else if (map) map[key] = value;
+}
+function pickRandomQuestions(type, activity, user) {
+  const all = activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
+  if (!all.length) return [];
+  const last = mapGet(user?.activityLastQuestion, type);
+  const shuffled = all.sort(() => Math.random() - 0.5);
+  const withoutLast = shuffled.filter(x => x.id !== last);
+  return (withoutLast.length ? withoutLast : shuffled).slice(0, Math.min(30, shuffled.length));
+}
+
 router.get('/:type', auth, async (req,res)=>{
   const type=req.params.type; const activity=ACTIVITIES[type];
   if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const items=activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
+  const user=await User.findById(req.user.id).select('activityLastQuestion');
+  const items=pickRandomQuestions(type,activity,user);
   res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
+});
+
+router.post('/:type/tab-change', auth, async (req,res)=>{
+  try {
+    const type=req.params.type;
+    if(!ACTIVITIES[type]) return res.status(404).json({success:false,message:'Activity not found'});
+    const user=await User.findById(req.user.id);
+    if(!user) return res.status(404).json({success:false,message:'User not found'});
+    user.tabChanges=Number(user.tabChanges||0)+1;
+    const current=mapGet(user.activityTabChanges,type);
+    mapSet(user.activityTabChanges,type,current+1);
+    await user.save();
+    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
+  } catch(e){ res.status(500).json({success:false,message:e.message}); }
 });
 
 router.post('/:type/submit', auth, async (req,res)=>{
@@ -1625,12 +1658,22 @@ router.post('/:type/submit', auth, async (req,res)=>{
     if(!user.activityCounts) user.activityCounts={};
     const count=Number(user.activityCounts.get ? user.activityCounts.get(type)||0 : user.activityCounts[type]||0);
     if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
-    user.activityCounts.set ? user.activityCounts.set(type,count+1) : user.activityCounts[type]=count+1;
+    mapSet(user.activityCounts,type,count+1);
+    mapSet(user.activityLastQuestion,type,index);
+    const correctCount=mapGet(user.activityCorrect,type);
+    const wrongCount=mapGet(user.activityWrong,type);
+    const earned=mapGet(user.activityEarn,type);
+    const deducted=mapGet(user.activityDeduct,type);
     if(correct){
       user.wallet=Number(user.wallet||0)+activity.reward;
       user.totalEarn=Number(user.totalEarn||0)+activity.reward;
+      mapSet(user.activityCorrect,type,correctCount+1);
+      mapSet(user.activityEarn,type,earned+activity.reward);
     }else{
+      const deduction=Math.min(Number(user.wallet||0),activity.reward);
       user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
+      mapSet(user.activityWrong,type,wrongCount+1);
+      mapSet(user.activityDeduct,type,deducted+deduction);
     }
     await user.save();
     res.json({
@@ -1641,6 +1684,10 @@ router.post('/:type/submit', auth, async (req,res)=>{
       totalEarn:Number(user.totalEarn||0),
       used:count+1,
       remaining:Math.max(0,activity.dailyLimit-count-1),
+      correctCount:correct?correctCount+1:correctCount,
+      wrongCount:correct?wrongCount:wrongCount+1,
+      activityEarn:correct?earned+activity.reward:earned,
+      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
       correctAnswer:expected
     });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}

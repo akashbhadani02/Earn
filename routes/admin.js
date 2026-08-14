@@ -233,7 +233,15 @@ router.get("/users", adminAuth, async (req, res) => {
                 // Questions answered today (resets automatically each new day).
                 dailyQuestionsAnswered,
 
-                dailyQuestionsDate: today
+                dailyQuestionsDate: today,
+                activityStats: {
+                    counts: Object.fromEntries(userData.activityCounts ? (userData.activityCounts instanceof Map ? userData.activityCounts : Object.entries(userData.activityCounts)) : []),
+                    correct: Object.fromEntries(userData.activityCorrect ? (userData.activityCorrect instanceof Map ? userData.activityCorrect : Object.entries(userData.activityCorrect)) : []),
+                    wrong: Object.fromEntries(userData.activityWrong ? (userData.activityWrong instanceof Map ? userData.activityWrong : Object.entries(userData.activityWrong)) : []),
+                    earn: Object.fromEntries(userData.activityEarn ? (userData.activityEarn instanceof Map ? userData.activityEarn : Object.entries(userData.activityEarn)) : []),
+                    deduct: Object.fromEntries(userData.activityDeduct ? (userData.activityDeduct instanceof Map ? userData.activityDeduct : Object.entries(userData.activityDeduct)) : []),
+                    tabChanges: Object.fromEntries(userData.activityTabChanges ? (userData.activityTabChanges instanceof Map ? userData.activityTabChanges : Object.entries(userData.activityTabChanges)) : [])
+                }
 
             };
 
