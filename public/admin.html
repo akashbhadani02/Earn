@@ -1002,7 +1002,2030 @@
 
                 <tr>
 
-                    <th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${Number(x.todayQuestions || 0)}</td>
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Payment Details</th>
+                    <th>Status</th>
+                    <th>Transaction ID</th>
+                    <th>Date</th>
+                    <th>Paid Date</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="withdrawTable">
+
+            </tbody>
+
+        </table>
+    </div>
+    </section>
+
+    <section id="adminSectionUsers">
+    <input id="search" placeholder="Search User" onkeyup="searchUser()">
+
+    <h2>All Users</h2>
+    <div class="table-wrap">
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Name</th>
+                    <th>Mobile</th>
+                    <th>Last Seen</th>
+                    <th>Wallet</th>
+                    <th>Today Questions</th>
+                    <th>Total Questions</th>
+                    <th>Warnings</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="userTable">
+
+            </tbody>
+
+        </table>
+    </div>
+    </section>
+
+
+    <!-- Deleted Users / Restore -->
+    <section id="adminSectionDeleted" style="margin-top:34px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <h2 style="margin-bottom:0;">🗑️ Deleted Users</h2>
+            <button onclick="loadDeletedUsers()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                ♻️ Refresh Deleted Users
+            </button>
+        </div>
+
+        <div class="table-wrap" style="margin-top:15px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Deleted Date</th>
+                        <th>Wallet</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="deletedUserTable">
+                    <tr>
+                        <td colspan="6">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+    <!-- ========================= ADMIN COMMAND CENTER ========================= -->
+    <section id="adminSectionCommand" class="adminProV2">
+        <div class="ap2-head">
+            <div>
+                <h2>🛡️ Admin Command Center</h2>
+            </div>
+            <div class="ap2-flex"><button class="ap2-btn" onclick="ap2Refresh()">🔄 Refresh</button><button
+                    class="ap2-btn" onclick="ap2Export()">📤 Export CSV</button></div>
+        </div>
+        <div class="ap2-grid">
+            <div class="ap2-card">
+                <div class="ap2-lbl">👥 Students</div>
+                <div class="ap2-val" id="ap2Students">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">🟢 Online</div>
+                <div class="ap2-val" id="ap2Online">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">🚫 Blocked</div>
+                <div class="ap2-val" id="ap2Blocked">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">❓ Questions Today</div>
+                <div class="ap2-val" id="ap2Q">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">💰 Wallet</div>
+                <div class="ap2-val" id="ap2Wallet">₹0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">⚠️ Warnings</div>
+                <div class="ap2-val" id="ap2Warnings">0</div>
+            </div>
+            <div class="ap2-card">
+                <div class="ap2-lbl">🎡 Spin Eligible</div>
+                <div class="ap2-val" id="ap2Spin">0</div>
+            </div>
+        </div>
+        <div class="ap2-tabs">
+            <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
+            <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
+            <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
+            <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
+            <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
+            <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
+        </div>
+
+        <div class="ap2-pane active" id="ap2-students">
+            <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile"
+                    oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button>
+            </div>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Status</th>
+                            <th>Questions</th>
+                            <th>Wallet</th>
+                            <th>Earn</th>
+                            <th>Warnings</th>
+                            <th>Spin</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2StudentRows"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ap2-pane" id="ap2-withdrawals">
+            <h3>💸 Withdrawal Requests</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Mobile</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Transaction ID</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2WithdrawRows"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ap2-pane" id="ap2-wallet">
+            <h3>💰 Wallet Ledger</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Student</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2WalletRows"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ap2-pane" id="ap2-security">
+            <h3>🛡️ Suspicious Activity</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Fast Answers</th>
+                            <th>Tab Changes</th>
+                            <th>Devices</th>
+                            <th>Logins</th>
+                            <th>Warnings</th>
+                            <th>Last Seen</th>
+                            <th>Risk</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2SecurityRows"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ap2-pane" id="ap2-recycle">
+            <h3>🗑️ Deleted Students</h3>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Deleted At</th>
+                            <th>Reason</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2RecycleRows"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ap2-pane" id="ap2-reports">
+            <div class="ap2-flex">
+                <div>
+                    <h3>📊 Reports</h3>
+                    <p class="ap2-muted">Live student report from MongoDB.</p>
+                </div>
+                <button class="ap2-btn" onclick="ap2Export()">📤 Download Student Report</button>
+            </div>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th><th>Mobile</th><th>Wallet</th><th>Today Q</th><th>Total Q</th><th>Warnings</th><th>Status</th><th>Last Seen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ap2ReportRows"><tr><td colspan="9">Click Reports to load.</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <div class="ap2-modal" id="ap2Modal">
+        <div class="ap2-box">
+            <div class="ap2-head">
+                <h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button>
+            </div>
+            <div id="ap2Body"></div>
+        </div>
+    </div>
+
+    <!-- ========================= QUESTION BANK ========================= -->
+    <section id="adminSectionQuestions" style="margin-top:34px;">
+        <h2>Question Bank — Add / Edit Questions</h2>
+        <div class="question-toolbar">
+            <input id="questionSearch" placeholder="Search question..." oninput="questionPage=1; loadQuestions();">
+            <button onclick="openQuestionEditor()" style="background-color: #1d4ed8;">➕ Add Question</button>
+            <button onclick="importQuestionsJson()" style="background:#16a34a;">📥 Import questions.json</button>
+            <button onclick="loadQuestions()" style="background-color: #2563eb;">🔄 All Questions</button>
+            <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
+            <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
+            <button onclick="deleteAllQuestions()" style="background:#dc2626;">🗑️ Delete All Questions</button>
+            <button id="downloadBtn" class="btn btn-success">📥 Download Questions JSON</button>
+        </div>
+        <div class="page-info" id="repeatInfo"></div>
+        <div class="page-info" id="questionInfo">Loading questions...</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Question</th>
+                        <th>Options</th>
+                        <th>Correct</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="questionTable"></tbody>
+            </table>
+        </div>
+        <div class="question-actions" style="margin-top:12px;">
+            <button onclick="changeQuestionPage(-1)" style="background-color: #1d4ed8;">◀ Previous</button>
+            <button onclick="changeQuestionPage(1)" style="background-color: #1d4ed8;">Next ▶</button>
+        </div>
+    </section>
+
+    <div id="questionModal" class="question-editor-modal" onclick="closeQuestionEditor(event)">
+        <div class="question-editor-box" onclick="event.stopPropagation()">
+            <h2 id="questionModalTitle">Add Question</h2>
+            <input type="hidden" id="editQuestionId">
+
+            <label>Question</label>
+            <textarea id="questionText" placeholder="Enter question"></textarea>
+
+            <label>Options — select the correct answer</label>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="0" checked>
+                <input type="text" id="option0" placeholder="Option 1">
+            </div>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="1">
+                <input type="text" id="option1" placeholder="Option 2">
+            </div>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="2">
+                <input type="text" id="option2" placeholder="Option 3">
+            </div>
+            <div class="question-option">
+                <input type="radio" name="correctOption" value="3">
+                <input type="text" id="option3" placeholder="Option 4">
+            </div>
+
+            <div class="modal-actions">
+                <button onclick="closeQuestionEditor()" style="background-color: #1d4ed8;">Cancel</button>
+                <button onclick="saveQuestion()" style="background-color: #1d4ed8;">💾 Save Question</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        // ===== Compact Admin Main Menu =====
+        function showAdminSection(name){
+            const map={
+                dashboard:'adminSectionDashboard',
+                users:'adminSectionUsers',
+                withdrawals:'adminSectionWithdrawals',
+                deleted:'adminSectionDeleted',
+                command:'adminSectionCommand',
+                questions:'adminSectionQuestions'
+            };
+            Object.keys(map).forEach(k=>{
+                const el=document.getElementById(map[k]);
+                if(el) el.classList.toggle('admin-section-hidden',k!==name);
+            });
+            document.querySelectorAll('.admin-main-menu button[data-admin-section]').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===name));
+            if(name==='users' && typeof loadUsers==='function') loadUsers();
+            if(name==='withdrawals' && typeof loadWithdraws==='function') loadWithdraws();
+            if(name==='deleted' && typeof loadDeletedUsers==='function') loadDeletedUsers();
+            if(name==='command' && typeof ap2Refresh==='function') ap2Refresh();
+            if(name==='questions' && typeof loadQuestions==='function') loadQuestions();
+        }
+        window.addEventListener('DOMContentLoaded',()=>showAdminSection('users'));
+
+        const token = localStorage.getItem("adminToken");
+
+        if (!token) {
+            location.replace("admin-login.html");
+        }
+
+        // ==========================================
+        // ADMIN TOKEN / SESSION HANDLER
+        // If the JWT expires or becomes invalid,
+        // do NOT show "Invalid Token" alerts from
+        // every API call. Send admin back to login.
+        // ==========================================
+        let sessionExpiredHandled = false;
+        const originalFetch = window.fetch.bind(window);
+
+        window.fetch = async function (...args) {
+            const response = await originalFetch(...args);
+
+            // Only handle unauthorized API responses.
+            if (response.status === 401 && !sessionExpiredHandled) {
+                sessionExpiredHandled = true;
+
+                localStorage.removeItem("adminToken");
+
+                // Redirect immediately to admin login.
+                location.replace("admin-login.html?session=expired");
+
+                // Stop the current function before it can show
+                // the backend "Invalid Token" alert.
+                return new Promise(() => { });
+            }
+
+            return response;
+        };
+
+        let allUsers = [];
+
+        //==========================
+        // Dashboard
+        //==========================
+
+        async function loadDashboard() {
+
+            const res = await fetch("/api/admin/dashboard", {
+
+                headers: {
+
+                    Authorization: "Bearer " + token
+
+                }
+
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+
+                alert(data.message);
+
+                return;
+
+            }
+
+            document.getElementById("totalUsers").innerHTML = data.totalUsers;
+            document.getElementById("wallet").innerHTML =
+                Number(data.totalWallet).toFixed(2);
+
+            document.getElementById("earn").innerHTML =
+                Number(data.totalEarn).toFixed(2);
+
+            document.getElementById("totalQuestions").innerHTML =
+                Number(data.totalQuestionsAnswered || 0);
+
+            document.getElementById("questionBankTotal").innerHTML =
+                Number(data.questionBankTotal || 0);
+
+            document.getElementById("withdraw").innerHTML =
+                Number(data.pendingWithdraw || 0);
+
+        }
+
+        //==========================
+        // Load Users
+        //==========================
+
+        async function loadUsers() {
+
+            const res = await fetch("/api/admin/users", {
+
+                headers: {
+
+                    Authorization: "Bearer " + token
+
+                }
+
+            });
+
+            const data = await res.json();
+
+            if (!data.success) {
+
+                alert(data.message);
+
+                return;
+
+            }
+
+            allUsers = data.users || [];
+
+            showUsers(allUsers);
+
+        }
+
+        //==========================
+        // last seen format
+        //==========================
+        function formatLastSeen(lastSeen) {
+
+            if (!lastSeen) {
+                return "<span style='color:#dc2626;font-weight:bold;'>🔴 Never</span>";
+            }
+
+            const diff = Date.now() - new Date(lastSeen).getTime();
+
+            if (diff <= 3000) {
+                return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
+            }
+
+            const date = new Date(lastSeen);
+
+            const datePart = date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+
+            const timePart = date.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true
+            });
+
+            return `
+        <span style="color:#dc2626;font-weight:bold;">
+            🔴 ${datePart}<br>${timePart}
+        </span>
+    `;
+        }
+        //==========================
+        // Show Users
+        //==========================
+
+        function showUsers(users) {
+
+            let html = "";
+
+            users.forEach(user => {
+
+                const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
+                const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
+
+                html += `
+
+<tr style="background:${isOnline ? '#dcfce7' : '#fee2e2'};">
+    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};"></span>${user.name}</td>
+    <td>${user.mobile}</td>
+
+    <td>${formatLastSeen(user.lastSeen)}</td>
+
+    <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
+
+    <td>₹${Number(user.totalEarn || 0).toFixed(2)}</td>
+
+    <td>
+        <span style="
+            font-weight:800;
+            color:#0369a1;
+            background:#ffffff;
+            padding:6px 10px;
+            border-radius:12px;
+            display:inline-block;
+        ">${Number(user.dailyQuestionsAnswered || 0)}</span>
+    </td>
+
+    <td>
+        <span style="
+            font-weight:800;
+            color:#6d28d9;
+            background:#ffffff;
+            padding:6px 10px;
+            border-radius:12px;
+            display:inline-block;
+        ">${Number(user.totalQuestionsAnswered || 0)}</span>
+    </td>
+
+<td>
+    <span style="
+        font-weight:bold;
+        color:${Number(user.warningCount || 0) >= 3 ? '#dc2626' : '#d97706'};
+        background:${Number(user.warningCount || 0) >= 3 ? '#fee2e2' : '#fef3c7'};
+        padding:5px 9px;
+        border-radius:12px;
+        display:inline-block;
+    ">⚠️ ${Number(user.warningCount || 0)}/3</span>
+</td>
+
+<td>
+
+<button onclick="editWallet('${user._id}',${user.wallet || 0})">
+💰
+</button>
+
+<button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})">
+📈
+</button>
+
+<button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})'
+style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
+🔔
+</button>
+
+<button onclick="deleteUser('${user._id}')">
+⛔
+</button>
+
+${user.isBlocked ? `
+<button onclick="unblockUser('${user._id}')"
+style="background:#16a34a;">
+🟢
+</button>
+` : ""}
+
+</td>
+
+</tr>
+
+`;
+
+            });
+
+            document.getElementById("userTable").innerHTML = html;
+
+        }
+
+        //==========================
+        // Search
+        //==========================
+
+        function searchUser() {
+            const value = document
+                .getElementById("search")
+                .value
+                .trim()
+                .toLowerCase();
+
+            const filtered = allUsers.filter(user => {
+
+                const name = String(user.name || "").toLowerCase();
+                const mobile = String(user.mobile || "").toLowerCase();
+
+                return name.includes(value) || mobile.includes(value);
+            });
+
+            showUsers(filtered);
+        }
+        //==========================
+        // Send Push Notification
+        //==========================
+        async function sendNotification(userId, userName) {
+            const title = prompt("Notification Title", "New Notification");
+            if (title === null) return;
+
+            const cleanTitle = title.trim();
+            if (!cleanTitle) {
+                alert("Notification title is required.");
+                return;
+            }
+
+            const message = prompt("Notification Message for " + userName, "");
+            if (message === null) return;
+
+            const cleanMessage = message.trim();
+            if (!cleanMessage) {
+                alert("Notification message is required.");
+                return;
+            }
+
+            if (!confirm(
+                "Send this notification only to " + userName + "?\n\n" +
+                cleanTitle + "\n" + cleanMessage
+            )) return;
+
+            try {
+                const res = await fetch("/api/admin/notification/send/" + userId, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        title: cleanTitle,
+                        message: cleanMessage,
+                        url: "/earn.html"
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert(
+                        "✅ Notification sent successfully.\n" +
+                        "Devices reached: " + (data.devicesSent || 0)
+                    );
+                } else {
+                    alert("❌ " + (data.message || "Notification failed"));
+                }
+            } catch (err) {
+                console.error("Notification Error:", err);
+                alert("❌ Server error while sending notification.");
+            }
+        }
+
+        //==========================
+        // Edit Wallet
+        //==========================
+
+        async function editWallet(id, currentWallet) {
+
+            const amount = prompt("Enter New Wallet", currentWallet);
+
+            if (amount == null) return;
+            if (isNaN(amount)) {
+
+                alert("Enter Valid Number");
+
+                return;
+
+            }
+
+            await fetch("/api/admin/wallet/" + id, {
+
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type": "application/json",
+
+                    Authorization: "Bearer " + token
+
+                },
+
+                body: JSON.stringify({
+
+                    wallet: Number(amount)
+
+                })
+
+            });
+
+            loadUsers();
+
+            loadDashboard();
+
+        }
+        //==========================
+        // Question Bank
+        //==========================
+
+        let questionPage = 1;
+        const questionLimit = 20;
+        let questionTotalPages = 1;
+        const questionCache = {};
+        let repeatedMode = false;
+
+        async function importQuestionsJson() {
+            const ok = confirm(
+                "questions.json ના નવા questions Question Bank માં add કરવા છે?\n\n" +
+                "Existing/repeated questions automatically skip થશે."
+            );
+            if (!ok) return;
+
+            try {
+                const res = await fetch("/api/questions/admin/import-json", {
+                    method: "POST",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    alert(data.message || "questions.json import failed");
+                    return;
+                }
+
+                alert(
+                    "✅ Import Complete!\n\n" +
+                    "New Questions: " + Number(data.added || 0) + "\n" +
+                    "Skipped: " + Number(data.skipped || 0) + "\n" +
+                    "Total Question Bank: " + Number(data.total || 0)
+                );
+
+                questionPage = 1;
+                await loadQuestions();
+                await loadDashboard();
+            } catch (err) {
+                console.error("Import JSON Error:", err);
+                alert("Server સાથે connect થવામાં error આવ્યો.");
+            }
+        }
+
+        async function loadQuestions() {
+            repeatedMode = false;
+            document.getElementById("repeatInfo").innerText = "";
+            const search = document.getElementById("questionSearch").value.trim();
+            const res = await fetch(
+                "/api/questions/admin?page=" + questionPage +
+                "&limit=" + questionLimit +
+                "&search=" + encodeURIComponent(search),
+                { headers: { Authorization: "Bearer " + token } }
+            );
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Could not load questions");
+                return;
+            }
+
+            questionTotalPages = Number(data.totalPages || 1);
+            const startNumber = (questionPage - 1) * questionLimit;
+
+            document.getElementById("questionInfo").innerText =
+                `Showing ${data.questions.length ? startNumber + 1 : 0}-${startNumber + data.questions.length} of ${data.total} questions | Page ${questionPage}/${questionTotalPages}`;
+
+            const html = (data.questions || []).map((question, index) => {
+                questionCache[question._id] = question;
+                const options = (question.options || []).map((option, i) =>
+                    `<div style="${i === Number(question.correct) ? 'font-weight:800;text-decoration:underline;' : ''}">${i + 1}. ${escapeHtml(option)}</div>`
+                ).join("");
+
+                return `<tr>
+                    <td>${startNumber + index + 1}</td>
+                    <td style="min-width:280px;max-width:500px;white-space:normal;">${escapeHtml(question.q)}</td>
+                    <td style="min-width:220px;white-space:normal;">${options}</td>
+                    <td>Option ${Number(question.correct) + 1}</td>
+                    <td>
+                        <button onclick="openQuestionEditorById('${question._id}')" style="background:#22c55e;">✏️ Edit</button>
+                        <button onclick="deleteQuestion('${question._id}')" style="background:#ef4444;">🗑️ Delete</button>
+                    </td>
+                </tr>`;
+            }).join("");
+
+            document.getElementById("questionTable").innerHTML = html ||
+                `<tr><td colspan="5">No questions found.</td></tr>`;
+        }
+
+        async function showRepeatedQuestions() {
+            repeatedMode = true;
+            questionPage = 1;
+            const res = await fetch("/api/questions/admin/repeated", {
+                headers: { Authorization: "Bearer " + token }
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Could not find repeated questions");
+                return;
+            }
+
+            const groups = data.groups || [];
+            document.getElementById("repeatInfo").innerText =
+                groups.length
+                    ? `🔁 ${groups.length} repeated question group(s) found • ${data.repeatedCount} total repeated entries`
+                    : "✅ No repeated questions found.";
+
+            const rows = [];
+            groups.forEach((group, groupIndex) => {
+                (group.questions || []).forEach((question, index) => {
+                    questionCache[question._id] = question;
+                    const options = (question.options || []).map((option, i) =>
+                        `<div style="${i === Number(question.correct) ? 'font-weight:800;text-decoration:underline;' : ''}">${i + 1}. ${escapeHtml(option)}</div>`
+                    ).join("");
+
+                    rows.push(`<tr>
+                        <td>${groupIndex + 1}</td>
+                        <td style="min-width:280px;max-width:500px;white-space:normal;">${escapeHtml(question.q)}</td>
+                        <td style="min-width:220px;white-space:normal;">${options}</td>
+                        <td>Option ${Number(question.correct) + 1}</td>
+                        <td>
+                            <span style="display:inline-block;padding:5px 9px;border-radius:999px;background:#7c2d12;color:#fed7aa;margin-bottom:5px;">Repeat ${index + 1}/${group.count}</span><br>
+                            <button onclick="openQuestionEditorById('${question._id}')">✏️ Edit</button>
+                            <button onclick="deleteQuestion('${question._id}')" style="background:#ef4444;">🗑️ Delete</button>
+                        </td>
+                    </tr>`);
+                });
+            });
+
+            document.getElementById("questionInfo").innerText =
+                `Showing repeated questions only: ${data.repeatedCount || 0} entries`;
+            document.getElementById("questionTable").innerHTML = rows.join("") ||
+                `<tr><td colspan="5">No repeated questions found.</td></tr>`;
+        }
+
+        async function removeRepeatedQuestions() {
+            const checkRes = await fetch("/api/questions/admin/repeated", {
+                headers: { Authorization: "Bearer " + token }
+            });
+            const checkData = await checkRes.json();
+
+            if (!checkRes.ok || !checkData.success) {
+                alert(checkData.message || "Could not check repeated questions");
+                return;
+            }
+
+            if (!checkData.repeatedCount) {
+                document.getElementById("repeatInfo").innerText = "✅ No repeated questions found.";
+                alert("No repeated questions found.");
+                return;
+            }
+
+            const ok = confirm(
+                `Found ${checkData.repeatedCount} entries in ${checkData.duplicateGroups} repeated group(s).\n\n` +
+                `Click OK to keep ONE copy of each question and delete the extra repeated copies.`
+            );
+            if (!ok) return;
+
+            const res = await fetch("/api/questions/admin/repeated/remove", {
+                method: "DELETE",
+                headers: { Authorization: "Bearer " + token }
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "Could not remove repeated questions");
+                return;
+            }
+
+            alert(`Done! ${data.deleted} repeated question(s) removed. One copy of each question was kept.`);
+            document.getElementById("repeatInfo").innerText = "✅ Repeated questions removed; one copy kept for each question.";
+            questionPage = 1;
+            await loadQuestions();
+            await loadDashboard();
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function changeQuestionPage(direction) {
+            const next = questionPage + direction;
+            if (next < 1 || next > questionTotalPages) return;
+            questionPage = next;
+            loadQuestions();
+        }
+
+        function openQuestionEditorById(id) {
+            openQuestionEditor(questionCache[id] || null);
+        }
+
+        function openQuestionEditor(question = null) {
+            document.getElementById("questionModalTitle").innerText = question ? "Edit Question" : "Add Question";
+            document.getElementById("editQuestionId").value = question?._id || "";
+            document.getElementById("questionText").value = question?.q || "";
+
+            for (let i = 0; i < 4; i++) {
+                document.getElementById("option" + i).value = question?.options?.[i] || "";
+            }
+
+            const correct = Number(question?.correct ?? 0);
+            document.querySelectorAll('input[name="correctOption"]').forEach(radio => {
+                radio.checked = Number(radio.value) === correct;
+            });
+
+            document.getElementById("questionModal").classList.add("show");
+        }
+
+        function closeQuestionEditor(event) {
+            if (event && event.target !== document.getElementById("questionModal")) return;
+            document.getElementById("questionModal").classList.remove("show");
+        }
+
+        async function saveQuestion() {
+            const id = document.getElementById("editQuestionId").value.trim();
+            const q = document.getElementById("questionText").value.trim();
+            const options = [0, 1, 2, 3]
+                .map(i => document.getElementById("option" + i).value.trim())
+                .filter(Boolean);
+            const selected = document.querySelector('input[name="correctOption"]:checked');
+            const correct = selected ? Number(selected.value) : 0;
+
+            if (!q || options.length < 2) {
+                alert("Question and at least 2 options are required.");
+                return;
+            }
+
+            if (correct >= options.length) {
+                alert("Please select a correct option that has text.");
+                return;
+            }
+
+            const url = id ? "/api/questions/admin/" + id : "/api/questions/admin";
+            const method = id ? "PUT" : "POST";
+
+            const res = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                },
+                body: JSON.stringify({ q, options, correct })
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Question save failed");
+                return;
+            }
+
+            document.getElementById("questionModal").classList.remove("show");
+            await loadQuestions();
+            await loadDashboard();
+            alert(id ? "Question updated successfully." : "Question added successfully.");
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm("Delete this question?")) return;
+
+            const res = await fetch("/api/questions/admin/" + id, {
+                method: "DELETE",
+                headers: { Authorization: "Bearer " + token }
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Question delete failed");
+                return;
+            }
+
+            await loadQuestions();
+            await loadDashboard();
+        }
+
+        //==========================
+        // Delete User
+        //==========================
+
+        async function deleteUser(id) {
+
+            if (!confirm(
+                "Move this user to Deleted Users?\n\n" +
+                "The user's wallet, earnings, questions and all other data will be kept safe.\n" +
+                "You can restore the user later."
+            )) return;
+
+            const res = await fetch("/api/admin/user/" + id, {
+                method: "DELETE",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "User delete failed");
+                return;
+            }
+
+            alert("✅ User moved to Deleted Users. You can restore it anytime.");
+
+            await loadUsers();
+            await loadDeletedUsers();
+            await loadDashboard();
+        }
+
+        //==========================
+        // Deleted Users
+        //==========================
+
+        async function loadDeletedUsers() {
+
+            const table = document.getElementById("deletedUserTable");
+            if (!table) return;
+
+            try {
+
+                const res = await fetch("/api/admin/deleted-users", {
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    table.innerHTML = `<tr><td colspan="6">${data.message || "Failed to load deleted users"}</td></tr>`;
+                    return;
+                }
+
+                const users = data.users || [];
+
+                if (!users.length) {
+                    table.innerHTML = `<tr><td colspan="6">No Deleted Users</td></tr>`;
+                    return;
+                }
+
+                table.innerHTML = users.map(user => {
+
+                    const deletedDate = user.deletedAt
+                        ? new Date(user.deletedAt).toLocaleString("en-IN")
+                        : "-";
+
+                    return `
+                        <tr>
+                            <td>${escapeHtml(user.name || "-")}</td>
+                            <td>${escapeHtml(user.mobile || "-")}</td>
+                            <td>${deletedDate}</td>
+                            <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
+                                                  <td>
+                                <button
+                                    onclick="restoreUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#16a34a,#15803d);">
+                                    ♻️ Restore
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+
+            } catch (err) {
+
+                console.error("Deleted Users Error:", err);
+                table.innerHTML = `<tr><td colspan="6">Failed to load deleted users</td></tr>`;
+
+            }
+
+        }
+
+        async function restoreUser(id) {
+
+            if (!confirm(
+                "Restore this user?\n\n" +
+                "The student will appear again in All Users and will be able to login."
+            )) return;
+
+            const res = await fetch("/api/admin/restore-user/" + id, {
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "User restore failed");
+                return;
+            }
+
+            alert("✅ User restored successfully.");
+
+            await loadDeletedUsers();
+            await loadUsers();
+            await loadDashboard();
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        async function loadWithdraws() {
+
+            const res = await fetch(
+
+                "/api/admin/withdraws",
+
+                {
+
+                    headers: {
+
+                        Authorization: "Bearer " + token
+
+                    }
+
+                }
+
+            );
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                console.error("Withdraw Load Error:", data.message);
+                document.getElementById("withdrawTable").innerHTML = `
+                    <tr><td colspan="10">${data.message || "Failed to load withdraw requests"}</td></tr>
+                `;
+                return;
+            }
+
+            let html = "";
+
+            const list = data.withdraws || [];
+
+            if (list.length === 0) {
+                document.getElementById("withdrawTable").innerHTML = `
+                    <tr><td colspan="10">No Withdraw Requests Found</td></tr>
+                `;
+                return;
+            }
+
+            list.forEach(w => {
+
+                html += `
+
+<tr>
+
+<td>${w.name}</td>
+
+<td>${w.mobile}</td>
+
+<td>₹${Number(w.amount || 0).toFixed(2)}</td>
+
+<td>
+    ${w.paymentMethod || "-"}
+</td>
+
+<td>
+
+${w.paymentMethod === "UPI"
+                        ? `
+<b>UPI:</b><br>
+${w.upiId || "-"}
+`
+                        : `
+<b>Bank:</b> ${w.bankName || "-"}<br>
+
+<b>Holder:</b> ${w.accountHolderName || "-"}<br>
+
+<b>Account:</b> ${w.accountNumber || "-"}<br>
+
+<b>IFSC:</b> ${w.ifscCode || "-"}
+`
+                    }
+
+</td>
+
+<td>
+<span class="status-badge ${String(w.status || "").toLowerCase()}">${w.status}</span>
+</td>   
+
+<td>
+    ${w.transactionId || "-"}
+</td>
+
+<td>
+    ${w.date
+                        ? new Date(w.date).toLocaleString()
+                        : "-"
+                    }
+</td>
+
+<td>
+    ${w.paidAt
+                        ? new Date(w.paidAt).toLocaleString()
+                        : "-"
+                    }
+</td>
+
+<td>
+
+${w.status === "Pending" ? `
+<button
+    onclick="approveWithdraw('${w.userId}','${w.requestId}')"
+    style="background:#2563eb;">
+    Approve
+</button>
+
+<button
+    onclick="rejectWithdraw('${w.userId}','${w.requestId}')"
+    style="background:#ef4444;">
+    Reject
+</button>
+` : ""}
+
+${w.status === "Approved" ? `
+<button
+    onclick="markWithdrawPaid('${w.userId}','${w.requestId}')"
+    style="background:#16a34a;">
+    Mark Paid
+</button>
+` : ""}
+
+<button
+    onclick="deleteWithdraw('${w.userId}','${w.requestId}')"
+    style="background:#6b7280;">
+    Delete
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+            });
+
+            document.getElementById("withdrawTable").innerHTML = html;
+
+        }
+
+        async function approveWithdraw(userId, requestId) {
+
+            if (!confirm("Approve this withdraw request?")) return;
+
+            const res = await fetch(
+                "/api/admin/withdraw/approve/" + userId + "/" + requestId,
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "Approve failed");
+                return;
+            }
+
+            await loadWithdraws();
+            await loadDashboard();
+        }
+
+        async function rejectWithdraw(userId, requestId) {
+
+            if (!confirm("Reject this withdraw request? Amount will be refunded to student wallet.")) return;
+
+            const res = await fetch(
+                "/api/admin/withdraw/reject/" + userId + "/" + requestId,
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "Reject failed");
+                return;
+            }
+
+            await loadWithdraws();
+            await loadDashboard();
+        }
+
+        //==========================
+        // Logout
+        //==========================
+
+        function logout() {
+
+            if (!confirm("Are you sure you want to logout?")) return;
+
+            localStorage.removeItem("adminToken");
+
+            location.href = "admin-login.html";
+
+        }
+
+        //==========================
+        // Mark Withdraw as Paid
+        //==========================
+
+        async function markWithdrawPaid(userId, requestId) {
+
+            const transactionId = prompt(
+                "Enter Payment Transaction ID:"
+            );
+
+            // Cancel clicked
+            if (transactionId === null) {
+                return;
+            }
+
+            // Empty Transaction ID
+            if (!transactionId.trim()) {
+
+                alert("Transaction ID is required.");
+
+                return;
+            }
+
+            const confirmPayment = confirm(
+                "Have you successfully paid the student?\n\n" +
+                "Transaction ID: " + transactionId.trim()
+            );
+
+            if (!confirmPayment) {
+                return;
+            }
+
+            try {
+
+                const res = await fetch(
+                    "/api/admin/withdraw/paid/" +
+                    userId +
+                    "/" +
+                    requestId,
+                    {
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type": "application/json",
+
+                            Authorization: "Bearer " + token
+
+                        },
+
+                        body: JSON.stringify({
+
+                            transactionId: transactionId.trim()
+
+                        })
+
+                    }
+                );
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+
+                    alert(
+                        data.message ||
+                        "Payment update failed"
+                    );
+
+                    return;
+                }
+
+                alert(
+                    "Payment marked as Paid successfully!\n\n" +
+                    "Transaction ID: " +
+                    data.transactionId
+                );
+
+                await loadWithdraws();
+
+                await loadDashboard();
+
+            } catch (err) {
+
+                console.error(
+                    "Mark Paid Error:",
+                    err
+                );
+
+                alert(
+                    "Something went wrong while updating payment."
+                );
+
+            }
+
+        }
+
+        async function deleteWithdraw(userId, requestId) {
+
+            if (!confirm("Delete this withdraw request?")) return;
+
+            const res = await fetch(
+                "/api/admin/withdraw/delete/" + userId + "/" + requestId,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                alert(data.message || "Delete failed");
+                return;
+            }
+
+            await loadWithdraws();
+            await loadDashboard();
+        }
+
+        async function unblockUser(id) {
+
+            if (!confirm("Unblock this student?")) return;
+
+            const res = await fetch("/api/admin/unblock/" + id, {
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            const data = await res.json();
+
+            alert(data.message);
+
+            loadUsers();
+
+        }
+        //==========================
+        // Initial Load
+        //==========================
+
+        loadDashboard();
+        loadUsers();
+        loadDeletedUsers();
+        loadWithdraws();
+        loadQuestions();
+
+
+        //==========================
+        // Auto Refresh
+        // Dashboard + Users every 10 seconds
+        //==========================
+
+        setInterval(async () => {
+            try {
+                await loadDashboard();
+                await loadUsers();
+            } catch (err) {
+                console.error("Auto refresh error:", err);
+            }
+        }, 3000);
+
+        async function deleteAllQuestions() {
+
+            const firstConfirm = confirm(
+                "⚠️ WARNING!\n\n" +
+                "Are you sure you want to DELETE ALL QUESTIONS?\n\n" +
+                "This action cannot be undone."
+            );
+
+            if (!firstConfirm) return;
+
+            const secondConfirm = confirm(
+                "FINAL CONFIRMATION!\n\n" +
+                "All questions will be permanently deleted.\n\n" +
+                "Click OK to delete ALL questions."
+            );
+
+            if (!secondConfirm) return;
+
+            try {
+
+                const res = await fetch("/api/questions/admin/all", {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: "Bearer " + token
+                    }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    alert(data.message || "Could not delete all questions");
+                    return;
+                }
+
+                alert(
+                    "✅ Successfully deleted " +
+                    data.deleted +
+                    " question(s)."
+                );
+
+                questionPage = 1;
+
+                await loadQuestions();
+                await loadDashboard();
+
+            } catch (err) {
+
+                console.error("Delete All Questions Error:", err);
+
+                alert(
+                    "❌ Error deleting questions.\n\n" +
+                    err.message
+                );
+
+            }
+        }
+
+        document
+            .getElementById("downloadBtn")
+            .addEventListener("click", downloadQuestions);
+
+        async function downloadQuestions() {
+            try {
+                const response = await fetch("/api/questions/download");
+
+                const blob = await response.blob();
+
+                const url = window.URL.createObjectURL(blob);
+
+                const a = document.createElement("a");
+
+                a.href = url;
+                a.download = "questions.json";
+
+                document.body.appendChild(a);
+                a.click();
+
+                a.remove();
+
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                console.log(err);
+                alert("Download Failed");
+            }
+        }
+    </script>
+    <style id="adminProV2CSS">
+        #adminProV2 {
+            margin: 24px 0;
+            padding: 22px;
+            border-radius: 22px;
+            background: #07111f;
+            border: 1px solid rgba(255, 255, 255, .08);
+            color: #fff
+        }
+
+        #adminProV2 * {
+            box-sizing: border-box
+        }
+
+        .ap2-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        #adminProV2 h2,
+        #adminProV2 h3 {
+            margin: 0
+        }
+
+        .ap2-muted {
+            color: #94a3b8;
+            font-size: 12px
+        }
+
+        .ap2-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin: 18px 0
+        }
+
+        .ap2-card {
+            padding: 15px;
+            border-radius: 15px;
+            background: #0c1727;
+            border: 1px solid rgba(255, 255, 255, .07)
+        }
+
+        .ap2-val {
+            font-size: 25px;
+            font-weight: 800;
+            margin-top: 5px
+        }
+
+        .ap2-lbl {
+            font-size: 12px;
+            color: #94a3b8
+        }
+
+        .ap2-btn {
+            border: 1px solid #2563eb;
+            background: #2563eb;
+            color: #fff;
+            padding: 9px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: .2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,.12);
+        }
+
+        .ap2-btn:hover {
+            filter: brightness(1.10);
+            transform: translateY(-1px);
+        }
+
+        /* Command Center colorful buttons */
+        .adminProV2 .ap2-head .ap2-btn:first-child {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+        .adminProV2 .ap2-head .ap2-btn:last-child {
+            background: #16a34a;
+            border-color: #16a34a;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(1) {
+            background: #2563eb; border-color: #2563eb;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(2) {
+            background: #16a34a; border-color: #16a34a;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(3) {
+            background: #f59e0b; border-color: #f59e0b; color: #111827;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(4) {
+            background: #dc2626; border-color: #dc2626;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(5) {
+            background: #7c3aed; border-color: #7c3aed;
+        }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(6) {
+            background: #0891b2; border-color: #0891b2;
+        }
+        .adminProV2 .ap2-pane .ap2-flex .ap2-btn {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+
+        /* Status + Action colors */
+        .admin-table td strong, .admin-table td .status-badge {
+            display:inline-block; padding:5px 10px; border-radius:999px; font-weight:800; font-size:12px;
+        }
+        .admin-table td strong { background:#334155; color:#fff; }
+        .status-pending, .status-badge.pending { background:#f59e0b !important; color:#111827 !important; }
+        .status-approved, .status-badge.approved { background:#2563eb !important; color:#fff !important; }
+        .status-paid, .status-badge.paid { background:#16a34a !important; color:#fff !important; }
+        .status-rejected, .status-badge.rejected { background:#dc2626 !important; color:#fff !important; }
+        .status-blocked, .status-badge.blocked { background:#7c3aed !important; color:#fff !important; }
+        .status-online, .status-badge.online { background:#16a34a !important; color:#fff !important; }
+        .status-offline, .status-badge.offline { background:#64748b !important; color:#fff !important; }
+
+        #withdrawTable td:last-child button, #usersTable td:last-child button, #userTable td:last-child button {
+            border:0 !important; color:#fff !important; border-radius:8px !important; padding:7px 10px !important; margin:2px !important;
+            font-weight:700; cursor:pointer; transition:.18s ease;
+        }
+        #withdrawTable td:last-child button:hover, #usersTable td:last-child button:hover, #userTable td:last-child button:hover { filter:brightness(1.12); transform:translateY(-1px); }
+        #withdrawTable td:last-child button:nth-child(1) { background:#16a34a !important; }
+        #withdrawTable td:last-child button:nth-child(2) { background:#dc2626 !important; }
+        #withdrawTable td:last-child button:nth-child(3) { background:#2563eb !important; }
+        #withdrawTable td:last-child button:last-child { background:#64748b !important; }
+
+        .action-view { background:#2563eb !important; }
+        .action-edit { background:#f59e0b !important; color:#111827 !important; }
+        .action-success { background:#16a34a !important; }
+        .action-danger { background:#dc2626 !important; }
+        .action-warning { background:#f59e0b !important; color:#111827 !important; }
+        .action-purple { background:#7c3aed !important; }
+        .action-neutral { background:#64748b !important; }
+
+        .ap2-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0
+        }
+
+        .ap2-pane {
+            display: none
+        }
+
+        .ap2-pane.active {
+            display: block
+        }
+
+        .ap2-tablewrap {
+            overflow: auto
+        }
+
+        .ap2-table {
+            width: 100%;
+            min-width: 900px;
+            border-collapse: collapse
+        }
+
+        .ap2-table th,
+        .ap2-table td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, .07);
+            font-size: 12px;
+            text-align: left
+        }
+
+        .ap2-input {
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #26354c;
+            background: #0d1929;
+            color: #fff
+        }
+
+        .ap2-flex {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .ap2-table td:last-child .ap2-btn:nth-child(1) { background:#2563eb; border-color:#2563eb; }
+        .ap2-table td:last-child .ap2-btn:nth-child(2) { background:#16a34a; border-color:#16a34a; }
+        .ap2-table td:last-child .ap2-btn:nth-child(3) { background:#f59e0b; border-color:#f59e0b; color:#111827; }
+        .ap2-table td:last-child .ap2-btn:nth-child(4) { background:#7c3aed; border-color:#7c3aed; }
+        .ap2-status-pending { background:#f59e0b !important; color:#111827 !important; }
+        .ap2-status-approved { background:#2563eb !important; color:#fff !important; }
+        .ap2-status-paid { background:#16a34a !important; color:#fff !important; }
+        .ap2-status-rejected { background:#dc2626 !important; color:#fff !important; }
+        .ap2-status-blocked { background:#dc2626 !important; color:#fff !important; }
+        .ap2-status-online { background:#16a34a !important; color:#fff !important; }
+        .ap2-status-offline { background:#64748b !important; color:#fff !important; }
+
+        .ap2-badge {
+            padding: 4px 8px;
+            border-radius: 99px;
+            background: #18263b;
+            font-size: 11px;
+            font-weight: 800
+        }
+
+        .ap2-green {
+            background: #16a34a !important;
+            color: #ffffff !important;
+            border: 1px solid #15803d !important;
+        }
+
+        .ap2-red {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            border: 1px solid #b91c1c !important;
+        }
+
+        .ap2-blue {
+            background: #2563eb !important;
+            color: #ffffff !important;
+            border: 1px solid #1d4ed8 !important;
+        }
+
+        .ap2-yellow {
+            background: #4a3711
+        }
+
+        .ap2-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+            padding: 18px
+        }
+
+        .ap2-modal.show {
+            display: flex
+        }
+
+        .ap2-box {
+            width: min(950px, 100%);
+            max-height: 90vh;
+            overflow: auto;
+            background: #091422;
+            border: 1px solid #26354c;
+            border-radius: 18px;
+            padding: 20px
+        }
+
+        .ap2-kv {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin: 15px 0
+        }
+
+        .ap2-kv>div {
+            background: #0d1929;
+            border-radius: 11px;
+            padding: 12px
+        }
+
+        .ap2-kv b {
+            display: block;
+            color: #94a3b8;
+            font-size: 11px
+        }
+
+        .ap2-kv span {
+            font-weight: 800;
+            display: block;
+            margin-top: 4px
+        }
+
+        @media(max-width:600px) {
+            #adminProV2 {
+                padding: 14px
+            }
+
+            .ap2-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .ap2-val {
+                font-size: 20px
+            }
+        }
+    </style>
+
+    <script id="adminProV2JS">
+        (function () {
+            let D = { users: [], withdrawals: [], stats: {} };
+            const token = () => localStorage.getItem("adminToken") || "";
+            async function api(url, opt = {}) {
+                opt.headers = Object.assign({ "Content-Type": "application/json", "Authorization": "Bearer " + token() }, opt.headers || {});
+                const r = await fetch("/api/admin" + url, opt), d = await r.json().catch(() => ({}));
+                if (!r.ok || !d.success) throw new Error(d.message || "API error");
+                return d;
+            }
+            const esc = x => String(x ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
+            const name = u => u.name || u.username || u.student_id || u.id || "Unknown", uid = u => String(u._id || u.id || u.student_id || "");
+            const q = u => u.dailyQuestionsDate === new Date().toISOString().slice(0, 10) ? Number(u.dailyQuestionsAnswered || 0) : 0;
+            const money = x => "₹" + Number(x || 0).toFixed(2);
+
+            window.ap2Refresh = async () => {
+                try {
+                    D = await api("/pro/dashboard");
+                    ap2Render();
+                } catch (e) {
+                    console.error("Command Center:", e);
+                    const msg = esc(e.message || "Unable to load Command Center data.");
+                    ["ap2StudentRows","ap2WithdrawRows","ap2WalletRows","ap2SecurityRows","ap2RecycleRows"]
+                        .forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = `<tr><td colspan="10" style="color:#fca5a5">⚠️ ${msg}</td></tr>`; });
+                }
+            };
+            function ap2Render() {
+                const s = D.stats || {}, map = { ap2Students: s.students, ap2Online: s.online, ap2Blocked: s.blocked, ap2Q: s.questionsToday, ap2Wallet: money(s.wallet), ap2Warnings: s.warnings, ap2Spin: s.spinEligible };
+                Object.keys(map).forEach(k => { let e = document.getElementById(k); if (e) e.textContent = map[k] ?? 0 });
+                ap2RenderStudents(); ap2RenderWithdrawals(); ap2RenderWallet(); ap2RenderSecurity(); ap2RenderRecycle();
+            }
+            window.ap2RenderStudents = () => {
+                const term = (document.getElementById("ap2Search").value || "").toLowerCase();
+                const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000 ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${Number(u.warningCount || 0)}</td><td>${q(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+            };
+            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Today Questions</b><span>${q(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
+            window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
+            window.ap2Block = async (id, blocked) => { try { await api("/pro/block/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ blocked, reason: "Admin action" }) }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Wallet = async id => { let amount = prompt("Wallet adjustment (+ add / - remove):", "1"); if (amount === null) return; let reason = prompt("Reason:", "Admin adjustment"); if (reason === null) return; try { await api("/pro/wallet/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ amount: Number(amount), reason }) }); await ap2Refresh(); alert("Wallet updated") } catch (e) { alert(e.message) } };
+            window.ap2ResetQ = async id => { try { await api("/pro/reset-questions/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2ResetSpin = async id => { try { await api("/pro/reset-spin/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Tab = t => {
+                const root = document.querySelector(".adminProV2");
+                if (!root) return;
+                root.querySelectorAll(".ap2-pane").forEach(x => x.classList.remove("active"));
+                const pane = document.getElementById("ap2-" + t);
+                if (pane) pane.classList.add("active");
+                root.querySelectorAll(".ap2-tabs .ap2-btn").forEach(b => {
+                    const match = (b.getAttribute("onclick") || "").match(/ap2Tab\(['"]([^'"]+)['"]\)/);
+                    b.classList.toggle("active", !!match && match[1] === t);
+                });
+                if (t === "reports" && typeof ap2LoadReports === "function") ap2LoadReports();
+            };
+            function ap2RenderWithdrawals() { document.getElementById("ap2WithdrawRows").innerHTML = D.withdrawals.map(w => `<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId || "-")}</td><td>${esc(w.date || "-")}</td></tr>`).join("") || '<tr><td colspan="6">No withdrawals.</td></tr>' }
+            function ap2RenderWallet() { let a = []; D.users.forEach(u => (u.walletTransactions || []).forEach(t => a.push({ student: name(u), ...t }))); a.sort((x, y) => new Date(y.time) - new Date(x.time)); document.getElementById("ap2WalletRows").innerHTML = a.map(t => `<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("") || '<tr><td colspan="5">No transactions.</td></tr>' }
+            function ap2SecurityRisk(u) {
+                const f = Number(u.fastAnswers || 0), t = Number(u.tabChanges || 0), d = Array.isArray(u.deviceIds) ? u.deviceIds.length : Number(u.deviceCount || 0);
+                const logins = Array.isArray(u.loginHistory) ? u.loginHistory.length : 0;
+                const warns = Number(u.warningCount || 0);
+                const score = (f >= 10 ? 3 : f >= 5 ? 2 : f > 0 ? 1 : 0)
+                    + (t >= 10 ? 3 : t >= 5 ? 2 : t > 0 ? 1 : 0)
+                    + (d >= 3 ? 3 : d >= 2 ? 2 : d > 0 ? 1 : 0)
+                    + (warns >= 3 ? 3 : warns >= 1 ? 1 : 0)
+                    + (logins >= 20 ? 2 : logins >= 10 ? 1 : 0);
+                return score >= 6 ? "HIGH" : score >= 3 ? "MEDIUM" : "LOW";
+            }
+            function ap2SecurityTime(x) { return x ? new Date(x).toLocaleString() : "-"; }
+            function ap2SecurityAgent(x) {
+                const a = String(x || "");
+                if (!a) return "-";
+                if (/Android/i.test(a)) return "📱 Android";
+                if (/iPhone|iPad/i.test(a)) return "📱 iPhone/iPad";
+                if (/Windows/i.test(a)) return "💻 Windows";
+                if (/Macintosh/i.test(a)) return "💻 macOS";
+                return "🌐 Browser";
+            }
+            window.ap2SecurityDetails = id => {
+                const u = D.users.find(x => uid(x) === String(id));
+                if (!u) return;
+                const history = Array.isArray(u.loginHistory) ? u.loginHistory.slice().reverse() : [];
+                const warnings = Array.isArray(u.warningHistory) ? u.warningHistory.slice().reverse() : [];
+                const activity = Array.isArray(u.adminActivity) ? u.adminActivity.slice().reverse() : [];
+                const risk = ap2SecurityRisk(u);
+                document.getElementById("ap2Title").textContent = "🔐 Security — " + name(u);
+                document.getElementById("ap2Body").innerHTML = `
+                    <div class="ap2-kv">
+                        <div><b>Student ID</b><span>${esc(uid(u))}</span></div>
+                        <div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
+                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"ap2-red":risk==="MEDIUM"?"ap2-yellow":"ap2-green"}">${risk}</span></span></div>
+                        <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
+                        <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
+                        <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
+                        <div><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
+                        <div><b>Login Records</b><span>${history.length}</span></div>
+                        <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
+                        <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
+                    </div>
+                    <h3>🔑 Login History</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
+                    ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
+                    <h3>⚠️ Warning History</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
+                    ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
+                    <h3>🛡️ Admin Security Activity</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
+                    ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
+                document.getElementById("ap2Modal").classList.add("show");
+            };
+            function ap2RenderSecurity() {
+                const rows = D.users.map(u => {
+                    const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0);
+                    const l=Array.isArray(u.loginHistory)?u.loginHistory.length:0, w=Number(u.warningCount||0), r=ap2SecurityRisk(u);
+                    return `<tr>
+                        <td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span></td>
+                        <td>${f}</td><td>${t}</td><td>${d}</td><td>${l}</td><td>${w}</td>
+                        <td>${esc(u.lastSeen ? ap2SecurityTime(u.lastSeen) : "Offline")}</td>
+                        <td><span class="ap2-badge ${r==="HIGH"?"ap2-red":r==="MEDIUM"?"ap2-yellow":"ap2-green"}">${r}</span></td>
+                        <td><button class="ap2-btn" onclick="ap2SecurityDetails('${esc(uid(u))}')">🔍 Details</button></td>
+                    </tr>`;
+                }).join("");
+                document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
+            }
+            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td></tr>`).join("") || '<tr><td colspan="4">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
+            window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
+            window.ap2LoadReports = async () => {
+                const el = document.getElementById("ap2ReportRows");
+                if (!el) return;
+                el.innerHTML = '<tr><td colspan="9">Loading report...</td></tr>';
+                try {
+                    const d = await api("/pro/reports");
+                    const rows = Array.isArray(d.report) ? d.report : [];
+                    el.innerHTML = rows.map(x => `<tr>
+                        <td><b>${esc(x.name || "-")}</b><br><span class="ap2-muted">${esc(x.id || "")}</span></td>
+                        <td>${esc(x.mobile || "-")}</td>
+                        <td>${money(x.wallet)}</td>
+                        
+                        <td>${Number(x.todayQuestions || 0)}</td>
                         <td>${Number(x.totalQuestions || 0)}</td>
                         <td>${Number(x.warnings || 0)}</td>
                         <td>${x.blocked ? '<span class="ap2-badge ap2-red">Blocked</span>' : '<span class="ap2-badge ap2-green">Active</span>'}</td>
@@ -1012,7 +3035,7 @@
                     el.innerHTML = `<tr><td colspan="9" style="color:#fca5a5">⚠️ ${esc(e.message || "Failed to load report.")}</td></tr>`;
                 }
             };
-            window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
+            window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
             window.addEventListener("load", () => {
                 ap2Tab("students");
                 ap2Refresh();
