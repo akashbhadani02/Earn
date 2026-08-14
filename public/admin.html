@@ -856,16 +856,11 @@
 
 
 <style>
-.admin-main-menu{overflow:visible!important;position:sticky;top:0;z-index:1000;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;margin:0 0 18px;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,.2);border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.2)}
+.admin-main-menu{overflow-x:auto!important;overflow-y:visible!important;position:sticky;top:0;z-index:1000;display:flex;gap:8px;align-items:center;flex-wrap:nowrap;overflow-x:auto;overflow-y:visible;padding:12px;margin:0 0 18px;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,.2);border-radius:14px;box-shadow:0 8px 25px rgba(0,0,0,.2)}
 .admin-main-menu button{margin:0!important;padding:10px 14px!important;border:0!important;border-radius:9px!important;cursor:pointer!important;font-weight:700!important;background:#334155!important;color:#fff!important}
 .admin-main-menu button.active{background:#2563eb!important}
-.admin-more-wrap{position:relative}
-.admin-more-menu{display:none;position:absolute;right:0;top:calc(100% + 7px);min-width:210px;padding:8px;background:#0f172a;border:1px solid rgba(148,163,184,.25);border-radius:12px;box-shadow:0 15px 35px rgba(0,0,0,.35);z-index:1100}
-.admin-more-menu.show{display:flex;flex-direction:column}
-.admin-more-menu button{width:100%;text-align:left;background:#1e293b!important;margin:3px 0!important}
-.admin-more-menu button:hover{background:#334155!important}
 .admin-section-hidden{display:none!important}
-@media(max-width:600px){.admin-main-menu{gap:6px}.admin-main-menu>.admin-users-btn{flex:1}.admin-more-wrap{flex:0 0 auto}.admin-main-menu button{padding:9px 11px!important;font-size:13px}}
+@media(max-width:600px){.admin-main-menu{gap:6px}admin-main-menu button{padding:9px 11px!important;font-size:13px}}
 </style>
 
 <style id="live-status-colors">
@@ -942,16 +937,11 @@
 
 <div class="admin-main-menu">
   <button class="admin-users-btn active" data-admin-section="users" onclick="showAdminSection('users')">👥 Users</button>
-  <div class="admin-more-wrap">
-    <button id="adminMoreBtn" onclick="toggleAdminMore(event)">☰ More ▾</button>
-    <div id="adminMoreMenu" class="admin-more-menu">
-      <button data-admin-section="dashboard" onclick="showAdminSection('dashboard')">🏠 Dashboard</button>
-      <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
-      <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
-      <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
-      <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
-    </div>
-  </div>
+  <button data-admin-section="dashboard" onclick="showAdminSection('dashboard')">🏠 Dashboard</button>
+  <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
+  <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
+  <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
+  <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
 </div>
 
 
@@ -1336,14 +1326,6 @@
 
 
         // ===== Compact Admin Main Menu =====
-        function toggleAdminMore(event){
-            event.stopPropagation();
-            document.getElementById('adminMoreMenu').classList.toggle('show');
-        }
-        document.addEventListener('click', function(e){
-            const menu=document.getElementById('adminMoreMenu');
-            if(menu && !e.target.closest('.admin-more-wrap')) menu.classList.remove('show');
-        });
         function showAdminSection(name){
             const map={
                 dashboard:'adminSectionDashboard',
@@ -1358,8 +1340,6 @@
                 if(el) el.classList.toggle('admin-section-hidden',k!==name);
             });
             document.querySelectorAll('.admin-main-menu button[data-admin-section]').forEach(b=>b.classList.toggle('active',b.dataset.adminSection===name));
-            const menu=document.getElementById('adminMoreMenu');
-            if(menu) menu.classList.remove('show');
             if(name==='users' && typeof loadUsers==='function') loadUsers();
             if(name==='withdrawals' && typeof loadWithdraws==='function') loadWithdraws();
             if(name==='deleted' && typeof loadDeletedUsers==='function') loadDeletedUsers();
