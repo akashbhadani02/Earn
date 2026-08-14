@@ -1040,8 +1040,8 @@
                     <th>Mobile</th>
                     <th>Last Seen</th>
                     <th>Wallet</th>
-                    <th>Today Questions</th>
-                    <th>Total Questions</th>
+                    <th>Questions Answered Today</th>
+                    <th>Total Questions Answered</th>
                     <th>Warnings</th>
                     <th>Action</th>
 
@@ -1544,6 +1544,7 @@
             border-radius:12px;
             display:inline-block;
         ">${Number(user.dailyQuestionsAnswered || 0)}</span>
+        <div style="font-size:10px;color:#64748b;margin-top:4px;">Today</div>
     </td>
 
     <td>
@@ -1555,6 +1556,7 @@
             border-radius:12px;
             display:inline-block;
         ">${Number(user.totalQuestionsAnswered || 0)}</span>
+        <div style="font-size:10px;color:#64748b;margin-top:4px;">Lifetime</div>
     </td>
 
 <td>
