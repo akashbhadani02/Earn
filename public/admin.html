@@ -699,6 +699,46 @@
             }
         }
 
+
+        /* ================= ADMIN COLLAPSIBLE MENU ================= */
+        .admin-menu {
+            position: sticky;
+            top: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            padding: 12px;
+            margin: 0 0 22px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(8, 18, 32, .88);
+            box-shadow: 0 14px 35px rgba(0,0,0,.22);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .admin-menu-btn {
+            margin: 0;
+            padding: 10px 14px;
+            border: 1px solid rgba(148,163,184,.18);
+            border-radius: 10px;
+            background: #17253a;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 800;
+        }
+        .admin-menu-btn:hover { transform: translateY(-1px); }
+        .admin-menu-btn.active {
+            background: linear-gradient(135deg, #2563eb, #4f46e5);
+            color: #fff;
+            border-color: rgba(96,165,250,.55);
+        }
+        .admin-view-hidden { display: none !important; }
+        @media(max-width:600px){
+            .admin-menu { position: static; gap: 6px; padding: 9px; }
+            .admin-menu-btn { flex: 1 1 calc(50% - 6px); padding: 9px 8px; font-size: 11px; }
+        }
+
         /* Question editor */
         .question-toolbar {
             display: flex;
@@ -876,6 +916,15 @@
         font-size:12px;
     ">
         🟢 Online status is based on the last 3 seconds • Dashboard updates automatically every 3 seconds
+    </div>
+
+    <div class="admin-menu" id="adminMenu">
+        <button class="admin-menu-btn active" data-view="dashboard" onclick="showAdminView('dashboard')">🏠 Dashboard</button>
+        <button class="admin-menu-btn" data-view="withdrawals" onclick="showAdminView('withdrawals')">💸 Withdrawals</button>
+        <button class="admin-menu-btn" data-view="users" onclick="showAdminView('users')">👥 Users</button>
+        <button class="admin-menu-btn" data-view="deleted" onclick="showAdminView('deleted')">🗑️ Deleted Users</button>
+        <button class="admin-menu-btn" data-view="command" onclick="showAdminView('command')">🛡️ Command Center</button>
+        <button class="admin-menu-btn" data-view="questions" onclick="showAdminView('questions')">❓ Question Bank</button>
     </div>
 
     <div class="cards">
@@ -2753,6 +2802,50 @@ ${w.status === "Approved" ? `
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
             window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
             window.addEventListener("load", () => { ap2Refresh(); setInterval(ap2Refresh, 3000) });
+        })();
+    </script>
+
+    <script id="adminCompactMenuJS">
+        (function () {
+            function findH2(text) {
+                return Array.from(document.querySelectorAll('h2')).find(h => h.textContent.trim() === text);
+            }
+
+            function buildViews() {
+                const cards = document.querySelector('.cards');
+                const notice = cards ? cards.previousElementSibling : null;
+                const withdrawH2 = findH2('Withdraw Requests');
+                const usersH2 = findH2('All Users');
+                const deleted = document.getElementById('deletedUsersSection');
+                const command = document.getElementById('adminProV2');
+                const questionH2 = findH2('Question Bank — Add / Edit Questions');
+
+                window.adminViews = {
+                    dashboard: [notice, cards].filter(Boolean),
+                    withdrawals: withdrawH2 ? [withdrawH2, withdrawH2.nextElementSibling].filter(Boolean) : [],
+                    users: usersH2 ? [document.getElementById('search'), usersH2, usersH2.nextElementSibling].filter(Boolean) : [],
+                    deleted: deleted ? [deleted] : [],
+                    command: command ? [command] : [],
+                    questions: questionH2 && questionH2.closest('section') ? [questionH2.closest('section')] : []
+                };
+
+                const all = Object.values(window.adminViews).flat();
+                all.forEach(el => el.classList.add('admin-view-hidden'));
+                window.adminViews.dashboard.forEach(el => el.classList.remove('admin-view-hidden'));
+            }
+
+            window.showAdminView = function (view) {
+                if (!window.adminViews) buildViews();
+                Object.values(window.adminViews).flat().forEach(el => el.classList.add('admin-view-hidden'));
+                (window.adminViews[view] || window.adminViews.dashboard).forEach(el => el.classList.remove('admin-view-hidden'));
+                document.querySelectorAll('.admin-menu-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === view));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            window.addEventListener('load', function () {
+                buildViews();
+                showAdminView('dashboard');
+            });
         })();
     </script>
 
