@@ -52,6 +52,13 @@ const userSchema = new mongoose.Schema(
             default: "",
         },
 
+        // Number of questions answered in the current 100-question spin cycle.
+        // This resets after Spin, while dailyQuestionsAnswered keeps today's full count.
+        spinCycleQuestionsAnswered: {
+            type: Number,
+            default: 0,
+        },
+
         // Lifetime number of quiz questions answered by this user.
         // This is not reset after a 100-question spin cycle.
         totalQuestionsAnswered: {

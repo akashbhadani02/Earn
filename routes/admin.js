@@ -921,12 +921,17 @@ router.get("/control-center", adminAuth, async (req, res) => {
                 ? Number(u.dailyQuestionsAnswered || 0)
                 : 0,
             totalQuestionsAnswered: Number(u.totalQuestionsAnswered || 0),
-            spinRemaining: u.dailyQuestionsDate === today ? Math.max(0, 100 - Number(u.dailyQuestionsAnswered || 0)) : 100,
+            spinCycleQuestionsAnswered: u.dailyQuestionsDate === today
+                ? Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0)
+                : 0,
+            spinRemaining: u.dailyQuestionsDate === today
+                ? Math.max(0, 100 - Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0))
+                : 100,
             wallet: Number(u.wallet || 0),
             totalEarn: Number(u.totalEarn || 0),
             warningCount: Number(u.warningCount || 0),
             spinEligible: u.dailyQuestionsDate === today &&
-                Number(u.dailyQuestionsAnswered || 0) >= 100
+                Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) >= 100
         }));
 
         const stats = {
@@ -1037,6 +1042,7 @@ router.put("/control-center/reset-questions/:id", adminAuth, async (req,res) => 
         const user=await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.dailyQuestionsAnswered=0;
+        user.spinCycleQuestionsAnswered=0;
         user.dailyQuestionsDate=todayKey();
         await user.save();
         return res.json({success:true,message:"Today's question count reset"});
@@ -1084,7 +1090,7 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
             totalQuestions:users.reduce((n,u)=>n+Number(u.totalQuestionsAnswered||0),0),
             wallet:users.reduce((n,u)=>n+Number(u.wallet||0),0),
             totalEarn:users.reduce((n,u)=>n+Number(u.totalEarn||0),0),
-            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.dailyQuestionsAnswered||0)>=100).length
+            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0)>=100).length
         };
         const withdrawals=[];
         users.forEach(u=>(u.withdrawRequests||[]).forEach(w=>withdrawals.push({

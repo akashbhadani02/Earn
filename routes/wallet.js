@@ -34,7 +34,9 @@ function walletResponse(user) {
         dailyQuestionsAnswered: Number(user.dailyQuestionsAnswered || 0),
         dailyQuestionsDate: user.dailyQuestionsDate || "",
         totalQuestionsAnswered: Number(user.totalQuestionsAnswered || 0),
-        canSpinAfterQuestions: Number(user.dailyQuestionsAnswered || 0) >= 100,
+        spinCycleQuestionsAnswered: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0),
+        spinQuestionsRemaining: Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0)),
+        canSpinAfterQuestions: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0) >= 100,
         withdrawRequests: user.withdrawRequests || []
     };
 }
@@ -103,10 +105,14 @@ router.post("/quiz", auth, async (req, res) => {
         if (user.dailyQuestionsDate !== today) {
             user.dailyQuestionsDate = today;
             user.dailyQuestionsAnswered = 0;
+            user.spinCycleQuestionsAnswered = 0;
         }
 
         user.dailyQuestionsAnswered =
             Number(user.dailyQuestionsAnswered || 0) + 1;
+
+        user.spinCycleQuestionsAnswered =
+            Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
 
         // Lifetime counter for Admin reporting.
         // This never resets when the 100-question spin cycle resets.
@@ -210,10 +216,15 @@ router.post("/spin", auth, async (req, res) => {
         if (user.dailyQuestionsDate !== today) {
             user.dailyQuestionsDate = today;
             user.dailyQuestionsAnswered = 0;
+            user.spinCycleQuestionsAnswered = 0;
         }
 
-        if (Number(user.dailyQuestionsAnswered || 0) < 100) {
-            const remaining = 100 - Number(user.dailyQuestionsAnswered || 0);
+        // Spin eligibility uses the current 100-question cycle.
+        // Today's total count is NOT reset after spinning.
+        const cycleCount = Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0);
+
+        if (cycleCount < 100) {
+            const remaining = 100 - cycleCount;
 
             return res.status(400).json({
                 success: false,
@@ -233,9 +244,9 @@ router.post("/spin", auth, async (req, res) => {
         user.lastSpinDate = today;
         user.lastSpin = today;
 
-        // Reset only the current spin-cycle counter.
-        // The lifetime totalQuestionsAnswered is preserved.
-        user.dailyQuestionsAnswered = 0;
+        // Reset ONLY the current spin-cycle counter.
+        // Today's total and lifetime total remain unchanged.
+        user.spinCycleQuestionsAnswered = 0;
 
         user.wallet = Number(user.wallet || 0) + prize;
         user.totalEarn = Number(user.totalEarn || 0) + prize;

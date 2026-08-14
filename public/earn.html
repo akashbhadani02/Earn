@@ -1485,6 +1485,7 @@ body.notification-locked{
 
                     spinReward = data.spinReward || 0;
                     dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+                    spinCycleQuestionsAnswered = Number(data.spinCycleQuestionsAnswered ?? data.dailyQuestionsAnswered ?? 0);
                     totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
                     dailyQuestionsDate = data.dailyQuestionsDate || "";
 
@@ -1514,6 +1515,7 @@ body.notification-locked{
             dailyReward = Number(data.dailyReward || 0);
             spinReward = Number(data.spinReward || 0);
             dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
+            spinCycleQuestionsAnswered = Number(data.spinCycleQuestionsAnswered ?? data.dailyQuestionsAnswered ?? 0);
             totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
             dailyQuestionsDate = data.dailyQuestionsDate || "";
             lastClaim = data.lastClaim || "";
@@ -1581,7 +1583,9 @@ body.notification-locked{
         }
 
         function updateQuestionProgress() {
-            const count = Math.min(100, Number(dailyQuestionsAnswered || 0));
+            // Today's total answer count never resets after Spin.
+            const todayCount = Number(dailyQuestionsAnswered || 0);
+            const count = Math.min(100, Number(spinCycleQuestionsAnswered || 0));
             const remaining = 100 - count;
 
             const remainBox = document.getElementById("remainingQuestions");
@@ -1593,7 +1597,7 @@ body.notification-locked{
             const spinBtn = document.getElementById("spinBtn");
 
             if (progress) {
-                progress.innerText = `Today's Questions: ${count} / 100`;
+                progress.innerText = `Today's Questions: ${todayCount}` + (todayCount >= 100 ? ` | Spin Cycle: ${count} / 100` : ` / 100`);
             }
 
             if (spinBtn) {
