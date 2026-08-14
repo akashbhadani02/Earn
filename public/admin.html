@@ -735,7 +735,7 @@
         }
         .admin-view-hidden { display: none !important; }
         @media(max-width:600px){
-            .admin-menu { position: static; gap: 6px; padding: 9px; }
+            .admin-menu { position: sticky; top: 8px; gap: 6px; padding: 9px; }
             .admin-menu-btn { flex: 1 1 calc(50% - 6px); padding: 9px 8px; font-size: 11px; }
         }
 
@@ -919,9 +919,9 @@
     </div>
 
     <div class="admin-menu" id="adminMenu">
-        <button class="admin-menu-btn active" data-view="dashboard" onclick="showAdminView('dashboard')">🏠 Dashboard</button>
+        <button class="admin-menu-btn active" data-view="users" onclick="showAdminView('users')">👥 Users</button>
+        <button class="admin-menu-btn" data-view="dashboard" onclick="showAdminView('dashboard')">🏠 Dashboard</button>
         <button class="admin-menu-btn" data-view="withdrawals" onclick="showAdminView('withdrawals')">💸 Withdrawals</button>
-        <button class="admin-menu-btn" data-view="users" onclick="showAdminView('users')">👥 Users</button>
         <button class="admin-menu-btn" data-view="deleted" onclick="showAdminView('deleted')">🗑️ Deleted Users</button>
         <button class="admin-menu-btn" data-view="command" onclick="showAdminView('command')">🛡️ Command Center</button>
         <button class="admin-menu-btn" data-view="questions" onclick="showAdminView('questions')">❓ Question Bank</button>
@@ -2831,7 +2831,7 @@ ${w.status === "Approved" ? `
 
                 const all = Object.values(window.adminViews).flat();
                 all.forEach(el => el.classList.add('admin-view-hidden'));
-                window.adminViews.dashboard.forEach(el => el.classList.remove('admin-view-hidden'));
+                window.adminViews.users.forEach(el => el.classList.remove('admin-view-hidden'));
             }
 
             window.showAdminView = function (view) {
@@ -2844,7 +2844,7 @@ ${w.status === "Approved" ? `
 
             window.addEventListener('load', function () {
                 buildViews();
-                showAdminView('dashboard');
+                showAdminView('users');
             });
         })();
     </script>
