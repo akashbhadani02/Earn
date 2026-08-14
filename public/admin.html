@@ -941,11 +941,7 @@
   <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
-<button id="ccTotalEarnEditBtn" type="button" onclick="editCommandCenterTotalEarn()" style="margin-left:8px;">
-  ✏️ Edit Total Earn
-</button>
-
-  <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
+<button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
 </div>
 
 
@@ -3081,33 +3077,45 @@ ${w.status === "Approved" ? `
         })();
     </script>
 
-
 <script>
-function editCommandCenterTotalEarn() {
-  const current =
-    (typeof totalEarn !== "undefined" ? totalEarn : null) ??
-    (document.querySelector("#totalEarn")?.textContent || "0");
-
-  const value = prompt("Enter Total Earn amount:", String(current).replace(/[^\d.]/g, ""));
+async function studentTotalEarnEdit(userId, currentEarn) {
+  const value = prompt("Enter Total Earn for this student:", String(currentEarn ?? 0));
   if (value === null) return;
 
   const amount = Number(value);
   if (!Number.isFinite(amount) || amount < 0) {
-    alert("Please enter a valid amount.");
+    alert("Please enter a valid Total Earn amount.");
     return;
   }
 
-  const el = document.querySelector("#totalEarn");
-  if (el) el.textContent = "₹" + amount.toFixed(2);
+  // Use the existing admin update function when available.
+  if (typeof updateUserTotalEarn === "function") {
+    await updateUserTotalEarn(userId, amount);
+    return;
+  }
+  if (typeof editTotalEarn === "function") {
+    await editTotalEarn(userId, amount);
+    return;
+  }
 
-  try { localStorage.setItem("commandCenterTotalEarn", String(amount)); } catch(e) {}
-
-  if (typeof updateTotalEarn === "function") {
-    updateTotalEarn(amount);
-  } else if (typeof saveTotalEarn === "function") {
-    saveTotalEarn(amount);
-  } else {
-    alert("Total Earn updated in Command Center.");
+  // Fallback: update through the admin API used by the project.
+  try {
+    const token = localStorage.getItem("adminToken") || localStorage.getItem("token") || "";
+    const res = await fetch("/api/admin/users/" + encodeURIComponent(userId) + "/total-earn", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? {"Authorization": "Bearer " + token} : {})
+      },
+      body: JSON.stringify({ totalEarn: amount })
+    });
+    if (!res.ok) throw new Error("API update failed");
+    alert("Total Earn updated successfully.");
+    if (typeof loadUsers === "function") loadUsers();
+    else if (typeof fetchUsers === "function") fetchUsers();
+    else location.reload();
+  } catch (e) {
+    alert("Total Earn update API not found. Please connect this button to your existing Total Earn update route.");
   }
 }
 </script>
