@@ -267,7 +267,11 @@ const userSchema = new mongoose.Schema(
         fastAnswers: { type: Number, default: 0 },
         isDeleted: { type: Boolean, default: false },
         deletedAt: { type: Date, default: null },
-        deletedReason: { type: String, default: "" }
+        deletedReason: { type: String, default: "" },
+
+        // Daily interactive English activity counters.
+        activityDate: { type: String, default: "" },
+        activityCounts: { type: Map, of: Number, default: {} }
     },
     {
         timestamps: true,

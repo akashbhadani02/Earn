@@ -12,6 +12,7 @@ const profileRoutes = require("./routes/profile");
 const adminRoutes=require("./routes/admin");
 const questionRoutes = require("./routes/questions");
 const notificationRoutes = require("./routes/notifications");
+const activityRoutes = require("./routes/activities");
 
 const app = express();
 app.disable("x-powered-by");
@@ -28,6 +29,7 @@ app.use("/api/admin",adminRoutes);
 // app.use("/api/questions", questionRoutes.router);
 app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/activities", activityRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
 
