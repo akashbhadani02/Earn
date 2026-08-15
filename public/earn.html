@@ -1028,7 +1028,7 @@ body.notification-locked #notificationRequiredOverlay button{
     <div id="activities" class="card hidden" aria-hidden="true" style="visibility:hidden;">
 <div id="activityWalletBar" class="activity-wallet-bar">
     <span>💰 Wallet Balance</span>
-    <strong id="activityWalletBalance">₹0.00</strong>
+    <strong id="activityWalletBalance">©0.00</strong>
 </div>
 
 <h2 class="activity-title">🎮 English Earning Zone</h2>
@@ -1049,7 +1049,7 @@ body.notification-locked #notificationRequiredOverlay button{
 <div id="activityPlay" class="card hidden activity-screen" aria-hidden="true" style="visibility:hidden;">
 <div id="activityWalletBar" class="activity-wallet-bar">
     <span>💰 Wallet Balance</span>
-    <strong id="activityWalletBalance">₹0.00</strong>
+    <strong id="activityWalletBalance">©0.00</strong>
 </div>
 
 <div class="activity-title" id="activityName">Activity</div>
@@ -1642,7 +1642,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 console.error("Wallet Load Error:", err);
 
                 // A newly deployed Vercel function can take a moment to respond.
-                // Retry a couple of times instead of leaving the student at ₹0.00.
+                // Retry a couple of times instead of leaving the student at ©0.00.
                 if (retry < 2) {
                     await new Promise(resolve => setTimeout(resolve, 700 * (retry + 1)));
                     return loadWallet(retry + 1);
@@ -1673,7 +1673,7 @@ body.notification-locked #notificationRequiredOverlay button{
             }
 
             document.querySelectorAll("#activityWalletBalance").forEach(el => {
-                el.innerText = "₹" + wallet.toFixed(2);
+                el.innerText = "©" + wallet.toFixed(2);
             });
 
             checkWithdrawStatus();
@@ -1818,7 +1818,7 @@ body.notification-locked #notificationRequiredOverlay button{
         function updateActivityWallet() {
             const amount = Number(typeof wallet !== 'undefined' ? wallet : 0);
             document.querySelectorAll('#activityWalletBalance').forEach(el => {
-                el.textContent = '₹' + amount.toFixed(2);
+                el.textContent = '©' + amount.toFixed(2);
             });
         }
 
@@ -2202,7 +2202,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
                 const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
-                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
+                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ©'+Number(data.wallet).toFixed(2));}
                 else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
                 setTimeout(()=>nextActivityQuestion(),1200);
             }catch(e){setFeedback(false,'Network error. Please try again.');}
