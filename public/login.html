@@ -462,11 +462,13 @@ function startBlockedCountdown(remainingMs){
     clearInterval(blockedTimerInterval);
     box.style.display = "block";
 
+    // Server-provided remaining time is authoritative. This is the same
+    // remainingMs derived from the user's canonical blockUntil used by Admin.
     let endTime = Date.now() + Math.max(0, Number(remainingMs || 0));
 
     function render(){
         const left = Math.max(0, endTime - Date.now());
-        const totalSeconds = Math.ceil(left / 1000);
+        const totalSeconds = Math.floor(left / 1000);
         const h = String(Math.floor(totalSeconds / 3600)).padStart(2,"0");
         const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,"0");
         const sec = String(totalSeconds % 60).padStart(2,"0");

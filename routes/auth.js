@@ -58,6 +58,27 @@ router.post("/signup", async (req, res) => {
 // Login
 // ==========================
 
+
+// ==========================
+// Shared block remaining-time calculation
+// Admin and Student login use the SAME server-side expiry.
+// ==========================
+function getBlockRemainingMs(user, nowMs = Date.now()) {
+    let untilMs = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
+
+    // Legacy blocked users without blockUntil: use the same fallback
+    // as Admin's blocked-students endpoint.
+    if (!untilMs || Number.isNaN(untilMs)) {
+        const startedMs = user.updatedAt ? new Date(user.updatedAt).getTime() : nowMs;
+        untilMs = startedMs + 12 * 60 * 60 * 1000;
+    }
+
+    return {
+        untilMs,
+        remainingMs: Math.max(0, untilMs - nowMs)
+    };
+}
+
 router.post("/login", async (req, res) => {
 
     try {
@@ -86,26 +107,32 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Temporary 12-hour block. If the 12 hours are over, unblock automatically.
+        // Temporary 12-hour block. Admin and Student use the SAME expiry.
         if (user.isBlocked) {
             const now = Date.now();
-            const until = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
+            const blockTime = getBlockRemainingMs(user, now);
 
-            if (until && until <= now) {
+            if (blockTime.remainingMs <= 0) {
                 user.isBlocked = false;
                 user.blockUntil = null;
                 user.blockReason = "";
                 user.warningCount = 0;
                 await user.save();
             } else {
-                const remainingMs = until ? Math.max(0, until - now) : 12 * 60 * 60 * 1000;
+                // Persist the fallback expiry for legacy records so every
+                // future Admin/Student request sees exactly the same end time.
+                if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
+                    user.blockUntil = new Date(blockTime.untilMs);
+                    await user.save();
+                }
+
                 return res.status(403).json({
                     success: false,
                     blocked: true,
                     message: "Your account is blocked for 12 hours.",
                     reason: user.blockReason,
-                    blockUntil: user.blockUntil,
-                    remainingMs
+                    blockUntil: new Date(blockTime.untilMs).toISOString(),
+                    remainingMs: blockTime.remainingMs
                 });
             }
         }
@@ -273,10 +300,9 @@ router.post("/block-me", auth, async (req, res) => {
         // Already blocked
         if (user.isBlocked) {
             const now = Date.now();
-            const until = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
-            const remainingMs = until ? Math.max(0, until - now) : 0;
+            const blockTime = getBlockRemainingMs(user, now);
 
-            if (until && until <= now) {
+            if (blockTime.remainingMs <= 0) {
                 user.isBlocked = false;
                 user.blockUntil = null;
                 user.blockReason = "";
@@ -285,14 +311,19 @@ router.post("/block-me", auth, async (req, res) => {
                 return res.json({ success: true, blocked: false, warning: false, warningCount: 0, message: "Block expired" });
             }
 
+            if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
+                user.blockUntil = new Date(blockTime.untilMs);
+                await user.save();
+            }
+
             return res.json({
                 success: true,
                 blocked: true,
                 warning: false,
                 warningCount: user.warningCount || 0,
                 message: "Account is already blocked",
-                blockUntil: user.blockUntil,
-                remainingMs
+                blockUntil: new Date(blockTime.untilMs).toISOString(),
+                remainingMs: blockTime.remainingMs
             });
         }
 

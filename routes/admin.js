@@ -1041,6 +1041,7 @@ router.put("/control-center/block/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = true;
+        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
         user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
         await user.save();
         return res.json({success:true,message:"Student blocked"});
@@ -1052,6 +1053,7 @@ router.put("/control-center/unblock/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = false;
+        user.blockUntil = null;
         user.blockReason = "";
         await user.save();
         return res.json({success:true,message:"Student unblocked"});
@@ -1068,6 +1070,7 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
         user.warningHistory.push({ time:new Date(), reason });
         if(user.warningCount >= 3){
             user.isBlocked = true;
+            user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
             user.blockReason = "Automatic block after 3 warnings";
         }
         await user.save();
@@ -1276,6 +1279,12 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
             if (!until || Number.isNaN(until.getTime())) {
                 const started = u.updatedAt ? new Date(u.updatedAt) : now;
                 until = new Date(started.getTime() + 12 * 60 * 60 * 1000);
+                // Persist the canonical expiry so Student and Admin always
+                // calculate from the exact same blockUntil value.
+                await User.updateOne(
+                    { _id: u._id, isBlocked: true },
+                    { $set: { blockUntil: until } }
+                );
             }
 
             if (until <= now) {
