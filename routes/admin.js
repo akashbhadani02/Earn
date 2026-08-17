@@ -207,7 +207,7 @@ router.get("/users", adminAuth, async (req, res) => {
                 const difference =
                     currentTime - lastSeenTime;
 
-                const ONLINE_TIMEOUT = 3000; // exactly 3 seconds after heartbeat stops
+                const ONLINE_TIMEOUT = 3000; // ~3 seconds after heartbeat stops
 
                 if (difference <= ONLINE_TIMEOUT) {
                     online = true;

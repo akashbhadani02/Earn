@@ -36,11 +36,9 @@ module.exports = async (req, res, next) => {
 
         req.user = decoded;
 
-        // દરેક Request પર Last Seen Update થશે
-        await User.findByIdAndUpdate(req.user.id, {
-            lastSeen: new Date(),
-            isOnline: true
-        });
+        // Presence is controlled only by /api/auth/heartbeat.
+        // Do not refresh lastSeen on every API request; otherwise background
+        // requests from a hidden tab can incorrectly keep a student Online.
 
         next();
 

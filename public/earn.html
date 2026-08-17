@@ -1493,15 +1493,11 @@ body.notification-locked #notificationRequiredOverlay button{
         // STUDENT ONLINE HEARTBEAT
         // ===============================
 
-        let heartbeatInFlight = false;
-
         async function sendHeartbeat() {
 
-            if (!token || heartbeatInFlight) {
+            if (!token || document.hidden) {
                 return;
             }
-
-            heartbeatInFlight = true;
 
             try {
 
@@ -1531,8 +1527,6 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 console.log("Heartbeat Error:", error);
 
-            } finally {
-                heartbeatInFlight = false;
             }
 
         }
@@ -1540,51 +1534,12 @@ body.notification-locked #notificationRequiredOverlay button{
         // Page open થાય ત્યારે તરત heartbeat મોકલો
         sendHeartbeat();
 
-        // દર 1 secondે heartbeat મોકલો — માત્ર આ tab visible હોય ત્યારે
-        function startStudentHeartbeat() {
-            clearInterval(window.__studentHeartbeatTimer);
+        // દર 1 secondે heartbeat મોકલો
+        window.__studentHeartbeatTimer = setInterval(() => {
+
             sendHeartbeat();
-            window.__studentHeartbeatTimer = setInterval(() => {
-                if (!document.hidden) sendHeartbeat();
-            }, 1000);
-        }
 
-        async function markStudentOffline() {
-            clearInterval(window.__studentHeartbeatTimer);
-            try {
-                await fetch("/api/auth/offline", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    },
-                    keepalive: true
-                });
-            } catch (e) {
-                console.log("Offline update error:", e);
-            }
-        }
-
-        // બીજી browser tab / app tab પર જતાં આ student તરત Offline થશે.
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden) {
-                markStudentOffline();
-            } else {
-                startStudentHeartbeat();
-            }
-        });
-
-        // Browser/tab બંધ થાય ત્યારે પણ offline mark કરવાનો પ્રયાસ
-        window.addEventListener("pagehide", () => {
-            if (!document.hidden && token) {
-                fetch("/api/auth/offline", {
-                    method: "POST",
-                    headers: { "Authorization": "Bearer " + token },
-                    keepalive: true
-                }).catch(() => {});
-            }
-        });
-
-        startStudentHeartbeat();
+        }, 1000);
 
         let wallet = 0;
 
@@ -1947,6 +1902,8 @@ body.notification-locked #notificationRequiredOverlay button{
 
         document.addEventListener("visibilitychange", async () => {
             if (document.hidden) {
+                // Hidden tab must not keep the student Online. The heartbeat
+                // simply stops; admin marks Offline after 3 seconds.
                 const quizOpen = !document.getElementById("quiz")?.classList.contains("hidden");
                 const activityOpen = !document.getElementById("activityPlay")?.classList.contains("hidden");
                 if (quizOpen || activityOpen) {
@@ -1961,6 +1918,9 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
                 return;
             }
+
+            // We are visible again: immediately refresh presence.
+            sendHeartbeat();
 
             if (!tabWasChanged) return;
             tabWasChanged = false;
