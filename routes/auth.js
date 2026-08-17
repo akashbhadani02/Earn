@@ -200,10 +200,16 @@ router.post("/heartbeat", async (req, res) => {
     try {
         const decoded = await verifyPresenceToken(req);
 
-        // Atomic update: heartbeat is the ONLY thing that refreshes presence.
+        const presenceId = String(req.headers["x-presence-id"] || "").trim();
+        if (!presenceId) {
+            return res.status(400).json({ success: false, message: "Presence id missing" });
+        }
+
+        // Heartbeat is the ONLY thing that refreshes presence. The presence id
+        // belongs to this browser tab, so multiple tabs cannot race each other.
         await User.findOneAndUpdate(
             { _id: decoded.id },
-            { $set: { isOnline: true, lastSeen: new Date() } },
+            { $set: { isOnline: true, lastSeen: new Date(), presenceId } },
             { new: false }
         );
 
@@ -223,8 +229,14 @@ router.post("/offline", async (req, res) => {
     try {
         const decoded = await verifyPresenceToken(req);
 
+        const presenceId = String(req.headers["x-presence-id"] || "").trim();
+        if (!presenceId) return res.status(400).json({ success: false });
+
+        // Only this exact tab may turn its presence offline. If another tab
+        // became the active tab after this one was hidden, this update matches
+        // nothing and therefore cannot cause Online -> Offline flicker.
         await User.findOneAndUpdate(
-            { _id: decoded.id },
+            { _id: decoded.id, presenceId },
             { $set: { isOnline: false } },
             { new: false }
         );

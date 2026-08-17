@@ -76,6 +76,13 @@ const userSchema = new mongoose.Schema(
             default: false
         },
 
+        // Unique browser-tab presence id. Each tab gets its own id so a hidden
+        // second tab cannot mark the active tab offline.
+        presenceId: {
+            type: String,
+            default: ""
+        },
+
         // Incremented by admin to invalidate all existing student login tokens.
         sessionVersion: {
             type: Number,

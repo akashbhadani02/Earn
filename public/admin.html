@@ -2724,20 +2724,29 @@ ${w.status === "Approved" ? `
         // Multiple heavy requests every 1 second can delay student heartbeats
         // and make the status flicker Offline -> Online.
         //==========================
+        // LIVE STATUS REFRESH
+        // Keep ALL admin presence refreshes in one queue.
+        // Two independent polling loops can return out of order and repaint an
+        // older lastSeen value over a newer one, which causes Online/Offline flicker.
         let adminRefreshBusy = false;
-        setInterval(async () => {
+        let adminRefreshTimer = null;
+        async function runAdminPresenceRefresh() {
             if (adminRefreshBusy || document.hidden) return;
             adminRefreshBusy = true;
             try {
+                // Always read the normal users list first, then Command Center.
+                // Never request both at the same time.
                 await loadUsers();
-                // Dashboard is intentionally not polled every second.
-                // Command Center below is the live status source.
+                if (!document.hidden && typeof ap2Refresh === "function") {
+                    await ap2Refresh();
+                }
             } catch (err) {
-                console.error("Admin users refresh error:", err);
+                console.error("Admin presence refresh error:", err);
             } finally {
                 adminRefreshBusy = false;
             }
-        }, 2000);
+        }
+        adminRefreshTimer = setInterval(runAdminPresenceRefresh, 2000);
 
         async function deleteAllQuestions() {
 
@@ -3375,18 +3384,11 @@ ${w.status === "Approved" ? `
                 }
             };
             window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
-            let ap2RefreshBusy = false;
             window.addEventListener("load", () => {
                 ap2Tab("students");
+                // The main admin refresh queue owns the live Command Center refresh.
+                // Do one initial load here; no second polling loop.
                 ap2Refresh();
-                // One live Command Center request every 2 seconds.
-                // Prevent overlapping requests so status timestamps are read consistently.
-                setInterval(async () => {
-                    if (ap2RefreshBusy || document.hidden) return;
-                    ap2RefreshBusy = true;
-                    try { await ap2Refresh(); }
-                    finally { ap2RefreshBusy = false; }
-                }, 2000);
             });
         })();
     </script>

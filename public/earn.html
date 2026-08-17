@@ -1498,18 +1498,25 @@ body.notification-locked #notificationRequiredOverlay button{
         let presenceTimer = null;
         let presenceInFlight = false;
         let presenceAbort = null;
+        // sessionStorage gives every browser tab its own stable presence id.
+        const presenceId = sessionStorage.getItem("presenceTabId") || (
+            (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + "-" + Math.random()))
+        );
+        sessionStorage.setItem("presenceTabId", presenceId);
 
         async function sendPresenceHeartbeat() {
             if (!token || document.hidden || presenceInFlight) return;
 
             presenceInFlight = true;
             presenceAbort = new AbortController();
-            const timeout = setTimeout(() => presenceAbort.abort(), 800);
+            // Allow normal Mongo/network latency. A too-short 800ms timeout was
+            // causing missed heartbeats and false Offline states.
+            const timeout = setTimeout(() => presenceAbort.abort(), 2500);
 
             try {
                 const res = await fetch("/api/auth/heartbeat", {
                     method: "POST",
-                    headers: { "Authorization": "Bearer " + token },
+                    headers: { "Authorization": "Bearer " + token, "X-Presence-Id": presenceId },
                     cache: "no-store",
                     signal: presenceAbort.signal
                 });
@@ -1537,7 +1544,7 @@ body.notification-locked #notificationRequiredOverlay button{
             try {
                 await fetch("/api/auth/offline", {
                     method: "POST",
-                    headers: { "Authorization": "Bearer " + token },
+                    headers: { "Authorization": "Bearer " + token, "X-Presence-Id": presenceId },
                     keepalive: true,
                     cache: "no-store"
                 });
