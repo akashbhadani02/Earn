@@ -123,26 +123,6 @@ color:green;
 
 }
 
-
-
-.blocked-timer-box{
-    display:none;
-    margin-top:14px;
-    padding:16px;
-    border-radius:16px;
-    background:#fff7ed;
-    border:2px solid #f97316;
-    color:#9a3412;
-    text-align:center;
-    font-weight:700;
-}
-.blocked-timer{
-    font-size:30px;
-    letter-spacing:2px;
-    margin-top:6px;
-    color:#dc2626;
-    font-variant-numeric:tabular-nums;
-}
 </style>
 
 </head>
@@ -194,11 +174,6 @@ Already have an account?
 </div>
 
 <div id="message"></div>
-<div id="blockedTimerBox" class="blocked-timer-box">
-    🚫 Account Blocked<br>
-    <span id="blockedTimerText">12:00:00</span>
-    <div style="font-size:12px;font-weight:500;margin-top:5px;">Time remaining</div>
-</div>
 <div id="notificationGate" style="display:none;margin-top:12px;padding:12px;border-radius:10px;background:#fff7ed;color:#9a3412;font-size:13px;text-align:center;"></div>
 
 </div>
@@ -452,35 +427,6 @@ async function registerAdminPushSubscription(token){
     return true;
 }
 
-let blockedTimerInterval = null;
-
-function startBlockedCountdown(remainingMs){
-    const box = document.getElementById("blockedTimerBox");
-    const timer = document.getElementById("blockedTimerText");
-    if(!box || !timer) return;
-
-    clearInterval(blockedTimerInterval);
-    box.style.display = "block";
-
-    let endTime = Date.now() + Math.max(0, Number(remainingMs || 0));
-
-    function render(){
-        const left = Math.max(0, endTime - Date.now());
-        const totalSeconds = Math.ceil(left / 1000);
-        const h = String(Math.floor(totalSeconds / 3600)).padStart(2,"0");
-        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,"0");
-        const sec = String(totalSeconds % 60).padStart(2,"0");
-        timer.textContent = h + ":" + m + ":" + sec;
-
-        if(left <= 0){
-            clearInterval(blockedTimerInterval);
-            box.innerHTML = "✅ Block time completed. Please login again.";
-        }
-    }
-    render();
-    blockedTimerInterval = setInterval(render, 1000);
-}
-
 async function performLogin(mobile, password){
 
     const loginButton = document.querySelector('#loginForm button');
@@ -497,22 +443,6 @@ async function performLogin(mobile, password){
         });
 
         const data = await res.json();
-
-        if(data.blocked){
-            document.getElementById("message").innerHTML =
-                "🚫 Account blocked.<br>" +
-                "Reason: " + (data.reason || "Security violation") + "<br>" +
-                "12-hour block is active.";
-            startBlockedCountdown(data.remainingMs);
-            if(loginButton){
-                loginButton.disabled = false;
-                loginButton.innerText = "Login";
-            }
-            return;
-        }
-
-        const timerBox = document.getElementById("blockedTimerBox");
-        if(timerBox) timerBox.style.display = "none";
 
         if(data.success && data.token){
             // Save the real Web Push subscription BEFORE opening the dashboard.
