@@ -1594,7 +1594,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 // This prevents the quiz from staying on "Loading question..."
                 // when MongoDB/API is temporarily unavailable.
                 if (!list.length) {
-                    const fallback = await fetch("/questions.json", { cache: "no-store" });
+                    const fallback = await fetch("/questions.json", { cache: "no-store", headers: { "Accept": "application/json" } });
                     if (fallback.ok) {
                         const fallbackData = await fallback.json();
                         list = Array.isArray(fallbackData) ? fallbackData : [];
@@ -1845,6 +1845,9 @@ body.notification-locked #notificationRequiredOverlay button{
             if (id === 'quiz') {
                 const qw = document.getElementById("quizWallet");
                 if (qw) qw.innerText = wallet.toFixed(2);
+                // Always load a fresh question when Start Quiz is pressed.
+                quizQuestionRequest++;
+                quizLoading = false;
                 loadQuiz();
             }
 

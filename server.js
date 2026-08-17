@@ -33,6 +33,14 @@ app.use("/api/activities", activityRoutes);
 
 app.use(express.static(path.join(__dirname, "public")));
 
+// Serve the bundled question bank explicitly. It lives one level above
+// /public, so express.static(public) cannot serve it by itself.
+app.get("/questions.json", (req, res) => {
+    res.sendFile(path.join(__dirname, "questions.json"), {
+        headers: { "Cache-Control": "no-store" }
+    });
+});
+
 app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname,"public","login.html"));
 });
