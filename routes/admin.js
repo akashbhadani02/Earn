@@ -76,9 +76,10 @@ router.post("/force-logout-all-users", adminAuth, async (req, res) => {
             { isDeleted: { $ne: true } },
             {
                 $inc: { sessionVersion: 1 },
+                // IMPORTANT: Do not change lastSeen during Force Logout All.
+                // lastSeen must remain the student's real last activity time.
                 $set: {
-                    isOnline: false,
-                    lastSeen: new Date()
+                    isOnline: false
                 }
             }
         );
