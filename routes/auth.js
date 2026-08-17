@@ -86,12 +86,28 @@ router.post("/login", async (req, res) => {
 
         }
 
+        // Temporary 12-hour block. If the 12 hours are over, unblock automatically.
         if (user.isBlocked) {
-            return res.status(403).json({
-                success: false,
-                message: "Your account has been blocked. You will unblocked at next 1<sup>st</sup> Date",
-                reason: user.blockReason
-            });
+            const now = Date.now();
+            const until = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
+
+            if (until && until <= now) {
+                user.isBlocked = false;
+                user.blockUntil = null;
+                user.blockReason = "";
+                user.warningCount = 0;
+                await user.save();
+            } else {
+                const remainingMs = until ? Math.max(0, until - now) : 12 * 60 * 60 * 1000;
+                return res.status(403).json({
+                    success: false,
+                    blocked: true,
+                    message: "Your account is blocked for 12 hours.",
+                    reason: user.blockReason,
+                    blockUntil: user.blockUntil,
+                    remainingMs
+                });
+            }
         }
 
         // Security audit: record every successful login and unique device.
@@ -284,8 +300,9 @@ router.post("/block-me", auth, async (req, res) => {
             });
         }
 
-        // 4th violation: block account.
+        // 4th violation: block account for exactly 12 hours.
         user.isBlocked = true;
+        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
         await user.save();
 
         return res.json({
@@ -293,7 +310,9 @@ router.post("/block-me", auth, async (req, res) => {
             blocked: true,
             warning: false,
             warningCount: user.warningCount,
-            message: "Account Blocked"
+            message: "Account Blocked for 12 hours",
+            blockUntil: user.blockUntil,
+            remainingMs: 12 * 60 * 60 * 1000
         });
 
     } catch (err) {

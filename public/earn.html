@@ -1374,7 +1374,9 @@ body.notification-locked #notificationRequiredOverlay button{
 
             clickCount++;
 
-            if (clickCount >= 2) {
+            // Allow normal accidental clicks. Only 5 clicks inside the warning
+            // window count as a violation.
+            if (clickCount >= 5) {
                 blockStudent("Too many mouse clicks");
             }
 
@@ -1390,7 +1392,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 spaceCount++;
 
-                if (spaceCount >= 2) {
+                if (spaceCount >= 5) {
                     blockStudent("Too many space presses");
                 }
 
@@ -1430,9 +1432,10 @@ body.notification-locked #notificationRequiredOverlay button{
                     warningMode = false;
 
                     alert(
-                        "🚫 Your account has been blocked.\n\n" +
+                        "🚫 Your account has been blocked for 12 hours.\n\n" +
                         "Reason: " + reason + "\n\n" +
-                        "Total Violations: " + data.warningCount
+                        "Remaining time: 12:00:00\n\n" +
+                        "You can login again after the timer reaches 00:00:00."
                     );
 
                     localStorage.removeItem("token");

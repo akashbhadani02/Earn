@@ -789,6 +789,7 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
         }
 
         user.isBlocked = false;
+        user.blockUntil = null;
         user.blockReason = "";
 
         // Reset warning system
