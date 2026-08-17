@@ -1493,11 +1493,15 @@ body.notification-locked #notificationRequiredOverlay button{
         // STUDENT ONLINE HEARTBEAT
         // ===============================
 
+        let heartbeatInFlight = false;
+
         async function sendHeartbeat() {
 
-            if (!token) {
+            if (!token || heartbeatInFlight) {
                 return;
             }
+
+            heartbeatInFlight = true;
 
             try {
 
@@ -1527,6 +1531,8 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 console.log("Heartbeat Error:", error);
 
+            } finally {
+                heartbeatInFlight = false;
             }
 
         }
@@ -1539,7 +1545,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
             sendHeartbeat();
 
-        }, 2000);
+        }, 1000);
 
         let wallet = 0;
 
