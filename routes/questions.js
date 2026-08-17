@@ -39,37 +39,22 @@ async function ensureQuestionsSeeded() {
 }
 
 // Student quiz question bank.
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
     try {
-        // The quiz is client-side and already needs the answer index, so this
-        // endpoint must remain readable even when the student session has an
-        // expired/missing token. Prefer MongoDB, but never leave the quiz stuck
-        // on "Loading..." if MongoDB is temporarily unavailable.
-        try {
-            await ensureQuestionsSeeded();
-            const questions = await Question.find()
-                .select("q options correct")
-                .lean();
-            if (questions.length) {
-                return res.json({ success: true, totalQuestions: questions.length, questions });
-            }
-        } catch (dbErr) {
-            console.error("Question DB unavailable, using bundled bank:", dbErr.message);
-        }
+        await ensureQuestionsSeeded();
 
-        const questions = seedQuestions.map(item => ({
-            q: String(item.q || "").trim(),
-            options: Array.isArray(item.options) ? item.options.map(String) : [],
-            correct: Number(item.correct)
-        })).filter(item =>
-            item.q && item.options.length >= 2 &&
-            Number.isInteger(item.correct) && item.correct >= 0 && item.correct < item.options.length
-        );
+        const questions = await Question.find()
+            .select("q options correct")
+            .lean();
 
-        return res.json({ success: true, totalQuestions: questions.length, questions });
+        return res.json({
+            success: true,
+            totalQuestions: questions.length,
+            questions
+        });
     } catch (err) {
         console.error("Load Questions Error:", err);
-        return res.status(500).json({ success: false, message: "Question bank could not be loaded." });
+        return res.status(500).json({ success: false, message: err.message });
     }
 });
 
