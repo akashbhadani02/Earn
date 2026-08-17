@@ -176,79 +176,68 @@ router.post("/login", async (req, res) => {
 });
 
 // ==========================
-// Student Heartbeat
+// Student Presence / Heartbeat
 // ==========================
 
-router.post("/heartbeat", async (req, res) => {
+const verifyPresenceToken = async (req) => {
+    const authHeader = req.headers.authorization || "";
+    const token = authHeader.split(" ")[1];
+    if (!token) throw new Error("No token provided");
 
-    try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked");
+    if (!user || user.isDeleted || user.isBlocked) throw new Error("Account is not available");
 
-        // Token check
-        const authHeader = req.headers.authorization;
-
-        if (!authHeader) {
-            return res.status(401).json({
-                success: false,
-                message: "No token provided"
-            });
-        }
-
-        const token = authHeader.split(" ")[1];
-
-        // Token verify
-        const decoded = jwt.verify(
-            token,
-            process.env.JWT_SECRET
-        );
-
-        // User find
-        const user = await User.findById(decoded.id);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        // Admin can force all existing student sessions to logout by incrementing sessionVersion.
-        if (Number(decoded.sessionVersion ?? 0) !== Number(user.sessionVersion || 0)) {
-            return res.status(401).json({
-                success: false,
-                message: "Session ended by admin. Please login again.",
-                forceLogout: true
-            });
-        }
-
-        // Student online — use a fast atomic DB update so a 1-second heartbeat
-        // does not occasionally miss the 3-second online window because a full
-        // document save took too long.
-        const heartbeatTime = new Date();
-        await User.updateOne(
-            { _id: user._id },
-            { $set: { isOnline: true, lastSeen: heartbeatTime } }
-        );
-
-        res.json({
-            success: true,
-            message: "Heartbeat updated"
-        });
-
-    } catch (err) {
-
-        console.error("Heartbeat Error:", err);
-
-        res.status(401).json({
-            success: false,
-            message: "Invalid token"
-        });
-
+    if (Number(decoded.sessionVersion ?? 0) !== Number(user.sessionVersion || 0)) {
+        const e = new Error("Session ended by admin. Please login again.");
+        e.forceLogout = true;
+        throw e;
     }
+    return decoded;
+};
 
+router.post("/heartbeat", async (req, res) => {
+    try {
+        const decoded = await verifyPresenceToken(req);
+
+        // Atomic update: heartbeat is the ONLY thing that refreshes presence.
+        await User.findOneAndUpdate(
+            { _id: decoded.id },
+            { $set: { isOnline: true, lastSeen: new Date() } },
+            { new: false }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        const status = err.forceLogout ? 401 : (err.message === "No token provided" ? 401 : 401);
+        res.status(status).json({
+            success: false,
+            message: err.message || "Invalid token",
+            forceLogout: !!err.forceLogout
+        });
+    }
+});
+
+// Called when the student tab becomes hidden / is closed.
+router.post("/offline", async (req, res) => {
+    try {
+        const decoded = await verifyPresenceToken(req);
+
+        await User.findOneAndUpdate(
+            { _id: decoded.id },
+            { $set: { isOnline: false } },
+            { new: false }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(401).json({ success: false });
+    }
 });
 
 // ==========================
 // Student Warning / Block System
+
 // 1st, 2nd, 3rd violation = Warning
 // 4th violation = Account Blocked
 // ==========================

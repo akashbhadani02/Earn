@@ -36,10 +36,9 @@ module.exports = async (req, res, next) => {
 
         req.user = decoded;
 
-        // Presence is controlled only by /api/auth/heartbeat.
-        // Do not refresh lastSeen on every API request; otherwise background
-        // requests from a hidden tab can incorrectly keep a student Online.
-
+        // IMPORTANT: Do NOT update lastSeen on every authenticated request.
+        // Presence is controlled ONLY by /api/auth/heartbeat.
+        // This prevents background/API requests from falsely keeping a student online.
         next();
 
     } catch (err) {

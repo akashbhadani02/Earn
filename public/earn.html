@@ -1490,56 +1490,94 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         // ===============================
-        // STUDENT ONLINE HEARTBEAT
+        // STUDENT ONLINE PRESENCE
+        // Active tab = Online. Hidden tab = Offline.
+        // Heartbeat every 1 second; server timeout = 3 seconds.
         // ===============================
 
-        async function sendHeartbeat() {
+        let presenceTimer = null;
+        let presenceInFlight = false;
+        let presenceAbort = null;
 
-            if (!token || document.hidden) {
-                return;
-            }
+        async function sendPresenceHeartbeat() {
+            if (!token || document.hidden || presenceInFlight) return;
+
+            presenceInFlight = true;
+            presenceAbort = new AbortController();
+            const timeout = setTimeout(() => presenceAbort.abort(), 800);
 
             try {
-
                 const res = await fetch("/api/auth/heartbeat", {
-
                     method: "POST",
-
-                    headers: {
-                        "Authorization": "Bearer " + token
-                    }
-
+                    headers: { "Authorization": "Bearer " + token },
+                    cache: "no-store",
+                    signal: presenceAbort.signal
                 });
 
                 if (res.status === 401) {
                     const data = await res.json().catch(() => ({}));
+                    stopPresence();
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
-                    clearInterval(window.__studentHeartbeatTimer);
-                    alert(data.message || "Your session was ended by app. Please login again.");
+                    alert(data.message || "Your session was ended. Please login again.");
                     window.location.replace("login.html");
                     return;
                 }
-
-                console.log("Student Online");
-
             } catch (error) {
-
-                console.log("Heartbeat Error:", error);
-
+                // A single missed heartbeat is okay. The next 1-second heartbeat retries.
+            } finally {
+                clearTimeout(timeout);
+                presenceAbort = null;
+                presenceInFlight = false;
             }
-
         }
 
-        // Page open થાય ત્યારે તરત heartbeat મોકલો
-        sendHeartbeat();
+        async function markPresenceOffline() {
+            if (!token) return;
+            try {
+                await fetch("/api/auth/offline", {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer " + token },
+                    keepalive: true,
+                    cache: "no-store"
+                });
+            } catch (_) {}
+        }
 
-        // દર 1 secondે heartbeat મોકલો
-        window.__studentHeartbeatTimer = setInterval(() => {
+        function stopPresence() {
+            if (presenceTimer) {
+                clearInterval(presenceTimer);
+                presenceTimer = null;
+            }
+            if (presenceAbort) {
+                try { presenceAbort.abort(); } catch (_) {}
+                presenceAbort = null;
+            }
+        }
 
-            sendHeartbeat();
+        function startPresence() {
+            if (!token || document.hidden) return;
+            stopPresence();
+            sendPresenceHeartbeat();
+            presenceTimer = setInterval(sendPresenceHeartbeat, 1000);
+        }
 
-        }, 1000);
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                stopPresence();
+                markPresenceOffline();
+            } else {
+                startPresence();
+            }
+        });
+
+        window.addEventListener("pagehide", () => {
+            stopPresence();
+            markPresenceOffline();
+        });
+
+        // Initial state
+        if (!document.hidden) startPresence();
 
         let wallet = 0;
 
@@ -1902,8 +1940,6 @@ body.notification-locked #notificationRequiredOverlay button{
 
         document.addEventListener("visibilitychange", async () => {
             if (document.hidden) {
-                // Hidden tab must not keep the student Online. The heartbeat
-                // simply stops; admin marks Offline after 3 seconds.
                 const quizOpen = !document.getElementById("quiz")?.classList.contains("hidden");
                 const activityOpen = !document.getElementById("activityPlay")?.classList.contains("hidden");
                 if (quizOpen || activityOpen) {
@@ -1918,9 +1954,6 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
                 return;
             }
-
-            // We are visible again: immediately refresh presence.
-            sendHeartbeat();
 
             if (!tabWasChanged) return;
             tabWasChanged = false;
