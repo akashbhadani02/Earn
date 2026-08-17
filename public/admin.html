@@ -1190,6 +1190,7 @@
             <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
             <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
             <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
+            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">⏳ Blocked Time</button>
         </div>
 
         <div class="ap2-pane active" id="ap2-students">
@@ -1319,6 +1320,16 @@
                 <h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button>
             </div>
             <div id="ap2Body"></div>
+        </div>
+    </div>
+
+    <div class="ap2-modal" id="ap2BlockedTimeModal">
+        <div class="ap2-box">
+            <div class="ap2-head">
+                <h2>⏳ Blocked Students — Remaining Time</h2>
+                <button class="ap2-btn" onclick="ap2CloseBlockedTime()">✕</button>
+            </div>
+            <div id="ap2BlockedTimeBody"></div>
         </div>
     </div>
 
@@ -2908,6 +2919,43 @@ ${w.status === "Approved" ? `
         .adminProV2 .ap2-tabs .ap2-btn:nth-child(6) {
             background: #0891b2; border-color: #0891b2;
         }
+        .adminProV2 .ap2-tabs .ap2-btn:nth-child(7) {
+            background: #ea580c; border-color: #ea580c;
+        }
+        .blocked-time-card {
+            background: #0d1929;
+            border: 1px solid #26354c;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .blocked-time-card .student-name {
+            font-size: 17px;
+            font-weight: 900;
+            color: #67e8f9;
+            background: rgba(8, 145, 178, 0.12);
+            border: 1px solid rgba(103, 232, 249, 0.28);
+            padding: 8px 10px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-shadow: 0 0 10px rgba(103, 232, 249, 0.35);
+        }
+        .blocked-time-card .student-meta {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .blocked-time-card .remaining {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 7px 10px;
+            border-radius: 9px;
+            background: #7c2d12;
+            color: #fed7aa;
+            font-weight: 800;
+        }
         .adminProV2 .ap2-pane .ap2-flex .ap2-btn {
             background: #2563eb;
             border-color: #2563eb;
@@ -3144,6 +3192,68 @@ ${w.status === "Approved" ? `
             window.ap2Wallet = async id => { let amount = prompt("Wallet adjustment (+ add / - remove):", "1"); if (amount === null) return; let reason = prompt("Reason:", "Admin adjustment"); if (reason === null) return; try { await api("/pro/wallet/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ amount: Number(amount), reason }) }); await ap2Refresh(); alert("Wallet updated") } catch (e) { alert(e.message) } };
             window.ap2ResetQ = async id => { try { await api("/pro/reset-questions/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2ResetSpin = async id => { try { await api("/pro/reset-spin/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            let ap2BlockedTimer = null;
+            let ap2BlockedUsers = [];
+
+            function ap2FormatRemaining(ms) {
+                ms = Math.max(0, Number(ms || 0));
+                const totalSeconds = Math.floor(ms / 1000);
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const sec = totalSeconds % 60;
+                return `${String(h).padStart(2,"0")}h ${String(m).padStart(2,"0")}m ${String(sec).padStart(2,"0")}s`;
+            }
+
+            function ap2RenderBlockedTime() {
+                const body = document.getElementById("ap2BlockedTimeBody");
+                if (!body) return;
+
+                const now = Date.now();
+                const active = ap2BlockedUsers
+                    .map(u => ({ ...u, remainingMs: Math.max(0, Number(u.blockUntilMs || 0) - now) }))
+                    .filter(u => u.remainingMs > 0);
+
+                if (!active.length) {
+                    body.innerHTML = '<div style="padding:35px 20px;text-align:center;color:#94a3b8;font-weight:800;">No blocked student found</div>';
+                    return;
+                }
+
+                body.innerHTML = active.map(u => `
+                    <div class="blocked-time-card">
+                        <div class="student-name">🚫 ${esc(u.name || "Unknown")}</div>
+                        <div class="student-meta">ID: ${esc(u.id || "-")} &nbsp; | &nbsp; Mobile: ${esc(u.mobile || "-")}</div>
+                        <div class="remaining">⏱ Remaining: ${ap2FormatRemaining(u.remainingMs)}</div>
+                    </div>
+                `).join("");
+            }
+
+            window.ap2ShowBlockedTime = async () => {
+                const modal = document.getElementById("ap2BlockedTimeModal");
+                const body = document.getElementById("ap2BlockedTimeBody");
+                if (!modal || !body) return;
+
+                modal.classList.add("show");
+                body.innerHTML = '<div style="padding:35px 20px;text-align:center;color:#94a3b8;font-weight:800;">Loading blocked students...</div>';
+
+                try {
+                    const d = await api("/pro/blocked-students");
+                    ap2BlockedUsers = Array.isArray(d.users) ? d.users : [];
+                    ap2RenderBlockedTime();
+
+                    clearInterval(ap2BlockedTimer);
+                    ap2BlockedTimer = setInterval(ap2RenderBlockedTime, 1000);
+                } catch (e) {
+                    body.innerHTML = `<div style="padding:35px 20px;text-align:center;color:#fca5a5;font-weight:800;">⚠️ ${esc(e.message || "Failed to load blocked students.")}</div>`;
+                }
+            };
+
+            window.ap2CloseBlockedTime = () => {
+                const modal = document.getElementById("ap2BlockedTimeModal");
+                if (modal) modal.classList.remove("show");
+                clearInterval(ap2BlockedTimer);
+                ap2BlockedTimer = null;
+            };
+
             window.ap2Tab = t => {
                 const root = document.querySelector(".adminProV2");
                 if (!root) return;

@@ -1567,20 +1567,61 @@ body.notification-locked #notificationRequiredOverlay button{
 
         async function loadQuestionBank() {
             try {
-                const res = await fetch("/api/questions", {
-                    headers: { Authorization: "Bearer " + token }
-                });
-                const data = await res.json();
-
-                if (!res.ok || !data.success) {
-                    throw new Error(data.message || "Could not load questions");
+                const currentToken = localStorage.getItem("token") || "";
+                if (!currentToken) {
+                    window.location.replace("login.html");
+                    return [];
                 }
 
-                quizData = Array.isArray(data.questions) ? data.questions : [];
+                const res = await fetch("/api/questions", {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: {
+                        "Authorization": "Bearer " + currentToken,
+                        "Accept": "application/json"
+                    }
+                });
+
+                const raw = await res.text();
+                let data;
+                try {
+                    data = JSON.parse(raw);
+                } catch (parseErr) {
+                    throw new Error("Question API returned invalid data.");
+                }
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.message || ("Question API error: " + res.status));
+                }
+
+                const list = Array.isArray(data.questions) ? data.questions : [];
+
+                // Keep only questions that the quiz can actually render.
+                quizData = list.filter(q =>
+                    q &&
+                    typeof q.q === "string" &&
+                    q.q.trim() &&
+                    Array.isArray(q.options) &&
+                    q.options.length >= 2 &&
+                    Number.isInteger(Number(q.correct)) &&
+                    Number(q.correct) >= 0 &&
+                    Number(q.correct) < q.options.length
+                );
+
+                console.log("Quiz question bank loaded:", quizData.length);
+
+                if (!quizData.length) {
+                    throw new Error("Question bank is empty or has invalid questions.");
+                }
+
                 return quizData;
             } catch (err) {
                 console.error("Question Bank Error:", err);
-                alert("Question load થવામાં error આવ્યો. Page refresh કરો.");
+                quizData = [];
+                const qEl = document.getElementById("question");
+                if (qEl) qEl.innerText = "⚠️ Questions load થઈ શક્યા નથી.";
+                const optEl = document.getElementById("options");
+                if (optEl) optEl.innerHTML = '<div style="padding:14px;text-align:center;color:#dc2626;font-weight:700;">Please refresh the page and try again.</div>';
                 return [];
             }
         }
@@ -2010,88 +2051,113 @@ body.notification-locked #notificationRequiredOverlay button{
 
         }
 
+        let quizLoading = false;
+        let quizQuestionRequest = 0;
+
         async function loadQuiz() {
-            if (!quizData.length) {
-                await loadQuestionBank();
-            }
+            if (quizLoading) return;
+            quizLoading = true;
+            const requestId = ++quizQuestionRequest;
 
-            if (!quizData.length) {
-                document.getElementById("question").innerText = "No questions available.";
-                return;
-            }
+            const questionEl = document.getElementById("question");
+            const optDiv = document.getElementById("options");
 
-            let q = quizData[Math.floor(Math.random() * quizData.length)];
-            document.getElementById("question").innerText = q.q;
-            questionStartTime = Date.now();
-            let optDiv = document.getElementById("options");
-            optDiv.innerHTML = "";
-            q.options.forEach((o, i) => {
-                let b = document.createElement("button");
-                b.className = "option-btn";
-                b.innerText = o;
-                b.onclick = async () => {
-                    // Prevent double-clicking / submitting the same question twice.
-                    optDiv.querySelectorAll("button").forEach(btn => {
-                        btn.disabled = true;
-                    });
+            if (questionEl) questionEl.innerText = "⏳ Loading question...";
+            if (optDiv) optDiv.innerHTML = '<div style="padding:14px;text-align:center;color:#64748b;font-weight:700;">Please wait...</div>';
 
-                    const timeTaken = (Date.now() - questionStartTime) / 1000;
+            try {
+                if (!quizData.length) {
+                    await loadQuestionBank();
+                }
 
-                    if (timeTaken < 1.5) {
+                if (!quizData.length) {
+                    if (questionEl) questionEl.innerText = "⚠️ No questions available.";
+                    if (optDiv) optDiv.innerHTML = "";
+                    return;
+                }
 
-                        // Count every fast answer in Security before issuing the warning.
-                        await recordSecurityEvent("fast_answer");
-                        await blockStudent("વાંચી ને જવાબ આપવાનો છે ઓછા સમય માં જવાબ આપ્યો છે.");
+                // Prevent an old async request from replacing a newer question.
+                if (requestId !== quizQuestionRequest) return;
 
-                        return;
+                const q = quizData[Math.floor(Math.random() * quizData.length)];
+                if (!q || !Array.isArray(q.options) || q.options.length < 2) {
+                    throw new Error("Invalid question received.");
+                }
 
-                    }
-                    const isCorrect = i === q.correct;
-                    const saved = await updateWallet(isCorrect);
+                if (questionEl) questionEl.innerText = String(q.q);
+                questionStartTime = Date.now();
+                optDiv.innerHTML = "";
 
-                    if (!saved) {
+                q.options.forEach((o, i) => {
+                    const b = document.createElement("button");
+                    b.className = "option-btn";
+                    b.type = "button";
+                    b.innerText = String(o);
+                    b.onclick = async () => {
+                        if (b.disabled) return;
+
                         optDiv.querySelectorAll("button").forEach(btn => {
-                            btn.disabled = false;
+                            btn.disabled = true;
                         });
-                        return;
-                    }
 
-                    const buttons = optDiv.querySelectorAll(".option-btn");
+                        const timeTaken = (Date.now() - questionStartTime) / 1000;
 
-                    // બધા Button Disable
-                    buttons.forEach(btn => btn.disabled = true);
-
-                    // Answer બતાવો
-                    buttons.forEach((btn, index) => {
-
-                        // સાચો જવાબ Green
-                        if (index === q.correct) {
-                            btn.style.background = "#22c55e";
-                            btn.style.color = "#fff";
-                            btn.style.border = "3px solid #16a34a";
-                            btn.innerHTML = "✅ " + q.options[index];
+                        if (timeTaken < 1.5) {
+                            await recordSecurityEvent("fast_answer");
+                            await blockStudent("વાંચી ને જવાબ આપવાનો છે ઓછા સમય માં જવાબ આપ્યો છે.");
+                            return;
                         }
 
-                        // ખોટો પસંદ કર્યો હોય તો Red
-                        if (index === i && !isCorrect) {
-                            btn.style.background = "#ef4444";
-                            btn.style.color = "#fff";
-                            btn.style.border = "3px solid #dc2626";
-                            btn.innerHTML = "❌ " + q.options[index];
+                        const isCorrect = i === Number(q.correct);
+                        const saved = await updateWallet(isCorrect);
+
+                        if (!saved) {
+                            optDiv.querySelectorAll("button").forEach(btn => btn.disabled = false);
+                            return;
                         }
 
-                    });
+                        const buttons = optDiv.querySelectorAll(".option-btn");
+                        buttons.forEach(btn => btn.disabled = true);
 
-                    // Warning Monitor
-                    startWarningMonitor();
+                        buttons.forEach((btn, index) => {
+                            if (index === Number(q.correct)) {
+                                btn.style.background = "#22c55e";
+                                btn.style.color = "#fff";
+                                btn.style.border = "3px solid #16a34a";
+                                btn.innerHTML = "✅ " + q.options[index];
+                            }
 
-                    // 1.5 Second પછી Next Question
-                    setTimeout(() => {
-                        loadQuiz();
-                    }, 1500);
-                };
-                optDiv.appendChild(b);
-            });
+                            if (index === i && !isCorrect) {
+                                btn.style.background = "#ef4444";
+                                btn.style.color = "#fff";
+                                btn.style.border = "3px solid #dc2626";
+                                btn.innerHTML = "❌ " + q.options[index];
+                            }
+                        });
+
+                        startWarningMonitor();
+
+                        setTimeout(() => {
+                            if (!document.getElementById("quiz")?.classList.contains("hidden")) {
+                                loadQuiz();
+                            }
+                        }, 1500);
+                    };
+                    optDiv.appendChild(b);
+                });
+            } catch (err) {
+                console.error("Quiz Render Error:", err);
+                if (questionEl) questionEl.innerText = "⚠️ Question display error";
+                if (optDiv) {
+                    optDiv.innerHTML =
+                        '<div style="padding:14px;text-align:center;color:#dc2626;font-weight:700;">' +
+                        (err.message || "Question could not be displayed.") +
+                        '</div>' +
+                        '<button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry</button>';
+                }
+            } finally {
+                quizLoading = false;
+            }
         }
 
 
