@@ -1573,6 +1573,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     return [];
                 }
 
+                // First try the authenticated API.
                 const res = await fetch("/api/questions", {
                     method: "GET",
                     cache: "no-store",
@@ -1582,46 +1583,45 @@ body.notification-locked #notificationRequiredOverlay button{
                     }
                 });
 
-                const raw = await res.text();
-                let data;
-                try {
-                    data = JSON.parse(raw);
-                } catch (parseErr) {
-                    throw new Error("Question API returned invalid data.");
+                let data = null;
+                try { data = await res.json(); } catch (_) {}
+
+                let list = (res.ok && data && data.success && Array.isArray(data.questions))
+                    ? data.questions
+                    : [];
+
+                // Reliable fallback: the bundled question bank is also public.
+                // This prevents the quiz from staying on "Loading question..."
+                // when MongoDB/API is temporarily unavailable.
+                if (!list.length) {
+                    const fallback = await fetch("/questions.json", { cache: "no-store" });
+                    if (fallback.ok) {
+                        const fallbackData = await fallback.json();
+                        list = Array.isArray(fallbackData) ? fallbackData : [];
+                    }
                 }
 
-                if (!res.ok || !data.success) {
-                    throw new Error(data.message || ("Question API error: " + res.status));
-                }
-
-                const list = Array.isArray(data.questions) ? data.questions : [];
-
-                // Keep only questions that the quiz can actually render.
-                quizData = list.filter(q =>
-                    q &&
-                    typeof q.q === "string" &&
-                    q.q.trim() &&
-                    Array.isArray(q.options) &&
-                    q.options.length >= 2 &&
-                    Number.isInteger(Number(q.correct)) &&
-                    Number(q.correct) >= 0 &&
-                    Number(q.correct) < q.options.length
-                );
+                quizData = list.filter(q => {
+                    const correct = Number(q?.correct);
+                    return q && typeof q.q === "string" && q.q.trim() &&
+                        Array.isArray(q.options) && q.options.length >= 2 &&
+                        Number.isInteger(correct) && correct >= 0 && correct < q.options.length;
+                }).map(q => ({
+                    q: String(q.q).trim(),
+                    options: q.options.map(String),
+                    correct: Number(q.correct)
+                }));
 
                 console.log("Quiz question bank loaded:", quizData.length);
-
-                if (!quizData.length) {
-                    throw new Error("Question bank is empty or has invalid questions.");
-                }
-
+                if (!quizData.length) throw new Error("Question bank is empty or invalid.");
                 return quizData;
             } catch (err) {
                 console.error("Question Bank Error:", err);
                 quizData = [];
                 const qEl = document.getElementById("question");
-                if (qEl) qEl.innerText = "⚠️ Questions load થઈ શક્યા નથી.";
                 const optEl = document.getElementById("options");
-                if (optEl) optEl.innerHTML = '<div style="padding:14px;text-align:center;color:#dc2626;font-weight:700;">Please refresh the page and try again.</div>';
+                if (qEl) qEl.innerText = "⚠️ Question load failed";
+                if (optEl) optEl.innerHTML = '<button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry Questions</button>';
                 return [];
             }
         }
