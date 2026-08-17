@@ -1431,10 +1431,18 @@ body.notification-locked #notificationRequiredOverlay button{
                     alreadyBlocked = true;
                     warningMode = false;
 
+                    function formatBlockRemaining(ms) {
+                        const totalSeconds = Math.ceil(Math.max(0, Number(ms || 0)) / 1000);
+                        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+                        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+                        const s = String(totalSeconds % 60).padStart(2, "0");
+                        return h + ":" + m + ":" + s;
+                    }
+
                     alert(
-                        "🚫 Your account has been blocked for 12 hours.\n\n" +
+                        "🚫 Your account has been blocked.\n\n" +
                         "Reason: " + reason + "\n\n" +
-                        "Remaining time: 12:00:00\n\n" +
+                        "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
                         "You can login again after the timer reaches 00:00:00."
                     );
 

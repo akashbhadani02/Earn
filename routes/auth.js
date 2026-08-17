@@ -272,12 +272,27 @@ router.post("/block-me", auth, async (req, res) => {
 
         // Already blocked
         if (user.isBlocked) {
+            const now = Date.now();
+            const until = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
+            const remainingMs = until ? Math.max(0, until - now) : 0;
+
+            if (until && until <= now) {
+                user.isBlocked = false;
+                user.blockUntil = null;
+                user.blockReason = "";
+                user.warningCount = 0;
+                await user.save();
+                return res.json({ success: true, blocked: false, warning: false, warningCount: 0, message: "Block expired" });
+            }
+
             return res.json({
                 success: true,
                 blocked: true,
                 warning: false,
                 warningCount: user.warningCount || 0,
-                message: "Account is already blocked"
+                message: "Account is already blocked",
+                blockUntil: user.blockUntil,
+                remainingMs
             });
         }
 

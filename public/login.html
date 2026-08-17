@@ -501,7 +501,7 @@ async function performLogin(mobile, password){
         if(data.blocked){
             document.getElementById("message").innerHTML =
                 "🚫 Account blocked.<br>" +
-                "12-hour block is active. ટાઈમ પૂરો થઈ ગયા પછી ફરી Login કરો.";
+                "Block is active. નીચે actual remaining time દેખાશે.";
             startBlockedCountdown(data.remainingMs);
             if(loginButton){
                 loginButton.disabled = false;
