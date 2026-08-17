@@ -2719,18 +2719,25 @@ ${w.status === "Approved" ? `
 
 
         //==========================
-        // Auto Refresh
-        // Dashboard + Users every 10 seconds
+        // Stable Auto Refresh
+        // Do NOT run dashboard + users + command-center at the same time.
+        // Multiple heavy requests every 1 second can delay student heartbeats
+        // and make the status flicker Offline -> Online.
         //==========================
-
+        let adminRefreshBusy = false;
         setInterval(async () => {
+            if (adminRefreshBusy || document.hidden) return;
+            adminRefreshBusy = true;
             try {
-                await loadDashboard();
                 await loadUsers();
+                // Dashboard is intentionally not polled every second.
+                // Command Center below is the live status source.
             } catch (err) {
-                console.error("Auto refresh error:", err);
+                console.error("Admin users refresh error:", err);
+            } finally {
+                adminRefreshBusy = false;
             }
-        }, 1000);
+        }, 2000);
 
         async function deleteAllQuestions() {
 
@@ -3368,10 +3375,18 @@ ${w.status === "Approved" ? `
                 }
             };
             window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
+            let ap2RefreshBusy = false;
             window.addEventListener("load", () => {
                 ap2Tab("students");
                 ap2Refresh();
-                setInterval(ap2Refresh, 1000);
+                // One live Command Center request every 2 seconds.
+                // Prevent overlapping requests so status timestamps are read consistently.
+                setInterval(async () => {
+                    if (ap2RefreshBusy || document.hidden) return;
+                    ap2RefreshBusy = true;
+                    try { await ap2Refresh(); }
+                    finally { ap2RefreshBusy = false; }
+                }, 2000);
             });
         })();
     </script>
