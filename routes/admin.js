@@ -207,7 +207,7 @@ router.get("/users", adminAuth, async (req, res) => {
                 const difference =
                     currentTime - lastSeenTime;
 
-                const ONLINE_TIMEOUT = 3500; // ~3 seconds after heartbeat stops
+                const ONLINE_TIMEOUT = 3000; // exactly 3 seconds after heartbeat stops
 
                 if (difference <= ONLINE_TIMEOUT) {
                     online = true;
@@ -972,7 +972,7 @@ router.get("/control-center", adminAuth, async (req, res) => {
             .lean();
 
         const now = Date.now();
-        const onlineTimeout = 3500;
+        const onlineTimeout = 3000;
 
         const mapped = users.map(u => ({
             ...u,
@@ -1140,7 +1140,7 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
     try{
         const today=proTodayKey();
         const users=await User.find({}).select("-password").lean();
-        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=3500);
+        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=3000);
         const stats={
             students:users.length,
             online:active.length,
