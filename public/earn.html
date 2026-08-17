@@ -1492,7 +1492,7 @@ body.notification-locked #notificationRequiredOverlay button{
         // ===============================
         // STUDENT ONLINE PRESENCE
         // Active tab = Online. Hidden tab = Offline.
-        // Heartbeat every 1 second; server timeout = 3 seconds.
+        // Heartbeat every 1 second; server timeout = 2 seconds.
         // ===============================
 
         let presenceTimer = null;
@@ -1511,7 +1511,7 @@ body.notification-locked #notificationRequiredOverlay button{
             presenceAbort = new AbortController();
             // Allow normal Mongo/network latency. A too-short 800ms timeout was
             // causing missed heartbeats and false Offline states.
-            const timeout = setTimeout(() => presenceAbort.abort(), 2500);
+            const timeout = setTimeout(() => presenceAbort.abort(), 1800);
 
             try {
                 const res = await fetch("/api/auth/heartbeat", {
@@ -1571,9 +1571,11 @@ body.notification-locked #notificationRequiredOverlay button{
 
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) {
+                // Stop heartbeats. Do NOT force an immediate DB offline write here.
+                // The server's 2-second lastSeen timeout is the single source of truth.
                 stopPresence();
-                markPresenceOffline();
             } else {
+                // Coming back to this tab: send heartbeat immediately.
                 startPresence();
             }
         });
