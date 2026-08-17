@@ -179,6 +179,34 @@ router.post("/login", async (req, res) => {
 // Student Heartbeat
 // ==========================
 
+// ==========================
+// Student Offline (when tab becomes hidden)
+// ==========================
+router.post("/offline", async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) return res.status(401).json({ success: false, message: "No token provided" });
+
+        const token = authHeader.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        if (Number(decoded.sessionVersion ?? 0) !== Number(user.sessionVersion || 0)) {
+            return res.status(401).json({ success: false, message: "Session ended by admin. Please login again." });
+        }
+
+        user.isOnline = false;
+        await user.save();
+
+        res.json({ success: true, message: "Student marked offline" });
+    } catch (err) {
+        console.error("Offline Error:", err);
+        res.status(401).json({ success: false, message: "Invalid token" });
+    }
+});
+
 router.post("/heartbeat", async (req, res) => {
 
     try {

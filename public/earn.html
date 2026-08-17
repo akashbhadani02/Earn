@@ -1540,12 +1540,51 @@ body.notification-locked #notificationRequiredOverlay button{
         // Page open થાય ત્યારે તરત heartbeat મોકલો
         sendHeartbeat();
 
-        // દર 1 secondે heartbeat મોકલો
-        window.__studentHeartbeatTimer = setInterval(() => {
-
+        // દર 1 secondે heartbeat મોકલો — માત્ર આ tab visible હોય ત્યારે
+        function startStudentHeartbeat() {
+            clearInterval(window.__studentHeartbeatTimer);
             sendHeartbeat();
+            window.__studentHeartbeatTimer = setInterval(() => {
+                if (!document.hidden) sendHeartbeat();
+            }, 1000);
+        }
 
-        }, 1000);
+        async function markStudentOffline() {
+            clearInterval(window.__studentHeartbeatTimer);
+            try {
+                await fetch("/api/auth/offline", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    },
+                    keepalive: true
+                });
+            } catch (e) {
+                console.log("Offline update error:", e);
+            }
+        }
+
+        // બીજી browser tab / app tab પર જતાં આ student તરત Offline થશે.
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                markStudentOffline();
+            } else {
+                startStudentHeartbeat();
+            }
+        });
+
+        // Browser/tab બંધ થાય ત્યારે પણ offline mark કરવાનો પ્રયાસ
+        window.addEventListener("pagehide", () => {
+            if (!document.hidden && token) {
+                fetch("/api/auth/offline", {
+                    method: "POST",
+                    headers: { "Authorization": "Bearer " + token },
+                    keepalive: true
+                }).catch(() => {});
+            }
+        });
+
+        startStudentHeartbeat();
 
         let wallet = 0;
 
