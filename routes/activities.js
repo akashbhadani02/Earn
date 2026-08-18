@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+const crypto = require('crypto');
 
 const ACTIVITIES = {
   arrange: {
@@ -1597,7 +1598,6 @@ function publicQuestion(type,q){
   if(type==='correction'||type==='translate') return {prompt:q[0]};
   if(type==='word') return {prompt:q[0]};
   if(type==='fill') return {prompt:q[0],options:q[1]};
-  // Browser speech needs the sentence to synthesize audio. No reward/answer check is done client-side.
   if(type==='listening') return {prompt:q};
   if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
   return {prompt:q};
@@ -1607,6 +1607,11 @@ function mapGet(map, key) {
   if (!map) return 0;
   if (typeof map.get === 'function') return Number(map.get(key) || 0);
   return Number(map[key] || 0);
+}
+function mapGetString(map, key) {
+  if (!map) return '';
+  if (typeof map.get === 'function') return String(map.get(key) || '');
+  return String(map[key] || '');
 }
 function mapSet(map, key, value) {
   if (map && typeof map.set === 'function') map.set(key, value);
@@ -1622,32 +1627,16 @@ function pickRandomQuestions(type, activity, user) {
 }
 
 router.get('/:type', auth, async (req,res)=>{
-  try {
-    const type=req.params.type; const activity=ACTIVITIES[type];
-    if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-    const user=await User.findById(req.user.id);
-    if(!user) return res.status(404).json({success:false,message:'User not found'});
-
-    // If a question is already active, return the same locked question.
-    if(String(user.activeActivityType||'')===type && String(user.activeActivityQuestionId||'')!=='') {
-      const idx=Number(user.activeActivityQuestionId);
-      const q=activity.questions[idx];
-      if(q) return res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[{id:idx,...publicQuestion(type,q)}]});
-    }
-
-    const items=pickRandomQuestions(type,activity,user);
-    const item=items[0];
-    if(!item) return res.status(404).json({success:false,message:'No questions available'});
-    user.activeActivityType=type;
-    user.activeActivityQuestionId=String(item.id);
-    user.activeActivityStartedAt=new Date();
-    user.activitySecurityBlocked=false;
-    await user.save();
-    res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[item]});
-  } catch(e) {
-    console.error(e);
-    res.status(500).json({success:false,message:e.message});
-  }
+  const type=req.params.type; const activity=ACTIVITIES[type];
+  if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
+  const user=await User.findById(req.user.id);
+  if(!user) return res.status(404).json({success:false,message:'User not found'});
+  const items=pickRandomQuestions(type,activity,user);
+  const sessionToken=crypto.randomBytes(24).toString('hex');
+  mapSet(user.activitySessionToken,type,sessionToken);
+  mapSet(user.activityActiveStartedAt,type,new Date());
+  await user.save();
+  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items,sessionToken});
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1659,12 +1648,10 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     user.tabChanges=Number(user.tabChanges||0)+1;
     const current=mapGet(user.activityTabChanges,type);
     mapSet(user.activityTabChanges,type,current+1);
-    if(String(user.activeActivityType||'')===type){
-      user.activitySecurityBlocked=true;
-      user.activeActivityType='';
-      user.activeActivityQuestionId='';
-      user.activeActivityStartedAt=null;
-    }
+    mapSet(user.activitySessionToken,type,'');
+    mapSet(user.activityActiveStartedAt,type,null);
+    mapSet(user.activityActiveQuestion,type,-1);
+    user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
     await user.save();
     res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
@@ -1676,15 +1663,16 @@ router.post('/:type/submit', auth, async (req,res)=>{
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
-    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.activitySecurityBlocked)
-      return res.status(409).json({success:false,message:'This question was invalidated because you changed the tab/window. Wallet amount was not updated.'});
-    if(String(user.activeActivityType||'')!==type || String(user.activeActivityQuestionId||'')!==String(index))
-      return res.status(409).json({success:false,message:'This question is no longer active. Open the current question again.'});
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
+    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+    const sessionToken=String(req.body.sessionToken||'');
+    const expectedToken=String(mapGetString(user.activitySessionToken,type)||'');
+    if(!sessionToken || !expectedToken || sessionToken!==expectedToken){
+      return res.status(409).json({success:false,securityInvalidated:true,message:'Question invalidated because the tab/window was changed. No wallet update was made.'});
+    }
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
     if(!user.activityCounts) user.activityCounts={};
@@ -1707,9 +1695,8 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
-    user.activeActivityType='';
-    user.activeActivityQuestionId='';
-    user.activeActivityStartedAt=null;
+    mapSet(user.activitySessionToken,type,'');
+    mapSet(user.activityActiveStartedAt,type,null);
     await user.save();
     res.json({
       success:true,
@@ -1722,7 +1709,8 @@ router.post('/:type/submit', auth, async (req,res)=>{
       correctCount:correct?correctCount+1:correctCount,
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
-      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)
+      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
+      correctAnswer:expected
     });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });

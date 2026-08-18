@@ -76,31 +76,24 @@ router.post("/quiz", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        // IMPORTANT: the browser is not trusted for quiz results.
-        // /api/questions/answer creates this one-time server-side result.
-        // If the student changed tab/window first, that result is cleared.
-        if (typeof user.pendingQuizRewardCorrect !== "boolean" || !user.pendingQuizRewardAt) {
+        const pending = user.pendingQuizReward || {};
+        const created = pending.createdAt ? new Date(pending.createdAt).getTime() : 0;
+        const validPending = pending.questionId && created && (Date.now() - created) <= 120000;
+
+        if (!validPending) {
             return res.status(409).json({
-                success:false,
-                message:"No valid quiz reward is pending. Changing tab/window invalidates the question; wallet was not updated.",
-                ...walletResponse(user)
+                success:false, securityInvalidated:true,
+                message:"Quiz answer is no longer eligible for wallet update."
             });
         }
 
-        const age = Date.now() - new Date(user.pendingQuizRewardAt).getTime();
-        if (age < 0 || age > 15000) {
-            user.pendingQuizRewardCorrect = null;
-            user.pendingQuizRewardAt = null;
+        const correct = pending.correct === true;
+        const amount = Number(pending.reward);
+        if (![0.20, -0.30].includes(amount)) {
+            user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
             await user.save();
-            return res.status(409).json({
-                success:false,
-                message:"Quiz reward expired. Wallet was not updated.",
-                ...walletResponse(user)
-            });
+            return res.status(409).json({success:false,securityInvalidated:true,message:"Invalid reward claim."});
         }
-
-        const correct = user.pendingQuizRewardCorrect;
-        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
 
         const today = todayKey();
         if (user.dailyQuestionsDate !== today) {
@@ -110,19 +103,16 @@ router.post("/quiz", auth, async (req, res) => {
         }
 
         user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
-        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
+        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered || 0) + 1;
         user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
-        user.wallet = Number(user.wallet || 0) + amount;
-        if (user.wallet < 0) user.wallet = 0;
+        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
 
         if (correct) {
-            user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
-            user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
+            user.totalEarn = Number(user.totalEarn || 0) + 0.20;
+            user.quizScore = Number(user.quizScore || 0) + 0.20;
         }
 
-        // Consume the server-issued result so it cannot be replayed.
-        user.pendingQuizRewardCorrect = null;
-        user.pendingQuizRewardAt = null;
+        user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
         await user.save();
 
         return res.json({ ...walletResponse(user), reward: amount, correct });

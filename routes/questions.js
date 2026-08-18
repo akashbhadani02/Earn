@@ -60,9 +60,6 @@ router.get("/next", auth, async (req, res) => {
             if (!question) return res.status(404).json({ success:false, message:"No questions available" });
             user.activeQuizQuestionId = question._id;
             user.activeQuizStartedAt = new Date();
-            user.quizSecurityBlocked = false;
-            user.pendingQuizRewardCorrect = null;
-            user.pendingQuizRewardAt = null;
             await user.save();
         }
         return res.json({ success:true, question });
@@ -81,8 +78,6 @@ router.post("/answer", auth, async (req,res) => {
 
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
-        if (user.quizSecurityBlocked)
-            return res.status(409).json({ success:false, message:"This question was invalidated because you changed the tab/window. No wallet reward will be added." });
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
             return res.status(409).json({ success:false, message:"This question is no longer active." });
 
@@ -91,15 +86,22 @@ router.post("/answer", auth, async (req,res) => {
             return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
-        // Issue the result server-side. The wallet route can consume this exact
-        // result once; the browser cannot choose the reward or correct value.
-        user.pendingQuizRewardCorrect = correct;
-        user.pendingQuizRewardAt = new Date();
+
+        // The answer is validated here, but the wallet is NOT changed here.
+        // A one-time pending reward is created. If the student changes tab/window
+        // before claiming it, the security-event endpoint clears it and wallet
+        // remains exactly unchanged.
+        user.pendingQuizReward = {
+            questionId: question._id,
+            correct,
+            reward: correct ? 0.20 : -0.30,
+            createdAt: new Date()
+        };
         user.activeQuizQuestionId = null;
         user.activeQuizStartedAt = null;
         await user.save();
 
-        return res.json({ success:true, correct, correctIndex:Number(question.correct) });
+        return res.json({ success:true, correct, correctIndex:Number(question.correct), pendingReward:true });
     } catch(err) {
         console.error("Answer Check Error:",err);
         return res.status(500).json({ success:false, message:err.message });
@@ -108,30 +110,65 @@ router.post("/answer", auth, async (req,res) => {
 
 router.post("/abandon", auth, async (req,res) => {
     try {
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({success:false,message:"User not found"});
-        // Invalidate the unanswered question. If the browser later tries to
-        // submit it, /answer cannot create a pending reward.
-        user.quizSecurityBlocked = true;
-        user.activeQuizQuestionId = null;
-        user.activeQuizStartedAt = null;
-        user.pendingQuizRewardCorrect = null;
-        user.pendingQuizRewardAt = null;
-        await user.save();
-        return res.status(200).json({success:true,blocked:true,message:"Question invalidated. No wallet reward."});
-    } catch (e) {
-        return res.status(500).json({success:false,message:e.message});
+        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null,pendingQuizReward:{questionId:null,correct:false,reward:0,createdAt:null}}});
+        return res.json({success:true});
+    } catch(err) {
+        return res.status(500).json({success:false,message:err.message});
     }
 });
 
-// Legacy student question-bank endpoints are intentionally disabled.
-// They must never expose the correct answer to the browser. Students use /next only.
+// Fast student quiz endpoint: return a small random batch instead of the full question bank.
 router.get("/random", auth, async (req, res) => {
-    return res.status(410).json({ success:false, message:"Question bank download is disabled. Use the active question endpoint." });
+    try {
+        const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
+        await ensureQuestionsSeeded();
+        let questions = await Question.aggregate([
+            { $match: { q: { $type: "string" }, options: { $type: "array" } } },
+            { $sample: { size: count } },
+            { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
+        ]);
+        questions = questions.filter(q => q.q && Array.isArray(q.options) && q.options.length >= 2);
+        // Student endpoints never expose the correct index. The secure /next +
+        // /answer flow is used for earning/validation.
+        questions = questions.map(({q, options}) => ({q, options}));
+        if (!questions.length && seedQuestions.length) {
+            const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
+                Array.isArray(q.options) && q.options.length >= 2 &&
+                Number.isInteger(Number(q.correct)) && Number(q.correct) >= 0 &&
+                Number(q.correct) < q.options.length);
+            for (let i = valid.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [valid[i], valid[j]] = [valid[j], valid[i]];
+            }
+            questions = valid.slice(0, count).map(q => ({
+                q: String(q.q).trim(), options: q.options.map(String)
+            }));
+        }
+        return res.json({ success: true, totalQuestions: questions.length, questions });
+    } catch (err) {
+        console.error("Random Questions Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
 });
 
+// Student quiz question bank.
 router.get("/", auth, async (req, res) => {
-    return res.status(410).json({ success:false, message:"Question bank download is disabled. Use the active question endpoint." });
+    try {
+        await ensureQuestionsSeeded();
+
+        const questions = await Question.find()
+            .select("q options")
+            .lean();
+
+        return res.json({
+            success: true,
+            totalQuestions: questions.length,
+            questions
+        });
+    } catch (err) {
+        console.error("Load Questions Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
 });
 
 // Admin question list with optional search + pagination.

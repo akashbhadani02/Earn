@@ -107,32 +107,39 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Temporary 12-hour block. Admin and Student use the SAME expiry.
+        // Violations 1-3 create a timed block. The 4th violation is a
+        // permanent admin-only block and NEVER shows a timer.
         if (user.isBlocked) {
+            const permanent = Number(user.warningCount || 0) >= 4 && !user.blockUntil;
+            if (permanent) {
+                return res.status(403).json({
+                    success: false, blocked: true, permanentBlocked: true,
+                    message: "Your account is permanently blocked. Only admin can unblock it.",
+                    reason: user.blockReason || "Repeated security violations"
+                });
+            }
+
             const now = Date.now();
             const blockTime = getBlockRemainingMs(user, now);
-
             if (blockTime.remainingMs <= 0) {
                 user.isBlocked = false;
                 user.blockUntil = null;
                 user.blockReason = "";
-                user.warningCount = 0;
+                // IMPORTANT: warningCount is kept. The 4th violation must still
+                // become the permanent admin-only block.
                 await user.save();
             } else {
-                // Persist the fallback expiry for legacy records so every
-                // future Admin/Student request sees exactly the same end time.
                 if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
                     user.blockUntil = new Date(blockTime.untilMs);
                     await user.save();
                 }
-
                 return res.status(403).json({
-                    success: false,
-                    blocked: true,
-                    message: "Your account is blocked for 12 hours.",
+                    success: false, blocked: true, permanentBlocked: false,
+                    message: `Your account is temporarily blocked. Violation ${Math.min(Number(user.warningCount || 0),3)}/3.`,
                     reason: user.blockReason,
                     blockUntil: new Date(blockTime.untilMs).toISOString(),
-                    remainingMs: blockTime.remainingMs
+                    remainingMs: blockTime.remainingMs,
+                    warningCount: Number(user.warningCount || 0)
                 });
             }
         }
@@ -327,40 +334,36 @@ router.post("/block-me", auth, async (req, res) => {
             });
         }
 
-        // Increase warning count for every confirmed violation.
-        user.warningCount = (user.warningCount || 0) + 1;
+        // Every confirmed violation increments the permanent security counter.
+        user.warningCount = Number(user.warningCount || 0) + 1;
         user.blockReason = reason || "Cheating Detected";
         user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
         user.warningHistory.push({ time: new Date(), reason: user.blockReason });
         if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
 
-        // First 3 violations: warning only.
         if (user.warningCount <= 3) {
+            // First, second and third violation: 12-hour timed block.
+            user.isBlocked = true;
+            user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
             await user.save();
-
             return res.json({
-                success: true,
-                blocked: false,
-                warning: true,
+                success: true, blocked: true, warning: true, permanentBlocked: false,
                 warningCount: user.warningCount,
-                remainingWarnings: 3 - user.warningCount,
-                message: `Warning ${user.warningCount}/3`
+                message: `Temporary block ${user.warningCount}/3`,
+                blockUntil: user.blockUntil,
+                remainingMs: 12 * 60 * 60 * 1000
             });
         }
 
-        // 4th violation: block account for exactly 12 hours.
+        // 4th violation: permanent block. No timer. Admin must unblock.
         user.isBlocked = true;
-        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
+        user.blockUntil = null;
+        user.blockReason = (reason || "Repeated security violations") + " — permanent admin-only block";
         await user.save();
-
         return res.json({
-            success: true,
-            blocked: true,
-            warning: false,
+            success: true, blocked: true, warning: false, permanentBlocked: true,
             warningCount: user.warningCount,
-            message: "Account Blocked for 12 hours",
-            blockUntil: user.blockUntil,
-            remainingMs: 12 * 60 * 60 * 1000
+            message: "Permanent block. Only admin can unblock this student."
         });
 
     } catch (err) {
@@ -389,6 +392,11 @@ router.post("/security-event", auth, async (req, res) => {
 
         if (type === "tab_change") {
             user.tabChanges = Number(user.tabChanges || 0) + 1;
+            user.activeQuizQuestionId = null;
+            user.activeQuizStartedAt = null;
+            user.pendingQuizReward = { questionId: null, correct: false, reward: 0, createdAt: null };
+            user.activityActiveQuestion = {};
+            user.activityActiveStartedAt = {};
         } else if (type === "fast_answer") {
             user.fastAnswers = Number(user.fastAnswers || 0) + 1;
         } else if (type === "device") {
