@@ -13,3 +13,8 @@
 1. Set your MongoDB/JWT/VAPID environment variables.
 2. `npm install`
 3. `npm start` (or `node server.js`)
+
+## Vercel Notification Setup
+Student login intentionally requires browser Notifications permission. After permission is granted, the app registers a Web Push subscription and saves it for Admin -> Student notifications.
+
+In Vercel Project Settings -> Environment Variables, set: MONGODB_URI, JWT_SECRET, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT. Redeploy after adding/changing them.

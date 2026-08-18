@@ -11,7 +11,7 @@ function configureWebPush() {
 
     if (!publicKey || !privateKey || !subject) {
         throw new Error(
-            "Web Push is not configured. Add VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY and VAPID_SUBJECT (or VAPID_EMAIL) to Vercel Environment Variables."
+            "Web Push is not configured. In Vercel, add VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY and VAPID_SUBJECT under Project Settings → Environment Variables, then redeploy."
         );
     }
 
@@ -23,7 +23,7 @@ function getPublicKey() {
     const publicKey = String(process.env.VAPID_PUBLIC_KEY || "").trim();
 
     if (!publicKey) {
-        throw new Error("VAPID_PUBLIC_KEY is not configured in .env.");
+        throw new Error("VAPID_PUBLIC_KEY is not configured in Vercel Environment Variables.");
     }
 
     return publicKey;
