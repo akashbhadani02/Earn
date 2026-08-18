@@ -31,9 +31,10 @@ app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
 
-// Never expose the bundled question bank to students. Correct answers stay server-side.
+// Public fallback for the bundled quiz question bank.
 app.get("/question-bank.json", (req, res) => {
-    return res.status(404).json({ success:false, message:"Question bank is not publicly available." });
+    res.set("Cache-Control", "no-store");
+    res.sendFile(path.join(__dirname, "questions.json"));
 });
 
 app.use(express.static(path.join(__dirname, "public")));

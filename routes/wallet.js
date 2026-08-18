@@ -67,15 +67,85 @@ router.get("/", auth, async (req, res) => {
 
 // =============================
 // Quiz Reward
-// Quiz rewards are now granted ONLY by /api/questions/answer after the
-// server verifies the active question and selected option. This endpoint
-// intentionally refuses direct client-supplied reward claims.
+// Server decides the reward amount.
+// Frontend can only tell whether
+// the selected answer was correct.
 // =============================
 router.post("/quiz", auth, async (req, res) => {
-    return res.status(409).json({
-        success:false,
-        message:"Quiz reward is granted only after the active question is verified."
-    });
+    try {
+        const { correct } = req.body;
+
+        if (typeof correct !== "boolean") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid quiz result"
+            });
+        }
+
+        const amount = correct
+            ? QUIZ_CORRECT_REWARD
+            : -QUIZ_WRONG_PENALTY;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // =============================
+        // Count today's answered questions
+        // Every submitted answer counts:
+        // correct OR wrong.
+        // =============================
+        const today = todayKey();
+
+        if (user.dailyQuestionsDate !== today) {
+            user.dailyQuestionsDate = today;
+            user.dailyQuestionsAnswered = 0;
+            user.spinCycleQuestionsAnswered = 0;
+        }
+
+        user.dailyQuestionsAnswered =
+            Number(user.dailyQuestionsAnswered || 0) + 1;
+
+        user.spinCycleQuestionsAnswered =
+            Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
+
+        // Lifetime counter for Admin reporting.
+        // This never resets when the 100-question spin cycle resets.
+        user.totalQuestionsAnswered =
+            Number(user.totalQuestionsAnswered || 0) + 1;
+
+        user.wallet = Number(user.wallet || 0) + amount;
+
+        // Wallet should never become negative.
+        if (user.wallet < 0) {
+            user.wallet = 0;
+        }
+
+        // totalEarn = only actual positive earnings.
+        if (correct) {
+            user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
+            user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
+        }
+
+        await user.save();
+
+        return res.json({
+            ...walletResponse(user),
+            reward: amount,
+            correct
+        });
+    } catch (err) {
+        console.error("Quiz Reward Error:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
 });
 
 // =============================

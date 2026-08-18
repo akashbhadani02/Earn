@@ -1,18 +1,5 @@
 const mongoose = require("mongoose");
 
-// MongoDB may contain legacy/corrupted values such as {} in these fields.
-// Mongoose Date fields must receive a real Date, null, or an empty value.
-function safeDateValue(value) {
-    if (value === null || value === undefined || value === "") return null;
-    if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
-    if (typeof value === "number" || typeof value === "string") {
-        const d = new Date(value);
-        return Number.isNaN(d.getTime()) ? null : d;
-    }
-    // Never allow objects/arrays such as {} to reach Mongoose Date casting.
-    return null;
-}
-
 const userSchema = new mongoose.Schema(
     {
         name: {
@@ -84,17 +71,6 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
-        activeQuizQuestionId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Question",
-            default: null
-        },
-        activeQuizStartedAt: {
-            type: Date,
-            default: null,
-            set: safeDateValue
-        },
-
         isOnline: {
             type: Boolean,
             default: false
@@ -155,26 +131,13 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
-        // Anti-cheating cycle counters. warningCount resets after each timed block.
-        // blockCount counts automatic timed/final blocks: 1..3 = timed, 4 = permanent/admin-only.
+        // Number of anti-cheating warnings received by the student.
+        // 1st, 2nd and 3rd violation = warning.
+        // 4th violation = account blocked.
         warningCount: {
             type: Number,
             default: 0
         },
-        blockCount: {
-            type: Number,
-            default: 0
-        },
-        permanentBlocked: {
-            type: Boolean,
-            default: false
-        },
-        // The currently issued English-learning question. The correct answer never
-        // needs to be stored in the browser; the server resolves this index.
-        activeActivityType: { type: String, default: "" },
-        activeActivityQuestionId: { type: Number, default: null },
-        activeActivityStartedAt: { type: Date, default: null, set: safeDateValue },
-        activeActivityToken: { type: String, default: "" },
 
         lastClaim: {
             type: String,

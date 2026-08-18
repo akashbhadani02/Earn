@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
-const { getBlockRemainingMs, registerViolation } = require("../services/antiCheat");
 
 const router = express.Router();
 
@@ -60,38 +59,31 @@ router.post("/signup", async (req, res) => {
 // ==========================
 
 
+// ==========================
+// Shared block remaining-time calculation
+// Admin and Student login use the SAME server-side expiry.
+// ==========================
+function getBlockRemainingMs(user, nowMs = Date.now()) {
+    let untilMs = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
+
+    // Legacy blocked users without blockUntil: use the same fallback
+    // as Admin's blocked-students endpoint.
+    if (!untilMs || Number.isNaN(untilMs)) {
+        const startedMs = user.updatedAt ? new Date(user.updatedAt).getTime() : nowMs;
+        untilMs = startedMs + 12 * 60 * 60 * 1000;
+    }
+
+    return {
+        untilMs,
+        remainingMs: Math.max(0, untilMs - nowMs)
+    };
+}
+
 router.post("/login", async (req, res) => {
 
     try {
 
         const { mobile, password } = req.body;
-
-        // Repair legacy/corrupt activity date values before Mongoose hydrates
-        // the document. Older records can contain {} in activeActivityStartedAt,
-        // which causes: "Cast to date failed for value {}" during user.save().
-        // This is a direct MongoDB update, so it works even when the existing
-        // value cannot be cast by Mongoose.
-        try {
-            await User.collection.updateMany(
-                {
-                    $or: [
-                        { activeActivityStartedAt: { $type: "object" } },
-                        { activeActivityStartedAt: { $type: "array" } },
-                        { activeQuizStartedAt: { $type: "object" } },
-                        { activeQuizStartedAt: { $type: "array" } }
-                    ]
-                },
-                {
-                    $set: {
-                        activeActivityStartedAt: null,
-                        activeQuizStartedAt: null
-                    }
-                }
-            );
-        } catch (repairError) {
-            console.error("Activity date repair warning:", repairError.message);
-            // Do not block login just because the cleanup query failed.
-        }
 
         const user = await User.findOne({ mobile, isDeleted: { $ne: true } });
 
@@ -115,18 +107,11 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Anti-cheating block gate. The first 3 automatic blocks are timed (12h).
-        // The 4th automatic block is permanent and can only be cleared by Admin.
+        // Temporary 12-hour block. Admin and Student use the SAME expiry.
         if (user.isBlocked) {
             const now = Date.now();
-            if (user.permanentBlocked || Number(user.blockCount || 0) >= 4) {
-                return res.status(403).json({
-                    success: false, blocked: true, permanentBlocked: true,
-                    message: "Your account is permanently blocked. Please contact the administrator.",
-                    reason: user.blockReason || "Security violation"
-                });
-            }
             const blockTime = getBlockRemainingMs(user, now);
+
             if (blockTime.remainingMs <= 0) {
                 user.isBlocked = false;
                 user.blockUntil = null;
@@ -134,14 +119,20 @@ router.post("/login", async (req, res) => {
                 user.warningCount = 0;
                 await user.save();
             } else {
-                if (!user.blockUntil) { user.blockUntil = new Date(blockTime.untilMs); await user.save(); }
+                // Persist the fallback expiry for legacy records so every
+                // future Admin/Student request sees exactly the same end time.
+                if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
+                    user.blockUntil = new Date(blockTime.untilMs);
+                    await user.save();
+                }
+
                 return res.status(403).json({
-                    success: false, blocked: true, permanentBlocked: false,
-                    message: "Your account is temporarily blocked.",
-                    reason: user.blockReason || "Security violation",
+                    success: false,
+                    blocked: true,
+                    message: "Your account is blocked for 12 hours.",
+                    reason: user.blockReason,
                     blockUntil: new Date(blockTime.untilMs).toISOString(),
-                    remainingMs: blockTime.remainingMs,
-                    blockCount: Number(user.blockCount || 0)
+                    remainingMs: blockTime.remainingMs
                 });
             }
         }
@@ -292,15 +283,97 @@ router.post("/offline", async (req, res) => {
 const auth = require("../middleware/auth");
 
 router.post("/block-me", auth, async (req, res) => {
+
     try {
+
+        const { reason } = req.body;
+
         const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success:false, message:"User not found" });
-        const result = await registerViolation(user, req.body?.reason);
-        return res.json({ success:true, ...result, message: result.permanentBlocked ? "Permanent block — Admin must unblock this student." : result.blocked ? `Account blocked (${result.blockCount}/3 timed blocks used).` : `Warning ${result.warningCount}/3` });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        // Already blocked
+        if (user.isBlocked) {
+            const now = Date.now();
+            const blockTime = getBlockRemainingMs(user, now);
+
+            if (blockTime.remainingMs <= 0) {
+                user.isBlocked = false;
+                user.blockUntil = null;
+                user.blockReason = "";
+                user.warningCount = 0;
+                await user.save();
+                return res.json({ success: true, blocked: false, warning: false, warningCount: 0, message: "Block expired" });
+            }
+
+            if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
+                user.blockUntil = new Date(blockTime.untilMs);
+                await user.save();
+            }
+
+            return res.json({
+                success: true,
+                blocked: true,
+                warning: false,
+                warningCount: user.warningCount || 0,
+                message: "Account is already blocked",
+                blockUntil: new Date(blockTime.untilMs).toISOString(),
+                remainingMs: blockTime.remainingMs
+            });
+        }
+
+        // Increase warning count for every confirmed violation.
+        user.warningCount = (user.warningCount || 0) + 1;
+        user.blockReason = reason || "Cheating Detected";
+        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
+        user.warningHistory.push({ time: new Date(), reason: user.blockReason });
+        if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
+
+        // First 3 violations: warning only.
+        if (user.warningCount <= 3) {
+            await user.save();
+
+            return res.json({
+                success: true,
+                blocked: false,
+                warning: true,
+                warningCount: user.warningCount,
+                remainingWarnings: 3 - user.warningCount,
+                message: `Warning ${user.warningCount}/3`
+            });
+        }
+
+        // 4th violation: block account for exactly 12 hours.
+        user.isBlocked = true;
+        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
+        await user.save();
+
+        return res.json({
+            success: true,
+            blocked: true,
+            warning: false,
+            warningCount: user.warningCount,
+            message: "Account Blocked for 12 hours",
+            blockUntil: user.blockUntil,
+            remainingMs: 12 * 60 * 60 * 1000
+        });
+
     } catch (err) {
+
         console.error("Warning/Block Error:", err);
-        return res.status(500).json({ success:false, message:err.message });
+
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
     }
+
 });
 
 

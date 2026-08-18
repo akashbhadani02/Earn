@@ -2,16 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const Question = require("../models/Question");
-const User = require("../models/User");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
-const { registerViolation } = require("../services/antiCheat");
 const seedQuestions = require("../questions.json");
 
 let seedPromise = null;
-const QUIZ_CORRECT_REWARD = 0.20;
-const QUIZ_WRONG_PENALTY = 0.30;
-function todayKey() { return new Intl.DateTimeFormat("en-CA", { timeZone:"Asia/Kolkata", year:"numeric", month:"2-digit", day:"2-digit" }).format(new Date()); }
 
 async function ensureQuestionsSeeded() {
     if (seedPromise) return seedPromise;
@@ -43,87 +38,6 @@ async function ensureQuestionsSeeded() {
     return seedPromise;
 }
 
-// Secure quiz endpoints. The correct answer never goes to the browser.
-router.get("/next", auth, async (req, res) => {
-    try {
-        await ensureQuestionsSeeded();
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success:false, message:"User not found" });
-
-        let question = user.activeQuizQuestionId
-            ? await Question.findById(user.activeQuizQuestionId).select("_id q options").lean()
-            : null;
-
-        if (!question) {
-            const picked = await Question.aggregate([
-                { $match:{ q:{ $type:"string" }, options:{ $type:"array" } } },
-                { $sample:{ size:1 } },
-                { $project:{ _id:1, q:1, options:1 } }
-            ]);
-            question = picked[0];
-            if (!question) return res.status(404).json({ success:false, message:"No questions available" });
-            user.activeQuizQuestionId = question._id;
-            user.activeQuizStartedAt = new Date();
-            await user.save();
-        }
-        return res.json({ success:true, question });
-    } catch(err) {
-        console.error("Next Question Error:",err);
-        return res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-router.post("/answer", auth, async (req,res) => {
-    try {
-        const { questionId, answerIndex } = req.body || {};
-        const index = Number(answerIndex);
-        if (!questionId || !Number.isInteger(index) || index < 0)
-            return res.status(400).json({ success:false, message:"Invalid answer" });
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success:false, message:"User not found" });
-        if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
-            return res.status(409).json({ success:false, message:"This question is no longer active. Your wallet was not changed." });
-        const question = await Question.findById(questionId).select("options correct").lean();
-        if (!question || index >= question.options.length)
-            return res.status(400).json({ success:false, message:"Invalid question or answer" });
-        const correct = index === Number(question.correct);
-        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
-        const today = todayKey();
-        if (user.dailyQuestionsDate !== today) {
-            user.dailyQuestionsDate = today; user.dailyQuestionsAnswered = 0; user.spinCycleQuestionsAnswered = 0;
-        }
-        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
-        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered || 0) + 1;
-        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
-        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
-        if (correct) {
-            user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
-            user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
-        }
-        user.activeQuizQuestionId = null; user.activeQuizStartedAt = null;
-        await user.save();
-        return res.json({ success:true, correct, correctIndex:Number(question.correct), reward:amount, wallet:Number(user.wallet||0), totalEarn:Number(user.totalEarn||0), dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0), totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0), spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0) });
-    } catch(err) {
-        console.error("Answer Check Error:",err);
-        return res.status(500).json({success:false,message:err.message});
-    }
-});
-
-router.post("/abandon", auth, async (req,res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({success:false,message:"User not found"});
-        const hadActive = !!user.activeQuizQuestionId;
-        user.activeQuizQuestionId=null; user.activeQuizStartedAt=null;
-        await user.save();
-        if (hadActive) {
-            const security = await registerViolation(user, "Tab/window changed during Quiz");
-            return res.json({success:true, invalidated:true, security});
-        }
-        return res.json({success:true,invalidated:false});
-    } catch(err) { return res.status(500).json({success:false,message:err.message}); }
-});
-
 // Fast student quiz endpoint: return a small random batch instead of the full question bank.
 router.get("/random", auth, async (req, res) => {
     try {
@@ -132,9 +46,11 @@ router.get("/random", auth, async (req, res) => {
         let questions = await Question.aggregate([
             { $match: { q: { $type: "string" }, options: { $type: "array" } } },
             { $sample: { size: count } },
-            { $project: { q: 1, options: 1, _id: 1 } }
+            { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
         ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) && q.options.length >= 2);
+        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
+            q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
+            Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
         if (!questions.length && seedQuestions.length) {
             const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
                 Array.isArray(q.options) && q.options.length >= 2 &&
@@ -144,8 +60,8 @@ router.get("/random", auth, async (req, res) => {
                 const j = Math.floor(Math.random() * (i + 1));
                 [valid[i], valid[j]] = [valid[j], valid[i]];
             }
-            questions = valid.slice(0, count).map((q, i) => ({
-                _id: "seed-" + i, q: String(q.q).trim(), options: q.options.map(String)
+            questions = valid.slice(0, count).map(q => ({
+                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
             }));
         }
         return res.json({ success: true, totalQuestions: questions.length, questions });
@@ -161,7 +77,7 @@ router.get("/", auth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options")
+            .select("q options correct")
             .lean();
 
         return res.json({
@@ -187,7 +103,7 @@ router.get("/admin", adminAuth, async (req, res) => {
 
         const [questions, total] = await Promise.all([
             Question.find(filter)
-                .select("q options")
+                .select("q options correct")
                 .sort({ _id: 1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
@@ -215,7 +131,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options")
+            .select("q options correct")
             .sort({ _id: 1 })
             .lean();
 
