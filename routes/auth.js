@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const router = express.Router();
+const { registerViolation, getBlockRemainingMs, BLOCK_DURATION_MS, WARNINGS_PER_BLOCK } = require("../services/antiCheat");
 
 
 // ==========================
@@ -59,26 +60,6 @@ router.post("/signup", async (req, res) => {
 // ==========================
 
 
-// ==========================
-// Shared block remaining-time calculation
-// Admin and Student login use the SAME server-side expiry.
-// ==========================
-function getBlockRemainingMs(user, nowMs = Date.now()) {
-    let untilMs = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
-
-    // Legacy blocked users without blockUntil: use the same fallback
-    // as Admin's blocked-students endpoint.
-    if (!untilMs || Number.isNaN(untilMs)) {
-        const startedMs = user.updatedAt ? new Date(user.updatedAt).getTime() : nowMs;
-        untilMs = startedMs + 12 * 60 * 60 * 1000;
-    }
-
-    return {
-        untilMs,
-        remainingMs: Math.max(0, untilMs - nowMs)
-    };
-}
-
 router.post("/login", async (req, res) => {
 
     try {
@@ -107,7 +88,7 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Temporary 12-hour block. Admin and Student use the SAME expiry.
+        // Temporary 3-hour block. Admin and Student use the SAME expiry.
         if (user.isBlocked) {
             const now = Date.now();
             const blockTime = getBlockRemainingMs(user, now);
@@ -129,7 +110,7 @@ router.post("/login", async (req, res) => {
                 return res.status(403).json({
                     success: false,
                     blocked: true,
-                    message: "Your account is blocked for 12 hours.",
+                    message: user.permanentBlocked ? "Your account is permanently blocked. Admin must unblock it." : "Your account is blocked for 3 hours.",
                     reason: user.blockReason,
                     blockUntil: new Date(blockTime.untilMs).toISOString(),
                     remainingMs: blockTime.remainingMs
@@ -276,104 +257,24 @@ router.post("/offline", async (req, res) => {
 
 // ==========================
 // Student Warning / Block System
-
-// 1st, 2nd, 3rd violation = Warning
-// 4th violation = Account Blocked
-// ==========================
-const auth = require("../middleware/auth");
-
+// 4 warnings -> one 3-hour block.
+// First 3 blocks are temporary; the 4th block is permanent and admin-only.
 router.post("/block-me", auth, async (req, res) => {
-
     try {
-
-        const { reason } = req.body;
-
         const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        // Already blocked
-        if (user.isBlocked) {
-            const now = Date.now();
-            const blockTime = getBlockRemainingMs(user, now);
-
-            if (blockTime.remainingMs <= 0) {
-                user.isBlocked = false;
-                user.blockUntil = null;
-                user.blockReason = "";
-                user.warningCount = 0;
-                await user.save();
-                return res.json({ success: true, blocked: false, warning: false, warningCount: 0, message: "Block expired" });
-            }
-
-            if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
-                user.blockUntil = new Date(blockTime.untilMs);
-                await user.save();
-            }
-
-            return res.json({
-                success: true,
-                blocked: true,
-                warning: false,
-                warningCount: user.warningCount || 0,
-                message: "Account is already blocked",
-                blockUntil: new Date(blockTime.untilMs).toISOString(),
-                remainingMs: blockTime.remainingMs
-            });
-        }
-
-        // Increase warning count for every confirmed violation.
-        user.warningCount = (user.warningCount || 0) + 1;
-        user.blockReason = reason || "Cheating Detected";
-        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
-        user.warningHistory.push({ time: new Date(), reason: user.blockReason });
-        if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
-
-        // First 3 violations: warning only.
-        if (user.warningCount <= 3) {
-            await user.save();
-
-            return res.json({
-                success: true,
-                blocked: false,
-                warning: true,
-                warningCount: user.warningCount,
-                remainingWarnings: 3 - user.warningCount,
-                message: `Warning ${user.warningCount}/3`
-            });
-        }
-
-        // 4th violation: block account for exactly 12 hours.
-        user.isBlocked = true;
-        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
-        await user.save();
-
+        const result = await registerViolation(user, req.body?.reason || "Cheating Detected");
         return res.json({
             success: true,
-            blocked: true,
-            warning: false,
-            warningCount: user.warningCount,
-            message: "Account Blocked for 12 hours",
-            blockUntil: user.blockUntil,
-            remainingMs: 12 * 60 * 60 * 1000
+            ...result,
+            blockDurationMs: result.permanentBlocked ? 0 : (result.blocked ? BLOCK_DURATION_MS : 0),
+            warningsPerBlock: WARNINGS_PER_BLOCK
         });
-
     } catch (err) {
-
         console.error("Warning/Block Error:", err);
-
-        return res.status(500).json({
-            success: false,
-            message: err.message
-        });
-
+        return res.status(500).json({ success: false, message: err.message });
     }
-
 });
 
 

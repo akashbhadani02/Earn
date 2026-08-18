@@ -125,18 +125,30 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
-        // Temporary anti-cheating block expiry time. Block lasts 12 hours.
+        // Temporary anti-cheating block expiry time. Each automatic block lasts 3 hours.
         blockUntil: {
             type: Date,
             default: null
         },
 
-        // Number of anti-cheating warnings received by the student.
-        // 1st, 2nd and 3rd violation = warning.
-        // 4th violation = account blocked.
+        // Number of anti-cheating warnings in the current warning cycle.
+        // 1st-4th violation = warning; the 4th warning triggers a block.
         warningCount: {
             type: Number,
             default: 0
+        },
+
+        // Number of automatic 3-hour blocks already completed.
+        // Blocks 1-3 are temporary; block 4 is permanent/admin-only.
+        blockCount: {
+            type: Number,
+            default: 0
+        },
+
+        // Set only for the 4th block. Admin must manually unblock.
+        permanentBlocked: {
+            type: Boolean,
+            default: false
         },
 
         lastClaim: {

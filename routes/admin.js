@@ -829,10 +829,15 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
 
         user.isBlocked = false;
         user.blockUntil = null;
+        user.permanentBlocked = false;
+        user.warningCount = 0;
+        user.blockCount = 0;
         user.blockReason = "";
 
-        // Reset warning system
+        // Admin unblock restores the student to a fresh warning/block cycle.
         user.warningCount = 0;
+        user.blockCount = 0;
+        user.permanentBlocked = false;
 
         // Reset online status (optional)
         user.lastSeen = new Date();
@@ -1080,7 +1085,7 @@ router.put("/control-center/block/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = true;
-        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
+        user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
         user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
         await user.save();
         return res.json({success:true,message:"Student blocked"});
@@ -1093,6 +1098,9 @@ router.put("/control-center/unblock/:id", adminAuth, async (req,res) => {
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = false;
         user.blockUntil = null;
+        user.permanentBlocked = false;
+        user.warningCount = 0;
+        user.blockCount = 0;
         user.blockReason = "";
         await user.save();
         return res.json({success:true,message:"Student unblocked"});
@@ -1103,17 +1111,44 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
     try {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
+
         const reason = String(req.body.reason || "Admin warning").slice(0,500);
         user.warningCount = Number(user.warningCount || 0) + 1;
         user.warningHistory = user.warningHistory || [];
         user.warningHistory.push({ time:new Date(), reason });
-        if(user.warningCount >= 3){
+
+        if(user.warningCount >= 4){
+            user.warningCount = 0;
+            user.blockCount = Number(user.blockCount || 0) + 1;
+            user.wallet = 0;
             user.isBlocked = true;
-            user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
-            user.blockReason = "Automatic block after 3 warnings";
+            user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+
+            if(user.blockCount >= 4){
+                user.permanentBlocked = true;
+                user.blockUntil = null;
+                user.blockReason = "Automatic block after 4 warnings — 4th block requires admin unblock";
+            } else {
+                user.permanentBlocked = false;
+                user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
+                user.blockReason = `Automatic 3-hour block (${user.blockCount}/3 temporary blocks)`;
+            }
         }
+
         await user.save();
-        return res.json({success:true,message:user.isBlocked?"3 warnings reached: student blocked":"Warning added",warningCount:user.warningCount,isBlocked:user.isBlocked});
+        return res.json({
+            success:true,
+            message:user.permanentBlocked
+              ? "4th block reached: admin unblock required"
+              : user.isBlocked
+                ? `4 warnings reached: student blocked for 3 hours (${user.blockCount}/3)`
+                : `Warning ${user.warningCount}/4 added`,
+            warningCount:user.warningCount,
+            blockCount:Number(user.blockCount||0),
+            isBlocked:user.isBlocked,
+            permanentBlocked:!!user.permanentBlocked,
+            remainingMs:user.isBlocked && user.blockUntil ? Math.max(0,new Date(user.blockUntil).getTime()-Date.now()) : 0
+        });
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
@@ -1217,18 +1252,47 @@ router.get("/pro/user/:id", adminAuth, async(req,res)=>{
 
 router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
     try{
-        const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
+        const u=await User.findById(req.params.id);
+        if(!u)return res.status(404).json({success:false,message:"Student not found"});
         const reason=String(req.body.reason||"Admin warning").slice(0,500);
+
         u.warningCount=Number(u.warningCount||0)+1;
         u.warningHistory=u.warningHistory||[];
         u.warningHistory.push({time:new Date(),reason});
-        if(u.warningCount>=3){
+
+        if(u.warningCount>=4){
+            u.warningCount=0;
+            u.blockCount=Number(u.blockCount||0)+1;
             u.isBlocked=true;
-            u.blockReason="Automatic block after 3 warnings";
-            u.blockUntil=new Date(Date.now() + 12 * 60 * 60 * 1000);
+            u.sessionVersion=Number(u.sessionVersion||0)+1;
+            u.wallet=0;
+
+            if(u.blockCount>=4){
+                u.permanentBlocked=true;
+                u.blockUntil=null;
+                u.blockReason="Automatic block after 4 warnings — 4th block requires admin unblock";
+            }else{
+                u.permanentBlocked=false;
+                u.blockUntil=new Date(Date.now()+3*60*60*1000);
+                u.blockReason=`Automatic 3-hour block (${u.blockCount}/3 temporary blocks)`;
+            }
         }
-        await proAdminLog(u,"WARNING",reason); await u.save();
-        res.json({success:true,message:u.isBlocked?"3 warnings reached — student blocked":"Warning added",warningCount:u.warningCount});
+
+        await proAdminLog(u,"WARNING",reason);
+        await u.save();
+        res.json({
+            success:true,
+            message:u.permanentBlocked
+              ? "4th block reached — admin unblock required"
+              : u.isBlocked
+                ? `4 warnings reached — student blocked for 3 hours (${u.blockCount}/3)`
+                : `Warning ${u.warningCount}/4 added`,
+            warningCount:u.warningCount,
+            blockCount:Number(u.blockCount||0),
+            isBlocked:!!u.isBlocked,
+            permanentBlocked:!!u.permanentBlocked,
+            remainingMs:u.isBlocked&&u.blockUntil?Math.max(0,new Date(u.blockUntil).getTime()-Date.now()):0
+        });
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
@@ -1237,7 +1301,8 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
         const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
         u.isBlocked=req.body.blocked!==false;
         u.blockReason=String(req.body.reason||"Admin action");
-        u.blockUntil=u.isBlocked ? new Date(Date.now() + 12 * 60 * 60 * 1000) : null;
+        u.permanentBlocked=false;
+        u.blockUntil=u.isBlocked ? new Date(Date.now() + 3 * 60 * 60 * 1000) : null;
         await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason);
         await u.save();
         res.json({success:true,blocked:u.isBlocked});
@@ -1317,7 +1382,7 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
             // from updatedAt so the admin timer still has a real end time.
             if (!until || Number.isNaN(until.getTime())) {
                 const started = u.updatedAt ? new Date(u.updatedAt) : now;
-                until = new Date(started.getTime() + 12 * 60 * 60 * 1000);
+                until = new Date(started.getTime() + 3 * 60 * 60 * 1000);
                 // Persist the canonical expiry so Student and Admin always
                 // calculate from the exact same blockUntil value.
                 await User.updateOne(

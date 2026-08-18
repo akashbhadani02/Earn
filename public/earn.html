@@ -1706,7 +1706,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 warningRequestRunning = false;
 
-                // 4th violation: account is blocked.
+                // 4th warning in the current cycle: account is blocked for 3 hours (or permanently on the 4th block).
                 if (data.blocked) {
 
                     alreadyBlocked = true;
@@ -1732,7 +1732,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     return;
                 }
 
-                // 1st, 2nd and 3rd violation: warning only.
+                // 1st, 2nd and 3rd violation: warning only; the 4th violation triggers a block.
                 if (data.warning) {
 
                     warningMode = false;
@@ -1741,21 +1741,21 @@ body.notification-locked #notificationRequiredOverlay button{
 
                     if (data.warningCount === 1) {
                         warningMessage =
-                            "⚠️ WARNING 1/3\n\n" +
+                            "⚠️ WARNING 1/4\n\n" +
                             "આ તમારી પહેલી ચેતવણી છે.\n" +
                             "મહેરબાની કરીને નિયમોનુ પાલન કરો .\n\n" +
                             "Reason: " + reason;
                     } else if (data.warningCount === 2) {
                         warningMessage =
-                            "⚠️ WARNING 2/3\n\n" +
+                            "⚠️ WARNING 2/4\n\n" +
                             "આ તમારી બીજી ચેતવણી છે.\n" +
                             "હજુ એકવાર ચેતવણી આપીએ છીએ બ્લોક કરતાં પહેલા.\n\n" +
                             "Reason: " + reason;
                     } else {
                         warningMessage =
-                            "⚠️ FINAL WARNING 3/3\n\n" +
-                            "આ તમારી છેલ્લી ચેતવણી છે, હવે ચેતવણી આપવામાં નહીં આવે.\n" +
-                            "હવે નિયમોનુ ઉલ્લંઘન કરશો તો કમ્પ્યુટર/મોબાઈલ બ્લોક કરી દેશે.\n\n" +
+                            "⚠️ WARNING 3/4\n\n" +
+                            "આ ત્રીજી ચેતવણી છે. હજુ એક ચેતવણી પછી 3 કલાકનો બ્લોક લાગશે.\n" +
+                            "આગામી ચેતવણી મળતાં 3 કલાકનો બ્લોક લાગશે.\n\n" +
                             "Reason: " + reason;
                     }
 
