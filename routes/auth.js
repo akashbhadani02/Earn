@@ -91,6 +91,20 @@ router.post("/login", async (req, res) => {
         // Temporary 3-hour block. Admin and Student use the SAME expiry.
         if (user.isBlocked) {
             const now = Date.now();
+
+            // Permanent block: never auto-expire or clear it. Only Admin
+            // unblock is allowed to reset this state.
+            if (user.permanentBlocked || Number(user.blockCount || 0) >= 4) {
+                return res.status(403).json({
+                    success: false,
+                    blocked: true,
+                    permanentBlocked: true,
+                    message: "Your account is permanently blocked. Admin must unblock it.",
+                    reason: user.blockReason || "Permanent block",
+                    remainingMs: 0
+                });
+            }
+
             const blockTime = getBlockRemainingMs(user, now);
 
             if (blockTime.remainingMs <= 0) {
@@ -98,6 +112,8 @@ router.post("/login", async (req, res) => {
                 user.blockUntil = null;
                 user.blockReason = "";
                 user.warningCount = 0;
+                // blockCount is intentionally preserved so the next block
+                // becomes 2/3, 3/3, and then the 4th permanent block.
                 await user.save();
             } else {
                 // Persist the fallback expiry for legacy records so every

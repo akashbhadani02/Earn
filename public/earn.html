@@ -1720,12 +1720,17 @@ body.notification-locked #notificationRequiredOverlay button{
                         return h + ":" + m + ":" + s;
                     }
 
-                    alert(
-                        "🚫 Your account has been blocked.\n\n" +
-                        "Reason: " + reason + "\n\n" +
-                        "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
-                        "You can login again after the timer reaches 00:00:00."
-                    );
+                    const blockMessage = data.permanentBlocked
+                        ? ("🚫 Your account is permanently blocked.\n\n" +
+                           "Reason: " + reason + "\n\n" +
+                           "Only Admin can unblock your account.")
+                        : ("🚫 Your account has been blocked for 3 hours.\n\n" +
+                           "Reason: " + reason + "\n\n" +
+                           "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
+                           "Your wallet has been reset to 0.\n" +
+                           "You can login again after the timer reaches 00:00:00.");
+
+                    alert(blockMessage);
 
                     localStorage.removeItem("token");
                     location.href = "login.html";

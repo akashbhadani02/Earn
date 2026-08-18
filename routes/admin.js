@@ -1085,8 +1085,11 @@ router.put("/control-center/block/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = true;
+        user.permanentBlocked = false;
         user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
         user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
+        user.wallet = 0;
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
         await user.save();
         return res.json({success:true,message:"Student blocked"});
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
@@ -1303,6 +1306,10 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
         u.blockReason=String(req.body.reason||"Admin action");
         u.permanentBlocked=false;
         u.blockUntil=u.isBlocked ? new Date(Date.now() + 3 * 60 * 60 * 1000) : null;
+        if (u.isBlocked) {
+            u.wallet = 0;
+            u.sessionVersion = Number(u.sessionVersion || 0) + 1;
+        }
         await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason);
         await u.save();
         res.json({success:true,blocked:u.isBlocked});
