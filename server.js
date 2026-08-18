@@ -31,19 +31,6 @@ app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
 
-// Public fallback for the bundled quiz question bank.
-app.get("/question-bank.json", (req, res) => {
-    // Never expose correct answers to the browser. The quiz uses the secure
-    // /api/questions/next endpoint for answer validation.
-    res.set("Cache-Control", "no-store");
-    try {
-        const bank = require("./questions.json");
-        res.json(Array.isArray(bank) ? bank.map(q => ({ q:q.q, options:q.options })) : []);
-    } catch (err) {
-        res.status(500).json({success:false,message:"Question bank unavailable"});
-    }
-});
-
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{

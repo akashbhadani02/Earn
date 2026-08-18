@@ -80,19 +80,6 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null
         },
-        // If true, the active quiz answer may be checked but must not change wallet.
-        activeQuizRewardBlocked: {
-            type: Boolean,
-            default: false
-        },
-        quizRewardPending: {
-            type: Boolean,
-            default: false
-        },
-        quizRewardCorrect: {
-            type: Boolean,
-            default: false
-        },
 
         isOnline: {
             type: Boolean,
@@ -160,33 +147,6 @@ const userSchema = new mongoose.Schema(
         warningCount: {
             type: Number,
             default: 0
-        },
-
-        // Number of completed anti-cheating temporary blocks.
-        // Blocks 1-3 have a timer; block 4+ is permanent until admin unblocks.
-        blockCount: {
-            type: Number,
-            default: 0
-        },
-
-        // True when the current question was invalidated by a tab/window change.
-        // The corresponding answer must never update the wallet.
-        quizTabViolation: {
-            type: Boolean,
-            default: false
-        },
-
-        // Per-activity tab-change invalidation flags.
-        activityTabViolation: {
-            type: Map,
-            of: Boolean,
-            default: {}
-        },
-
-        activityRewardBlocked: {
-            type: Map,
-            of: Boolean,
-            default: {}
         },
 
         lastClaim: {

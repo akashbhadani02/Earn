@@ -1327,28 +1327,16 @@ body.notification-locked #notificationRequiredOverlay button{
             return id;
         }
 
-        async function recordSecurityEvent(type, activityType = "") {
+        async function recordSecurityEvent(type) {
             try {
-                const response = await fetch("/api/auth/security-event", {
+                await fetch("/api/auth/security-event", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + localStorage.getItem("token")
                     },
-                    body: JSON.stringify({ type, activityType, deviceId: getSecurityDeviceId() })
+                    body: JSON.stringify({ type, deviceId: getSecurityDeviceId() })
                 });
-                const data = await response.json().catch(() => ({}));
-                if (type === "tab_change") {
-                    if (data.warning) {
-                        alert("⚠️ WARNING " + Number(data.warningCount || 1) + "/3\n\nTab/web change detected while answering.\nBlock cycle: " + Number(data.blockCount || 0) + "/3");
-                    } else if (data.blocked) {
-                        alert(data.permanent
-                            ? "🚫 PERMANENT BLOCK\n\nOnly admin can unblock this account."
-                            : "🚫 ACCOUNT BLOCKED\n\nBlock " + Number(data.blockCount || 1) + "/3\nTimer has started.");
-                        localStorage.removeItem("token");
-                        window.location.replace("login.html");
-                    }
-                }
             } catch (e) {
                 console.warn("Security event was not recorded:", e);
             }
@@ -1451,23 +1439,12 @@ body.notification-locked #notificationRequiredOverlay button{
                         return h + ":" + m + ":" + s;
                     }
 
-                    if (data.permanent) {
-                        alert(
-                            "🚫 PERMANENT BLOCK\n\n" +
-                            "Reason: " + reason + "\n\n" +
-                            "Block #" + Number(data.blockCount || 4) + " complete.\n" +
-                            "No timer and no further warnings will be shown.\n\n" +
-                            "Only the administrator can unblock this account."
-                        );
-                    } else {
-                        alert(
-                            "🚫 Your account has been blocked.\n\n" +
-                            "Block: " + Number(data.blockCount || 1) + "/3\n" +
-                            "Reason: " + reason + "\n\n" +
-                            "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
-                            "You can login again after the timer reaches 00:00:00."
-                        );
-                    }
+                    alert(
+                        "🚫 Your account has been blocked.\n\n" +
+                        "Reason: " + reason + "\n\n" +
+                        "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
+                        "You can login again after the timer reaches 00:00:00."
+                    );
 
                     localStorage.removeItem("token");
                     location.href = "login.html";
@@ -1671,25 +1648,10 @@ body.notification-locked #notificationRequiredOverlay button{
                     console.warn("Random question API unavailable, using fallback.", apiErr);
                 }
 
-                // Server-side bundled JSON fallback.
-                if (!list.length) {
-                    const fallback = await fetch("/question-bank.json", { cache: "no-store" });
-                    if (fallback.ok) {
-                        const fallbackData = await fallback.json();
-                        list = Array.isArray(fallbackData) ? fallbackData : [];
-                    }
-                }
-
                 quizData = list.filter(q => {
-                    const correct = Number(q?.correct);
                     return q && typeof q.q === "string" && q.q.trim() &&
-                        Array.isArray(q.options) && q.options.length >= 2 &&
-                        Number.isInteger(correct) && correct >= 0 && correct < q.options.length;
-                }).map(q => ({
-                    q: String(q.q).trim(),
-                    options: q.options.map(String),
-                    correct: Number(q.correct)
-                }));
+                        Array.isArray(q.options) && q.options.length >= 2;
+                }).map(q => ({ q: String(q.q).trim(), options: q.options.map(String) }));
 
                 if (!quizData.length) throw new Error("Question bank is empty or invalid.");
                 console.log("Quiz question bank loaded:", quizData.length);
@@ -2074,8 +2036,12 @@ body.notification-locked #notificationRequiredOverlay button{
                     }
                     tabWasChanged = true;
                     tabChangedScreen = activityOpen ? "activity" : "quiz";
-                    await recordSecurityEvent("tab_change", activityOpen ? activityType : "");
-
+                    recordSecurityEvent("tab_change");
+                    if (activityOpen && typeof activityType !== "undefined" && activityType) {
+                        fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {
+                            method:"POST", headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+                        }).catch(()=>{});
+                    }
                 }
                 return;
             }
@@ -2090,26 +2056,7 @@ body.notification-locked #notificationRequiredOverlay button{
             }
 
             if (tabChangedScreen === "activity" && !document.getElementById("activityPlay")?.classList.contains("hidden")) {
-                const oldId = activityQuestions?.[activityIndex]?.id;
-                const res = await fetch("/api/activities/"+encodeURIComponent(activityType), {
-                    headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                }).catch(()=>null);
-                if (res && res.ok) {
-                    const data = await res.json();
-                    if (data.success && Array.isArray(data.questions) && data.questions.length) {
-                        activityQuestions = data.questions;
-                        const candidates = activityQuestions.filter(q => q.id !== oldId);
-                        activityIndex = Math.floor(Math.random() * (candidates.length ? candidates.length : activityQuestions.length));
-                        if (candidates.length) {
-                            const selected = candidates[activityIndex];
-                            const realIndex = activityQuestions.findIndex(q => q.id === selected.id);
-                            activityIndex = realIndex >= 0 ? realIndex : 0;
-                        }
-                        arrangeWords=[];
-                        renderActivity();
-                        updateActivityWallet();
-                    }
-                }
+                await openActivity(activityType);
             }
             tabChangedScreen = null;
         });
@@ -2119,13 +2066,16 @@ body.notification-locked #notificationRequiredOverlay button{
         // question is open, invalidate that question on the server.
         window.addEventListener("blur",()=>{
             const quizOpen=!document.getElementById("quiz")?.classList.contains("hidden");
+            const activityOpen=!document.getElementById("activityPlay")?.classList.contains("hidden");
             if(quizOpen && !quizQuestionAnswered){
-                recordSecurityEvent("tab_change", "");
+                recordSecurityEvent("quiz_window_blur");
                 try{sessionStorage.removeItem("activeQuizQuestion");}catch(_){}
-                fetch("/api/questions/abandon",{
-                    method:"POST",
-                    headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                }).catch(()=>{});
+                fetch("/api/questions/abandon",{method:"POST",headers:{Authorization:"Bearer "+localStorage.getItem("token")}}).catch(()=>{});
+            }
+            if(activityOpen && activityToken){
+                recordSecurityEvent("activity_window_blur");
+                fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change",{method:"POST",headers:{Authorization:"Bearer "+localStorage.getItem("token")}}).catch(()=>{});
+                activityToken="";
             }
         });
 
@@ -2273,16 +2223,8 @@ body.notification-locked #notificationRequiredOverlay button{
                             return;
                         }
 
-                        // If the student changed tab/window while this question
-                        // was open, the server has already invalidated its reward.
-                        // Never call the wallet endpoint in that case.
-                        if (!data.rewardBlocked) {
-                            const saved = await updateWallet(Boolean(data.correct));
-                            if (!saved) { buttons.forEach(btn=>btn.disabled=false); return; }
-                        } else {
-                            await loadWallet();
-                            alert("⚠️ Tab/web change detected. આ question માટે wallet amount update નહીં થાય.");
-                        }
+                        const saved = await updateWallet(Boolean(data.correct));
+                        if (!saved) { buttons.forEach(btn=>btn.disabled=false); return; }
 
                         quizQuestionAnswered = true;
                         setQuizExitState();
@@ -2363,7 +2305,7 @@ body.notification-locked #notificationRequiredOverlay button{
         // ==========================================
         // INTERACTIVE ENGLISH EARNING ACTIVITIES
         // ==========================================
-        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[];
+        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, activityToken='', arrangeWords=[];
         function showActivityScreen(id){
             ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
         }
@@ -2418,12 +2360,13 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 activityQuestions=Array.isArray(data.questions)?data.questions:[];
                 activityData=data;
+                activityToken=String(data.activityToken||'');
 
                 if(!activityQuestions.length){
                     throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
                 }
 
-                activityIndex=Math.floor(Math.random()*activityQuestions.length);
+                activityIndex=0;
                 arrangeWords=[];
 
                 if(nameEl) nameEl.textContent=data.title || titles[type];
@@ -2467,10 +2410,10 @@ body.notification-locked #notificationRequiredOverlay button{
         async function submitActivity(answer){
             const q=activityQuestions[activityIndex];
             try{
-                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
+                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer,activityToken})});
                 const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
-                if(data.rewardBlocked){setFeedback(true,'⚠️ Answer checked, but tab/web change was detected. આ question માટે wallet amount update નહીં થાય. Wallet: ©'+Number(data.wallet).toFixed(2));} else if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ©'+Number(data.wallet).toFixed(2));}
+                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ©'+Number(data.wallet).toFixed(2));}
                 else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
                 setTimeout(()=>nextActivityQuestion(),1200);
             }catch(e){setFeedback(false,'Network error. Please try again.');}
@@ -2486,7 +2429,7 @@ body.notification-locked #notificationRequiredOverlay button{
             r.onend=()=>{if(!spokenText)document.getElementById('micStatus').textContent='No speech detected. Try again.'};r.start();
         }
         function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
-        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.audioText || q.answer || q.prompt);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
         loadQuestionBank();
         // Wallet is fetched from the server; do not overwrite it with the initial 0.
         loadWallet();

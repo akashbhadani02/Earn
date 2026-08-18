@@ -50,7 +50,6 @@ router.get("/next", auth, async (req, res) => {
             ? await Question.findById(user.activeQuizQuestionId).select("_id q options").lean()
             : null;
 
-        let rewardBlocked = false;
         if (!question) {
             const picked = await Question.aggregate([
                 { $match:{ q:{ $type:"string" }, options:{ $type:"array" } } },
@@ -61,14 +60,9 @@ router.get("/next", auth, async (req, res) => {
             if (!question) return res.status(404).json({ success:false, message:"No questions available" });
             user.activeQuizQuestionId = question._id;
             user.activeQuizStartedAt = new Date();
-            rewardBlocked = Boolean(user.quizTabViolation);
-            user.activeQuizRewardBlocked = rewardBlocked;
-            user.quizTabViolation = false;
             await user.save();
-        } else {
-            rewardBlocked = Boolean(user.activeQuizRewardBlocked);
         }
-        return res.json({ success:true, question, rewardBlocked });
+        return res.json({ success:true, question });
     } catch(err) {
         console.error("Next Question Error:",err);
         return res.status(500).json({ success:false, message:err.message });
@@ -80,36 +74,48 @@ router.post("/answer", auth, async (req,res) => {
         const { questionId, answerIndex } = req.body || {};
         const index = Number(answerIndex);
         if (!questionId || !Number.isInteger(index) || index < 0)
-            return res.status(400).json({ success:false, message:"Invalid answer" });
+            return res.status(400).json({success:false,message:"Invalid answer"});
 
         const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (!user) return res.status(404).json({success:false,message:"User not found"});
+        if (user.isBlocked || user.finalBlocked) return res.status(403).json({success:false,message:"Account is blocked"});
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
-            return res.status(409).json({ success:false, message:"This question is no longer active." });
+            return res.status(409).json({success:false,message:"This question is no longer active. No wallet update was made."});
 
         const question = await Question.findById(questionId).select("options correct").lean();
         if (!question || index >= question.options.length)
-            return res.status(400).json({ success:false, message:"Invalid question or answer" });
+            return res.status(400).json({success:false,message:"Invalid question or answer"});
 
         const correct = index === Number(question.correct);
-        const rewardBlocked = Boolean(user.activeQuizRewardBlocked);
-        user.quizRewardPending = !rewardBlocked;
-        user.quizRewardCorrect = correct;
-        user.activeQuizQuestionId = null;
-        user.activeQuizStartedAt = null;
-        user.activeQuizRewardBlocked = false;
+        const QUIZ_CORRECT_REWARD = 0.20;
+        const QUIZ_WRONG_PENALTY = 0.30;
+        const today = new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+        if (user.dailyQuestionsDate !== today) {
+            user.dailyQuestionsDate=today; user.dailyQuestionsAnswered=0; user.spinCycleQuestionsAnswered=0;
+        }
+        user.dailyQuestionsAnswered=Number(user.dailyQuestionsAnswered||0)+1;
+        user.spinCycleQuestionsAnswered=Number(user.spinCycleQuestionsAnswered||0)+1;
+        user.totalQuestionsAnswered=Number(user.totalQuestionsAnswered||0)+1;
+        const amount=correct?QUIZ_CORRECT_REWARD:-QUIZ_WRONG_PENALTY;
+        user.wallet=Math.max(0,Number(user.wallet||0)+amount);
+        if(correct){
+            user.totalEarn=Number(user.totalEarn||0)+QUIZ_CORRECT_REWARD;
+            user.quizScore=Number(user.quizScore||0)+QUIZ_CORRECT_REWARD;
+        }
+        user.activeQuizQuestionId=null;
+        user.activeQuizStartedAt=null;
         await user.save();
 
-        return res.json({ success:true, correct, correctIndex:Number(question.correct), rewardBlocked });
+        return res.json({success:true,correct,reward:amount,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correctIndex:Number(question.correct),dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0),totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0)});
     } catch(err) {
         console.error("Answer Check Error:",err);
-        return res.status(500).json({ success:false, message:err.message });
+        return res.status(500).json({success:false,message:err.message});
     }
 });
 
 router.post("/abandon", auth, async (req,res) => {
     try {
-        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null,activeQuizRewardBlocked:false,quizRewardPending:false,quizRewardCorrect:false}});
+        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null}});
         return res.json({success:true});
     } catch(err) {
         return res.status(500).json({success:false,message:err.message});
@@ -121,19 +127,27 @@ router.get("/random", auth, async (req, res) => {
     try {
         const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
         await ensureQuestionsSeeded();
-        const questions = await Question.aggregate([
+        let questions = await Question.aggregate([
             { $match: { q: { $type: "string" }, options: { $type: "array" } } },
             { $sample: { size: count } },
             { $project: { q: 1, options: 1, _id: 0 } }
         ]);
-        return res.json({
-            success:true,
-            totalQuestions:questions.length,
-            questions:questions.map(q => ({q:q.q, options:q.options}))
-        });
-    } catch(err) {
-        console.error("Random Questions Error:",err);
-        return res.status(500).json({success:false,message:err.message});
+        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
+            q.options.length >= 2);
+        if (!questions.length && seedQuestions.length) {
+            const valid = seedQuestions.filter(q => q && typeof q.q === "string" && Array.isArray(q.options) && q.options.length >= 2);
+            for (let i = valid.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [valid[i], valid[j]] = [valid[j], valid[i]];
+            }
+            questions = valid.slice(0, count).map(q => ({
+                q: String(q.q).trim(), options: q.options.map(String)
+            }));
+        }
+        return res.json({ success: true, totalQuestions: questions.length, questions });
+    } catch (err) {
+        console.error("Random Questions Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
     }
 });
 
