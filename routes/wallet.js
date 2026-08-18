@@ -74,7 +74,7 @@ router.get("/", auth, async (req, res) => {
 router.post("/quiz", auth, async (req, res) => {
     return res.status(410).json({
         success:false,
-        message:"Quiz rewards are issued only by the server-side /api/questions/answer endpoint."
+        message:"Quiz rewards are now processed securely by /api/questions/answer."
     });
 });
 

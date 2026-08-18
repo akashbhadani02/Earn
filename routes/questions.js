@@ -9,14 +9,6 @@ const seedQuestions = require("../questions.json");
 
 let seedPromise = null;
 
-const QUIZ_CORRECT_REWARD = 0.20;
-const QUIZ_WRONG_PENALTY = 0.30;
-function todayKey() {
-    return new Intl.DateTimeFormat("en-CA", {
-        timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
-    }).format(new Date());
-}
-
 async function ensureQuestionsSeeded() {
     if (seedPromise) return seedPromise;
 
@@ -86,41 +78,48 @@ router.post("/answer", auth, async (req,res) => {
 
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
-        if (user.isBlocked) return res.status(403).json({success:false,blocked:true,permanent:Number(user.blockCount||0)>=4,wallet:0,message:"Account is blocked"});
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
-            return res.status(409).json({ success:false, invalidated:true, message:"This question is no longer active. No wallet update was made.", wallet:Number(user.wallet||0) });
+            return res.status(409).json({ success:false, message:"This question is no longer active. Wallet was not changed." });
 
         const question = await Question.findById(questionId).select("options correct").lean();
         if (!question || index >= question.options.length)
             return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
-        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
-        const today = todayKey();
+        const REWARD = 0.20;
+        const PENALTY = 0.30;
+        const amount = correct ? REWARD : -PENALTY;
+        const today = new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+
+        // Atomically claim/close the active question. A second submit for the
+        // same question therefore cannot earn again.
+        const claimed = await User.findOneAndUpdate(
+            { _id: user._id, activeQuizQuestionId: questionId },
+            { $set: { activeQuizQuestionId: null, activeQuizStartedAt: null } },
+            { new: true }
+        );
+        if (!claimed) return res.status(409).json({success:false,message:"This question was already submitted or invalidated. Wallet was not changed."});
+        user.activeQuizQuestionId = null;
+        user.activeQuizStartedAt = null;
         if (user.dailyQuestionsDate !== today) {
             user.dailyQuestionsDate = today;
             user.dailyQuestionsAnswered = 0;
             user.spinCycleQuestionsAnswered = 0;
         }
-        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered||0)+1;
-        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered||0)+1;
-        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered||0)+1;
-        user.wallet = Math.max(0, Number(user.wallet||0)+amount);
+        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
+        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered || 0) + 1;
+        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
+        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
         if (correct) {
-            user.totalEarn = Number(user.totalEarn||0)+QUIZ_CORRECT_REWARD;
-            user.quizScore = Number(user.quizScore||0)+QUIZ_CORRECT_REWARD;
+            user.totalEarn = Number(user.totalEarn || 0) + REWARD;
+            user.quizScore = Number(user.quizScore || 0) + REWARD;
         }
-        user.activeQuizQuestionId = null;
-        user.activeQuizStartedAt = null;
         await user.save();
 
-        return res.json({
-            success:true, correct, correctIndex:Number(question.correct),
+        return res.json({ success:true, correct, correctIndex:Number(question.correct), reward:amount,
             wallet:Number(user.wallet||0), totalEarn:Number(user.totalEarn||0),
-            reward:amount, dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),
-            totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0),
-            spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0)
-        });
+            dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),
+            totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0) });
     } catch(err) {
         console.error("Answer Check Error:",err);
         return res.status(500).json({ success:false, message:err.message });
@@ -157,7 +156,7 @@ router.get("/random", auth, async (req, res) => {
                 [valid[i], valid[j]] = [valid[j], valid[i]];
             }
             questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
+                q: String(q.q).trim(), options: q.options.map(String)
             }));
         }
         return res.json({ success: true, totalQuestions: questions.length, questions });
@@ -173,7 +172,7 @@ router.get("/", auth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options correct")
+            .select("q options")
             .lean();
 
         return res.json({
@@ -199,7 +198,7 @@ router.get("/admin", adminAuth, async (req, res) => {
 
         const [questions, total] = await Promise.all([
             Question.find(filter)
-                .select("q options correct")
+                .select("q options")
                 .sort({ _id: 1 })
                 .skip((page - 1) * limit)
                 .limit(limit)
@@ -227,7 +226,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options correct")
+            .select("q options")
             .sort({ _id: 1 })
             .lean();
 
@@ -267,7 +266,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
     }
 });
 
-router.get("/download", async (req, res) => {
+router.get("/download", adminAuth, async (req, res) => {
     try {
         const questions = await Question.find().lean();
 

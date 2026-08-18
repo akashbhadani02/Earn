@@ -15,14 +15,20 @@ module.exports = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked");
+        const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked permanentBlock blockUntil");
 
-        if (!user || user.isDeleted || user.isBlocked) {
-            return res.status(401).json({
-                success: false,
-                message: "Account is not available",
-                forceLogout: true
-            });
+        if (!user || user.isDeleted) {
+            return res.status(401).json({ success:false, message:"Account is not available", forceLogout:true });
+        }
+        if (user.isBlocked) {
+            const until = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
+            if (!user.permanentBlock && until > Date.now()) {
+                return res.status(403).json({ success:false, blocked:true, permanent:false, message:"Your account is temporarily blocked.", blockUntil:new Date(until).toISOString(), remainingMs:until-Date.now(), forceLogout:true });
+            }
+            if (user.permanentBlock || !user.blockUntil) {
+                return res.status(403).json({ success:false, blocked:true, permanent:true, message:"Your account is permanently blocked. Admin must unblock it.", forceLogout:true });
+            }
+            user.isBlocked=false; user.blockUntil=null; user.warningCycleCount=0; await user.save();
         }
 
         // Admin can invalidate all existing student sessions at once.

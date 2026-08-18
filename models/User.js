@@ -144,31 +144,16 @@ const userSchema = new mongoose.Schema(
         // Number of anti-cheating warnings received by the student.
         // 1st, 2nd and 3rd violation = warning.
         // 4th violation = account blocked.
-        warningCount: {
-            type: Number,
-            default: 0
-        },
-
-        // Number of timed anti-cheating blocks already issued.
-        // Blocks 1-3 have a timer; block 4 is permanent until admin unblocks.
-        blockCount: {
-            type: Number,
-            default: 0
-        },
-
-        // Current English Learning & Earning question locked on the server.
-        activeActivityType: {
-            type: String,
-            default: ""
-        },
-        activeActivityQuestionId: {
-            type: Number,
-            default: null
-        },
-        activeActivityStartedAt: {
-            type: Date,
-            default: null
-        },
+        // Anti-cheat progression: 3 warnings -> temporary block.
+        // blockCount 1-3 use the timer; blockCount >= 4 is permanent/admin-only.
+        warningCount: { type: Number, default: 0 },
+        warningCycleCount: { type: Number, default: 0 },
+        blockCount: { type: Number, default: 0 },
+        permanentBlock: { type: Boolean, default: false },
+        lastSecurityViolationAt: { type: Date, default: null },
+        activeActivityType: { type: String, default: "" },
+        activeActivityQuestionId: { type: String, default: "" },
+        activeActivityStartedAt: { type: Date, default: null },
 
         lastClaim: {
             type: String,
