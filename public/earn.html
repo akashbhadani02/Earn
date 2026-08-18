@@ -2009,16 +2009,9 @@ body.notification-locked #notificationRequiredOverlay button{
             tabWasChanged = false;
 
             if (tabChangedScreen === "quiz" && !document.getElementById("quiz")?.classList.contains("hidden")) {
-                // A tab/window change invalidates the previous question.
-                // Do not award that question and do not silently load a new
-                // paid question in the same screen. The student must return
-                // to the dashboard and start the quiz again.
-                quizQuestionAnswered = true;
-                try { sessionStorage.removeItem("activeQuizQuestion"); } catch(_) {}
-                document.getElementById("question").innerText = "⚠️ Question cancelled: tab/window was changed.";
-                document.getElementById("options").innerHTML = '<button type="button" class="activity-action" onclick="showScreen(\'dashboard\')">← Back to Dashboard</button>';
-                setQuizExitState();
-                if (typeof refreshWallet === "function") { try { await refreshWallet(); } catch(_) {} }
+                document.getElementById("question").innerText = "Loading new question...";
+                document.getElementById("options").innerHTML = "";
+                await loadQuiz();
             }
 
             if (tabChangedScreen === "activity" && !document.getElementById("activityPlay")?.classList.contains("hidden")) {

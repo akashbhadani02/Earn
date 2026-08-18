@@ -76,27 +76,33 @@ router.post("/quiz", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        // IMPORTANT: never trust req.body.correct. Only /questions/answer
-        // can create this one-time server-side reward ticket.
-        const ticket = user.pendingQuizReward || {};
-        if (!ticket.questionId || !ticket.createdAt) {
+        // IMPORTANT: the browser is not trusted for quiz results.
+        // /api/questions/answer creates this one-time server-side result.
+        // If the student changed tab/window first, that result is cleared.
+        if (typeof user.pendingQuizRewardCorrect !== "boolean" || !user.pendingQuizRewardAt) {
             return res.status(409).json({
                 success:false,
-                message:"Quiz reward denied. The question was not completed securely or was invalidated."
+                message:"No valid quiz reward is pending. Changing tab/window invalidates the question; wallet was not updated.",
+                ...walletResponse(user)
             });
         }
 
-        // Ticket expires quickly and is single-use.
-        if ((Date.now() - new Date(ticket.createdAt).getTime()) > 15000) {
-            user.pendingQuizReward = { questionId:null, correct:false, createdAt:null };
+        const age = Date.now() - new Date(user.pendingQuizRewardAt).getTime();
+        if (age < 0 || age > 15000) {
+            user.pendingQuizRewardCorrect = null;
+            user.pendingQuizRewardAt = null;
             await user.save();
-            return res.status(409).json({ success:false, message:"Quiz reward expired. Wallet was not updated." });
+            return res.status(409).json({
+                success:false,
+                message:"Quiz reward expired. Wallet was not updated.",
+                ...walletResponse(user)
+            });
         }
 
-        const correct = Boolean(ticket.correct);
+        const correct = user.pendingQuizRewardCorrect;
         const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
-        const today = todayKey();
 
+        const today = todayKey();
         if (user.dailyQuestionsDate !== today) {
             user.dailyQuestionsDate = today;
             user.dailyQuestionsAnswered = 0;
@@ -106,18 +112,20 @@ router.post("/quiz", auth, async (req, res) => {
         user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
         user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
         user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
-        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
+        user.wallet = Number(user.wallet || 0) + amount;
+        if (user.wallet < 0) user.wallet = 0;
 
         if (correct) {
             user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
             user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
         }
 
-        // Consume the ticket before returning. A second request cannot pay.
-        user.pendingQuizReward = { questionId:null, correct:false, createdAt:null };
+        // Consume the server-issued result so it cannot be replayed.
+        user.pendingQuizRewardCorrect = null;
+        user.pendingQuizRewardAt = null;
         await user.save();
 
-        return res.json({ ...walletResponse(user), reward:amount, correct });
+        return res.json({ ...walletResponse(user), reward: amount, correct });
     } catch (err) {
         console.error("Quiz Reward Error:", err);
         return res.status(500).json({ success:false, message:err.message });

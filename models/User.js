@@ -81,13 +81,20 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
-        // Server-side quiz reward ticket. The wallet endpoint will only
-        // reward an answer that was validated by /api/questions/answer.
-        // It is cleared if the student changes tab/window before reward.
-        pendingQuizReward: {
-            questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question", default: null },
-            correct: { type: Boolean, default: false },
-            createdAt: { type: Date, default: null }
+        // Set when the quiz question is left by changing tab/window.
+        // A blocked question can never generate a wallet reward.
+        quizSecurityBlocked: {
+            type: Boolean,
+            default: false
+        },
+        // Server-issued quiz result. /wallet/quiz may consume it only once.
+        pendingQuizRewardCorrect: {
+            type: Boolean,
+            default: null
+        },
+        pendingQuizRewardAt: {
+            type: Date,
+            default: null
         },
 
         // One locked English activity question per user. The answer stays on the server.
@@ -102,6 +109,12 @@ const userSchema = new mongoose.Schema(
         activeActivityStartedAt: {
             type: Date,
             default: null
+        },
+        // If the active activity question was left by changing tab/window,
+        // its answer must never update the wallet.
+        activitySecurityBlocked: {
+            type: Boolean,
+            default: false
         },
 
         isOnline: {

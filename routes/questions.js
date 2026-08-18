@@ -60,6 +60,9 @@ router.get("/next", auth, async (req, res) => {
             if (!question) return res.status(404).json({ success:false, message:"No questions available" });
             user.activeQuizQuestionId = question._id;
             user.activeQuizStartedAt = new Date();
+            user.quizSecurityBlocked = false;
+            user.pendingQuizRewardCorrect = null;
+            user.pendingQuizRewardAt = null;
             await user.save();
         }
         return res.json({ success:true, question });
@@ -78,6 +81,8 @@ router.post("/answer", auth, async (req,res) => {
 
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (user.quizSecurityBlocked)
+            return res.status(409).json({ success:false, message:"This question was invalidated because you changed the tab/window. No wallet reward will be added." });
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
             return res.status(409).json({ success:false, message:"This question is no longer active." });
 
@@ -86,13 +91,10 @@ router.post("/answer", auth, async (req,res) => {
             return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
-        // Create a one-time server-side reward ticket. The client cannot
-        // choose the correct/incorrect result for the wallet endpoint.
-        user.pendingQuizReward = {
-            questionId: question._id,
-            correct,
-            createdAt: new Date()
-        };
+        // Issue the result server-side. The wallet route can consume this exact
+        // result once; the browser cannot choose the reward or correct value.
+        user.pendingQuizRewardCorrect = correct;
+        user.pendingQuizRewardAt = new Date();
         user.activeQuizQuestionId = null;
         user.activeQuizStartedAt = null;
         await user.save();
@@ -105,24 +107,20 @@ router.post("/answer", auth, async (req,res) => {
 });
 
 router.post("/abandon", auth, async (req,res) => {
-    // Security rule: if the student leaves the quiz tab/window while the
-    // question is unanswered, invalidate that question immediately.
-    // Therefore a later answer request cannot reach the wallet reward flow.
     try {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({success:false,message:"User not found"});
-
-        // Leaving the tab/window invalidates both the active question and
-        // any not-yet-paid reward ticket. Therefore wallet amount remains
-        // exactly unchanged for that question.
+        // Invalidate the unanswered question. If the browser later tries to
+        // submit it, /answer cannot create a pending reward.
+        user.quizSecurityBlocked = true;
         user.activeQuizQuestionId = null;
         user.activeQuizStartedAt = null;
-        user.pendingQuizReward = { questionId: null, correct: false, createdAt: null };
+        user.pendingQuizRewardCorrect = null;
+        user.pendingQuizRewardAt = null;
         await user.save();
-        return res.json({success:true, invalidated:true, message:"Question invalidated because the quiz tab/window was changed."});
-    } catch (err) {
-        console.error("Abandon Question Error:", err);
-        return res.status(500).json({success:false,message:"Could not invalidate question"});
+        return res.status(200).json({success:true,blocked:true,message:"Question invalidated. No wallet reward."});
+    } catch (e) {
+        return res.status(500).json({success:false,message:e.message});
     }
 });
 

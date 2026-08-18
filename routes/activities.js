@@ -1641,6 +1641,7 @@ router.get('/:type', auth, async (req,res)=>{
     user.activeActivityType=type;
     user.activeActivityQuestionId=String(item.id);
     user.activeActivityStartedAt=new Date();
+    user.activitySecurityBlocked=false;
     await user.save();
     res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[item]});
   } catch(e) {
@@ -1659,6 +1660,7 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     const current=mapGet(user.activityTabChanges,type);
     mapSet(user.activityTabChanges,type,current+1);
     if(String(user.activeActivityType||'')===type){
+      user.activitySecurityBlocked=true;
       user.activeActivityType='';
       user.activeActivityQuestionId='';
       user.activeActivityStartedAt=null;
@@ -1675,6 +1677,8 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
     const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+    if(user.activitySecurityBlocked)
+      return res.status(409).json({success:false,message:'This question was invalidated because you changed the tab/window. Wallet amount was not updated.'});
     if(String(user.activeActivityType||'')!==type || String(user.activeActivityQuestionId||'')!==String(index))
       return res.status(409).json({success:false,message:'This question is no longer active. Open the current question again.'});
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
