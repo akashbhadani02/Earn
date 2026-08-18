@@ -81,6 +81,15 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
+        // Server-side quiz reward ticket. The wallet endpoint will only
+        // reward an answer that was validated by /api/questions/answer.
+        // It is cleared if the student changes tab/window before reward.
+        pendingQuizReward: {
+            questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question", default: null },
+            correct: { type: Boolean, default: false },
+            createdAt: { type: Date, default: null }
+        },
+
         // One locked English activity question per user. The answer stays on the server.
         activeActivityType: {
             type: String,

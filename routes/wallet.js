@@ -73,33 +73,28 @@ router.get("/", auth, async (req, res) => {
 // =============================
 router.post("/quiz", auth, async (req, res) => {
     try {
-        const { correct } = req.body;
-
-        if (typeof correct !== "boolean") {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid quiz result"
-            });
-        }
-
-        const amount = correct
-            ? QUIZ_CORRECT_REWARD
-            : -QUIZ_WRONG_PENALTY;
-
         const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
+        // IMPORTANT: never trust req.body.correct. Only /questions/answer
+        // can create this one-time server-side reward ticket.
+        const ticket = user.pendingQuizReward || {};
+        if (!ticket.questionId || !ticket.createdAt) {
+            return res.status(409).json({
+                success:false,
+                message:"Quiz reward denied. The question was not completed securely or was invalidated."
             });
         }
 
-        // =============================
-        // Count today's answered questions
-        // Every submitted answer counts:
-        // correct OR wrong.
-        // =============================
+        // Ticket expires quickly and is single-use.
+        if ((Date.now() - new Date(ticket.createdAt).getTime()) > 15000) {
+            user.pendingQuizReward = { questionId:null, correct:false, createdAt:null };
+            await user.save();
+            return res.status(409).json({ success:false, message:"Quiz reward expired. Wallet was not updated." });
+        }
+
+        const correct = Boolean(ticket.correct);
+        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
         const today = todayKey();
 
         if (user.dailyQuestionsDate !== today) {
@@ -108,43 +103,24 @@ router.post("/quiz", auth, async (req, res) => {
             user.spinCycleQuestionsAnswered = 0;
         }
 
-        user.dailyQuestionsAnswered =
-            Number(user.dailyQuestionsAnswered || 0) + 1;
+        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
+        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
+        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
+        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
 
-        user.spinCycleQuestionsAnswered =
-            Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
-
-        // Lifetime counter for Admin reporting.
-        // This never resets when the 100-question spin cycle resets.
-        user.totalQuestionsAnswered =
-            Number(user.totalQuestionsAnswered || 0) + 1;
-
-        user.wallet = Number(user.wallet || 0) + amount;
-
-        // Wallet should never become negative.
-        if (user.wallet < 0) {
-            user.wallet = 0;
-        }
-
-        // totalEarn = only actual positive earnings.
         if (correct) {
             user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
             user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
         }
 
+        // Consume the ticket before returning. A second request cannot pay.
+        user.pendingQuizReward = { questionId:null, correct:false, createdAt:null };
         await user.save();
 
-        return res.json({
-            ...walletResponse(user),
-            reward: amount,
-            correct
-        });
+        return res.json({ ...walletResponse(user), reward:amount, correct });
     } catch (err) {
         console.error("Quiz Reward Error:", err);
-        return res.status(500).json({
-            success: false,
-            message: err.message
-        });
+        return res.status(500).json({ success:false, message:err.message });
     }
 });
 
