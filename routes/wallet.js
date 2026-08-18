@@ -73,52 +73,78 @@ router.get("/", auth, async (req, res) => {
 // =============================
 router.post("/quiz", auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        const { correct } = req.body;
 
-        const pending = user.pendingQuizReward || {};
-        const created = pending.createdAt ? new Date(pending.createdAt).getTime() : 0;
-        const validPending = pending.questionId && created && (Date.now() - created) <= 120000;
-
-        if (!validPending) {
-            return res.status(409).json({
-                success:false, securityInvalidated:true,
-                message:"Quiz answer is no longer eligible for wallet update."
+        if (typeof correct !== "boolean") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid quiz result"
             });
         }
 
-        const correct = pending.correct === true;
-        const amount = Number(pending.reward);
-        if (![0.20, -0.30].includes(amount)) {
-            user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
-            await user.save();
-            return res.status(409).json({success:false,securityInvalidated:true,message:"Invalid reward claim."});
+        const amount = correct
+            ? QUIZ_CORRECT_REWARD
+            : -QUIZ_WRONG_PENALTY;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
         }
 
+        // =============================
+        // Count today's answered questions
+        // Every submitted answer counts:
+        // correct OR wrong.
+        // =============================
         const today = todayKey();
+
         if (user.dailyQuestionsDate !== today) {
             user.dailyQuestionsDate = today;
             user.dailyQuestionsAnswered = 0;
             user.spinCycleQuestionsAnswered = 0;
         }
 
-        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
-        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered || 0) + 1;
-        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
-        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
+        user.dailyQuestionsAnswered =
+            Number(user.dailyQuestionsAnswered || 0) + 1;
 
-        if (correct) {
-            user.totalEarn = Number(user.totalEarn || 0) + 0.20;
-            user.quizScore = Number(user.quizScore || 0) + 0.20;
+        user.spinCycleQuestionsAnswered =
+            Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
+
+        // Lifetime counter for Admin reporting.
+        // This never resets when the 100-question spin cycle resets.
+        user.totalQuestionsAnswered =
+            Number(user.totalQuestionsAnswered || 0) + 1;
+
+        user.wallet = Number(user.wallet || 0) + amount;
+
+        // Wallet should never become negative.
+        if (user.wallet < 0) {
+            user.wallet = 0;
         }
 
-        user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
+        // totalEarn = only actual positive earnings.
+        if (correct) {
+            user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
+            user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
+        }
+
         await user.save();
 
-        return res.json({ ...walletResponse(user), reward: amount, correct });
+        return res.json({
+            ...walletResponse(user),
+            reward: amount,
+            correct
+        });
     } catch (err) {
         console.error("Quiz Reward Error:", err);
-        return res.status(500).json({ success:false, message:err.message });
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
     }
 });
 

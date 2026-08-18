@@ -80,11 +80,17 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null
         },
-        pendingQuizReward: {
-            questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question", default: null },
-            correct: { type: Boolean, default: false },
-            reward: { type: Number, default: 0 },
-            createdAt: { type: Date, default: null }
+
+        // Active English Learning & Earning question per activity.
+        activeActivityQuestions: {
+            type: Map,
+            of: Number,
+            default: {}
+        },
+        activeActivityStartedAt: {
+            type: Map,
+            of: Date,
+            default: {}
         },
 
         isOnline: {
@@ -306,13 +312,7 @@ const userSchema = new mongoose.Schema(
         activityEarn: { type: Map, of: Number, default: {} },
         activityDeduct: { type: Map, of: Number, default: {} },
         activityTabChanges: { type: Map, of: Number, default: {} },
-        activityLastQuestion: { type: Map, of: Number, default: {} },
-
-        // Server-side active English activity question.  The question is
-        // invalidated immediately when the student changes tab/window.
-        activityActiveQuestion: { type: Map, of: Number, default: {} },
-        activityActiveStartedAt: { type: Map, of: Date, default: {} },
-        activitySessionToken: { type: Map, of: String, default: {} }
+        activityLastQuestion: { type: Map, of: Number, default: {} }
     },
     {
         timestamps: true,

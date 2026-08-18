@@ -1404,44 +1404,90 @@ body.notification-locked #notificationRequiredOverlay button{
         let warningRequestRunning = false;
 
         async function blockStudent(reason) {
+
+            // Prevent duplicate requests when multiple events fire together.
             if (warningRequestRunning || alreadyBlocked) return;
+
             warningRequestRunning = true;
+
             try {
+
                 const response = await fetch("/api/auth/block-me", {
                     method: "POST",
-                    headers: {"Content-Type":"application/json", Authorization:"Bearer "+localStorage.getItem("token")},
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + localStorage.getItem("token")
+                    },
                     body: JSON.stringify({ reason })
                 });
+
                 const data = await response.json();
+
                 warningRequestRunning = false;
 
-                if (data.permanentBlocked) {
+                // Any security block logs the student out. Blocks 1-3 have a
+                // timer; the 4th and later are permanent and require admin.
+                if (data.blocked || data.timedBlock) {
+
                     alreadyBlocked = true;
                     warningMode = false;
-                    alert("🚫 4th security violation detected.\n\nYour account is now permanently blocked.\nOnly Admin can unblock your account.\n\nReason: " + reason);
+
+                    function formatBlockRemaining(ms) {
+                        const totalSeconds = Math.floor(Math.max(0, Number(ms || 0)) / 1000);
+                        const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+                        const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+                        const s = String(totalSeconds % 60).padStart(2, "0");
+                        return h + ":" + m + ":" + s;
+                    }
+
+                    const msg = data.permanent
+                        ? "🚫 Your account is permanently blocked.\n\nReason: " + reason + "\n\nOnly admin can unblock this account."
+                        : "🚫 Your account has been temporarily blocked.\n\nReason: " + reason + "\n\nBlock " + Number(data.blockCount || 0) + "/3\nRemaining time: " + formatBlockRemaining(data.remainingMs) + "\n\nYou can login again after the timer reaches 00:00:00.";
+                    alert(msg);
+
                     localStorage.removeItem("token");
-                    localStorage.removeItem("user");
                     location.href = "login.html";
                     return;
                 }
 
-                if (data.blocked && data.remainingMs) {
-                    alreadyBlocked = true;
+                // 1st, 2nd and 3rd violation: warning only.
+                if (data.warning) {
+
                     warningMode = false;
-                    function formatBlockRemaining(ms) {
-                        const totalSeconds=Math.floor(Math.max(0,Number(ms||0))/1000);
-                        return String(Math.floor(totalSeconds/3600)).padStart(2,"0")+":"+String(Math.floor((totalSeconds%3600)/60)).padStart(2,"0")+":"+String(totalSeconds%60).padStart(2,"0");
+
+                    let warningMessage;
+
+                    if (data.warningCount === 1) {
+                        warningMessage =
+                            "⚠️ WARNING 1/3\n\n" +
+                            "આ તમારી પહેલી ચેતવણી છે.\n" +
+                            "મહેરબાની કરીને નિયમોનુ પાલન કરો .\n\n" +
+                            "Reason: " + reason;
+                    } else if (data.warningCount === 2) {
+                        warningMessage =
+                            "⚠️ WARNING 2/3\n\n" +
+                            "આ તમારી બીજી ચેતવણી છે.\n" +
+                            "હજુ એકવાર ચેતવણી આપીએ છીએ બ્લોક કરતાં પહેલા.\n\n" +
+                            "Reason: " + reason;
+                    } else {
+                        warningMessage =
+                            "⚠️ FINAL WARNING 3/3\n\n" +
+                            "આ તમારી છેલ્લી ચેતવણી છે, હવે ચેતવણી આપવામાં નહીં આવે.\n" +
+                            "હવે નિયમોનુ ઉલ્લંઘન કરશો તો કમ્પ્યુટર/મોબાઈલ બ્લોક કરી દેશે.\n\n" +
+                            "Reason: " + reason;
                     }
-                    alert("🚫 Temporary block " + String(data.warningCount || "") + "/3.\n\nReason: " + reason + "\n\nRemaining time: " + formatBlockRemaining(data.remainingMs) + "\n\nઆ timer પૂરો થયા પછી તમે ફરી login કરી શકશો. 3 timed blocks પછી 4th violation પર માત્ર Admin જ unblock કરી શકશે.");
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                    location.href = "login.html";
+
+                    alert(warningMessage);
                 }
+
             } catch (e) {
+
                 warningRequestRunning = false;
                 console.error("Warning/Block Error:", e);
-                alert("⚠️ Unable to process the security block right now. Please try again.");
+
+                alert("⚠️ Unable to process the warning right now. Please try again.");
             }
+
         }
 
         const token = localStorage.getItem("token");
@@ -1995,21 +2041,22 @@ body.notification-locked #notificationRequiredOverlay button{
                 const quizOpen = !document.getElementById("quiz")?.classList.contains("hidden");
                 const activityOpen = !document.getElementById("activityPlay")?.classList.contains("hidden");
                 if (quizOpen || activityOpen) {
-                    if (quizOpen && !quizQuestionAnswered) {
-                        try { sessionStorage.removeItem("activeQuizQuestion"); } catch (_) {}
-                        fetch("/api/questions/abandon", {
-                            method:"POST",
-                            headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                        }).catch(()=>{});
-                    }
                     tabWasChanged = true;
                     tabChangedScreen = activityOpen ? "activity" : "quiz";
                     recordSecurityEvent("tab_change");
-                    if (activityOpen && typeof activityType !== "undefined" && activityType) {
-                        fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {
-                            method:"POST", headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                        }).catch(()=>{});
-                    }
+                    // A tab/web change while answering is a security violation.
+                    // Invalidate the active question on the server BEFORE any
+                    // answer can be submitted, then apply the 1st-3rd timer or
+                    // 4th permanent admin-only block.
+                    try {
+                        if (quizOpen && !quizQuestionAnswered) {
+                            await fetch("/api/questions/abandon", {method:"POST",headers:{Authorization:"Bearer "+localStorage.getItem("token")}});
+                        }
+                        if (activityOpen && typeof activityType !== "undefined" && activityType) {
+                            await fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {method:"POST",headers:{Authorization:"Bearer "+localStorage.getItem("token")}});
+                        }
+                        await blockStudent("Tab / web change while answering");
+                    } catch (_) {}
                 }
                 return;
             }
@@ -2017,36 +2064,9 @@ body.notification-locked #notificationRequiredOverlay button{
             if (!tabWasChanged) return;
             tabWasChanged = false;
 
-            if (tabChangedScreen === "quiz" && !document.getElementById("quiz")?.classList.contains("hidden")) {
-                document.getElementById("question").innerText = "Loading new question...";
-                document.getElementById("options").innerHTML = "";
-                await loadQuiz();
-            }
-
-            if (tabChangedScreen === "activity" && !document.getElementById("activityPlay")?.classList.contains("hidden")) {
-                const oldId = activityQuestions?.[activityIndex]?.id;
-                const res = await fetch("/api/activities/"+encodeURIComponent(activityType), {
-                    headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                }).catch(()=>null);
-                if (res && res.ok) {
-                    const data = await res.json();
-                    if (data.success && Array.isArray(data.questions) && data.questions.length) {
-                        activityQuestions = data.questions;
-                        activityData = data;
-                        activitySessionToken = String(data.sessionToken||'');
-                        const candidates = activityQuestions.filter(q => q.id !== oldId);
-                        activityIndex = Math.floor(Math.random() * (candidates.length ? candidates.length : activityQuestions.length));
-                        if (candidates.length) {
-                            const selected = candidates[activityIndex];
-                            const realIndex = activityQuestions.findIndex(q => q.id === selected.id);
-                            activityIndex = realIndex >= 0 ? realIndex : 0;
-                        }
-                        arrangeWords=[];
-                        renderActivity();
-                        updateActivityWallet();
-                    }
-                }
-            }
+            // Security violation has already invalidated the question and
+            // blockStudent() has handled the timer/permanent block. Never
+            // silently give the student a replacement question here.
             tabChangedScreen = null;
         });
 
@@ -2291,7 +2311,7 @@ body.notification-locked #notificationRequiredOverlay button{
         // ==========================================
         // INTERACTIVE ENGLISH EARNING ACTIVITIES
         // ==========================================
-        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, activitySessionToken='', arrangeWords=[];
+        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[];
         function showActivityScreen(id){
             ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
         }
@@ -2346,7 +2366,6 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 activityQuestions=Array.isArray(data.questions)?data.questions:[];
                 activityData=data;
-                activitySessionToken=String(data.sessionToken||'');
 
                 if(!activityQuestions.length){
                     throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
@@ -2396,17 +2415,8 @@ body.notification-locked #notificationRequiredOverlay button{
         async function submitActivity(answer){
             const q=activityQuestions[activityIndex];
             try{
-                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer,sessionToken:activitySessionToken})});
-                const data=await res.json();
-                if(!data.success){
-                    if(data.securityInvalidated){
-                        setFeedback(false,'🔒 આ question tab/window changeને કારણે invalidate થયો છે. Wallet update કરવામાં આવ્યું નથી.');
-                        setTimeout(()=>openActivity(activityType),900);
-                    } else {
-                        setFeedback(false,data.message||'Try again');
-                    }
-                    return;
-                }
+                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
+                const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
                 if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ©'+Number(data.wallet).toFixed(2));}
                 else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
@@ -2424,7 +2434,7 @@ body.notification-locked #notificationRequiredOverlay button{
             r.onend=()=>{if(!spokenText)document.getElementById('micStatus').textContent='No speech detected. Try again.'};r.start();
         }
         function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
-        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.prompt);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
         loadQuestionBank();
         // Wallet is fetched from the server; do not overwrite it with the initial 0.
         loadWallet();

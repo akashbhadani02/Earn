@@ -792,8 +792,10 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
         user.blockUntil = null;
         user.blockReason = "";
 
-        // Reset warning system
+        // Keep blockCount so a student who reached the permanent threshold
+        // does not receive the 1-3 timers again. Admin is the only unblock.
         user.warningCount = 0;
+        user.permanentBlocked = false;
 
         // Reset online status (optional)
         user.lastSeen = new Date();
@@ -801,15 +803,16 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
 
         await user.save();
 
-        user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
-        user.activeQuizQuestionId = null;
-        user.activeQuizStartedAt = null;
-        user.activitySessionToken = {};
+        res.json({
+            success: true,
+            message: "Student Unblocked Successfully. Warning count has been reset."
+        });
+
         await user.save();
 
         res.json({
             success: true,
-            message: "Student Unblocked Successfully. Security block counter reset."
+            message: "Student Unblocked Successfully"
         });
 
     } catch (err) {
@@ -1054,10 +1057,8 @@ router.put("/control-center/unblock/:id", adminAuth, async (req,res) => {
         user.isBlocked = false;
         user.blockUntil = null;
         user.blockReason = "";
-        user.warningCount = 0;
-        user.pendingQuizReward = {questionId:null,correct:false,reward:0,createdAt:null};
         await user.save();
-        return res.json({success:true,message:"Student unblocked and security counter reset"});
+        return res.json({success:true,message:"Student unblocked"});
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
@@ -1069,17 +1070,13 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
         user.warningCount = Number(user.warningCount || 0) + 1;
         user.warningHistory = user.warningHistory || [];
         user.warningHistory.push({ time:new Date(), reason });
-        if(user.warningCount <= 3){
+        if(user.warningCount >= 3){
             user.isBlocked = true;
             user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
-            user.blockReason = "Timed security block " + user.warningCount + "/3";
-        } else {
-            user.isBlocked = true;
-            user.blockUntil = null;
-            user.blockReason = "Permanent admin-only block after 4th violation";
+            user.blockReason = "Automatic block after 3 warnings";
         }
         await user.save();
-        return res.json({success:true,message:user.warningCount>=4?"Permanent admin-only block":"Timed block",warningCount:user.warningCount,isBlocked:user.isBlocked,permanentBlocked:user.warningCount>=4});
+        return res.json({success:true,message:user.isBlocked?"3 warnings reached: student blocked":"Warning added",warningCount:user.warningCount,isBlocked:user.isBlocked});
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
@@ -1148,7 +1145,7 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
     try{
         const today=proTodayKey();
         const users=await User.find({}).select("-password").lean();
-        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=2000);
+        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=3000);
         const stats={
             students:users.length,
             online:active.length,
@@ -1186,19 +1183,22 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
         const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
         const reason=String(req.body.reason||"Admin warning").slice(0,500);
         u.warningCount=Number(u.warningCount||0)+1;
+        u.blockCount=Number(u.blockCount||0)+1;
         u.warningHistory=u.warningHistory||[];
         u.warningHistory.push({time:new Date(),reason});
-        if(u.warningCount<=3){
-            u.isBlocked=true;
-            u.blockReason="Timed security block " + u.warningCount + "/3";
+        u.wallet=0;
+        u.activeQuizQuestionId=null; u.activeQuizStartedAt=null;
+        if(u.blockCount<=3){
+            u.isBlocked=true; u.permanentBlocked=false;
+            u.blockReason=reason;
             u.blockUntil=new Date(Date.now() + 12 * 60 * 60 * 1000);
-        } else {
-            u.isBlocked=true;
-            u.blockReason="Permanent admin-only block after 4th violation";
+        }else{
+            u.isBlocked=true; u.permanentBlocked=true;
+            u.blockReason="Permanent block after 4 security blocks";
             u.blockUntil=null;
         }
         await proAdminLog(u,"WARNING",reason); await u.save();
-        res.json({success:true,message:u.warningCount>=4?"Permanent admin-only block":"Timed block",warningCount:u.warningCount,permanentBlocked:u.warningCount>=4});
+        res.json({success:true,message:u.isBlocked?"3 warnings reached — student blocked":"Warning added",warningCount:u.warningCount});
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
@@ -1207,8 +1207,15 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
         const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
         u.isBlocked=req.body.blocked!==false;
         u.blockReason=String(req.body.reason||"Admin action");
-        u.blockUntil=u.isBlocked ? new Date(Date.now() + 12 * 60 * 60 * 1000) : null;
-        if(!u.isBlocked){ u.warningCount=0; u.pendingQuizReward={questionId:null,correct:false,reward:0,createdAt:null}; }
+        if(u.isBlocked){
+            u.wallet=0;
+            if(u.permanentBlocked || Number(u.blockCount||0)>=4){ u.permanentBlocked=true; u.blockUntil=null; }
+            else { u.blockUntil=new Date(Date.now() + 12 * 60 * 60 * 1000); }
+        } else {
+            u.blockUntil=null;
+            // Admin can manually unblock, but the historical block count remains.
+            u.permanentBlocked=false;
+        }
         await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason);
         await u.save();
         res.json({success:true,blocked:u.isBlocked});
@@ -1282,35 +1289,49 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
         const expiredIds = [];
 
         for (const u of users) {
-            const permanent = Number(u.warningCount || 0) >= 4 && !u.blockUntil;
-            if (permanent) {
+            let until = u.blockUntil ? new Date(u.blockUntil) : null;
+
+            // Older blocked records may not have blockUntil. Treat them as 12 hours
+            // from updatedAt so the admin timer still has a real end time.
+            if (u.permanentBlocked || Number(u.blockCount || 0) >= 4) {
                 active.push({
                     id: String(u._id), name: nmPro(u), mobile: u.mobile || "",
-                    blockReason: u.blockReason || "", permanentBlocked: true,
-                    blockUntil: null, blockUntilMs: null, warningCount: Number(u.warningCount || 0)
+                    blockReason: u.blockReason || "Permanent security block",
+                    permanent: true, blockUntil: null, blockUntilMs: 0
                 });
                 continue;
             }
 
-            let until = u.blockUntil ? new Date(u.blockUntil) : null;
             if (!until || Number.isNaN(until.getTime())) {
                 const started = u.updatedAt ? new Date(u.updatedAt) : now;
                 until = new Date(started.getTime() + 12 * 60 * 60 * 1000);
-                await User.updateOne({_id:u._id,isBlocked:true},{$set:{blockUntil:until}});
+                // Persist the canonical expiry so Student and Admin always
+                // calculate from the exact same blockUntil value.
+                await User.updateOne(
+                    { _id: u._id, isBlocked: true },
+                    { $set: { blockUntil: until } }
+                );
             }
-            if (until <= now) { expiredIds.push(u._id); continue; }
+
+            if (until <= now) {
+                expiredIds.push(u._id);
+                continue;
+            }
+
             active.push({
-                id:String(u._id), name:nmPro(u), mobile:u.mobile||"",
-                blockReason:u.blockReason||"", permanentBlocked:false,
-                blockUntil:until.toISOString(), blockUntilMs:until.getTime(),
-                warningCount:Number(u.warningCount||0)
+                id: String(u._id),
+                name: nmPro(u),
+                mobile: u.mobile || "",
+                blockReason: u.blockReason || "",
+                blockUntil: until.toISOString(),
+                blockUntilMs: until.getTime()
             });
         }
 
         if (expiredIds.length) {
             await User.updateMany(
                 { _id: { $in: expiredIds } },
-                { $set: { isBlocked: false, blockUntil: null, blockReason: "" } }
+                { $set: { isBlocked: false, blockUntil: null, blockReason: "", warningCount: 0 } }
             );
         }
 

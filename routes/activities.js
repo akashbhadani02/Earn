@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
-const crypto = require('crypto');
 
 const ACTIVITIES = {
   arrange: {
@@ -1594,12 +1593,12 @@ function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolka
 function normalize(s){return String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
 function fieldName(type){return `activity_${type}`;}
 function publicQuestion(type,q){
-  if(type==='arrange') return {prompt:q[0]};
-  if(type==='correction'||type==='translate') return {prompt:q[0]};
-  if(type==='word') return {prompt:q[0]};
-  if(type==='fill') return {prompt:q[0],options:q[1]};
-  if(type==='listening') return {prompt:q};
-  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
+  if(type==='arrange') return {prompt:q[0],answer:q[1]};
+  if(type==='correction'||type==='translate') return {prompt:q[0],answer:q[1]};
+  if(type==='word') return {prompt:q[0],answer:q[1]};
+  if(type==='fill') return {prompt:q[0],options:q[1],answer:q[2]};
+  if(type==='listening') return {prompt:q,answer:q};
+  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2],answer:q[3]};
   return {prompt:q};
 }
 
@@ -1607,11 +1606,6 @@ function mapGet(map, key) {
   if (!map) return 0;
   if (typeof map.get === 'function') return Number(map.get(key) || 0);
   return Number(map[key] || 0);
-}
-function mapGetString(map, key) {
-  if (!map) return '';
-  if (typeof map.get === 'function') return String(map.get(key) || '');
-  return String(map[key] || '');
 }
 function mapSet(map, key, value) {
   if (map && typeof map.set === 'function') map.set(key, value);
@@ -1629,14 +1623,23 @@ function pickRandomQuestions(type, activity, user) {
 router.get('/:type', auth, async (req,res)=>{
   const type=req.params.type; const activity=ACTIVITIES[type];
   if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const user=await User.findById(req.user.id);
-  if(!user) return res.status(404).json({success:false,message:'User not found'});
-  const items=pickRandomQuestions(type,activity,user);
-  const sessionToken=crypto.randomBytes(24).toString('hex');
-  mapSet(user.activitySessionToken,type,sessionToken);
-  mapSet(user.activityActiveStartedAt,type,new Date());
-  await user.save();
-  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items,sessionToken});
+  const user=await User.findById(req.user.id).select('activityLastQuestion activeActivityQuestions activeActivityStartedAt');
+  let items=pickRandomQuestions(type,activity,user);
+  const activeId=mapGet(user?.activeActivityQuestions,type);
+  let active=Number.isInteger(activeId) ? items.find(x=>Number(x.id)===activeId) : null;
+  if(!active){
+    const pool=activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
+    active=pool[Math.floor(Math.random()*pool.length)];
+    mapSet(user.activeActivityQuestions,type,Number(active.id));
+    mapSet(user.activeActivityStartedAt,type,new Date());
+    user.markModified('activeActivityQuestions');
+    user.markModified('activeActivityStartedAt');
+    await user.save();
+    items=[active,...items.filter(x=>Number(x.id)!==Number(active.id))];
+  } else {
+    items=[active,...items.filter(x=>Number(x.id)!==Number(active.id))];
+  }
+  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1648,12 +1651,12 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     user.tabChanges=Number(user.tabChanges||0)+1;
     const current=mapGet(user.activityTabChanges,type);
     mapSet(user.activityTabChanges,type,current+1);
-    mapSet(user.activitySessionToken,type,'');
-    mapSet(user.activityActiveStartedAt,type,null);
-    mapSet(user.activityActiveQuestion,type,-1);
-    user.pendingQuizReward = { questionId:null, correct:false, reward:0, createdAt:null };
+    mapSet(user.activeActivityQuestions,type,-1);
+    mapSet(user.activeActivityStartedAt,type,null);
+    user.markModified('activeActivityQuestions');
+    user.markModified('activeActivityStartedAt');
     await user.save();
-    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
+    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1,questionInvalidated:true,wallet:Number(user.wallet||0)});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
 });
 
@@ -1662,17 +1665,16 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const type=req.params.type; const activity=ACTIVITIES[type];
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
+    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+    const activeId=mapGet(user.activeActivityQuestions,type);
+    if(!Number.isInteger(activeId) || activeId < 0 || activeId !== index){
+      return res.status(409).json({success:false,message:'This question is no longer active. Tab change detected; no wallet reward was added.',wallet:Number(user.wallet||0),tabChanged:true});
+    }
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
-    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
-    const sessionToken=String(req.body.sessionToken||'');
-    const expectedToken=String(mapGetString(user.activitySessionToken,type)||'');
-    if(!sessionToken || !expectedToken || sessionToken!==expectedToken){
-      return res.status(409).json({success:false,securityInvalidated:true,message:'Question invalidated because the tab/window was changed. No wallet update was made.'});
-    }
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
     if(!user.activityCounts) user.activityCounts={};
@@ -1695,8 +1697,11 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
-    mapSet(user.activitySessionToken,type,'');
-    mapSet(user.activityActiveStartedAt,type,null);
+    // Consume the active question so the same question cannot be submitted twice.
+    mapSet(user.activeActivityQuestions,type,-1);
+    mapSet(user.activeActivityStartedAt,type,null);
+    user.markModified('activeActivityQuestions');
+    user.markModified('activeActivityStartedAt');
     await user.save();
     res.json({
       success:true,

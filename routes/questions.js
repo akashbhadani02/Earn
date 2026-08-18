@@ -86,22 +86,11 @@ router.post("/answer", auth, async (req,res) => {
             return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
-
-        // The answer is validated here, but the wallet is NOT changed here.
-        // A one-time pending reward is created. If the student changes tab/window
-        // before claiming it, the security-event endpoint clears it and wallet
-        // remains exactly unchanged.
-        user.pendingQuizReward = {
-            questionId: question._id,
-            correct,
-            reward: correct ? 0.20 : -0.30,
-            createdAt: new Date()
-        };
         user.activeQuizQuestionId = null;
         user.activeQuizStartedAt = null;
         await user.save();
 
-        return res.json({ success:true, correct, correctIndex:Number(question.correct), pendingReward:true });
+        return res.json({ success:true, correct, correctIndex:Number(question.correct) });
     } catch(err) {
         console.error("Answer Check Error:",err);
         return res.status(500).json({ success:false, message:err.message });
@@ -110,7 +99,7 @@ router.post("/answer", auth, async (req,res) => {
 
 router.post("/abandon", auth, async (req,res) => {
     try {
-        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null,pendingQuizReward:{questionId:null,correct:false,reward:0,createdAt:null}}});
+        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null}});
         return res.json({success:true});
     } catch(err) {
         return res.status(500).json({success:false,message:err.message});
@@ -127,10 +116,9 @@ router.get("/random", auth, async (req, res) => {
             { $sample: { size: count } },
             { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
         ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) && q.options.length >= 2);
-        // Student endpoints never expose the correct index. The secure /next +
-        // /answer flow is used for earning/validation.
-        questions = questions.map(({q, options}) => ({q, options}));
+        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
+            q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
+            Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
         if (!questions.length && seedQuestions.length) {
             const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
                 Array.isArray(q.options) && q.options.length >= 2 &&
@@ -141,7 +129,7 @@ router.get("/random", auth, async (req, res) => {
                 [valid[i], valid[j]] = [valid[j], valid[i]];
             }
             questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String)
+                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
             }));
         }
         return res.json({ success: true, totalQuestions: questions.length, questions });
@@ -157,7 +145,7 @@ router.get("/", auth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options")
+            .select("q options correct")
             .lean();
 
         return res.json({
