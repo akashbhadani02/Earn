@@ -966,12 +966,12 @@ router.get("/control-center", adminAuth, async (req, res) => {
             .lean();
 
         const now = Date.now();
-        const onlineTimeout = 2000;
+        const onlineTimeout = 3000;
 
         const mapped = users.map(u => ({
             ...u,
             _id: String(u._id),
-            isOnline: !!u.lastSeen && (now - new Date(u.lastSeen).getTime()) <= onlineTimeout,
+            isOnline: !u.isBlocked && !u.permanentBlocked && !!u.lastSeen && (now - new Date(u.lastSeen).getTime()) <= onlineTimeout,
             dailyQuestionsAnswered: u.dailyQuestionsDate === today
                 ? Number(u.dailyQuestionsAnswered || 0)
                 : 0,

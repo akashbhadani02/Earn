@@ -9,6 +9,7 @@ const Question = require("../models/Question");
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
+const { registerViolation } = require("../services/antiCheat");
 const seedQuestions = require("../questions.json");
 
 let seedPromise = null;
@@ -50,10 +51,10 @@ router.get("/next", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
+        // A tab-changed question is permanently invalidated. It can only be cleared
+        // when the student starts a fresh Quiz screen, never during answer submission.
         if (user.quizInvalidated) {
             user.quizInvalidated = false;
-            user.activeQuizQuestionId = null;
-            user.activeQuizStartedAt = null;
             await user.save();
         }
 
@@ -89,6 +90,7 @@ router.post("/answer", auth, async (req,res) => {
 
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (user.isBlocked || user.permanentBlocked) return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,wallet:Number(user.wallet||0),message:"Account is blocked."});
         if (user.quizInvalidated)
             return res.status(409).json({ success:false, securityViolation:true, message:"This question was invalidated because the tab/window was changed. Wallet was not updated." });
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
@@ -142,22 +144,29 @@ router.post("/tab-change", auth, async (req,res) => {
     try {
         const user=await User.findById(req.user.id);
         if(!user) return res.status(404).json({success:false,message:"User not found"});
+        if(user.isBlocked || user.permanentBlocked){
+            user.wallet=0;
+            await user.save();
+            return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,wallet:0,message:"Account is blocked."});
+        }
+
+        // Only an actually active unanswered Quiz question is a violation.
+        // This prevents normal tab switching on the dashboard/result screen
+        // from consuming one of the student's three warnings.
+        if(!user.activeQuizQuestionId){
+            return res.json({success:true,violation:false,tabChanges:Number(user.tabChanges||0),wallet:Number(user.wallet||0),message:"No active Quiz question."});
+        }
+
+        const walletBefore=Number(user.wallet||0);
         user.tabChanges=Number(user.tabChanges||0)+1;
         user.quizInvalidated=true; user.activeQuizQuestionId=null; user.activeQuizStartedAt=null;
-        user.warningCount=Number(user.warningCount||0); user.blockCount=Number(user.blockCount||0);
-        const reason="Tab/window changed while a Quiz question was active";
-        user.warningHistory=Array.isArray(user.warningHistory)?user.warningHistory:[];
-        user.warningHistory.push({time:new Date(),reason});
-        if(user.warningHistory.length>200) user.warningHistory=user.warningHistory.slice(-200);
-        let warning=false, blocked=false, permanentBlocked=false;
-        if(user.warningCount<3){ user.warningCount+=1; warning=true; }
-        else{
-            user.blockCount+=1; user.wallet=0; user.isOnline=false;
-            if(user.blockCount>=4){ user.permanentBlocked=true; user.isBlocked=true; user.blockUntil=null; user.blockReason="Permanent block after 4 anti-cheating blocks"; blocked=true; permanentBlocked=true; }
-            else{ user.isBlocked=true; user.blockUntil=new Date(Date.now()+12*60*60*1000); user.blockReason=`Temporary block #${user.blockCount}: ${reason}`; blocked=true; }
+        const result=await registerViolation(user,"Tab/window changed while a Quiz question was active");
+        // Warnings never change wallet. A block always forces wallet to 0.
+        if(result.warning && Number(user.wallet||0)!==walletBefore){
+            user.wallet=walletBefore;
+            await user.save();
         }
-        await user.save();
-        return res.json({success:true,warning,blocked,permanentBlocked,warningCount:Number(user.warningCount||0),blockCount:Number(user.blockCount||0),wallet:Number(user.wallet||0),remainingMs:user.permanentBlocked?null:(user.blockUntil?Math.max(0,new Date(user.blockUntil).getTime()-Date.now()):0),message:permanentBlocked?'Permanent block — Admin unblock required':blocked?`Temporary block #${user.blockCount}`:warning?`Warning ${user.warningCount}/3`:'Security event recorded'});
+        return res.json({success:true,...result,tabChanges:Number(user.tabChanges||0),wallet:Number(user.wallet||0)});
     }catch(e){return res.status(500).json({success:false,message:e.message});}
 });
 

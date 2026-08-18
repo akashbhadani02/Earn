@@ -291,6 +291,7 @@ router.post("/offline", async (req, res) => {
 // 4th violation = Account Blocked
 // ==========================
 const auth = require("../middleware/auth");
+const { registerViolation, BLOCK_DURATION_MS } = require("../services/antiCheat");
 
 router.post("/block-me", auth, async (req, res) => {
     try {
@@ -298,93 +299,27 @@ router.post("/block-me", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        // Permanent block: only Admin can clear it.
         if (user.permanentBlocked) {
-            user.isBlocked = true;
-            user.blockUntil = null;
-            user.wallet = 0;
-            await user.save();
-            return res.json({
-                success:true, blocked:true, permanentBlocked:true,
-                warning:false, warningCount:Number(user.warningCount||0),
-                blockCount:Number(user.blockCount||0), remainingMs:null,
-                message:"Account permanently blocked. Only Admin can unblock this account."
-            });
+            user.isBlocked = true; user.blockUntil = null; user.wallet = 0; await user.save();
+            return res.json({ success:true, blocked:true, permanentBlocked:true, warning:false,
+                warningCount:Number(user.warningCount||0), blockCount:Number(user.blockCount||0), remainingMs:null,
+                message:"Account permanently blocked. Only Admin can unblock this account." });
         }
 
-        // A temporary block is already active. Do not count the same event again.
         if (user.isBlocked) {
             const blockTime = getBlockRemainingMs(user, Date.now());
             if (blockTime.remainingMs > 0) {
-                user.wallet = 0;
-                await user.save();
-                return res.json({
-                    success:true, blocked:true, permanentBlocked:false,
-                    warning:false, warningCount:Number(user.warningCount||0),
-                    blockCount:Number(user.blockCount||0),
-                    blockUntil:new Date(blockTime.untilMs).toISOString(),
-                    remainingMs:blockTime.remainingMs,
-                    message:"Account is already temporarily blocked"
-                });
+                user.wallet = 0; await user.save();
+                return res.json({ success:true, blocked:true, permanentBlocked:false, warning:false,
+                    warningCount:Number(user.warningCount||0), blockCount:Number(user.blockCount||0),
+                    blockUntil:new Date(blockTime.untilMs).toISOString(), remainingMs:blockTime.remainingMs,
+                    message:"Account is already temporarily blocked" });
             }
-            // Timer expired: unlock automatically, but keep history.
-            user.isBlocked = false;
-            user.blockUntil = null;
-            user.blockReason = "";
+            user.isBlocked = false; user.blockUntil = null; user.blockReason = "";
         }
 
-        // The first 3 violations are warnings. Wallet is untouched for warnings.
-        // Violation #4 starts temporary block #1.
-        user.warningCount = Number(user.warningCount || 0);
-        user.blockCount = Number(user.blockCount || 0);
-        user.blockReason = reason;
-        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
-        user.warningHistory.push({ time:new Date(), reason });
-        if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
-
-        if (user.warningCount < 3) {
-            user.warningCount += 1;
-            await user.save();
-            return res.json({
-                success:true, blocked:false, warning:true,
-                warningCount:user.warningCount, remainingWarnings:3-user.warningCount,
-                blockCount:Number(user.blockCount||0), permanentBlocked:false,
-                message:`Warning ${user.warningCount}/3`
-            });
-        }
-
-        // From here on, every violation creates block #1, #2, #3, then #4 permanent.
-        user.blockCount += 1;
-        user.wallet = 0;
-        user.isOnline = false;
-
-        if (user.blockCount >= 4) {
-            user.permanentBlocked = true;
-            user.isBlocked = true;
-            user.blockUntil = null;
-            user.blockReason = `Permanent block after ${user.blockCount} anti-cheating blocks`;
-            await user.save();
-            return res.json({
-                success:true, blocked:true, permanentBlocked:true,
-                warning:false, warningCount:Number(user.warningCount||0),
-                blockCount:user.blockCount, remainingMs:null,
-                message:"Permanent block. Only Admin can unblock this account."
-            });
-        }
-
-        user.isBlocked = true;
-        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
-        user.blockReason = `Temporary block #${user.blockCount}: ${reason}`;
-        await user.save();
-
-        return res.json({
-            success:true, blocked:true, permanentBlocked:false,
-            warning:false, warningCount:Number(user.warningCount||0),
-            blockCount:user.blockCount, blockNumber:user.blockCount,
-            blockUntil:user.blockUntil.toISOString(),
-            remainingMs:12*60*60*1000,
-            message:`Temporary block #${user.blockCount} for 12 hours`
-        });
+        const result = await registerViolation(user, reason);
+        return res.json({ success:true, ...result, remainingWarnings:Math.max(0,3-Number(user.warningCount||0)) });
     } catch (err) {
         console.error("Warning/Block Error:", err);
         return res.status(500).json({ success:false, message:err.message });

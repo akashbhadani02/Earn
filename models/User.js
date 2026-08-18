@@ -154,6 +154,10 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
 
+        // Anti-cheating blocks: blocks 1-3 are temporary (timer), block 4 is permanent/admin-only.
+        blockCount: { type: Number, default: 0 },
+        permanentBlocked: { type: Boolean, default: false },
+
         lastClaim: {
             type: String,
             default: ""
@@ -305,7 +309,9 @@ const userSchema = new mongoose.Schema(
         activityEarn: { type: Map, of: Number, default: {} },
         activityDeduct: { type: Map, of: Number, default: {} },
         activityTabChanges: { type: Map, of: Number, default: {} },
-        activityLastQuestion: { type: Map, of: Number, default: {} }
+        activityLastQuestion: { type: Map, of: Number, default: {} },
+        activityActiveQuestion: { type: Map, of: Number, default: {} },
+        activityInvalidated: { type: Map, of: Boolean, default: {} }
     },
     {
         timestamps: true,

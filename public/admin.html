@@ -1551,7 +1551,7 @@
 
             const diff = Date.now() - new Date(lastSeen).getTime();
 
-            if (diff <= 2000) {
+            if (diff <= 3000) {
                 return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
             }
 
@@ -1586,12 +1586,12 @@
 
             users.forEach(user => {
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
-                const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 2000;
+                const isOnline = !user.isBlocked && !user.permanentBlocked && lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
 
                 html += `
 
-<tr style="background:${isOnline ? '#dcfce7' : '#fee2e2'};">
-    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};"></span>${user.name}</td>
+<tr data-student-status="${isOnline ? 'online' : 'offline'}" style="background:${isOnline ? '#dcfce7' : '#fee2e2'};transition:background .2s ease;">
+    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};box-shadow:${isOnline ? '0 0 10px #22c55e' : 'none'};"></span>${user.name}<br><span style="display:inline-block;margin-top:4px;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:800;background:${isOnline ? '#dcfce7' : '#fee2e2'};color:${isOnline ? '#166534' : '#991b1b'};">${isOnline ? '🟢 Online' : '🔴 Offline'}</span></td>
     <td>${user.mobile}</td>
 
     <td>${formatLastSeen(user.lastSeen)}</td>

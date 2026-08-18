@@ -509,7 +509,7 @@ async function performLogin(mobile, password){
             } else {
                 document.getElementById("message").innerHTML =
                     "🚫 Account blocked.<br>" +
-                    "Block is active. નીચે actual remaining time દેખાશે.";
+                    "Temporary Block "+(Number(data.blockCount || 0))+"/3 — timer below.";
                 startBlockedCountdown(data.remainingMs);
             }
             if(loginButton){
