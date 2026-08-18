@@ -17,7 +17,7 @@ const activityRoutes = require("./routes/activities");
 const app = express();
 app.disable("x-powered-by");
 
-connectDB();
+connectDB().catch((err) => console.error("❌ MongoDB connection error:", err.message));
 
 app.use(cors());
 app.use(express.json());
