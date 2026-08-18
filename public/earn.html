@@ -2693,10 +2693,47 @@ body.notification-locked #notificationRequiredOverlay button{
         // Refresh the authoritative wallet once the page UI is ready.
         loadWallet();
 
-        function claimBonus() {
-            alert("🔥 તમે Bonus થી બસ થોડા જ દૂર છો! 🎁\n\n🎯 વધુ પ્રશ્નો solve કરો અને તમારો સ્કોર વધારો.\n🚀 થોડો વધુ પ્રયત્ન કરો અને Bonus unlock કરો!\n🏆 Top Performer બનવાની તક તમારી છે!");
+        async function claimBonus() {
+    try {
+        const token = localStorage.getItem("studentToken");
+
+        if (!token) {
+            alert("❌ Please login first.");
+            return;
         }
 
+        const response = await fetch("/api/bonus/claim", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert("🎁 Bonus is not available right now.");
+            return;
+        }
+
+        alert(
+            "🎉 Bonus Claim Successful!\n\n" +
+            "📸 આ screen નો screenshot લો.\n\n" +
+            "📤 લીધેલો screenshot Admin ને મોકલવાનો છે.\n\n" +
+            "⏳ Admin screenshot verify કર્યા પછી જ Bonus તમારા Wallet માં add કરશે.\n\n" +
+            "💰 Bonus હાલમાં Wallet માં add થયો નથી."
+        );
+
+    } catch (error) {
+        console.error("Bonus Error:", error);
+
+        alert(
+            "❌ Something went wrong.\n\n" +
+            "Please try again later."
+        );
+    }
+}
         function toggleTheme() {
             document.body.classList.toggle("dark");
 
