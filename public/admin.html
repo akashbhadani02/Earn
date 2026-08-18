@@ -918,7 +918,7 @@
   line-height: 1.2 !important;
   text-transform: uppercase;
 }
-<style id="activity-stats-color-fix">
+/* <style id="activity-stats-color-fix"> */
 /* English Learning & Earning popup - stronger, clear colors */
 #closeActivityStats{
   border:0 !important;
@@ -2727,7 +2727,7 @@ ${w.status === "Approved" ? `
 
         function applyLivePresence(presenceUsers) {
             const byId = new Map(presenceUsers.map(u => [String(u.id), u]));
-            const now = Date.now();
+            const now = Number(window.__presenceServerTime || Date.now());
             const onlineCount = presenceUsers.filter(u => {
                 const t = u.lastSeen ? new Date(u.lastSeen).getTime() : 0;
                 return t > 0 && (now - t) <= 7000;
@@ -2780,7 +2780,14 @@ ${w.status === "Approved" ? `
                 });
                 if (!r.ok) return;
                 const d = await r.json();
-                if (d.success) applyLivePresence(d.users || []);
+                if (d.success) {
+                    window.__presenceServerTime = Number(d.serverTime || Date.now());
+                    applyLivePresence(d.users || []);
+                    // Keep Command Center student list/counter in sync with the same
+                    // lightweight presence source, instead of waiting for the 5-second
+                    // full dashboard refresh.
+                    if (window.ap2SyncPresence) window.ap2SyncPresence(d.users || []);
+                }
             } catch (e) {
                 console.warn("Live presence refresh failed:", e.message);
             } finally {
@@ -3256,6 +3263,21 @@ ${w.status === "Approved" ? `
             const q = u => u.dailyQuestionsDate === new Date().toISOString().slice(0, 10) ? Number(u.dailyQuestionsAnswered || 0) : 0;
             const spinQ = u => u.dailyQuestionsDate === new Date().toISOString().slice(0, 10) ? Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) : 0;
             const money = x => "₹" + Number(x || 0).toFixed(2);
+
+            window.ap2SyncPresence = (presenceUsers) => {
+                const byId = new Map((presenceUsers || []).map(u => [String(u.id), u]));
+                let online = 0;
+                D.users = (D.users || []).map(u => {
+                    const p = byId.get(String(u._id || u.id || u.student_id || ""));
+                    if (!p) return u;
+                    const isOnline = !!p.isOnline;
+                    if (isOnline) online++;
+                    return { ...u, lastSeen: p.lastSeen || u.lastSeen || null, isOnline };
+                });
+                const onlineEl = document.getElementById("ap2Online");
+                if (onlineEl) onlineEl.textContent = online;
+                if (document.getElementById("ap2StudentRows")) ap2RenderStudents();
+            };
 
             window.ap2Refresh = async () => {
                 try {

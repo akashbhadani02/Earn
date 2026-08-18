@@ -1802,7 +1802,7 @@ body.notification-locked #notificationRequiredOverlay button{
             // Allow normal Mongo/network/serverless latency. Keep the request alive
             // long enough so normal Vercel/Render cold starts do not cause
             // false Offline states.
-            const timeout = setTimeout(() => presenceAbort.abort(), 2500);
+            const timeout = setTimeout(() => presenceAbort.abort(), 5000);
 
             try {
                 const res = await fetch("/api/auth/heartbeat", {
@@ -1865,7 +1865,7 @@ body.notification-locked #notificationRequiredOverlay button{
 
         window.addEventListener("pagehide", () => {
             // Do not mark offline immediately. The admin/server decides Offline
-            // only after 3 seconds without a heartbeat. This prevents a real
+            // only after 7 seconds without a heartbeat. This prevents a real
             // active student from being shown Offline during tab/page changes.
             stopPresence();
         });
