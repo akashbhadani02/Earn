@@ -1001,123 +1001,345 @@ body.notification-locked #notificationRequiredOverlay button{
     pointer-events:auto;
 }
 
-    /* ================================
-   DASHBOARD BUTTON LAYOUT UPDATE
+/* =========================================
+   FINAL DASHBOARD LAYOUT
    CSS ONLY — NO FUNCTIONALITY CHANGE
-================================ */
+========================================= */
 
-/* Dashboard ને 2-column layout */
 #dashboard {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
 }
 
-/* Title + wallet full width */
+/* Heading + Wallet + First Grid Full Width */
 #dashboard > h2,
-#dashboard > .wallet-box {
-    grid-column: 1 / -1;
-}
-
-/* Existing first button grid full width */
+#dashboard > .wallet-box,
 #dashboard > .grid {
     grid-column: 1 / -1;
 }
 
-/* Dashboard ના normal buttons 2-2 ની pair માં */
-#dashboard > .btn {
-    width: 100%;
-    margin-top: 0;
+/* =========================================
+   TOP ICON ROW
+   Dark Mode + Profile + Admin
+========================================= */
+
+/* Dark Mode */
+#dashboard > #themeBtn {
+    grid-column: 1;
+    grid-row: 3;
+
+    width: 100% !important;
+    height: 58px !important;
+    min-height: 58px !important;
+
+    margin: 0 !important;
+    padding: 8px !important;
+
+    border-radius: 16px !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 0 !important;
 }
 
-/* Profile + Admin icon ઉપર */
-#dashboard > .btn-profile,
-#dashboard > .btn-Admin {
-    height: 82px;
-    min-height: 82px;
+/* Dark Mode icon */
+#dashboard > #themeBtn::before {
+    content: "🌙";
+    font-size: 25px;
+}
+
+/* Profile */
+#dashboard > .btn-profile {
+    grid-column: 1;
+    grid-row: 4;
+
+    width: 100%;
+    height: 58px;
+    min-height: 58px;
+
+    margin: 0 !important;
+    padding: 6px !important;
+
+    border-radius: 16px;
+
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 5px;
-    font-size: 13px;
+    justify-content: center;
+
+    gap: 3px;
+
+    font-size: 0 !important;
 }
 
 /* Profile icon */
-#dashboard > .btn-profile {
-    font-size: 0;
-}
-
 #dashboard > .btn-profile::before {
     content: "👤";
-    font-size: 27px;
+    font-size: 23px;
     line-height: 1;
 }
 
 #dashboard > .btn-profile::after {
     content: "Profile";
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 700;
 }
 
-/* Admin icon */
+/* Admin */
 #dashboard > .btn-Admin {
-    font-size: 0;
+    grid-column: 2;
+    grid-row: 4;
+
+    width: 100%;
+    height: 58px;
+    min-height: 58px;
+
+    margin: 0 !important;
+    padding: 6px !important;
+
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 3px;
+
+    font-size: 0 !important;
 }
 
+/* Admin icon */
 #dashboard > .btn-Admin::before {
     content: "🛡️";
-    font-size: 27px;
+    font-size: 23px;
     line-height: 1;
 }
 
 #dashboard > .btn-Admin::after {
     content: "Admin";
-    font-size: 13px;
+    font-size: 10px;
     font-weight: 700;
 }
 
-/* Telegram button લાંબો */
+
+/* =========================================
+   NORMAL BUTTONS
+   ALL SAME SIZE
+   2 BUTTONS IN ONE ROW
+========================================= */
+
+#dashboard > .btn-spin,
+#dashboard > .btn-reward,
+#dashboard > .btn-bonus,
+#dashboard > .btn-withdraw {
+
+    width: 100% !important;
+
+    height: 62px !important;
+    min-height: 62px !important;
+
+    margin: 0 !important;
+
+    border-radius: 17px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+/* Spin */
+#dashboard > .btn-spin {
+    grid-column: 1;
+    grid-row: 5;
+}
+
+/* Daily Reward */
+#dashboard > .btn-reward {
+    grid-column: 2;
+    grid-row: 5;
+}
+
+/* Bonus */
+#dashboard > .btn-bonus {
+    grid-column: 1;
+    grid-row: 6;
+}
+
+/* Withdraw */
+#dashboard > .btn-withdraw {
+    grid-column: 2;
+    grid-row: 6;
+}
+
+
+/* =========================================
+   TELEGRAM FULL WIDTH
+========================================= */
+
 #dashboard > .telegram-btn {
+
     grid-column: 1 / -1;
-    width: 100%;
-    min-height: 62px;
-    margin-top: 0;
+
+    width: 100% !important;
+
+    height: 62px !important;
+    min-height: 62px !important;
+
+    margin: 0 !important;
+
     border-radius: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    font-size: 13px;
 }
 
-/* Telegram icon */
-#dashboard > .telegram-btn .telegram-icon {
-    width: 22px;
-    height: 22px;
+
+/* =========================================
+   ENGLISH LEARNING + QUIZ
+========================================= */
+
+#dashboard > .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    margin: 0;
 }
 
-/* Mobile */
+#dashboard > .grid .btn {
+
+    width: 100%;
+
+    height: 62px;
+    min-height: 62px;
+
+    margin: 0;
+
+    border-radius: 17px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 480px) {
+
     #dashboard {
         grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
+    /* Dark Mode */
+    #dashboard > #themeBtn {
+
+        height: 54px !important;
+        min-height: 54px !important;
+
+        border-radius: 14px !important;
+    }
+
+    #dashboard > #themeBtn::before {
+        font-size: 22px;
+    }
+
+    /* Profile + Admin */
     #dashboard > .btn-profile,
     #dashboard > .btn-Admin {
-        min-height: 78px;
-        height: 78px;
+
+        height: 58px;
+        min-height: 58px;
+
+        border-radius: 14px;
     }
 
     #dashboard > .btn-profile::before,
     #dashboard > .btn-Admin::before {
-        font-size: 24px;
+        font-size: 21px;
     }
 
     #dashboard > .btn-profile::after,
     #dashboard > .btn-Admin::after {
-        font-size: 12px;
+        font-size: 9px;
+    }
+
+    /* Normal buttons */
+    #dashboard > .btn-spin,
+    #dashboard > .btn-reward,
+    #dashboard > .btn-bonus,
+    #dashboard > .btn-withdraw {
+
+        height: 58px !important;
+        min-height: 58px !important;
+
+        border-radius: 15px;
+
+        font-size: 11px !important;
+    }
+
+    /* Quiz + Learning */
+    #dashboard > .grid {
+        gap: 10px;
+    }
+
+    #dashboard > .grid .btn {
+
+        height: 58px;
+        min-height: 58px;
+
+        border-radius: 15px;
+
+        font-size: 11px;
+    }
+
+    /* Telegram */
+    #dashboard > .telegram-btn {
+
+        height: 58px !important;
+        min-height: 58px !important;
+
+        border-radius: 15px;
+
+        font-size: 11px;
+    }
+}
+
+
+/* =========================================
+   VERY SMALL MOBILE
+========================================= */
+
+@media (max-width: 350px) {
+
+    #dashboard > .btn-spin,
+    #dashboard > .btn-reward,
+    #dashboard > .btn-bonus,
+    #dashboard > .btn-withdraw,
+    #dashboard > .grid .btn {
+
+        font-size: 10px !important;
     }
 
     #dashboard > .telegram-btn {
-        min-height: 58px;
-        font-size: 12px;
+        font-size: 10px;
     }
 }
 </style>
