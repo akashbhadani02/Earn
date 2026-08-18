@@ -71,6 +71,16 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        activeQuizQuestionId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Question",
+            default: null
+        },
+        activeQuizStartedAt: {
+            type: Date,
+            default: null
+        },
+
         isOnline: {
             type: Boolean,
             default: false

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Question = require("../models/Question");
+const User = require("../models/User");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
 const seedQuestions = require("../questions.json");
@@ -37,6 +38,73 @@ async function ensureQuestionsSeeded() {
 
     return seedPromise;
 }
+
+// Secure quiz endpoints. The correct answer never goes to the browser.
+router.get("/next", auth, async (req, res) => {
+    try {
+        await ensureQuestionsSeeded();
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+
+        let question = user.activeQuizQuestionId
+            ? await Question.findById(user.activeQuizQuestionId).select("_id q options").lean()
+            : null;
+
+        if (!question) {
+            const picked = await Question.aggregate([
+                { $match:{ q:{ $type:"string" }, options:{ $type:"array" } } },
+                { $sample:{ size:1 } },
+                { $project:{ _id:1, q:1, options:1 } }
+            ]);
+            question = picked[0];
+            if (!question) return res.status(404).json({ success:false, message:"No questions available" });
+            user.activeQuizQuestionId = question._id;
+            user.activeQuizStartedAt = new Date();
+            await user.save();
+        }
+        return res.json({ success:true, question });
+    } catch(err) {
+        console.error("Next Question Error:",err);
+        return res.status(500).json({ success:false, message:err.message });
+    }
+});
+
+router.post("/answer", auth, async (req,res) => {
+    try {
+        const { questionId, answerIndex } = req.body || {};
+        const index = Number(answerIndex);
+        if (!questionId || !Number.isInteger(index) || index < 0)
+            return res.status(400).json({ success:false, message:"Invalid answer" });
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
+            return res.status(409).json({ success:false, message:"This question is no longer active." });
+
+        const question = await Question.findById(questionId).select("options correct").lean();
+        if (!question || index >= question.options.length)
+            return res.status(400).json({ success:false, message:"Invalid question or answer" });
+
+        const correct = index === Number(question.correct);
+        user.activeQuizQuestionId = null;
+        user.activeQuizStartedAt = null;
+        await user.save();
+
+        return res.json({ success:true, correct, correctIndex:Number(question.correct) });
+    } catch(err) {
+        console.error("Answer Check Error:",err);
+        return res.status(500).json({ success:false, message:err.message });
+    }
+});
+
+router.post("/abandon", auth, async (req,res) => {
+    try {
+        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null}});
+        return res.json({success:true});
+    } catch(err) {
+        return res.status(500).json({success:false,message:err.message});
+    }
+});
 
 // Fast student quiz endpoint: return a small random batch instead of the full question bank.
 router.get("/random", auth, async (req, res) => {
