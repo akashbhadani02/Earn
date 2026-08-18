@@ -1000,6 +1000,126 @@ body.notification-locked #notificationRequiredOverlay{
 body.notification-locked #notificationRequiredOverlay button{
     pointer-events:auto;
 }
+
+    /* ================================
+   DASHBOARD BUTTON LAYOUT UPDATE
+   CSS ONLY — NO FUNCTIONALITY CHANGE
+================================ */
+
+/* Dashboard ને 2-column layout */
+#dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* Title + wallet full width */
+#dashboard > h2,
+#dashboard > .wallet-box {
+    grid-column: 1 / -1;
+}
+
+/* Existing first button grid full width */
+#dashboard > .grid {
+    grid-column: 1 / -1;
+}
+
+/* Dashboard ના normal buttons 2-2 ની pair માં */
+#dashboard > .btn {
+    width: 100%;
+    margin-top: 0;
+}
+
+/* Profile + Admin icon ઉપર */
+#dashboard > .btn-profile,
+#dashboard > .btn-Admin {
+    height: 82px;
+    min-height: 82px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+}
+
+/* Profile icon */
+#dashboard > .btn-profile {
+    font-size: 0;
+}
+
+#dashboard > .btn-profile::before {
+    content: "👤";
+    font-size: 27px;
+    line-height: 1;
+}
+
+#dashboard > .btn-profile::after {
+    content: "Profile";
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Admin icon */
+#dashboard > .btn-Admin {
+    font-size: 0;
+}
+
+#dashboard > .btn-Admin::before {
+    content: "🛡️";
+    font-size: 27px;
+    line-height: 1;
+}
+
+#dashboard > .btn-Admin::after {
+    content: "Admin";
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Telegram button લાંબો */
+#dashboard > .telegram-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-height: 62px;
+    margin-top: 0;
+    border-radius: 18px;
+}
+
+/* Telegram icon */
+#dashboard > .telegram-btn .telegram-icon {
+    width: 22px;
+    height: 22px;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    #dashboard {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    #dashboard > .btn-profile,
+    #dashboard > .btn-Admin {
+        min-height: 78px;
+        height: 78px;
+    }
+
+    #dashboard > .btn-profile::before,
+    #dashboard > .btn-Admin::before {
+        font-size: 24px;
+    }
+
+    #dashboard > .btn-profile::after,
+    #dashboard > .btn-Admin::after {
+        font-size: 12px;
+    }
+
+    #dashboard > .telegram-btn {
+        min-height: 58px;
+        font-size: 12px;
+    }
+}
 </style>
 
 </head>
