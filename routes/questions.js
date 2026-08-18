@@ -114,11 +114,10 @@ router.get("/random", auth, async (req, res) => {
         let questions = await Question.aggregate([
             { $match: { q: { $type: "string" }, options: { $type: "array" } } },
             { $sample: { size: count } },
-            { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
+            { $project: { q: 1, options: 1, _id: 0 } }
         ]);
         questions = questions.filter(q => q.q && Array.isArray(q.options) &&
-            q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
-            Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
+            q.options.length >= 2);
         if (!questions.length && seedQuestions.length) {
             const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
                 Array.isArray(q.options) && q.options.length >= 2 &&
@@ -129,7 +128,7 @@ router.get("/random", auth, async (req, res) => {
                 [valid[i], valid[j]] = [valid[j], valid[i]];
             }
             questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
+                q: String(q.q).trim(), options: q.options.map(String)
             }));
         }
         return res.json({ success: true, totalQuestions: questions.length, questions });
@@ -145,7 +144,7 @@ router.get("/", auth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options correct")
+            .select("q options")
             .lean();
 
         return res.json({
@@ -239,7 +238,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
     }
 });
 
-router.get("/download", async (req, res) => {
+router.get("/download", adminAuth, async (req, res) => {
     try {
         const questions = await Question.find().lean();
 

@@ -1611,71 +1611,236 @@ function mapSet(map, key, value) {
   if (map && typeof map.set === 'function') map.set(key, value);
   else if (map) map[key] = value;
 }
-function pickRandomQuestions(type, activity, user) {
+
+// Only question content needed to render the activity is sent to the browser.
+// Correct answers stay on the server and are checked only by /submit.
+function publicQuestion(type,q){
+  if(type==='arrange') return {prompt:q[0]};
+  if(type==='correction'||type==='translate'||type==='word') return {prompt:q[0]};
+  if(type==='fill') return {prompt:q[0],options:q[1]};
+  if(type==='listening') return {prompt:q};
+  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
+  if(type==='speaking') return {prompt:q};
+  return {prompt:q};
+}
+
+function mapGet(map, key) {
+  if (!map) return 0;
+  if (typeof map.get === 'function') return Number(map.get(key) || 0);
+  return Number(map[key] || 0);
+}
+function mapSet(map, key, value) {
+  if (map && typeof map.set === 'function') map.set(key, value);
+  else if (map) map[key] = value;
+}
+
+function mapDelete(map,key){
+  if (!map) return;
+  if (typeof map.delete === 'function') map.delete(key);
+  else delete map[key];
+}
+
+function getMapDate(map,key){
+  if (!map) return null;
+  const v = typeof map.get === 'function' ? map.get(key) : map[key];
+  return v ? new Date(v) : null;
+}
+
+function setMapDate(map,key,value){
+  if (map && typeof map.set === 'function') map.set(key,value);
+  else if (map) map[key]=value;
+}
+
+function pickQuestion(type, activity, user) {
   const all = activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
-  if (!all.length) return [];
+  if (!all.length) return null;
   const last = mapGet(user?.activityLastQuestion, type);
-  const shuffled = all.sort(() => Math.random() - 0.5);
-  const withoutLast = shuffled.filter(x => x.id !== last);
-  return (withoutLast.length ? withoutLast : shuffled).slice(0, Math.min(30, shuffled.length));
+  const candidates = all.filter(x => x.id !== last);
+  const source = candidates.length ? candidates : all;
+  return source[Math.floor(Math.random()*source.length)];
+}
+
+function clearActivityLock(user,type){
+  mapDelete(user.activityActiveQuestion,type);
+  mapDelete(user.activityActiveStartedAt,type);
+}
+
+function isActivityLocked(user,type){
+  const until=getMapDate(user.activityLockedUntil,type);
+  return until && until.getTime()>Date.now();
 }
 
 router.get('/:type', auth, async (req,res)=>{
-  const type=req.params.type; const activity=ACTIVITIES[type];
-  if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const user=await User.findById(req.user.id).select('activityLastQuestion');
-  const items=pickRandomQuestions(type,activity,user);
-  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
+  try {
+    const type=req.params.type; const activity=ACTIVITIES[type];
+    if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
+    const user=await User.findById(req.user.id);
+    if(!user) return res.status(404).json({success:false,message:'User not found'});
+
+    if(isActivityLocked(user,type)){
+      const until=getMapDate(user.activityLockedUntil,type);
+      return res.status(409).json({
+        success:false,
+        locked:true,
+        message:'Activity temporarily locked because the tab/window was changed. Please return to this activity after the short security lock.',
+        retryAt:until.toISOString()
+      });
+    }
+
+    const today=todayKey();
+    if(!user.activityDate || user.activityDate!==today){
+      user.activityDate=today;
+      user.activityCounts={};
+    }
+    const count=mapGet(user.activityCounts,type);
+    if(count>=activity.dailyLimit){
+      return res.status(400).json({
+        success:false,
+        limitReached:true,
+        message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,
+        used:count,
+        remaining:0
+      });
+    }
+
+    let index=mapGet(user.activityActiveQuestion,type);
+    let valid=Number.isInteger(index) && index>=0 && index<activity.questions.length;
+    if(!valid){
+      const picked=pickQuestion(type,activity,user);
+      if(!picked) return res.status(404).json({success:false,message:'No questions available'});
+      index=picked.id;
+      mapSet(user.activityActiveQuestion,type,index);
+      setMapDate(user.activityActiveStartedAt,type,new Date());
+      await user.save();
+    }
+
+    const q=activity.questions[index];
+    return res.json({
+      success:true,
+      type,
+      title:activity.title,
+      reward:activity.reward,
+      dailyLimit:activity.dailyLimit,
+      used:count,
+      remaining:Math.max(0,activity.dailyLimit-count),
+      questions:[{id:index,...publicQuestion(type,q)}]
+    });
+  } catch(e){
+    console.error('Activity load error:',e);
+    res.status(500).json({success:false,message:e.message});
+  }
 });
 
+// A tab/window change immediately invalidates the unanswered activity question.
+// A short server-side lock prevents using Google/search in another tab and then
+// returning to submit the old question for a reward.
 router.post('/:type/tab-change', auth, async (req,res)=>{
   try {
     const type=req.params.type;
     if(!ACTIVITIES[type]) return res.status(404).json({success:false,message:'Activity not found'});
     const user=await User.findById(req.user.id);
     if(!user) return res.status(404).json({success:false,message:'User not found'});
+
     user.tabChanges=Number(user.tabChanges||0)+1;
     const current=mapGet(user.activityTabChanges,type);
     mapSet(user.activityTabChanges,type,current+1);
+
+    clearActivityLock(user,type);
+    setMapDate(user.activityLockedUntil,type,new Date(Date.now()+30000));
     await user.save();
-    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
-  } catch(e){ res.status(500).json({success:false,message:e.message}); }
+
+    res.json({
+      success:true,
+      tabChanges:Number(user.tabChanges||0),
+      activityTabChanges:current+1,
+      invalidated:true,
+      lockSeconds:30
+    });
+  } catch(e){
+    res.status(500).json({success:false,message:e.message});
+  }
+});
+
+// Explicit abandon endpoint for navigation/visibility protection.
+router.post('/:type/abandon', auth, async (req,res)=>{
+  try {
+    const type=req.params.type;
+    if(!ACTIVITIES[type]) return res.status(404).json({success:false,message:'Activity not found'});
+    const user=await User.findById(req.user.id);
+    if(!user) return res.status(404).json({success:false,message:'User not found'});
+    clearActivityLock(user,type);
+    await user.save();
+    res.json({success:true,invalidated:true});
+  } catch(e){
+    res.status(500).json({success:false,message:e.message});
+  }
 });
 
 router.post('/:type/submit', auth, async (req,res)=>{
   try{
     const type=req.params.type; const activity=ACTIVITIES[type];
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-    const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
-    const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
+    const index=Number(req.body.questionId);
+    const answer=String(req.body.answer||'').trim();
+    if(!Number.isInteger(index) || index<0) return res.status(400).json({success:false,message:'Invalid question'});
+
+    const user=await User.findById(req.user.id);
+    if(!user) return res.status(404).json({success:false,message:'User not found'});
+
+    if(isActivityLocked(user,type)){
+      return res.status(409).json({success:false,message:'This activity question was invalidated because the tab/window was changed. Please reopen the activity after the security lock.'});
+    }
+
+    const activeIndex=mapGet(user.activityActiveQuestion,type);
+    if(activeIndex!==index){
+      return res.status(409).json({success:false,message:'This question is no longer active. Please reopen the activity.'});
+    }
+
+    const q=activity.questions[index];
+    if(!q) return res.status(400).json({success:false,message:'Invalid question'});
+
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
-    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+
     const today=todayKey();
-    if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
+    if(!user.activityDate || user.activityDate!==today){
+      user.activityDate=today;
+      user.activityCounts={};
+    }
     if(!user.activityCounts) user.activityCounts={};
-    const count=Number(user.activityCounts.get ? user.activityCounts.get(type)||0 : user.activityCounts[type]||0);
-    if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
+    const count=mapGet(user.activityCounts,type);
+    if(count>=activity.dailyLimit){
+      return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
+    }
+
+    // Consume this question exactly once. The active lock is cleared before saving.
     mapSet(user.activityCounts,type,count+1);
     mapSet(user.activityLastQuestion,type,index);
+    clearActivityLock(user,type);
+
     const correctCount=mapGet(user.activityCorrect,type);
     const wrongCount=mapGet(user.activityWrong,type);
     const earned=mapGet(user.activityEarn,type);
     const deducted=mapGet(user.activityDeduct,type);
+
     if(correct){
       user.wallet=Number(user.wallet||0)+activity.reward;
       user.totalEarn=Number(user.totalEarn||0)+activity.reward;
       mapSet(user.activityCorrect,type,correctCount+1);
       mapSet(user.activityEarn,type,earned+activity.reward);
     }else{
-      const deduction=Math.min(Number(user.wallet||0),activity.reward);
-      user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
+      const beforeWallet=Number(user.wallet||0);
+      const deduction=Math.min(beforeWallet,activity.reward);
+      user.wallet=Math.max(0,beforeWallet-activity.reward);
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
+
     await user.save();
+
+    // IMPORTANT: never send correctAnswer/expected back to the browser.
     res.json({
       success:true,
       correct,
@@ -1687,9 +1852,12 @@ router.post('/:type/submit', auth, async (req,res)=>{
       correctCount:correct?correctCount+1:correctCount,
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
-      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
-      correctAnswer:expected
+      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)
     });
-  }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
+  }catch(e){
+    console.error('Activity submit error:',e);
+    res.status(500).json({success:false,message:e.message});
+  }
 });
+
 module.exports=router;

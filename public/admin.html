@@ -2811,7 +2811,9 @@ ${w.status === "Approved" ? `
 
         async function downloadQuestions() {
             try {
-                const response = await fetch("/api/questions/download");
+                const response = await fetch("/api/questions/download", {
+                    headers: { Authorization: "Bearer " + (localStorage.getItem("adminToken") || localStorage.getItem("token") || "") }
+                });
 
                 const blob = await response.blob();
 
