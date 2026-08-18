@@ -31,6 +31,12 @@ app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
 
+// Public fallback for the bundled quiz question bank.
+app.get("/question-bank.json", (req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.sendFile(path.join(__dirname, "questions.json"));
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{

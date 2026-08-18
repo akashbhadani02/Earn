@@ -72,9 +72,10 @@ router.get("/", auth, async (req, res) => {
 // the selected answer was correct.
 // =============================
 router.post("/quiz", auth, async (req, res) => {
-    // Deprecated insecure endpoint. Quiz rewards are now granted atomically by
-    // /api/questions/answer after the server verifies the active question.
-    return res.status(410).json({ success:false, message:"Quiz rewards must be submitted through the active question." });
+    return res.status(410).json({
+        success:false,
+        message:"Quiz rewards are issued only by the server-side /api/questions/answer endpoint."
+    });
 });
 
 // =============================

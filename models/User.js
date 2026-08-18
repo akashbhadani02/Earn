@@ -149,6 +149,27 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
 
+        // Number of timed anti-cheating blocks already issued.
+        // Blocks 1-3 have a timer; block 4 is permanent until admin unblocks.
+        blockCount: {
+            type: Number,
+            default: 0
+        },
+
+        // Current English Learning & Earning question locked on the server.
+        activeActivityType: {
+            type: String,
+            default: ""
+        },
+        activeActivityQuestionId: {
+            type: Number,
+            default: null
+        },
+        activeActivityStartedAt: {
+            type: Date,
+            default: null
+        },
+
         lastClaim: {
             type: String,
             default: ""

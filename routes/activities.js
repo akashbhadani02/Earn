@@ -1,5 +1,4 @@
 const express = require('express');
-const crypto = require('crypto');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
@@ -1598,7 +1597,7 @@ function publicQuestion(type,q){
   if(type==='correction'||type==='translate') return {prompt:q[0]};
   if(type==='word') return {prompt:q[0]};
   if(type==='fill') return {prompt:q[0],options:q[1]};
-  if(type==='listening') return {prompt:'🎧 Listen carefully and type the sentence',audioText:q};
+  if(type==='listening') return {prompt:'Listen carefully and type the sentence'};
   if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
   return {prompt:q};
 }
@@ -1622,23 +1621,32 @@ function pickRandomQuestions(type, activity, user) {
 }
 
 router.get('/:type', auth, async (req,res)=>{
-  try {
-    const type=req.params.type; const activity=ACTIVITIES[type];
-    if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-    const user=await User.findById(req.user.id);
-    if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.isBlocked || user.finalBlocked) return res.status(403).json({success:false,message:'Account is blocked'});
-    const items=pickRandomQuestions(type,activity,user);
-    if(!items.length) return res.status(404).json({success:false,message:'No questions available'});
-    const selected=items[Math.floor(Math.random()*items.length)];
-    const token=crypto.randomBytes(18).toString('hex');
+  const type=req.params.type; const activity=ACTIVITIES[type];
+  if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
+  const user=await User.findById(req.user.id);
+  if(!user) return res.status(404).json({success:false,message:'User not found'});
+  if(user.isBlocked) return res.status(403).json({success:false,blocked:true,permanent:Number(user.blockCount||0)>=4,message:'Account is blocked'});
+
+  // Keep one server-side active question. A reload returns the same question;
+  // a new question is created only after the previous one is successfully submitted.
+  let selectedId = null;
+  if(user.activeActivityType===type && Number.isInteger(Number(user.activeActivityQuestionId))) {
+    selectedId = Number(user.activeActivityQuestionId);
+  } else {
+    const last = mapGet(user.activityLastQuestion,type);
+    const candidates = activity.questions.map((_,i)=>i).filter(i=>i!==last);
+    selectedId = candidates.length ? candidates[Math.floor(Math.random()*candidates.length)] : Math.floor(Math.random()*activity.questions.length);
     user.activeActivityType=type;
-    user.activeActivityQuestionId=Number(selected.id);
-    user.activeActivityToken=token;
-    user.activeActivityInvalidated=false;
+    user.activeActivityQuestionId=selectedId;
+    user.activeActivityStartedAt=new Date();
     await user.save();
-    return res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[selected],activityToken:token});
-  } catch(e){ return res.status(500).json({success:false,message:e.message}); }
+  }
+  const ids=[selectedId];
+  const remaining=activity.questions.map((_,i)=>i).filter(i=>i!==selectedId);
+  remaining.sort(()=>Math.random()-.5);
+  ids.push(...remaining.slice(0, Math.min(29, remaining.length)));
+  const items=ids.map(id=>({id,...publicQuestion(type,activity.questions[id])}));
+  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items,activeQuestionId:selectedId});
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1648,15 +1656,29 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     const user=await User.findById(req.user.id);
     if(!user) return res.status(404).json({success:false,message:'User not found'});
     user.tabChanges=Number(user.tabChanges||0)+1;
-    const current=mapGet(user.activityTabChanges,type); mapSet(user.activityTabChanges,type,current+1);
+    const current=mapGet(user.activityTabChanges,type);
+    mapSet(user.activityTabChanges,type,current+1);
     if(user.activeActivityType===type){
-      user.activeActivityInvalidated=true;
-      user.activeActivityToken='';
-      user.activeActivityQuestionId=null;
+      user.activeActivityType=''; user.activeActivityQuestionId=null; user.activeActivityStartedAt=null;
     }
+    user.activeQuizQuestionId=null; user.activeQuizStartedAt=null;
     await user.save();
     res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1,invalidated:true});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
+});
+
+router.post('/:type/listen', auth, async (req,res)=>{
+  try{
+    const type=req.params.type; const activity=ACTIVITIES[type];
+    if(type!=='listening' || !activity) return res.status(404).json({success:false,message:'Activity not found'});
+    const user=await User.findById(req.user.id);
+    if(!user || user.isBlocked) return res.status(403).json({success:false,blocked:true,message:'Account is blocked'});
+    const index=Number(user.activeActivityQuestionId);
+    if(user.activeActivityType!=='listening' || !Number.isInteger(index) || !activity.questions[index])
+      return res.status(409).json({success:false,message:'Question expired'});
+    // Only reveal the listening sentence after the student explicitly presses Play Audio.
+    return res.json({success:true,text:String(activity.questions[index])});
+  }catch(e){ return res.status(500).json({success:false,message:e.message}); }
 });
 
 router.post('/:type/submit', auth, async (req,res)=>{
@@ -1664,12 +1686,12 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const type=req.params.type; const activity=ACTIVITIES[type];
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
-    const suppliedToken=String(req.body.activityToken||'');
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
     const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.isBlocked || user.finalBlocked) return res.status(403).json({success:false,message:'Account is blocked. No wallet update was made.',wallet:Number(user.wallet||0)});
-    if(user.activeActivityInvalidated || user.activeActivityType!==type || Number(user.activeActivityQuestionId)!==index || !suppliedToken || suppliedToken!==String(user.activeActivityToken||'')){
-      return res.status(409).json({success:false,message:'Question expired because the tab/window changed or the question is no longer active. No wallet update was made.',wallet:Number(user.wallet||0)});
+    if(user.isBlocked) return res.status(403).json({success:false,blocked:true,permanent:Number(user.blockCount||0)>=4,wallet:0,message:'Account is blocked'});
+    // Critical anti-cheat check: the submitted question must be the exact server-locked question.
+    if(user.activeActivityType!==type || Number(user.activeActivityQuestionId)!==index){
+      return res.status(409).json({success:false,invalidated:true,wallet:Number(user.wallet||0),message:'Question expired. Please open the activity again.'});
     }
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
@@ -1678,15 +1700,37 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
     if(!user.activityCounts) user.activityCounts={};
-    const count=mapGet(user.activityCounts,type);
+    const count=Number(user.activityCounts.get ? user.activityCounts.get(type)||0 : user.activityCounts[type]||0);
     if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
-    mapSet(user.activityCounts,type,count+1); mapSet(user.activityLastQuestion,type,index);
-    const correctCount=mapGet(user.activityCorrect,type), wrongCount=mapGet(user.activityWrong,type), earned=mapGet(user.activityEarn,type), deducted=mapGet(user.activityDeduct,type);
-    if(correct){ user.wallet=Number(user.wallet||0)+activity.reward; user.totalEarn=Number(user.totalEarn||0)+activity.reward; mapSet(user.activityCorrect,type,correctCount+1); mapSet(user.activityEarn,type,earned+activity.reward); }
-    else { const deduction=Math.min(Number(user.wallet||0),activity.reward); user.wallet=Math.max(0,Number(user.wallet||0)-activity.reward); mapSet(user.activityWrong,type,wrongCount+1); mapSet(user.activityDeduct,type,deducted+deduction); }
-    user.activeActivityType=''; user.activeActivityQuestionId=null; user.activeActivityToken=''; user.activeActivityInvalidated=false;
+    mapSet(user.activityCounts,type,count+1);
+    mapSet(user.activityLastQuestion,type,index);
+    const correctCount=mapGet(user.activityCorrect,type);
+    const wrongCount=mapGet(user.activityWrong,type);
+    const earned=mapGet(user.activityEarn,type);
+    const deducted=mapGet(user.activityDeduct,type);
+    if(correct){
+      user.wallet=Number(user.wallet||0)+activity.reward;
+      user.totalEarn=Number(user.totalEarn||0)+activity.reward;
+      mapSet(user.activityCorrect,type,correctCount+1);
+      mapSet(user.activityEarn,type,earned+activity.reward);
+    }else{
+      const deduction=Math.min(Number(user.wallet||0),activity.reward);
+      user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
+      mapSet(user.activityWrong,type,wrongCount+1);
+      mapSet(user.activityDeduct,type,deducted+deduction);
+    }
+    // Consume the active question. The next GET creates the next lock.
+    user.activeActivityType=''; user.activeActivityQuestionId=null; user.activeActivityStartedAt=null;
     await user.save();
-    res.json({success:true,correct,reward:correct?activity.reward:-activity.reward,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),used:count+1,remaining:Math.max(0,activity.dailyLimit-count-1),correctCount:correct?correctCount+1:correctCount,wrongCount:correct?wrongCount:wrongCount+1,activityEarn:correct?earned+activity.reward:earned,activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)});
+    res.json({
+      success:true, correct, reward:correct?activity.reward:-activity.reward,
+      wallet:Number(user.wallet||0), totalEarn:Number(user.totalEarn||0), used:count+1,
+      remaining:Math.max(0,activity.dailyLimit-count-1),
+      correctCount:correct?correctCount+1:correctCount,
+      wrongCount:correct?wrongCount:wrongCount+1,
+      activityEarn:correct?earned+activity.reward:earned,
+      activityDeduct:correct?deducted:deducted+deduction
+    });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });
 module.exports=router;

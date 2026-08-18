@@ -789,28 +789,28 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
         }
 
         user.isBlocked = false;
-        user.finalBlocked = false;
         user.blockUntil = null;
         user.blockReason = "";
-        user.warningCount = 0;
-        user.blockCount = 0;
 
-        // Reset online status (optional)
-        user.lastSeen = new Date();
+        // Start a fresh 3-warning cycle after an explicit admin unblock.
+        // Keep blockCount so the 4th block remains final on future violations.
+        user.warningCount = 0;
+        user.activeQuizQuestionId = null;
+        user.activeQuizStartedAt = null;
+        user.activeActivityType = "";
+        user.activeActivityQuestionId = null;
+        user.activeActivityStartedAt = null;
+
+        // Do not fake Online. Presence heartbeat remains the source of truth.
         user.isOnline = false;
 
         await user.save();
 
         res.json({
             success: true,
-            message: "Student Unblocked Successfully. Warning count has been reset."
-        });
-
-        await user.save();
-
-        res.json({
-            success: true,
-            message: "Student Unblocked Successfully"
+            message: "Student Unblocked Successfully",
+            blockCount: Number(user.blockCount || 0),
+            warningCount: 0
         });
 
     } catch (err) {
@@ -1041,9 +1041,7 @@ router.put("/control-center/block/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = true;
-        user.finalBlocked = false;
         user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
-        user.wallet = 0;
         user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
         await user.save();
         return res.json({success:true,message:"Student blocked"});
@@ -1055,11 +1053,8 @@ router.put("/control-center/unblock/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = false;
-        user.finalBlocked = false;
         user.blockUntil = null;
         user.blockReason = "";
-        user.warningCount = 0;
-        user.blockCount = 0;
         await user.save();
         return res.json({success:true,message:"Student unblocked"});
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
@@ -1188,9 +1183,10 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
         u.warningCount=Number(u.warningCount||0)+1;
         u.warningHistory=u.warningHistory||[];
         u.warningHistory.push({time:new Date(),reason});
-
+        // Admin warning is only a warning. Automatic anti-cheat blocks happen on the 4th confirmed violation.
+        if(u.warningCount>3) u.warningCount=3;
         await proAdminLog(u,"WARNING",reason); await u.save();
-        res.json({success:true,message:u.isBlocked?"3 warnings reached — student blocked":"Warning added",warningCount:u.warningCount});
+        res.json({success:true,message:"Warning added",warningCount:u.warningCount,blockCount:Number(u.blockCount||0)});
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
@@ -1198,14 +1194,21 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
     try{
         const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
         u.isBlocked=req.body.blocked!==false;
-        u.finalBlocked=false;
         u.blockReason=String(req.body.reason||"Admin action");
-        u.blockUntil=u.isBlocked ? new Date(Date.now() + 12 * 60 * 60 * 1000) : null;
-        if(u.isBlocked) u.wallet=0;
-        else { u.warningCount=0; u.blockCount=0; }
+        if(u.isBlocked){
+            u.blockCount=Number(u.blockCount||0)+1;
+            u.wallet=0;
+            u.warningCount=0;
+            u.activeQuizQuestionId=null; u.activeQuizStartedAt=null;
+            u.activeActivityType=""; u.activeActivityQuestionId=null; u.activeActivityStartedAt=null;
+            u.blockUntil=u.blockCount<=3 ? new Date(Date.now()+12*60*60*1000) : null;
+        }else{
+            u.blockUntil=null;
+            u.warningCount=0;
+        }
         await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason);
         await u.save();
-        res.json({success:true,blocked:u.isBlocked});
+        res.json({success:true,blocked:u.isBlocked,permanent:u.isBlocked && Number(u.blockCount||0)>=4,blockCount:Number(u.blockCount||0),wallet:Number(u.wallet||0)});
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
@@ -1266,23 +1269,57 @@ router.put("/pro/restore/:id", adminAuth, async(req,res)=>{
 
 router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
     try{
-        const users=await User.find({isDeleted:{$ne:true},isBlocked:true}).select("-password").lean();
-        const active=[];
-        const expiredIds=[];
-        const now=Date.now();
-        for(const u of users){
-            if(u.finalBlocked){
-                active.push({id:String(u._id),name:nmPro(u),mobile:u.mobile||"",blockReason:u.blockReason||"",blockUntil:null,blockUntilMs:null,permanent:true,blockCount:Number(u.blockCount||0)});
+        const now = new Date();
+        const users = await User.find({
+            isDeleted: { $ne: true },
+            isBlocked: true
+        }).select("-password").lean();
+
+        const active = [];
+        const expiredIds = [];
+
+        for (const u of users) {
+            let until = u.blockUntil ? new Date(u.blockUntil) : null;
+
+            // Older blocked records may not have blockUntil. Treat them as 12 hours
+            // from updatedAt so the admin timer still has a real end time.
+            if (!until || Number.isNaN(until.getTime())) {
+                const started = u.updatedAt ? new Date(u.updatedAt) : now;
+                until = new Date(started.getTime() + 12 * 60 * 60 * 1000);
+                // Persist the canonical expiry so Student and Admin always
+                // calculate from the exact same blockUntil value.
+                await User.updateOne(
+                    { _id: u._id, isBlocked: true },
+                    { $set: { blockUntil: until } }
+                );
+            }
+
+            if (until <= now) {
+                expiredIds.push(u._id);
                 continue;
             }
-            let until=u.blockUntil?new Date(u.blockUntil):null;
-            if(!until || Number.isNaN(until.getTime())) until=new Date((u.updatedAt?new Date(u.updatedAt).getTime():now)+12*60*60*1000);
-            if(until.getTime()<=now){ expiredIds.push(u._id); continue; }
-            active.push({id:String(u._id),name:nmPro(u),mobile:u.mobile||"",blockReason:u.blockReason||"",blockUntil:until.toISOString(),blockUntilMs:until.getTime(),permanent:false,blockCount:Number(u.blockCount||0)});
+
+            active.push({
+                id: String(u._id),
+                name: nmPro(u),
+                mobile: u.mobile || "",
+                blockReason: u.blockReason || "",
+                blockUntil: until.toISOString(),
+                blockUntilMs: until.getTime()
+            });
         }
-        if(expiredIds.length) await User.updateMany({_id:{$in:expiredIds}},{ $set:{isBlocked:false,blockUntil:null,blockReason:"",warningCount:0} });
-        res.json({success:true,users:active});
-    }catch(e){res.status(500).json({success:false,message:e.message});}
+
+        if (expiredIds.length) {
+            await User.updateMany(
+                { _id: { $in: expiredIds } },
+                { $set: { isBlocked: false, blockUntil: null, blockReason: "", warningCount: 0 } }
+            );
+        }
+
+        res.json({ success:true, users:active });
+    }catch(e){
+        res.status(500).json({success:false,message:e.message});
+    }
 });
 
 router.get("/pro/reports", adminAuth, async(req,res)=>{

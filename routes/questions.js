@@ -9,6 +9,14 @@ const seedQuestions = require("../questions.json");
 
 let seedPromise = null;
 
+const QUIZ_CORRECT_REWARD = 0.20;
+const QUIZ_WRONG_PENALTY = 0.30;
+function todayKey() {
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+}
+
 async function ensureQuestionsSeeded() {
     if (seedPromise) return seedPromise;
 
@@ -74,42 +82,48 @@ router.post("/answer", auth, async (req,res) => {
         const { questionId, answerIndex } = req.body || {};
         const index = Number(answerIndex);
         if (!questionId || !Number.isInteger(index) || index < 0)
-            return res.status(400).json({success:false,message:"Invalid answer"});
+            return res.status(400).json({ success:false, message:"Invalid answer" });
 
         const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({success:false,message:"User not found"});
-        if (user.isBlocked || user.finalBlocked) return res.status(403).json({success:false,message:"Account is blocked"});
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (user.isBlocked) return res.status(403).json({success:false,blocked:true,permanent:Number(user.blockCount||0)>=4,wallet:0,message:"Account is blocked"});
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
-            return res.status(409).json({success:false,message:"This question is no longer active. No wallet update was made."});
+            return res.status(409).json({ success:false, invalidated:true, message:"This question is no longer active. No wallet update was made.", wallet:Number(user.wallet||0) });
 
         const question = await Question.findById(questionId).select("options correct").lean();
         if (!question || index >= question.options.length)
-            return res.status(400).json({success:false,message:"Invalid question or answer"});
+            return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
-        const QUIZ_CORRECT_REWARD = 0.20;
-        const QUIZ_WRONG_PENALTY = 0.30;
-        const today = new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
+        const today = todayKey();
         if (user.dailyQuestionsDate !== today) {
-            user.dailyQuestionsDate=today; user.dailyQuestionsAnswered=0; user.spinCycleQuestionsAnswered=0;
+            user.dailyQuestionsDate = today;
+            user.dailyQuestionsAnswered = 0;
+            user.spinCycleQuestionsAnswered = 0;
         }
-        user.dailyQuestionsAnswered=Number(user.dailyQuestionsAnswered||0)+1;
-        user.spinCycleQuestionsAnswered=Number(user.spinCycleQuestionsAnswered||0)+1;
-        user.totalQuestionsAnswered=Number(user.totalQuestionsAnswered||0)+1;
-        const amount=correct?QUIZ_CORRECT_REWARD:-QUIZ_WRONG_PENALTY;
-        user.wallet=Math.max(0,Number(user.wallet||0)+amount);
-        if(correct){
-            user.totalEarn=Number(user.totalEarn||0)+QUIZ_CORRECT_REWARD;
-            user.quizScore=Number(user.quizScore||0)+QUIZ_CORRECT_REWARD;
+        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered||0)+1;
+        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered||0)+1;
+        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered||0)+1;
+        user.wallet = Math.max(0, Number(user.wallet||0)+amount);
+        if (correct) {
+            user.totalEarn = Number(user.totalEarn||0)+QUIZ_CORRECT_REWARD;
+            user.quizScore = Number(user.quizScore||0)+QUIZ_CORRECT_REWARD;
         }
-        user.activeQuizQuestionId=null;
-        user.activeQuizStartedAt=null;
+        user.activeQuizQuestionId = null;
+        user.activeQuizStartedAt = null;
         await user.save();
 
-        return res.json({success:true,correct,reward:amount,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correctIndex:Number(question.correct),dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0),totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0)});
+        return res.json({
+            success:true, correct, correctIndex:Number(question.correct),
+            wallet:Number(user.wallet||0), totalEarn:Number(user.totalEarn||0),
+            reward:amount, dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),
+            totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0),
+            spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0)
+        });
     } catch(err) {
         console.error("Answer Check Error:",err);
-        return res.status(500).json({success:false,message:err.message});
+        return res.status(500).json({ success:false, message:err.message });
     }
 });
 
@@ -132,16 +146,18 @@ router.get("/random", auth, async (req, res) => {
             { $sample: { size: count } },
             { $project: { q: 1, options: 1, _id: 0 } }
         ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
-            q.options.length >= 2);
+        questions = questions.filter(q => q.q && Array.isArray(q.options) && q.options.length >= 2);
         if (!questions.length && seedQuestions.length) {
-            const valid = seedQuestions.filter(q => q && typeof q.q === "string" && Array.isArray(q.options) && q.options.length >= 2);
+            const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
+                Array.isArray(q.options) && q.options.length >= 2 &&
+                Number.isInteger(Number(q.correct)) && Number(q.correct) >= 0 &&
+                Number(q.correct) < q.options.length);
             for (let i = valid.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [valid[i], valid[j]] = [valid[j], valid[i]];
             }
             questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String)
+                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
             }));
         }
         return res.json({ success: true, totalQuestions: questions.length, questions });
@@ -157,7 +173,7 @@ router.get("/", auth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options")
+            .select("q options correct")
             .lean();
 
         return res.json({
