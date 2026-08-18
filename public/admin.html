@@ -918,6 +918,7 @@
   line-height: 1.2 !important;
   text-transform: uppercase;
 }
+<style id="activity-stats-color-fix">
 /* English Learning & Earning popup - stronger, clear colors */
 #closeActivityStats{
   border:0 !important;
@@ -1590,7 +1591,7 @@
                 html += `
 
 <tr style="background:${isOnline ? '#dcfce7' : '#fee2e2'};">
-    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};"></span>${user.name}<div style="font-size:11px;font-weight:900;color:${isOnline ? '#15803d' : '#b91c1c'};margin-top:3px;">${isOnline ? 'ONLINE' : 'OFFLINE'}</div></td>
+    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};box-shadow:${isOnline ? '0 0 10px #22c55e' : 'none'};"></span>${user.name} <span style="font-weight:800;color:${isOnline ? '#15803d' : '#b91c1c'};font-size:12px;">${isOnline ? 'ONLINE' : 'OFFLINE'}</span></td>
     <td>${user.mobile}</td>
 
     <td>${formatLastSeen(user.lastSeen)}</td>
@@ -1634,14 +1635,14 @@
     </td>
 
 <td>
-    <span style="font-weight:900;color:#d97706;background:#fef3c7;padding:5px 9px;border-radius:12px;display:inline-block;">
-        ⚠️ ${Number(user.warningCycleCount || 0)}/3
-    </span>
-    <div style="font-size:10px;color:#64748b;margin-top:4px;">Blocks: ${Number(user.blockCount || 0)}/3${user.permanentBlock ? ' • FINAL' : ''}</div>
-</td>
-
-<td>
-    ${user.isBlocked ? `<span style="font-weight:900;color:#b91c1c;background:#fee2e2;padding:5px 9px;border-radius:12px;display:inline-block;">🚫 BLOCKED${user.permanentBlock ? ' • ADMIN' : ''}</span>` : `<span style="font-weight:900;color:#15803d;background:#dcfce7;padding:5px 9px;border-radius:12px;display:inline-block;">✓ ACTIVE</span>`}
+    <span style="
+        font-weight:bold;
+        color:${Number(user.warningCount || 0) >= 3 ? '#dc2626' : '#d97706'};
+        background:${Number(user.warningCount || 0) >= 3 ? '#fee2e2' : '#fef3c7'};
+        padding:5px 9px;
+        border-radius:12px;
+        display:inline-block;
+    ">⚠️ ${Number(user.warningCount || 0)}/3</span>
 </td>
 
 <td>
@@ -3225,8 +3226,8 @@ ${w.status === "Approved" ? `
 
                 const now = Date.now();
                 const active = ap2BlockedUsers
-                    .map(u => ({ ...u, remainingMs: Math.max(0, Number(u.blockUntilMs || 0) - now) }))
-                    .filter(u => u.remainingMs > 0);
+                    .map(u => ({ ...u, remainingMs: u.permanentBlocked ? null : Math.max(0, Number(u.blockUntilMs || 0) - now) }))
+                    .filter(u => u.permanentBlocked || u.remainingMs > 0);
 
                 if (!active.length) {
                     body.innerHTML = '<div style="padding:35px 20px;text-align:center;color:#94a3b8;font-weight:800;">No blocked student found</div>';
@@ -3237,7 +3238,7 @@ ${w.status === "Approved" ? `
                     <div class="blocked-time-card">
                         <div class="student-name">🚫 ${esc(u.name || "Unknown")}</div>
                         <div class="student-meta">ID: ${esc(u.id || "-")} &nbsp; | &nbsp; Mobile: ${esc(u.mobile || "-")}</div>
-                        <div class="remaining">⏱ Remaining: ${ap2FormatRemaining(u.remainingMs)}</div>
+                        <div class="remaining">${u.permanentBlocked ? '🔒 Permanent Block — Admin Unblock Required' : '⏱ Remaining: '+ap2FormatRemaining(u.remainingMs)}</div>
                     </div>
                 `).join("");
             }

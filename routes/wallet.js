@@ -67,14 +67,14 @@ router.get("/", auth, async (req, res) => {
 
 // =============================
 // Quiz Reward
-// Server decides the reward amount.
-// Frontend can only tell whether
-// the selected answer was correct.
+// Quiz rewards are now granted ONLY by /api/questions/answer after the
+// server verifies the active question and selected option. This endpoint
+// intentionally refuses direct client-supplied reward claims.
 // =============================
 router.post("/quiz", auth, async (req, res) => {
-    return res.status(410).json({
+    return res.status(409).json({
         success:false,
-        message:"Quiz rewards are now processed securely by /api/questions/answer."
+        message:"Quiz reward is granted only after the active question is verified."
     });
 });
 

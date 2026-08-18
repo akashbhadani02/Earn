@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
+const { getBlockRemainingMs, registerViolation } = require("../services/antiCheat");
 
 const router = express.Router();
 
@@ -59,26 +60,6 @@ router.post("/signup", async (req, res) => {
 // ==========================
 
 
-// ==========================
-// Shared block remaining-time calculation
-// Admin and Student login use the SAME server-side expiry.
-// ==========================
-function getBlockRemainingMs(user, nowMs = Date.now()) {
-    let untilMs = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
-
-    // Legacy blocked users without blockUntil: use the same fallback
-    // as Admin's blocked-students endpoint.
-    if (!untilMs || Number.isNaN(untilMs)) {
-        const startedMs = user.updatedAt ? new Date(user.updatedAt).getTime() : nowMs;
-        untilMs = startedMs + 12 * 60 * 60 * 1000;
-    }
-
-    return {
-        untilMs,
-        remainingMs: Math.max(0, untilMs - nowMs)
-    };
-}
-
 router.post("/login", async (req, res) => {
 
     try {
@@ -107,18 +88,35 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Timed blocks expire automatically after 12 hours. The 4th block is
-        // permanent and can only be cleared by an admin.
+        // Anti-cheating block gate. The first 3 automatic blocks are timed (12h).
+        // The 4th automatic block is permanent and can only be cleared by Admin.
         if (user.isBlocked) {
-            if (user.permanentBlock || !user.blockUntil) {
-                return res.status(403).json({success:false,blocked:true,permanent:true,message:"Your account is permanently blocked. Admin must unblock it."});
+            const now = Date.now();
+            if (user.permanentBlocked || Number(user.blockCount || 0) >= 4) {
+                return res.status(403).json({
+                    success: false, blocked: true, permanentBlocked: true,
+                    message: "Your account is permanently blocked. Please contact the administrator.",
+                    reason: user.blockReason || "Security violation"
+                });
             }
-            const until = new Date(user.blockUntil).getTime();
-            if (until > Date.now()) {
-                return res.status(403).json({success:false,blocked:true,permanent:false,message:"Your account is temporarily blocked.",blockUntil:new Date(until).toISOString(),remainingMs:until-Date.now()});
+            const blockTime = getBlockRemainingMs(user, now);
+            if (blockTime.remainingMs <= 0) {
+                user.isBlocked = false;
+                user.blockUntil = null;
+                user.blockReason = "";
+                user.warningCount = 0;
+                await user.save();
+            } else {
+                if (!user.blockUntil) { user.blockUntil = new Date(blockTime.untilMs); await user.save(); }
+                return res.status(403).json({
+                    success: false, blocked: true, permanentBlocked: false,
+                    message: "Your account is temporarily blocked.",
+                    reason: user.blockReason || "Security violation",
+                    blockUntil: new Date(blockTime.untilMs).toISOString(),
+                    remainingMs: blockTime.remainingMs,
+                    blockCount: Number(user.blockCount || 0)
+                });
             }
-            user.isBlocked=false; user.blockUntil=null; user.blockReason=""; user.warningCycleCount=0;
-            await user.save();
         }
 
         // Security audit: record every successful login and unique device.
@@ -265,22 +263,16 @@ router.post("/offline", async (req, res) => {
 // 4th violation = Account Blocked
 // ==========================
 const auth = require("../middleware/auth");
-const { registerSecurityViolation } = require("../services/security");
 
 router.post("/block-me", auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({success:false,message:"User not found"});
-        const reason = String(req.body?.reason || "Cheating detected").slice(0,300);
-        const result = await registerSecurityViolation(user, reason);
-        return res.json({success:true,...result,
-            message: result.permanent ? "Final block. Admin must unblock the account." :
-                result.blocked ? `Blocked (${result.blockCount}/3 timed blocks used).` :
-                `Warning ${result.cycleWarningCount}/3. ${result.remainingWarnings} warning(s) remaining before the next timed block.`
-        });
-    } catch(err) {
-        console.error("Warning/Block Error:",err);
-        return res.status(500).json({success:false,message:err.message});
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        const result = await registerViolation(user, req.body?.reason);
+        return res.json({ success:true, ...result, message: result.permanentBlocked ? "Permanent block — Admin must unblock this student." : result.blocked ? `Account blocked (${result.blockCount}/3 timed blocks used).` : `Warning ${result.warningCount}/3` });
+    } catch (err) {
+        console.error("Warning/Block Error:", err);
+        return res.status(500).json({ success:false, message:err.message });
     }
 });
 
@@ -293,37 +285,37 @@ router.post("/security-event", auth, async (req, res) => {
     try {
         const { type, deviceId } = req.body || {};
         const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
-        if (type === "tab_change" || type === "quiz_window_blur" || type === "activity_window_blur") {
-            // Prevent one tab switch from generating duplicate warnings when
-            // visibilitychange and blur fire within the same short moment.
-            const last = user.lastSecurityViolationAt ? new Date(user.lastSecurityViolationAt).getTime() : 0;
-            if (!last || Date.now() - last > 3000) {
-                user.tabChanges = Number(user.tabChanges || 0) + 1;
-                const result = await registerSecurityViolation(user, type === "tab_change" ? "Student changed browser tab/window while answering." : "Student left the question window while answering.");
-                return res.json({success:true,...result,tabChanges:Number(user.tabChanges||0),warningCount:Number(user.warningCount||0)});
-            }
-            return res.json({success:true,duplicateSuppressed:true,warningCount:Number(user.warningCount||0),blockCount:Number(user.blockCount||0)});
-        }
-
-        if (type === "fast_answer") {
+        if (type === "tab_change") {
+            user.tabChanges = Number(user.tabChanges || 0) + 1;
+        } else if (type === "fast_answer") {
             user.fastAnswers = Number(user.fastAnswers || 0) + 1;
-            await user.save();
         } else if (type === "device") {
             const id = String(deviceId || "").trim().slice(0, 200);
-            if (!id) return res.status(400).json({ success:false, message:"Device ID required" });
+            if (!id) return res.status(400).json({ success: false, message: "Device ID required" });
             user.deviceIds = Array.isArray(user.deviceIds) ? user.deviceIds : [];
-            if (!user.deviceIds.includes(id)) user.deviceIds.push(id);
-            if (user.deviceIds.length > 50) user.deviceIds = user.deviceIds.slice(-50);
+            if (!user.deviceIds.includes(id)) {
+                user.deviceIds.push(id);
+                if (user.deviceIds.length > 50) user.deviceIds = user.deviceIds.slice(-50);
+            }
             user.deviceCount = user.deviceIds.length;
-            await user.save();
-        } else return res.status(400).json({success:false,message:"Unknown security event"});
+        } else {
+            return res.status(400).json({ success: false, message: "Unknown security event" });
+        }
 
-        return res.json({success:true,fastAnswers:Number(user.fastAnswers||0),tabChanges:Number(user.tabChanges||0),deviceCount:Number(user.deviceCount||0),warningCount:Number(user.warningCount||0)});
-    } catch(err) {
-        console.error("Security event error:",err);
-        return res.status(500).json({success:false,message:err.message});
+        await user.save();
+        return res.json({
+            success: true,
+            fastAnswers: Number(user.fastAnswers || 0),
+            tabChanges: Number(user.tabChanges || 0),
+            deviceCount: Number(user.deviceCount || 0),
+            warningCount: Number(user.warningCount || 0),
+            loginCount: Array.isArray(user.loginHistory) ? user.loginHistory.length : 0
+        });
+    } catch (err) {
+        console.error("Security event error:", err);
+        return res.status(500).json({ success: false, message: err.message });
     }
 });
 

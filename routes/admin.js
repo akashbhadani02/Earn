@@ -776,24 +776,193 @@ router.delete("/withdraw/delete/:userId/:requestId", adminAuth, async (req, res)
 // Unblock Student
 // ===========================
 router.put("/unblock/:id", adminAuth, async (req, res) => {
+
     try {
+
         const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({success:false,message:"User Not Found"});
-        user.isBlocked=false;
-        user.permanentBlock=false;
-        user.blockUntil=null;
-        user.blockReason="";
-        user.warningCycleCount=0;
-        user.activeQuizQuestionId=null;
-        user.activeQuizStartedAt=null;
-        user.activeActivityType="";
-        user.activeActivityQuestionId="";
-        user.activeActivityStartedAt=null;
-        user.isOnline=false;
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User Not Found"
+            });
+        }
+
+        user.isBlocked = false;
+        user.permanentBlocked = false;
+        user.blockUntil = null;
+        user.blockReason = "";
+
+        // Reset the current warning cycle; keep blockCount so the 4th-block
+        // permanent security rule remains in force after an admin unblock.
+        user.warningCount = 0;
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+
+        // Reset online status (optional)
+        user.lastSeen = new Date();
+        user.isOnline = false;
+
         await user.save();
-        return res.json({success:true,message:"Student unblocked by admin. A new warning cycle is available."});
-    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
+
+        res.json({
+            success: true,
+            message: "Student Unblocked Successfully. Warning count has been reset."
+        });
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: "Student Unblocked Successfully"
+        });
+
+    } catch (err) {
+
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+
+    }
+
 });
+
+
+
+// ===========================
+// Push Notification Configuration / Status
+// ===========================
+router.get("/notification/status", adminAuth, async (req, res) => {
+    const publicKey = String(process.env.VAPID_PUBLIC_KEY || "").trim();
+    const privateKey = String(process.env.VAPID_PRIVATE_KEY || "").trim();
+    const subject = String(process.env.VAPID_SUBJECT || "").trim();
+
+    return res.json({
+        success: true,
+        configured: Boolean(publicKey && privateKey && subject),
+        hasPublicKey: Boolean(publicKey),
+        hasPrivateKey: Boolean(privateKey),
+        hasSubject: Boolean(subject),
+        message: publicKey && privateKey && subject
+            ? "Web Push is configured"
+            : "Vercel Environment Variables VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY and VAPID_SUBJECT are required"
+    });
+});
+
+// ===========================
+// Send Push Notification to One Student
+// ===========================
+router.post("/notification/send/:userId", adminAuth, async (req, res) => {
+    try {
+        const { title, message, url } = req.body || {};
+
+        const cleanTitle = String(title || "").trim();
+        const cleanMessage = String(message || "").trim();
+
+        if (!cleanTitle) {
+            return res.status(400).json({
+                success: false,
+                message: "Notification title is required"
+            });
+        }
+
+        if (!cleanMessage) {
+            return res.status(400).json({
+                success: false,
+                message: "Notification message is required"
+            });
+        }
+
+        const user = await User.findById(req.params.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found"
+            });
+        }
+
+        const subscriptions = Array.isArray(user.pushSubscriptions)
+            ? user.pushSubscriptions
+            : [];
+
+        if (!subscriptions.length) {
+            return res.status(400).json({
+                success: false,
+                message: "This student has not enabled notifications on any device."
+            });
+        }
+
+        configureWebPush();
+
+        const payload = JSON.stringify({
+            title: cleanTitle.slice(0, 100),
+            body: cleanMessage.slice(0, 500),
+            url: String(url || "/earn.html"),
+            icon: "/icon-192.png",
+            badge: "/icon-192.png",
+            tag: "admin-notification",
+            requireInteraction: false
+        });
+
+        const results = await Promise.allSettled(
+            subscriptions.map(subscription =>
+                webpush.sendNotification(
+                    subscription.toObject ? subscription.toObject() : subscription,
+                    payload
+                )
+            )
+        );
+
+        const staleEndpoints = [];
+        let sent = 0;
+
+        results.forEach((result, index) => {
+            if (result.status === "fulfilled") {
+                sent++;
+                return;
+            }
+
+            const statusCode = result.reason?.statusCode;
+            if (statusCode === 404 || statusCode === 410) {
+                staleEndpoints.push(subscriptions[index].endpoint);
+            }
+
+            console.error(
+                "Push notification error:",
+                result.reason?.message || result.reason
+            );
+        });
+
+        if (staleEndpoints.length) {
+            user.pushSubscriptions = subscriptions.filter(
+                subscription => !staleEndpoints.includes(subscription.endpoint)
+            );
+            await user.save();
+        }
+
+        if (sent === 0) {
+            return res.status(502).json({
+                success: false,
+                message: "Notification could not be delivered. The saved device subscription may have expired."
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: `Notification sent to ${user.name}`,
+            devicesSent: sent,
+            staleDevicesRemoved: staleEndpoints.length
+        });
+    } catch (err) {
+        console.error("Send notification error:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+});
+
 
 // ===========================
 // Admin Control Center - Real DB Data
@@ -825,9 +994,6 @@ router.get("/control-center", adminAuth, async (req, res) => {
             wallet: Number(u.wallet || 0),
             totalEarn: Number(u.totalEarn || 0),
             warningCount: Number(u.warningCount || 0),
-            warningCycleCount: Number(u.warningCycleCount || 0),
-            blockCount: Number(u.blockCount || 0),
-            permanentBlock: !!u.permanentBlock,
             spinEligible: u.dailyQuestionsDate === today &&
                 Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) >= 100
         }));
@@ -875,28 +1041,33 @@ router.get("/control-center/user/:id", adminAuth, async (req,res) => {
 
 router.put("/control-center/block/:id", adminAuth, async (req,res) => {
     try {
-        const user=await User.findById(req.params.id);
+        const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
-        user.isBlocked=true;
-        user.permanentBlock=false;
-        user.blockUntil=new Date(Date.now()+12*60*60*1000);
-        user.blockReason=String(req.body.reason||"Blocked by admin").slice(0,300);
-        user.wallet=0;
+        user.isBlocked = true;
+        user.permanentBlocked = false;
+        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
+        user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
+        user.wallet = 0;
+        user.isOnline = false;
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
         await user.save();
-        return res.json({success:true,message:"Student blocked for 12 hours; wallet reset to 0."});
-    }catch(err){return res.status(500).json({success:false,message:err.message});}
+        return res.json({success:true,message:"Student blocked"});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
 router.put("/control-center/unblock/:id", adminAuth, async (req,res) => {
     try {
-        const user=await User.findById(req.params.id);
+        const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
-        user.isBlocked=false; user.permanentBlock=false; user.blockUntil=null; user.blockReason=""; user.warningCycleCount=0;
-        user.activeQuizQuestionId=null; user.activeQuizStartedAt=null; user.activeActivityType=""; user.activeActivityQuestionId=""; user.activeActivityStartedAt=null;
-        user.isOnline=false;
+        user.isBlocked = false;
+        user.permanentBlocked = false;
+        user.blockUntil = null;
+        user.blockReason = "";
+        user.warningCount = 0;
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
         await user.save();
-        return res.json({success:true,message:"Student unblocked by admin."});
-    }catch(err){return res.status(500).json({success:false,message:err.message});}
+        return res.json({success:true,message:"Student unblocked"});
+    } catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
 router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
@@ -907,13 +1078,8 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
         user.warningCount = Number(user.warningCount || 0) + 1;
         user.warningHistory = user.warningHistory || [];
         user.warningHistory.push({ time:new Date(), reason });
-        if(user.warningCount >= 3){
-            user.isBlocked = true;
-            user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
-            user.blockReason = "Automatic block after 3 warnings";
-        }
         await user.save();
-        return res.json({success:true,message:user.isBlocked?"3 warnings reached: student blocked":"Warning added",warningCount:user.warningCount,isBlocked:user.isBlocked});
+        return res.json({success:true,message:"Warning added",warningCount:user.warningCount,isBlocked:user.isBlocked});
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
@@ -1022,13 +1188,8 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
         u.warningCount=Number(u.warningCount||0)+1;
         u.warningHistory=u.warningHistory||[];
         u.warningHistory.push({time:new Date(),reason});
-        if(u.warningCount>=3){
-            u.isBlocked=true;
-            u.blockReason="Automatic block after 3 warnings";
-            u.blockUntil=new Date(Date.now() + 12 * 60 * 60 * 1000);
-        }
         await proAdminLog(u,"WARNING",reason); await u.save();
-        res.json({success:true,message:u.isBlocked?"3 warnings reached — student blocked":"Warning added",warningCount:u.warningCount});
+        res.json({success:true,message:"Warning added",warningCount:u.warningCount});
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
@@ -1036,8 +1197,12 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
     try{
         const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
         u.isBlocked=req.body.blocked!==false;
+        u.permanentBlocked=false;
         u.blockReason=String(req.body.reason||"Admin action");
         u.blockUntil=u.isBlocked ? new Date(Date.now() + 12 * 60 * 60 * 1000) : null;
+        if(u.isBlocked){ u.wallet=0; u.isOnline=false; }
+        u.warningCount=0;
+        u.sessionVersion=Number(u.sessionVersion||0)+1;
         await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason);
         await u.save();
         res.json({success:true,blocked:u.isBlocked});
@@ -1115,15 +1280,14 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
 
             // Older blocked records may not have blockUntil. Treat them as 12 hours
             // from updatedAt so the admin timer still has a real end time.
+            if (u.permanentBlocked || Number(u.blockCount || 0) >= 4) {
+                active.push({id:String(u._id),name:nmPro(u),mobile:u.mobile||"",blockReason:u.blockReason||"",permanentBlocked:true,blockCount:Number(u.blockCount||4),blockUntil:null,blockUntilMs:null});
+                continue;
+            }
             if (!until || Number.isNaN(until.getTime())) {
                 const started = u.updatedAt ? new Date(u.updatedAt) : now;
                 until = new Date(started.getTime() + 12 * 60 * 60 * 1000);
-                // Persist the canonical expiry so Student and Admin always
-                // calculate from the exact same blockUntil value.
-                await User.updateOne(
-                    { _id: u._id, isBlocked: true },
-                    { $set: { blockUntil: until } }
-                );
+                await User.updateOne({ _id: u._id, isBlocked: true }, { $set: { blockUntil: until } });
             }
 
             if (until <= now) {
@@ -1144,7 +1308,7 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
         if (expiredIds.length) {
             await User.updateMany(
                 { _id: { $in: expiredIds } },
-                { $set: { isBlocked: false, blockUntil: null, blockReason: "", warningCount: 0 } }
+                { $set: { isBlocked: false, blockUntil: null, blockReason: "", warningCount: 0, permanentBlocked: false } }
             );
         }
 

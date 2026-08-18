@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { registerSecurityViolation } = require('../services/security');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
+const { registerViolation } = require('../services/antiCheat');
 
 const ACTIVITIES = {
   arrange: {
@@ -1598,10 +1598,11 @@ function publicQuestion(type,q){
   if(type==='correction'||type==='translate') return {prompt:q[0]};
   if(type==='word') return {prompt:q[0]};
   if(type==='fill') return {prompt:q[0],options:q[1]};
-  if(type==='listening') return {prompt:'Listen carefully and type the sentence.'};
+  if(type==='listening') return {prompt:'🎧 Listen carefully and type the sentence.',audioText:q};
   if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
   return {prompt:q};
 }
+
 
 function mapGet(map, key) {
   if (!map) return 0;
@@ -1613,12 +1614,12 @@ function mapSet(map, key, value) {
   else if (map) map[key] = value;
 }
 function pickRandomQuestions(type, activity, user) {
-  const all = activity.questions.map((q,i)=>({id:String(i),...publicQuestion(type,q)}));
+  const all = activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
   if (!all.length) return [];
   const last = mapGet(user?.activityLastQuestion, type);
   const shuffled = all.sort(() => Math.random() - 0.5);
-  const withoutLast = shuffled.filter(x => Number(x.id) !== last);
-  return (withoutLast.length ? withoutLast : shuffled).slice(0, 1);
+  const withoutLast = shuffled.filter(x => x.id !== last);
+  return (withoutLast.length ? withoutLast : shuffled).slice(0, Math.min(30, shuffled.length));
 }
 
 router.get('/:type', auth, async (req,res)=>{
@@ -1627,24 +1628,28 @@ router.get('/:type', auth, async (req,res)=>{
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const user=await User.findById(req.user.id);
     if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.activeActivityType && user.activeActivityQuestionId){
-      const activeType=user.activeActivityType;
-      const active=ACTIVITIES[activeType];
-      const idx=Number(user.activeActivityQuestionId);
-      if(active && active.questions[idx]){
-        const item={id:String(idx),...publicQuestion(activeType,active.questions[idx])};
-        return res.json({success:true,type:activeType,title:active.title,reward:active.reward,dailyLimit:active.dailyLimit,questions:[item]});
-      }
+
+    let index = null;
+    if(user.activeActivityType === type && Number.isInteger(Number(user.activeActivityQuestionId))) {
+      const candidate = Number(user.activeActivityQuestionId);
+      if(activity.questions[candidate]) index = candidate;
     }
-    const items=pickRandomQuestions(type,activity,user);
-    const item=items[0];
-    if(!item) return res.status(404).json({success:false,message:'No questions available'});
-    user.activeActivityType=type;
-    user.activeActivityQuestionId=String(item.id);
-    user.activeActivityStartedAt=new Date();
-    await user.save();
-    res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[item]});
-  } catch(e){ res.status(500).json({success:false,message:e.message}); }
+    if(index === null) {
+      const last=mapGet(user.activityLastQuestion,type);
+      const candidates=activity.questions.map((_,i)=>i).filter(i=>i!==last);
+      index=(candidates.length?candidates:activity.questions.map((_,i)=>i))[Math.floor(Math.random()*(candidates.length?candidates.length:activity.questions.length))];
+      user.activeActivityType=type;
+      user.activeActivityQuestionId=index;
+      user.activeActivityStartedAt=new Date();
+      user.activeActivityToken=require('crypto').randomUUID();
+      await user.save();
+    }
+    const item=activity.questions[index];
+    return res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[{id:index,...publicQuestion(type,item)}]});
+  } catch(e) {
+    console.error('Activity load error:',e);
+    return res.status(500).json({success:false,message:e.message});
+  }
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1655,9 +1660,11 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     if(!user) return res.status(404).json({success:false,message:'User not found'});
     user.tabChanges=Number(user.tabChanges||0)+1;
     const current=mapGet(user.activityTabChanges,type); mapSet(user.activityTabChanges,type,current+1);
+    // Leaving the activity invalidates the active question before any submit can happen.
+    user.activeActivityType=''; user.activeActivityQuestionId=null; user.activeActivityStartedAt=null; user.activeActivityToken='';
     await user.save();
-    const result=await registerSecurityViolation(user,"Student changed browser tab/window while answering an English activity.");
-    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1,...result});
+    const security = await registerViolation(user, `Tab/window changed during ${type} activity`);
+    res.json({success:true,activityTabChanges:current+1,security});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
 });
 
@@ -1665,34 +1672,37 @@ router.post('/:type/submit', auth, async (req,res)=>{
   try{
     const type=req.params.type; const activity=ACTIVITIES[type];
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-    const index=String(req.body.questionId); const answer=String(req.body.answer||'').trim();
-    const user=await User.findById(req.user.id);
-    if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.activeActivityType!==type || user.activeActivityQuestionId!==index)
-      return res.status(409).json({success:false,message:'Question expired or invalidated. Wallet was not changed.'});
-    const q=activity.questions[Number(index)]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
+    const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
+    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+    // Only the exact server-issued question can be answered. If the student changed tabs,
+    // the active question was invalidated and NO wallet update is possible.
+    if(user.activeActivityType!==type || Number(user.activeActivityQuestionId)!==index) {
+      return res.status(409).json({success:false,questionInvalidated:true,message:'This question is no longer active. Your wallet was not changed.'});
+    }
+    const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
-    if(!user.activityCounts) user.activityCounts={};
     const count=mapGet(user.activityCounts,type);
-    if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),correct:false,limitReached:true});
-
-    // Atomically consume the active activity question so duplicate submits cannot earn twice.
-    const claimed=await User.findOneAndUpdate(
-      {_id:user._id,activeActivityType:type,activeActivityQuestionId:index},
-      {$set:{activeActivityType:'',activeActivityQuestionId:'',activeActivityStartedAt:null}},
-      {new:true}
-    );
-    if(!claimed) return res.status(409).json({success:false,message:'Question was already submitted or invalidated. Wallet was not changed.'});
-
-    mapSet(user.activityCounts,type,count+1); mapSet(user.activityLastQuestion,type,Number(index));
-    const correctCount=mapGet(user.activityCorrect,type), wrongCount=mapGet(user.activityWrong,type), earned=mapGet(user.activityEarn,type), deducted=mapGet(user.activityDeduct,type);
-    if(correct){ user.wallet=Number(user.wallet||0)+activity.reward; user.totalEarn=Number(user.totalEarn||0)+activity.reward; mapSet(user.activityCorrect,type,correctCount+1); mapSet(user.activityEarn,type,earned+activity.reward); }
-    else { const deduction=Math.min(Number(user.wallet||0),activity.reward); user.wallet=Math.max(0,Number(user.wallet||0)-activity.reward); mapSet(user.activityWrong,type,wrongCount+1); mapSet(user.activityDeduct,type,deducted+deduction); }
+    if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
+    mapSet(user.activityCounts,type,count+1);
+    mapSet(user.activityLastQuestion,type,index);
+    const correctCount=mapGet(user.activityCorrect,type), wrongCount=mapGet(user.activityWrong,type);
+    const earned=mapGet(user.activityEarn,type), deducted=mapGet(user.activityDeduct,type);
+    if(correct){
+      user.wallet=Number(user.wallet||0)+activity.reward;
+      user.totalEarn=Number(user.totalEarn||0)+activity.reward;
+      mapSet(user.activityCorrect,type,correctCount+1); mapSet(user.activityEarn,type,earned+activity.reward);
+    }else{
+      const deduction=Math.min(Number(user.wallet||0),activity.reward);
+      user.wallet=Math.max(0,Number(user.wallet||0)-activity.reward);
+      mapSet(user.activityWrong,type,wrongCount+1); mapSet(user.activityDeduct,type,deducted+deduction);
+    }
+    // Consume the question before saving. A second submit can never earn again.
+    user.activeActivityType=''; user.activeActivityQuestionId=null; user.activeActivityStartedAt=null; user.activeActivityToken='';
     await user.save();
     res.json({success:true,correct,reward:correct?activity.reward:-activity.reward,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),used:count+1,remaining:Math.max(0,activity.dailyLimit-count-1),correctCount:correct?correctCount+1:correctCount,wrongCount:correct?wrongCount:wrongCount+1,activityEarn:correct?earned+activity.reward:earned,activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)});
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
