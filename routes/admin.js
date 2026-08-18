@@ -209,7 +209,9 @@ router.get("/users", adminAuth, async (req, res) => {
 
                 const ONLINE_TIMEOUT = 3000; // Offline after 3 seconds without heartbeat
 
-                if (difference <= ONLINE_TIMEOUT) {
+                // isOnline is the explicit live-presence flag. lastSeen is the
+                // safety timeout for crashed/disconnected tabs. Both must agree.
+                if (user.isOnline === true && difference <= ONLINE_TIMEOUT) {
                     online = true;
                 }
 
@@ -977,7 +979,7 @@ router.get("/control-center", adminAuth, async (req, res) => {
         const mapped = users.map(u => ({
             ...u,
             _id: String(u._id),
-            isOnline: !!u.lastSeen && (now - new Date(u.lastSeen).getTime()) <= onlineTimeout,
+            isOnline: u.isOnline === true && !!u.lastSeen && (now - new Date(u.lastSeen).getTime()) <= onlineTimeout,
             dailyQuestionsAnswered: u.dailyQuestionsDate === today
                 ? Number(u.dailyQuestionsAnswered || 0)
                 : 0,
@@ -1143,7 +1145,7 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
     try{
         const today=proTodayKey();
         const users=await User.find({}).select("-password").lean();
-        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=3000);
+        const active=users.filter(u=>u.isOnline === true && u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=3000);
         const stats={
             students:users.length,
             online:active.length,
