@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>English Mastery Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* =====================================
-   RESET
-===================================== */
-
+        /* ==========================================================================
+           1. RESET & BASE STYLES
+           ========================================================================== */
         * {
             margin: 0;
             padding: 0;
@@ -20,764 +20,592 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-
             min-height: 100vh;
-
             display: flex;
             justify-content: center;
             align-items: center;
-
             padding: 20px;
-
-            /* Colorful Background */
+            color: #2d3436;
+            user-select: none;
+            -webkit-user-select: none;
             background:
                 radial-gradient(circle at 10% 20%, #ff9ff3 0%, transparent 25%),
                 radial-gradient(circle at 90% 10%, #54a0ff 0%, transparent 25%),
                 radial-gradient(circle at 20% 90%, #1dd1a1 0%, transparent 25%),
                 radial-gradient(circle at 90% 90%, #feca57 0%, transparent 25%),
                 linear-gradient(135deg, #667eea, #764ba2);
-
             background-attachment: fixed;
-
-            color: #2d3436;
-
-            user-select: none;
-            -webkit-user-select: none;
         }
 
+        /* Dark Mode Theme */
+        body.dark {
+            background: #111111 !important;
+        }
 
-        /* =====================================
-   MAIN CARD
-===================================== */
+        body.dark .card {
+            background: #1e1e1e;
+            color: #ffffff;
+        }
 
+        body.dark #question,
+        body.dark #message {
+            color: #ffffff !important;
+        }
+
+        body.dark .option-btn {
+            background: #333333;
+            color: #ffffff;
+            border: 2px solid #555555;
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ==========================================================================
+           2. CONTAINER & CARDS
+           ========================================================================== */
         .card {
             width: 100%;
             max-width: 440px;
-
             padding: 28px 22px;
-
             background: rgba(255, 255, 255, 0.96);
-
             border-radius: 32px;
-
             border: 4px solid rgba(255, 255, 255, 0.7);
-
-            box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.25),
-                0 0 40px rgba(255, 255, 255, 0.15);
-
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25), 0 0 40px rgba(255, 255, 255, 0.15);
             animation: cardShow 0.6s ease;
-
             position: relative;
-
             overflow: hidden;
         }
 
         @keyframes cardShow {
-
             0% {
                 opacity: 0;
                 transform: translateY(40px) scale(0.9);
             }
-
             100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
-
         }
 
+        /* ==========================================================================
+           3. DASHBOARD GRID & HEADER
+           ========================================================================== */
+        #dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
 
-        /* =====================================
-   DASHBOARD TITLE
-===================================== */
+        #dashboard > h2,
+        #dashboard > .wallet-box,
+        #dashboard > .grid,
+        #dashboard > .telegram-btn {
+            grid-column: 1 / -1;
+        }
 
         #dashboard h2 {
-
             text-align: center;
-
             font-size: 27px;
-
             font-weight: 700;
-
             margin-bottom: 22px;
-
-            background:
-                linear-gradient(90deg,
-                    #ff0080,
-                    #7928ca,
-                    #00c6ff,
-                    #00b894);
-
+            background: linear-gradient(90deg, #ff0080, #7928ca, #00c6ff, #00b894);
             background-size: 300%;
-
             -webkit-background-clip: text;
-
             -webkit-text-fill-color: transparent;
-
             animation: gradientText 5s infinite;
-
         }
 
         @keyframes gradientText {
-
-            0% {
-                background-position: 0%;
-            }
-
-            50% {
-                background-position: 100%;
-            }
-
-            100% {
-                background-position: 0%;
-            }
-
+            0% { background-position: 0%; }
+            50% { background-position: 100%; }
+            100% { background-position: 0%; }
         }
 
+        /* Top Small Icons (Dark Mode, Profile, Admin) */
+        #dashboard > #themeBtn {
+            grid-column: 1;
+            width: 100%;
+            height: 52px;
+            min-height: 52px;
+            margin: 0 !important;
+            padding: 8px;
+            border-radius: 14px !important;
+            font-size: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: #222;
+            color: #fff;
+            cursor: pointer;
+        }
 
-        /* =====================================
-   WALLET
-===================================== */
+        #dashboard > #themeBtn::before {
+            content: "🌙";
+            font-size: 23px;
+        }
 
+        #dashboard > .btn-profile {
+            grid-column: 2;
+            width: 100% !important;
+            height: 52px !important;
+            min-height: 52px !important;
+            margin: 0 !important;
+            padding: 5px !important;
+            border-radius: 14px !important;
+            font-size: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dashboard > .btn-profile::before {
+            content: "👤";
+            font-size: 23px;
+        }
+
+        #dashboard > .btn-Admin {
+            grid-column: 2;
+            width: 52px !important;
+            height: 52px !important;
+            min-height: 52px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-radius: 14px !important;
+            font-size: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 28px;
+            right: 28px;
+        }
+
+        #dashboard > .btn-Admin::before {
+            content: "🛡️";
+            font-size: 23px;
+        }
+
+        /* ==========================================================================
+           4. WALLET BOX
+           ========================================================================== */
         .wallet-box {
-
             position: relative;
-
             overflow: hidden;
-
             padding: 25px 22px;
-
             border-radius: 25px;
-
             color: white;
-
             margin-bottom: 22px;
-
-            background:
-                linear-gradient(135deg,
-                    #ff0080,
-                    #7928ca,
-                    #2f80ed);
-
-            box-shadow:
-                0 12px 30px rgba(121, 40, 202, 0.4);
-
+            background: linear-gradient(135deg, #ff0080, #7928ca, #2f80ed);
+            box-shadow: 0 12px 30px rgba(121, 40, 202, 0.4);
         }
-
-
-        /* Wallet Shine */
 
         .wallet-box::before {
-
             content: "";
-
             position: absolute;
-
             width: 200px;
             height: 200px;
-
             background: rgba(255, 255, 255, 0.15);
-
             border-radius: 50%;
-
             right: -80px;
             top: -90px;
-
         }
 
         .wallet-box::after {
-
             content: "";
-
             position: absolute;
-
             width: 100px;
             height: 100px;
-
             background: rgba(255, 255, 255, 0.1);
-
             border-radius: 50%;
-
             left: -40px;
             bottom: -50px;
-
         }
 
         .wallet-box small {
-
             position: relative;
-
             z-index: 2;
-
             font-size: 14px;
-
             opacity: 0.9;
-
         }
 
         .wallet-val {
-
             position: relative;
-
             z-index: 2;
-
             display: block;
-
             margin-top: 5px;
-
             font-size: 36px;
-
             font-weight: 700;
-
             letter-spacing: 1px;
-
         }
 
-
-        /* =====================================
-   BUTTON GRID
-===================================== */
-
+        /* ==========================================================================
+           5. BUTTONS STYLING
+           ========================================================================== */
         .grid {
-
             display: grid;
-
             grid-template-columns: 1fr 1fr;
-
             gap: 13px;
-
         }
-
-
-        /* =====================================
-   ALL BUTTON
-===================================== */
 
         .btn {
-
             border: none;
-
             width: 100%;
-
             min-height: 60px;
-
             padding: 13px 10px;
-
             border-radius: 20px;
-
             color: white;
-
             font-family: 'Poppins', sans-serif;
-
             font-size: 13px;
-
             font-weight: 600;
-
             cursor: pointer;
-
             transition: all 0.25s ease;
-
-            box-shadow:
-                0 8px 18px rgba(0, 0, 0, 0.15);
-
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
             position: relative;
-
             overflow: hidden;
-
             margin-top: 10px;
-
         }
 
-
-        /* Button Shine */
-
         .btn::after {
-
             content: "";
-
             position: absolute;
-
             top: 0;
-
             left: -100%;
-
             width: 70%;
-
             height: 100%;
-
-            background:
-                linear-gradient(90deg,
-                    transparent,
-                    rgba(255, 255, 255, 0.35),
-                    transparent);
-
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
             transform: skewX(-20deg);
-
             transition: 0.5s;
-
         }
 
         .btn:hover::after {
-
             left: 130%;
-
         }
 
         .btn:hover {
-
             transform: translateY(-5px) scale(1.02);
-
-            box-shadow:
-                0 15px 28px rgba(0, 0, 0, 0.2);
-
+            box-shadow: 0 15px 28px rgba(0, 0, 0, 0.2);
         }
 
         .btn:active {
-
             transform: scale(0.94);
-
         }
 
-
-        /* =====================================
-   QUIZ BUTTON
-===================================== */
-
-        .btn-quiz {
-
-            background:
-                linear-gradient(135deg,
-                    #ff416c,
-                    #ff4b2b);
-
+        #dashboard > .btn-spin,
+        #dashboard > .btn-reward,
+        #dashboard > .btn-bonus,
+        #dashboard > .btn-withdraw {
+            width: 100% !important;
+            height: 62px !important;
+            min-height: 62px !important;
+            margin: 0 !important;
+            border-radius: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
+        .btn-quiz { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+        .btn-spin { background: linear-gradient(135deg, #f7971e, #ffd200); color: #5c3d00; grid-column: 1; }
+        .btn-profile { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+        .btn-reward { background: linear-gradient(135deg, #f857a6, #ff5858); grid-column: 2; font-size: 14px; }
+        .btn-bonus { grid-column: 1; }
+        .btn-withdraw { background: linear-gradient(135deg, #8e2de2, #4a00e0); grid-column: 2; font-size: 14px; }
 
-        /* =====================================
-   SPIN BUTTON
-===================================== */
-
-        .btn-spin {
-
-            background:
-                linear-gradient(135deg,
-                    #f7971e,
-                    #ffd200);
-
-            color: #5c3d00;
-
+        .btn-withdraw:disabled {
+            background: linear-gradient(135deg, #bdc3c7, #7f8c8d);
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
         }
 
-
-        /* =====================================
-   PROFILE
-===================================== */
-
-        .btn-profile {
-
-            background:
-                linear-gradient(135deg,
-                    #00c6ff,
-                    #0072ff);
-
-        }
-
-
-        /* =====================================
-   ADMIN & TELEGRAM
-===================================== */
-
+        /* Admin & Telegram Buttons */
         .btn-Admin,
         .telegram-btn {
-
             border: none;
-
             width: 100%;
-
             min-height: 60px;
-
             padding: 13px 10px;
-
             border-radius: 20px;
-
             color: white;
-
             font-family: 'Poppins', sans-serif;
-
             font-size: 13px;
-
             font-weight: 600;
-
             cursor: pointer;
-
             transition: all 0.25s ease;
-
-            box-shadow:
-                0 8px 18px rgba(0, 0, 0, 0.15);
-
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
             position: relative;
-
             overflow: hidden;
-
             margin-top: 10px;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 10px;
-
             text-decoration: none;
-
         }
 
-        .btn-Admin {
-
-            background:
-                linear-gradient(135deg,
-                    #11998e,
-                    #38ef7d);
-
-        }
-
+        .btn-Admin { background: linear-gradient(135deg, #11998e, #38ef7d); }
         .telegram-btn {
-
-            background:
-                linear-gradient(135deg,
-                    #0088cc,
-                    #229ed9);
-
+            background: linear-gradient(135deg, #0088cc, #229ed9);
+            grid-column: 1 / -1;
+            height: 62px !important;
+            min-height: 62px !important;
+            margin: 0 !important;
+            border-radius: 17px;
         }
 
         .telegram-btn:hover,
         .btn-Admin:hover {
-
             transform: translateY(-5px) scale(1.02);
-
-            box-shadow:
-                0 15px 28px rgba(0, 0, 0, 0.2);
-
+            box-shadow: 0 15px 28px rgba(0, 0, 0, 0.2);
         }
 
         .telegram-btn:active,
         .btn-Admin:active {
-
             transform: scale(0.94);
-
         }
 
         .telegram-icon {
-
             width: 20px;
-
             height: 20px;
-
             fill: white;
-
         }
 
-
-        /* =====================================
-   DAILY REWARD
-===================================== */
-
-        .btn-reward {
-
-            background:
-                linear-gradient(135deg,
-                    #f857a6,
-                    #ff5858);
-
-            margin-top: 18px;
-
-            font-size: 14px;
-
-        }
-
-
-        /* =====================================
-   WITHDRAW
-===================================== */
-
-        .btn-withdraw {
-
-            background:
-                linear-gradient(135deg,
-                    #8e2de2,
-                    #4a00e0);
-
-            margin-top: 12px;
-
-            font-size: 14px;
-
-        }
-
-
-        .btn-withdraw:disabled {
-
-            background:
-                linear-gradient(135deg,
-                    #bdc3c7,
-                    #7f8c8d);
-
-            opacity: 0.6;
-
-            cursor: not-allowed;
-
-            box-shadow: none;
-
-            transform: none;
-
-        }
-
-
-        /* =====================================
-   QUIZ SCREEN
-===================================== */
-
+        /* ==========================================================================
+           6. QUIZ SCREEN & OPTIONS
+           ========================================================================== */
         #quiz {
-
             text-align: center;
         }
 
         #quiz h3 {
-
             font-size: 20px;
-
             line-height: 1.6;
-
             margin-bottom: 22px;
-
             color: #5f27cd;
-
         }
 
-
-        /* =====================================
-   QUIZ OPTIONS
-===================================== */
-
         .option-btn {
-
             width: 100%;
-
             padding: 16px;
-
             margin: 9px 0;
-
             border-radius: 18px;
-
             border: 3px solid #eee;
-
-            background:
-                linear-gradient(135deg,
-                    #ffffff,
-                    #f3f0ff);
-
+            background: linear-gradient(135deg, #ffffff, #f3f0ff);
             color: #2d3436;
-
             font-family: 'Poppins', sans-serif;
-
             font-size: 14px;
-
             font-weight: 600;
-
             cursor: pointer;
-
             transition: all 0.25s ease;
-
         }
 
         .option-btn:hover {
-
             color: white;
-
             border-color: transparent;
-
-            background:
-                linear-gradient(135deg,
-                    #ff0080,
-                    #7928ca);
-
-            transform:
-                translateX(6px) scale(1.02);
-
-            box-shadow:
-                0 10px 22px rgba(121, 40, 202, 0.3);
-
+            background: linear-gradient(135deg, #ff0080, #7928ca);
+            transform: translateX(6px) scale(1.02);
+            box-shadow: 0 10px 22px rgba(121, 40, 202, 0.3);
         }
 
         .option-btn:active {
-
             transform: scale(0.95);
-
         }
-
-
-        /* =====================================
-   BACK BUTTON
-===================================== */
 
         #quiz .btn {
-
-            background:
-                linear-gradient(135deg,
-                    #636e72,
-                    #2d3436);
-
+            background: linear-gradient(135deg, #636e72, #2d3436);
             margin-top: 20px;
-
         }
 
-
-        /* =====================================
-   HIDDEN
-===================================== */
-
-        .hidden {
-
-            display: none !important;
-
+        /* ==========================================================================
+           7. EARNING ACTIVITIES & ZONES
+           ========================================================================== */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 14px;
         }
 
-
-        /* =====================================
-   MOBILE
-===================================== */
-
-        @media (max-width: 480px) {
-
-            body {
-
-                padding: 12px;
-
-                align-items: center;
-                justify-content: center;
-
-            }
-
-            .card {
-
-                margin-top: 10px;
-
-                padding: 24px 16px;
-
-                border-radius: 28px;
-
-            }
-
-            #dashboard h2 {
-
-                font-size: 23px;
-
-            }
-
-            .wallet-box {
-
-                padding: 22px 18px;
-
-                border-radius: 22px;
-
-            }
-
-            .wallet-val {
-
-                font-size: 31px;
-
-            }
-
-            .grid {
-
-                gap: 10px;
-
-            }
-
-            .btn,
-            .btn-Admin,
-            .telegram-btn {
-
-                min-height: 58px;
-
-                font-size: 11.5px;
-
-                border-radius: 17px;
-
-            }
-
-            .btn-reward,
-            .btn-withdraw {
-
-                font-size: 13px;
-
-            }
-
-            .option-btn {
-
-                padding: 14px 10px;
-
-                font-size: 13px;
-
-            }
-
+        .activity-btn {
+            border: 0;
+            border-radius: 18px;
+            padding: 16px 10px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+            transition: 0.2s;
         }
 
-
-        /* =====================================
-   SMALL PHONES
-===================================== */
-
-        @media (max-width: 350px) {
-
-            body {
-
-                padding: 8px;
-
-            }
-
-            .card {
-
-                padding: 20px 12px;
-
-            }
-
-            #dashboard h2 {
-
-                font-size: 20px;
-
-            }
-
-            .wallet-val {
-
-                font-size: 27px;
-
-            }
-
-            .btn,
-            .btn-Admin,
-            .telegram-btn {
-
-                min-height: 54px;
-
-                font-size: 10px;
-
-            }
-
+        .activity-btn:hover {
+            transform: translateY(-3px);
         }
 
-        /* ===========================
-   Withdraw Popup
-=========================== */
+        .activity-btn small {
+            display: block;
+            font-size: 11px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
 
+        .a1 { background: linear-gradient(135deg, #7c3aed, #4f46e5); }
+        .a2 { background: linear-gradient(135deg, #0891b2, #2563eb); }
+        .a3 { background: linear-gradient(135deg, #f97316, #ef4444); }
+        .a4 { background: linear-gradient(135deg, #16a34a, #059669); }
+        .a5 { background: linear-gradient(135deg, #db2777, #9333ea); }
+        .a6 { background: linear-gradient(135deg, #ca8a04, #ea580c); }
+        .a7 { background: linear-gradient(135deg, #0f766e, #0d9488); }
+        .a8 { background: linear-gradient(135deg, #0284c7, #4f46e5); }
+
+        .activity-screen { text-align: center; }
+        .activity-title { font-size: 22px; font-weight: 800; color: #5f27cd; }
+
+        .activity-reward {
+            display: inline-block;
+            margin: 8px 0;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #ecfdf5;
+            color: #047857;
+            font-weight: 700;
+        }
+
+        .activity-question {
+            font-size: 19px;
+            line-height: 1.6;
+            margin: 18px 0;
+            color: #222;
+        }
+
+        .activity-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 14px;
+            font: 600 14px 'Poppins', sans-serif;
+            margin: 8px 0;
+        }
+
+        .activity-action {
+            width: 100%;
+            border: 0;
+            border-radius: 14px;
+            padding: 14px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, #6366f1, #7c3aed);
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 12px 0;
+        }
+
+        .word-chip {
+            border: 0;
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: #f1f5f9;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .answer-box {
+            min-height: 52px;
+            padding: 12px;
+            border: 2px dashed #a78bfa;
+            border-radius: 14px;
+            background: #faf5ff;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .activity-option {
+            width: 100%;
+            padding: 13px;
+            margin: 6px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 13px;
+            background: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .activity-feedback { min-height: 26px; font-weight: 800; margin: 8px 0; }
+        .passage { background: #f8fafc; padding: 15px; border-radius: 14px; text-align: left; line-height: 1.7; font-size: 14px; }
+        .mic-status { font-size: 13px; color: #64748b; margin: 8px; }
+
+        .activity-wallet-bar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+            font-weight: 700;
+        }
+
+        .activity-wallet-bar strong { font-size: 18px; }
+
+        [data-activity="fill"], [data-activity="reading"] {
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            touch-action: manipulation;
+        }
+
+        .submit-answer {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px 16px;
+            border: 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        #activityContent input, #activityContent textarea {
+            pointer-events: auto !important;
+            user-select: text !important;
+        }
+
+        #activityContent .activity-option {
+            position: relative;
+            z-index: 30;
+            pointer-events: auto !important;
+            touch-action: manipulation;
+        }
+
+        /* ==========================================================================
+           8. OVERLAYS & POPUPS
+           ========================================================================== */
+        /* Withdraw Popup */
         .withdraw-popup {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, .6);
+            background: rgba(0, 0, 0, 0.6);
             display: none;
             justify-content: center;
             align-items: center;
@@ -790,26 +618,12 @@
             background: #fff;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
 
-        .withdraw-box h2 {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .withdraw-box p {
-            text-align: center;
-            font-weight: bold;
-            color: #0a8f08;
-            margin-bottom: 20px;
-        }
-
-        .withdraw-box label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
+        .withdraw-box h2 { text-align: center; margin-bottom: 15px; }
+        .withdraw-box p { text-align: center; font-weight: bold; color: #0a8f08; margin-bottom: 20px; }
+        .withdraw-box label { display: block; margin-bottom: 8px; font-weight: bold; }
 
         .withdraw-box select,
         .withdraw-box input {
@@ -823,15 +637,9 @@
         }
 
         .withdraw-box input:focus,
-        .withdraw-box select:focus {
-            border-color: #007bff;
-        }
+        .withdraw-box select:focus { border-color: #007bff; }
 
-        .withdraw-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
+        .withdraw-buttons { display: flex; gap: 10px; }
         .withdraw-buttons button {
             flex: 1;
             padding: 12px;
@@ -841,438 +649,136 @@
             color: #fff;
             font-size: 15px;
         }
+        .withdraw-buttons button:first-child { background: #28a745; }
+        .withdraw-buttons button:last-child { background: #dc3545; }
+        .withdraw-buttons button:hover { opacity: 0.9; }
 
-        .withdraw-buttons button:first-child {
-            background: #28a745;
+        /* Notification Lock Gate Overlay */
+        #notificationRequiredOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(5px);
         }
 
-        .withdraw-buttons button:last-child {
-            background: #dc3545;
+        #notificationRequiredBox {
+            width: min(430px, 100%);
+            background: #fff;
+            color: #1f2937;
+            border-radius: 22px;
+            padding: 28px 22px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
         }
 
-        .withdraw-buttons button:hover {
-            opacity: .9;
-        }
+        #notificationRequiredBox .nr-icon { font-size: 52px; margin-bottom: 8px; }
+        #notificationRequiredBox h2 { margin: 0 0 10px; font-size: 24px; }
+        #notificationRequiredBox p { margin: 8px 0; line-height: 1.55; color: #4b5563; }
 
-        body.dark {
-            background: #111 !important;
-        }
-
-        body.dark .card {
-            background: #1e1e1e;
+        #requiredNotificationBtn {
+            width: 100%;
+            border: 0;
+            border-radius: 13px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            font-size: 16px;
+            font-weight: 700;
             color: #fff;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            cursor: pointer;
         }
 
-        body.dark #question,
-        body.dark #message {
-            color: #fff !important;
+        #requiredNotificationBtn:disabled { opacity: 0.7; cursor: wait; }
+        #notificationRequiredStatus { min-height: 22px; margin-top: 12px; font-size: 14px; font-weight: 600; }
+        #notificationRequiredHelp {
+            display: none;
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #fff7ed;
+            color: #9a3412;
+            font-size: 13px;
         }
 
-        body.dark .option-btn {
-            background: #333;
-            color: #fff;
-            border: 2px solid #555;
-        }
-    
-/* Interactive English earning activities */
-.activity-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.activity-btn{border:0;border-radius:18px;padding:16px 10px;color:#fff;font-family:Poppins,sans-serif;font-weight:700;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.15);transition:.2s}.activity-btn:hover{transform:translateY(-3px)}.activity-btn small{display:block;font-size:11px;opacity:.9;margin-top:4px}.a1{background:linear-gradient(135deg,#7c3aed,#4f46e5)}.a2{background:linear-gradient(135deg,#0891b2,#2563eb)}.a3{background:linear-gradient(135deg,#f97316,#ef4444)}.a4{background:linear-gradient(135deg,#16a34a,#059669)}.a5{background:linear-gradient(135deg,#db2777,#9333ea)}.a6{background:linear-gradient(135deg,#ca8a04,#ea580c)}.a7{background:linear-gradient(135deg,#0f766e,#0d9488)}.a8{background:linear-gradient(135deg,#0284c7,#4f46e5)}.activity-screen{text-align:center}.activity-title{font-size:22px;font-weight:800;color:#5f27cd}.activity-reward{display:inline-block;margin:8px 0;padding:7px 12px;border-radius:20px;background:#ecfdf5;color:#047857;font-weight:700}.activity-question{font-size:19px;line-height:1.6;margin:18px 0;color:#222}.activity-input{width:100%;padding:14px;border:2px solid #ddd;border-radius:14px;font:600 14px Poppins,sans-serif;margin:8px 0}.activity-action{width:100%;border:0;border-radius:14px;padding:14px;margin:8px 0;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;font-weight:800;cursor:pointer}.word-bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}.word-chip{border:0;border-radius:12px;padding:10px 12px;background:#f1f5f9;font-weight:700;cursor:pointer}.answer-box{min-height:52px;padding:12px;border:2px dashed #a78bfa;border-radius:14px;background:#faf5ff;margin:10px 0;line-height:1.8}.activity-option{width:100%;padding:13px;margin:6px 0;border:2px solid #e5e7eb;border-radius:13px;background:#fff;font-weight:700;cursor:pointer;text-align:left}.activity-feedback{min-height:26px;font-weight:800;margin:8px 0}.passage{background:#f8fafc;padding:15px;border-radius:14px;text-align:left;line-height:1.7;font-size:14px}.mic-status{font-size:13px;color:#64748b;margin:8px}
-@media(max-width:480px){.activity-grid{grid-template-columns:1fr 1fr}.activity-btn{padding:14px 7px;font-size:13px}}
+        body.notification-locked { overflow: hidden; pointer-events: none; }
+        body.notification-locked #notificationRequiredOverlay { pointer-events: auto; }
+        body.notification-locked #notificationRequiredOverlay button { pointer-events: auto; }
 
-        .activity-wallet-bar{
-            position:sticky;
-            top:0;
-            z-index:20;
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:12px;
-            margin-bottom:16px;
-            padding:12px 16px;
-            border-radius:12px;
-            background:#ffffff;
-            box-shadow:0 3px 14px rgba(0,0,0,.08);
-            font-weight:700;
-        }
-        .activity-wallet-bar strong{
-            font-size:18px;
-        }
-        @media(max-width:600px){
-            .activity-wallet-bar{
-                padding:11px 13px;
-                margin-bottom:12px;
+        /* ==========================================================================
+           9. MEDIA QUERIES (RESPONSIVE)
+           ========================================================================== */
+        @media (max-width: 600px) {
+            .activity-wallet-bar {
+                padding: 11px 13px;
+                margin-bottom: 12px;
             }
         }
 
-        [data-activity="fill"], [data-activity="reading"]{
-            cursor:pointer !important;
-            pointer-events:auto !important;
-            touch-action:manipulation;
+        @media (max-width: 480px) {
+            body { padding: 12px; align-items: center; justify-content: center; }
+            .card { margin-top: 10px; padding: 24px 16px; border-radius: 28px; }
+            #dashboard { gap: 10px; }
+            #dashboard h2 { font-size: 23px; }
+            .wallet-box { padding: 22px 18px; border-radius: 22px; }
+            .wallet-val { font-size: 31px; }
+            .grid { gap: 10px; }
+
+            .btn, .btn-Admin, .telegram-btn { min-height: 58px; font-size: 11.5px; border-radius: 17px; }
+            .btn-reward, .btn-withdraw { font-size: 13px; }
+            .option-btn { padding: 14px 10px; font-size: 13px; }
+
+            #dashboard > #themeBtn { height: 50px !important; min-height: 50px !important; }
+            #dashboard > #themeBtn::before { font-size: 21px; }
+            #dashboard > .btn-profile { height: 50px !important; min-height: 50px !important; }
+            #dashboard > .btn-profile::before { font-size: 21px; }
+            #dashboard > .btn-Admin { width: 50px !important; height: 50px !important; min-height: 50px !important; top: 24px; right: 18px; }
+            #dashboard > .btn-Admin::before { font-size: 21px; }
+
+            #dashboard > .btn-spin,
+            #dashboard > .btn-reward,
+            #dashboard > .btn-bonus,
+            #dashboard > .btn-withdraw { height: 58px !important; min-height: 58px !important; font-size: 11px !important; }
+            #dashboard > .telegram-btn { height: 58px !important; min-height: 58px !important; font-size: 11px; }
+
+            .activity-grid { grid-template-columns: 1fr 1fr; }
+            .activity-btn { padding: 14px 7px; font-size: 13px; }
         }
 
-        .submit-answer{
-            display:block;width:100%;margin-top:12px;padding:12px 16px;
-            border:0;border-radius:10px;cursor:pointer;font-weight:700;
+        @media (max-width: 350px) {
+            body { padding: 8px; }
+            .card { padding: 20px 12px; }
+            #dashboard h2 { font-size: 20px; }
+            .wallet-val { font-size: 27px; }
+            .btn, .btn-Admin, .telegram-btn { min-height: 54px; font-size: 10px; }
         }
-        #activityContent input,#activityContent textarea{
-            pointer-events:auto !important;user-select:text !important;
-        }
-
-#activityContent .activity-option{
-    position:relative;
-    z-index:30;
-    pointer-events:auto !important;
-    touch-action:manipulation;
-}
-</style>
-
-<style id="notification-required-style">
-#notificationRequiredOverlay{
-    position:fixed;
-    inset:0;
-    z-index:999999;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    background:rgba(0,0,0,.72);
-    backdrop-filter:blur(5px);
-}
-#notificationRequiredBox{
-    width:min(430px,100%);
-    background:#fff;
-    color:#1f2937;
-    border-radius:22px;
-    padding:28px 22px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
-}
-#notificationRequiredBox .nr-icon{
-    font-size:52px;
-    margin-bottom:8px;
-}
-#notificationRequiredBox h2{
-    margin:0 0 10px;
-    font-size:24px;
-}
-#notificationRequiredBox p{
-    margin:8px 0;
-    line-height:1.55;
-    color:#4b5563;
-}
-#requiredNotificationBtn{
-    width:100%;
-    border:0;
-    border-radius:13px;
-    padding:14px 18px;
-    margin-top:16px;
-    font-size:16px;
-    font-weight:700;
-    color:#fff;
-    background:linear-gradient(135deg,#2563eb,#7c3aed);
-    cursor:pointer;
-}
-#requiredNotificationBtn:disabled{
-    opacity:.7;
-    cursor:wait;
-}
-#notificationRequiredStatus{
-    min-height:22px;
-    margin-top:12px;
-    font-size:14px;
-    font-weight:600;
-}
-#notificationRequiredHelp{
-    display:none;
-    margin-top:12px;
-    padding:10px;
-    border-radius:10px;
-    background:#fff7ed;
-    color:#9a3412;
-    font-size:13px;
-}
-body.notification-locked{
-    overflow:hidden;
-    pointer-events:none;
-}
-body.notification-locked #notificationRequiredOverlay{
-    pointer-events:auto;
-}
-body.notification-locked #notificationRequiredOverlay button{
-    pointer-events:auto;
-}
-
-/* =========================================
-   FINAL DASHBOARD LAYOUT
-========================================= */
-
-#dashboard {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-/* Heading + Wallet */
-#dashboard > h2,
-#dashboard > .wallet-box {
-    grid-column: 1 / -1;
-}
-
-
-/* =========================================
-   TOP SMALL ICON AREA
-   DARK MODE + PROFILE + ADMIN
-========================================= */
-
-#dashboard > #themeBtn {
-    grid-column: 1;
-    width: 100%;
-    height: 52px;
-    min-height: 52px;
-    margin: 0 !important;
-    padding: 8px;
-    border-radius: 14px !important;
-
-    font-size: 0 !important;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#dashboard > #themeBtn::before {
-    content: "🌙";
-    font-size: 23px;
-}
-
-
-/* Profile = SMALL ICON */
-#dashboard > .btn-profile {
-
-    grid-column: 2;
-
-    width: 100% !important;
-    height: 52px !important;
-    min-height: 52px !important;
-
-    margin: 0 !important;
-    padding: 5px !important;
-
-    border-radius: 14px !important;
-
-    font-size: 0 !important;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#dashboard > .btn-profile::before {
-    content: "👤";
-    font-size: 23px;
-}
-
-
-/* Admin = SMALL ICON */
-#dashboard > .btn-Admin {
-
-    grid-column: 2;
-
-    width: 52px !important;
-    height: 52px !important;
-    min-height: 52px !important;
-
-    margin: 0 !important;
-
-    padding: 0 !important;
-
-    border-radius: 14px !important;
-
-    font-size: 0 !important;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: absolute;
-
-    top: 28px;
-    right: 28px;
-}
-
-#dashboard > .btn-Admin::before {
-    content: "🛡️";
-    font-size: 23px;
-}
-
-
-/* =========================================
-   NORMAL BUTTONS
-   2 × 2 SAME SIZE
-========================================= */
-
-#dashboard > .grid {
-    grid-column: 1 / -1;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-
-/* All normal dashboard buttons */
-#dashboard > .btn-spin,
-#dashboard > .btn-reward,
-#dashboard > .btn-bonus,
-#dashboard > .btn-withdraw {
-
-    width: 100% !important;
-
-    height: 62px !important;
-    min-height: 62px !important;
-
-    margin: 0 !important;
-
-    border-radius: 17px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-}
-
-
-/* Spin + Daily Reward */
-#dashboard > .btn-spin {
-    grid-column: 1;
-}
-
-#dashboard > .btn-reward {
-    grid-column: 2;
-}
-
-
-/* Bonus + Withdraw */
-#dashboard > .btn-bonus {
-    grid-column: 1;
-}
-
-#dashboard > .btn-withdraw {
-    grid-column: 2;
-}
-
-
-/* =========================================
-   TELEGRAM FULL WIDTH
-========================================= */
-
-#dashboard > .telegram-btn {
-
-    grid-column: 1 / -1;
-
-    width: 100% !important;
-
-    height: 62px !important;
-    min-height: 62px !important;
-
-    margin: 0 !important;
-
-    border-radius: 17px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media (max-width: 480px) {
-
-    #dashboard {
-        gap: 10px;
-    }
-
-    #dashboard > #themeBtn {
-        height: 50px !important;
-        min-height: 50px !important;
-    }
-
-    #dashboard > #themeBtn::before {
-        font-size: 21px;
-    }
-
-    #dashboard > .btn-profile {
-        height: 50px !important;
-        min-height: 50px !important;
-    }
-
-    #dashboard > .btn-profile::before {
-        font-size: 21px;
-    }
-
-    #dashboard > .btn-Admin {
-        width: 50px !important;
-        height: 50px !important;
-        min-height: 50px !important;
-
-        top: 24px;
-        right: 18px;
-    }
-
-    #dashboard > .btn-Admin::before {
-        font-size: 21px;
-    }
-
-    #dashboard > .btn-spin,
-    #dashboard > .btn-reward,
-    #dashboard > .btn-bonus,
-    #dashboard > .btn-withdraw {
-
-        height: 58px !important;
-        min-height: 58px !important;
-
-        font-size: 11px !important;
-    }
-
-    #dashboard > .telegram-btn {
-
-        height: 58px !important;
-        min-height: 58px !important;
-
-        font-size: 11px;
-    }
-}
-</style>
-
+    </style>
 </head>
 
 <body>
 
-<!-- Mandatory notification gate: no dashboard option can be used until notifications are enabled -->
-<div id="notificationRequiredOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationGateTitle">
-  <div id="notificationRequiredBox">
-    <div class="nr-icon">🔔</div>
-    <h2 id="notificationGateTitle">App Notifications Enable કરો</h2>
-    <p>Admin તરફથી notification મેળવવા અને Dashboard ના કોઈપણ option નો ઉપયોગ કરવા માટે પહેલા Notifications <b>Allow</b> કરવી જરૂરી છે.</p>
-    <button id="requiredNotificationBtn" type="button" onclick="enableRequiredNotifications()">🔔 Enable App Notifications</button>
-    <div id="notificationRequiredStatus"></div>
-    <div id="notificationRequiredHelp">
-      Browser માં notifications Block છે. Site settings ખોલીને <b>Notifications → Allow</b> કરો અને પછી page reload કરો.
+    <!-- Mandatory notification gate: no dashboard option can be used until notifications are enabled -->
+    <div id="notificationRequiredOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationGateTitle">
+        <div id="notificationRequiredBox">
+            <div class="nr-icon">🔔</div>
+            <h2 id="notificationGateTitle">App Notifications Enable કરો</h2>
+            <p>Admin તરફથી notification મેળવવા અને Dashboard ના કોઈપણ option નો ઉપયોગ કરવા માટે પહેલા Notifications <b>Allow</b> કરવી જરૂરી છે.</p>
+            <button id="requiredNotificationBtn" type="button" onclick="enableRequiredNotifications()">🔔 Enable App Notifications</button>
+            <div id="notificationRequiredStatus"></div>
+            <div id="notificationRequiredHelp">
+                Browser માં notifications Block છે. Site settings ખોલીને <b>Notifications → Allow</b> કરો અને પછી page reload કરો.
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-
-
-
-
+    <!-- MAIN DASHBOARD -->
     <div id="dashboard" class="card" aria-hidden="true" style="visibility:hidden;">
         <h2 style="color: #2d3436;">Student Dashboard</h2>
-        <button id="themeBtn" onclick="toggleTheme()"
-            style="margin-bottom:15px;padding:10px 15px;background:#222;color:#fff;border:none;border-radius:10px;cursor:pointer;">🌙 Dark Mode</button>
+        <button id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
 
         <div class="wallet-box">
             <small>Total Balance</small>
@@ -1283,146 +789,84 @@ body.notification-locked #notificationRequiredOverlay button{
             <button class="btn btn-quiz" onclick="showScreen('quiz')">Start Quiz</button>
             <button class="btn" style="background:linear-gradient(135deg,#00b894,#0984e3);color:#fff" type="button" onclick="showScreen('activities')">🎮 English Learning & Earning</button>
         </div>
-        
-        <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions
-            (©1 - ©150)</button>
-            
-            <!-- <div id="questionProgress" style="text-align:center;margin:8px 0 14px;font-weight:700;color:#6c5ce7;">Today's
-                Questions: 0 / 100</div> -->
-                
-                <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Daily Reward</button>
-                
-                <!-- <button id="notificationBtn" class="btn" onclick="enableNotifications()"
-                style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:white;margin:10px 0;">
-                🔔 Enable App Notifications
-            </button> -->
-            
-            <button class="btn btn-bonus"
-            style="text-align:center;margin:8px 0 14px;font-weight:700;background:linear-gradient(135deg,#fa5252,#c73030);color:white;"
-            onclick="claimBonus()">©500 bonus</button>
-            
-            <button class="btn btn-profile" onclick="location.href='profile.html'">👤 Profile</button>
-       
-            <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw Now
-            (Min ©500)</button>
-        
+
+        <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions (©1 - ©150)</button>
+
+        <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Daily Reward</button>
+
+        <button class="btn btn-bonus" style="text-align:center;margin:8px 0 14px;font-weight:700;background:linear-gradient(135deg,#fa5252,#c73030);color:white;" onclick="claimBonus()">©500 bonus</button>
+
+        <button class="btn btn-profile" onclick="location.href='profile.html'">👤 Profile</button>
+
+        <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw Now (Min ©500)</button>
+
         <button class="btn btn-Admin" onclick="location.href='admin.html'">👤 Admin</button>
 
-        <a href="https://t.me/+blPfoyArs0U1NmI1" 
-           target="_blank"
-           rel="noopener noreferrer"
-           class="telegram-btn">
+        <a href="https://t.me/+blPfoyArs0U1NmI1" target="_blank" rel="noopener noreferrer" class="telegram-btn">
             <svg class="telegram-icon" viewBox="0 0 24 24">
                 <path d="M21.5 3.5L18.3 20c-.24 1.17-.88 1.46-1.79.91l-4.91-3.62-2.37 2.28c-.26.26-.48.48-.99.48l.35-5.01 9.12-8.24c.4-.35-.09-.55-.62-.2L6.04 13.72l-4.82-1.51c-1.05-.33-1.07-1.05.22-1.55L20.27 3.02c.89-.33 1.67.21 1.23.48z"/>
             </svg>
             Join Telegram for earning tips
         </a>
 
-
-<!-- Student Notification Button -->
-<div id="studentNotificationCard" style="
-    margin:16px 0 0;
-    padding:16px;
-    border-radius:16px;
-    background:#ffffff;
-    box-shadow:0 4px 18px rgba(0,0,0,.08);
-    text-align:center;
-">
-    <div style="font-size:18px;font-weight:700;margin-bottom:6px;">
-        🔔 Notifications
+        <!-- Student Notification Button Card -->
+        <div id="studentNotificationCard" style="margin:16px 0 0; padding:16px; border-radius:16px; background:#ffffff; box-shadow:0 4px 18px rgba(0,0,0,.08); text-align:center;">
+            <div style="font-size:18px;font-weight:700;margin-bottom:6px;">🔔 Notifications</div>
+            <div id="studentNotificationText" style="font-size:13px;color:#6b7280;margin-bottom:12px;">
+                Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો.
+            </div>
+            <button id="studentEnableNotificationBtn" type="button" onclick="enableStudentNotifications()" style="width:100%;border:0;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,#2563eb,#7c3aed);cursor:pointer;">
+                🔔 Enable App Notifications
+            </button>
+        </div>
     </div>
 
-    <div id="studentNotificationText" style="
-        font-size:13px;
-        color:#6b7280;
-        margin-bottom:12px;
-    ">
-        Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો. 
-    </div>
-
-    <button id="studentEnableNotificationBtn"
-        type="button"
-        onclick="enableStudentNotifications()"
-        style="
-            width:100%;
-            border:0;
-            border-radius:12px;
-            padding:12px 20px;
-            font-size:15px;
-            font-weight:700;
-            color:#fff;
-            background:linear-gradient(135deg,#2563eb,#7c3aed);
-            cursor:pointer;
-        ">
-        🔔 Enable App Notifications
-    </button>
-</div>
-
-    </div>
-
-
+    <!-- ACTIVITIES DASHBOARD -->
     <div id="activities" class="card hidden" aria-hidden="true" style="visibility:hidden;">
-<div id="activityWalletBar" class="activity-wallet-bar">
-    <span>💰 Wallet Balance</span>
-    <strong id="activityWalletBalance">©0.00</strong>
-</div>
-
-<h2 class="activity-title">🎮 English Earning Zone</h2>
-<p style="text-align:center;color:#64748b;margin-bottom:8px">Learn English, complete tasks and earn points.</p>
-<div class="activity-grid">
-<button type="button" class="activity-btn a1" onclick="openActivity('arrange')">🔀 Arrange Sentence<small>+10 points</small></button>
-<button type="button" class="activity-btn a2" onclick="openActivity('fill')">🧩 Fill Blank<small>+10 points</small></button>
-<button type="button" class="activity-btn a3" onclick="openActivity('correction')">🛠️ Fix Sentence<small>+15 points</small></button>
-<button type="button" class="activity-btn a4" onclick="openActivity('translate')">🔄 Translate<small>+15 points</small></button>
-<button type="button" class="activity-btn a5" onclick="openActivity('word')">🔤 Word Builder<small>+5 points</small></button>
-<button type="button" class="activity-btn a6" onclick="openActivity('listening')">🎧 Listen & Type<small>+15 points</small></button>
-<button type="button" class="activity-btn a7" onclick="openActivity('speaking')">🎤 Speak & Earn<small>+20 points</small></button>
-<button type="button" class="activity-btn a8" onclick="openActivity('reading')">📖 Reading<small>+15 points</small></button>
-</div>
-<button class="btn" style="background:#374151;margin-top:16px" onclick="showScreen('dashboard')">Back to Dashboard</button>
-</div>
-
-<div id="activityPlay" class="card hidden activity-screen" aria-hidden="true" style="visibility:hidden;">
-<div id="activityWalletBar" class="activity-wallet-bar">
-    <span>💰 Wallet Balance</span>
-    <strong id="activityWalletBalance">©0.00</strong>
-</div>
-
-<div class="activity-title" id="activityName">Activity</div>
-<div class="activity-reward" id="activityMeta">Earn points</div>
-<div id="activityContent"></div>
-<div class="activity-feedback" id="activityFeedback"></div>
-<button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to Activities</button>
-</div>
-
-<div id="quiz" class="card hidden" aria-hidden="true" style="visibility:hidden;">
-
-
-        <div style="
-        text-align:center;
-        margin-bottom:10px;
-        padding:10px;
-        background:linear-gradient(135deg,#ff9800,#ff5722);
-        color:white;
-        border-radius:12px;
-        font-size:18px;
-        font-weight:bold;">
-            📚 Remaining Questions :
-            <span id="remainingQuestions">100</span>/100
+        <div id="activityWalletBar" class="activity-wallet-bar">
+            <span>💰 Wallet Balance</span>
+            <strong id="activityWalletBalance">©0.00</strong>
         </div>
 
-        <div style="
-        text-align:center;
-        margin-bottom:15px;
-        padding:12px;
-        background:linear-gradient(135deg,#ae2bf5,#bb00ff);
-        color:white;
-        border-radius:12px;
-        font-size:20px;
-        font-weight:bold;">
+        <h2 class="activity-title">🎮 English Earning Zone</h2>
+        <p style="text-align:center;color:#64748b;margin-bottom:8px">Learn English, complete tasks and earn points.</p>
+        
+        <div class="activity-grid">
+            <button type="button" class="activity-btn a1" onclick="openActivity('arrange')">🔀 Arrange Sentence<small>+10 points</small></button>
+            <button type="button" class="activity-btn a2" onclick="openActivity('fill')">🧩 Fill Blank<small>+10 points</small></button>
+            <button type="button" class="activity-btn a3" onclick="openActivity('correction')">🛠️ Fix Sentence<small>+15 points</small></button>
+            <button type="button" class="activity-btn a4" onclick="openActivity('translate')">🔄 Translate<small>+15 points</small></button>
+            <button type="button" class="activity-btn a5" onclick="openActivity('word')">🔤 Word Builder<small>+5 points</small></button>
+            <button type="button" class="activity-btn a6" onclick="openActivity('listening')">🎧 Listen & Type<small>+15 points</small></button>
+            <button type="button" class="activity-btn a7" onclick="openActivity('speaking')">🎤 Speak & Earn<small>+20 points</small></button>
+            <button type="button" class="activity-btn a8" onclick="openActivity('reading')">📖 Reading<small>+15 points</small></button>
+        </div>
+        <button class="btn" style="background:#374151;margin-top:16px" onclick="showScreen('dashboard')">Back to Dashboard</button>
+    </div>
+
+    <!-- ACTIVITY PLAY SCREEN -->
+    <div id="activityPlay" class="card hidden activity-screen" aria-hidden="true" style="visibility:hidden;">
+        <div id="activityWalletBar" class="activity-wallet-bar">
+            <span>💰 Wallet Balance</span>
+            <strong id="activityWalletBalance">©0.00</strong>
+        </div>
+
+        <div class="activity-title" id="activityName">Activity</div>
+        <div class="activity-reward" id="activityMeta">Earn points</div>
+        <div id="activityContent"></div>
+        <div class="activity-feedback" id="activityFeedback"></div>
+        <button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to Activities</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz" class="card hidden" aria-hidden="true" style="visibility:hidden;">
+        <div style="text-align:center;margin-bottom:10px;padding:10px;background:linear-gradient(135deg,#ff9800,#ff5722);color:white;border-radius:12px;font-size:18px;font-weight:bold;">
+            📚 Remaining Questions : <span id="remainingQuestions">100</span>/100
+        </div>
+
+        <div style="text-align:center;margin-bottom:15px;padding:12px;background:linear-gradient(135deg,#ae2bf5,#bb00ff);color:white;border-radius:12px;font-size:20px;font-weight:bold;">
             💰 Wallet Balance : ©<span id="quizWallet">0.00</span>
         </div>
-
 
         <h3 id="question">Loading...</h3>
 
@@ -1431,19 +875,46 @@ body.notification-locked #notificationRequiredOverlay button{
         <p id="message" style="color:#000000;"><br>સવાલ વાંચવો પછી જવાબ આપવો નહીંતર બ્લોક થઇ જશો.</p>
     </div>
 
+    <!-- WITHDRAW POPUP -->
+    <div id="withdrawPopup" class="withdraw-popup">
+        <div class="withdraw-box">
+            <h2>Withdraw Request</h2>
+            <p id="withdrawAmountText"></p>
+
+            <label>Payment Method</label>
+            <select id="paymentMethod" onchange="changePaymentMethod()">
+                <option value="UPI">UPI</option>
+                <option value="Bank">Bank</option>
+            </select>
+
+            <!-- UPI Section -->
+            <div id="upiSection">
+                <input type="text" id="upiId" placeholder="Enter UPI ID">
+            </div>
+
+            <!-- Bank Section -->
+            <div id="bankSection" style="display:none;">
+                <input type="text" id="bankName" placeholder="Bank Name">
+                <input type="text" id="accountHolderName" placeholder="Account Holder Name">
+                <input type="text" id="accountNumber" placeholder="Account Number">
+                <input type="text" id="ifscCode" placeholder="IFSC Code">
+            </div>
+
+            <div class="withdraw-buttons">
+                <button onclick="submitWithdraw()">Submit Request</button>
+                <button onclick="closeWithdrawPopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // ==========================================
-        // MOBILE PUSH NOTIFICATIONS
-        // ==========================================
         function urlBase64ToUint8Array(base64String) {
             const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-            const base64 = (base64String + padding)
-                .replace(/-/g, "+")
-                .replace(/_/g, "/");
+            const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
             const rawData = window.atob(base64);
             return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
         }
-
 
         async function enableNotifications() {
             return setupNotifications(true);
@@ -1461,49 +932,31 @@ body.notification-locked #notificationRequiredOverlay button{
                 return false;
             }
 
-            if (
-                !("Notification" in window) ||
-                !("serviceWorker" in navigator) ||
-                !("PushManager" in window)
-            ) {
-                status.innerText = "❌ આ browser Web Push support કરતું નથી.";
+            if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
+                if (status) status.innerText = "❌ આ browser Web Push support કરતું નથી.";
                 return false;
             }
 
             if (!window.isSecureContext) {
-                status.innerText = "❌ App Notifications માટે HTTPS જરૂરી છે.";
+                if (status) status.innerText = "❌ App Notifications માટે HTTPS જરૂરી છે.";
                 return false;
             }
 
             try {
-                if (button) {
-                    button.disabled = true;
-                    button.innerText = "⏳ Enabling...";
-                }
-                if (requiredButton) {
-                    requiredButton.disabled = true;
-                    requiredButton.innerText = "⏳ Enabling...";
-                }
+                if (button) { button.disabled = true; button.innerText = "⏳ Enabling..."; }
+                if (requiredButton) { requiredButton.disabled = true; requiredButton.innerText = "⏳ Enabling..."; }
                 if (status) status.innerText = "App Notification permission ચેક થઈ રહ્યું છે...";
                 if (help) help.style.display = "none";
 
                 let permission = Notification.permission;
-
-                // Browser permission prompt must be triggered by a user gesture.
                 if (permission !== "granted") {
-                    if (permission === "denied") {
-                        throw new Error("NOTIFICATION_BLOCKED");
-                    }
+                    if (permission === "denied") throw new Error("NOTIFICATION_BLOCKED");
                     permission = await Notification.requestPermission();
                 }
 
-                if (permission !== "granted") {
-                    throw new Error("NOTIFICATION_NOT_ALLOWED");
-                }
+                if (permission !== "granted") throw new Error("NOTIFICATION_NOT_ALLOWED");
 
-                const registration = await navigator.serviceWorker.register("/sw.js", {
-                    scope: "/"
-                });
+                const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
                 await navigator.serviceWorker.ready;
 
                 const keyResponse = await fetch("/api/notifications/vapid-public-key", {
@@ -1516,7 +969,6 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
 
                 let subscription = await registration.pushManager.getSubscription();
-
                 if (!subscription) {
                     subscription = await registration.pushManager.subscribe({
                         userVisibleOnly: true,
@@ -1534,10 +986,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 });
 
                 const saveData = await saveResponse.json();
-
-                if (!saveResponse.ok || !saveData.success) {
-                    throw new Error(saveData.message || "Subscription save failed");
-                }
+                if (!saveResponse.ok || !saveData.success) throw new Error(saveData.message || "Subscription save failed");
 
                 if (button) {
                     button.disabled = false;
@@ -1546,21 +995,13 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
 
                 hideNotificationRequired();
-
                 if (status) status.innerText = "✅ App Notifications Enabled";
                 return true;
 
             } catch (error) {
                 console.error("Notification setup error:", error);
-
-                if (button) {
-                    button.disabled = false;
-                    button.innerText = "🔔 Enable App Notifications";
-                }
-                if (requiredButton) {
-                    requiredButton.disabled = false;
-                    requiredButton.innerText = "🔔 Enable App Notifications";
-                }
+                if (button) { button.disabled = false; button.innerText = "🔔 Enable App Notifications"; }
+                if (requiredButton) { requiredButton.disabled = false; requiredButton.innerText = "🔔 Enable App Notifications"; }
 
                 if (error.message === "NOTIFICATION_BLOCKED") {
                     if (status) status.innerText = "❌ Notifications browserમાં Block છે.";
@@ -1570,7 +1011,6 @@ body.notification-locked #notificationRequiredOverlay button{
                 } else {
                     if (status) status.innerText = "❌ " + error.message;
                 }
-
                 return false;
             }
         }
@@ -1602,21 +1042,14 @@ body.notification-locked #notificationRequiredOverlay button{
 
         async function checkNotificationStatus() {
             const button = document.getElementById("notificationBtn");
-
-            if (
-                !("Notification" in window) ||
-                !("serviceWorker" in navigator) ||
-                !("PushManager" in window)
-            ) {
+            if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
                 showNotificationRequired();
                 return false;
             }
 
             try {
                 const registration = await navigator.serviceWorker.getRegistration("/");
-                const subscription = registration
-                    ? await registration.pushManager.getSubscription()
-                    : null;
+                const subscription = registration ? await registration.pushManager.getSubscription() : null;
 
                 if (subscription && Notification.permission === "granted") {
                     if (button) {
@@ -1627,14 +1060,10 @@ body.notification-locked #notificationRequiredOverlay button{
                     return true;
                 }
 
-                // If permission was granted but subscription is missing, repair it.
-                if (Notification.permission === "granted") {
-                    return await setupNotifications(false);
-                }
+                if (Notification.permission === "granted") return await setupNotifications(false);
 
                 showNotificationRequired();
                 return false;
-
             } catch (error) {
                 console.log("Notification status check:", error);
                 showNotificationRequired();
@@ -1642,18 +1071,9 @@ body.notification-locked #notificationRequiredOverlay button{
             }
         }
 
-        // Student must enable notifications before using the dashboard.
-        window.addEventListener("DOMContentLoaded", function () {
-            showNotificationRequired();
-        });
+        window.addEventListener("DOMContentLoaded", function () { showNotificationRequired(); });
+        window.addEventListener("load", function () { checkNotificationStatus(); });
 
-        window.addEventListener("load", function () {
-            checkNotificationStatus();
-        });
-
-        // =====================
-        // SECURITY TRACKING
-        // =====================
         function getSecurityDeviceId() {
             let id = localStorage.getItem("securityDeviceId");
             if (!id) {
@@ -1678,76 +1098,38 @@ body.notification-locked #notificationRequiredOverlay button{
             }
         }
 
-        // Register this browser/device once after login.
         if (localStorage.getItem("token")) recordSecurityEvent("device");
 
-        // =====================
-        // Anti Cheating
-        // =====================
-        let warningMode = false;
-        let clickCount = 0;
-        let spaceCount = 0;
-        let questionStartTime = 0;
-        let warningTimer = null;
+        let warningMode = false, clickCount = 0, spaceCount = 0, questionStartTime = 0, warningTimer = null;
 
         function startWarningMonitor() {
-
-            warningMode = true;
-            clickCount = 0;
-            spaceCount = 0;
-
+            warningMode = true; clickCount = 0; spaceCount = 0;
             clearTimeout(warningTimer);
-
-            warningTimer = setTimeout(() => {
-                warningMode = false;
-            }, 5000);
-
+            warningTimer = setTimeout(() => { warningMode = false; }, 5000);
         }
 
         document.addEventListener("click", () => {
-
             if (!warningMode) return;
-
             clickCount++;
-
-            // Allow normal accidental clicks. Only 5 clicks inside the warning
-            // window count as a violation.
-            if (clickCount >= 5) {
-                blockStudent("Too many mouse clicks");
-            }
-
+            if (clickCount >= 5) blockStudent("Too many mouse clicks");
         });
 
         document.addEventListener("keydown", (e) => {
-
             if (!warningMode) return;
-
             if (e.code === "Space") {
-
                 e.preventDefault();
-
                 spaceCount++;
-
-                if (spaceCount >= 5) {
-                    blockStudent("Too many space presses");
-                }
-
+                if (spaceCount >= 5) blockStudent("Too many space presses");
             }
-
         });
 
-        let alreadyBlocked = false;
-        let warningRequestRunning = false;
+        let alreadyBlocked = false, warningRequestRunning = false;
 
         async function blockStudent(reason) {
-
-            // Prevent duplicate requests when multiple events fire together.
             if (warningRequestRunning || alreadyBlocked) return;
-
             warningRequestRunning = true;
 
             try {
-
                 const response = await fetch("/api/auth/block-me", {
                     method: "POST",
                     headers: {
@@ -1758,15 +1140,10 @@ body.notification-locked #notificationRequiredOverlay button{
                 });
 
                 const data = await response.json();
-
                 warningRequestRunning = false;
 
-                // 4th violation: account is blocked.
                 if (data.blocked) {
-
-                    alreadyBlocked = true;
-                    warningMode = false;
-
+                    alreadyBlocked = true; warningMode = false;
                     function formatBlockRemaining(ms) {
                         const totalSeconds = Math.floor(Math.max(0, Number(ms || 0)) / 1000);
                         const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
@@ -1774,87 +1151,42 @@ body.notification-locked #notificationRequiredOverlay button{
                         const s = String(totalSeconds % 60).padStart(2, "0");
                         return h + ":" + m + ":" + s;
                     }
-
-                    alert(
-                        "🚫 Your account has been blocked.\n\n" +
-                        "Reason: " + reason + "\n\n" +
-                        "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
-                        "You can login again after the timer reaches 00:00:00."
-                    );
-
+                    alert("🚫 Your account has been blocked.\n\nReason: " + reason + "\n\nRemaining time: " + formatBlockRemaining(data.remainingMs) + "\n\nYou can login again after the timer reaches 00:00:00.");
                     localStorage.removeItem("token");
                     location.href = "login.html";
                     return;
                 }
 
-                // 1st, 2nd and 3rd violation: warning only.
                 if (data.warning) {
-
                     warningMode = false;
-
                     let warningMessage;
-
                     if (data.warningCount === 1) {
-                        warningMessage =
-                            "⚠️ WARNING 1/3\n\n" +
-                            "આ તમારી પહેલી ચેતવણી છે.\n" +
-                            "મહેરબાની કરીને નિયમોનુ પાલન કરો .\n\n" +
-                            "Reason: " + reason;
+                        warningMessage = "⚠️ WARNING 1/3\n\nઆ તમારી પહેલી ચેતવણી છે.\nમહેરબાની કરીને નિયમોનુ પાલન કરો .\n\nReason: " + reason;
                     } else if (data.warningCount === 2) {
-                        warningMessage =
-                            "⚠️ WARNING 2/3\n\n" +
-                            "આ તમારી બીજી ચેતવણી છે.\n" +
-                            "હજુ એકવાર ચેતવણી આપીએ છીએ બ્લોક કરતાં પહેલા.\n\n" +
-                            "Reason: " + reason;
+                        warningMessage = "⚠️ WARNING 2/3\n\nઆ તમારી બીજી ચેતવણી છે.\nહજુ એકવાર ચેતવણી આપીએ છીએ બ્લોક કરતાં પહેલા.\n\nReason: " + reason;
                     } else {
-                        warningMessage =
-                            "⚠️ FINAL WARNING 3/3\n\n" +
-                            "આ તમારી છેલ્લી ચેતવણી છે, હવે ચેતવણી આપવામાં નહીં આવે.\n" +
-                            "હવે નિયમોનુ ઉલ્લંઘન કરશો તો કમ્પ્યુટર/મોબાઈલ બ્લોક કરી દેશે.\n\n" +
-                            "Reason: " + reason;
+                        warningMessage = "⚠️ FINAL WARNING 3/3\n\nઆ તમારી છેલ્લી ચેતવણી છે, હવે ચેતવણી આપવામાં નહીં આવે.\nહવે નિયમોનુ ઉલ્લંઘન કરશો તો કમ્પ્યુટર/મોબાઈલ બ્લોક કરી દેશે.\n\nReason: " + reason;
                     }
-
                     alert(warningMessage);
                 }
-
             } catch (e) {
-
                 warningRequestRunning = false;
                 console.error("Warning/Block Error:", e);
-
                 alert("⚠️ Unable to process the warning right now. Please try again.");
             }
-
         }
 
         const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
 
-        if (!token) {
-            window.location.href = "login.html";
-        }
-
-        // ===============================
-        // STUDENT ONLINE PRESENCE
-        // Active tab = Online. Hidden tab = Offline.
-        // Heartbeat every 1 second; server timeout = 2 seconds.
-        // ===============================
-
-        let presenceTimer = null;
-        let presenceInFlight = false;
-        let presenceAbort = null;
-        // sessionStorage gives every browser tab its own stable presence id.
-        const presenceId = sessionStorage.getItem("presenceTabId") || (
-            (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + "-" + Math.random()))
-        );
+        let presenceTimer = null, presenceInFlight = false, presenceAbort = null;
+        const presenceId = sessionStorage.getItem("presenceTabId") || ((crypto.randomUUID ? crypto.randomUUID() : (Date.now() + "-" + Math.random())));
         sessionStorage.setItem("presenceTabId", presenceId);
 
         async function sendPresenceHeartbeat() {
             if (!token || document.hidden || presenceInFlight) return;
-
             presenceInFlight = true;
             presenceAbort = new AbortController();
-            // Allow normal Mongo/network latency. A too-short 800ms timeout was
-            // causing missed heartbeats and false Offline states.
             const timeout = setTimeout(() => presenceAbort.abort(), 1800);
 
             try {
@@ -1875,7 +1207,6 @@ body.notification-locked #notificationRequiredOverlay button{
                     return;
                 }
             } catch (error) {
-                // A single missed heartbeat is okay. The next 1-second heartbeat retries.
             } finally {
                 clearTimeout(timeout);
                 presenceAbort = null;
@@ -1896,14 +1227,8 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         function stopPresence() {
-            if (presenceTimer) {
-                clearInterval(presenceTimer);
-                presenceTimer = null;
-            }
-            if (presenceAbort) {
-                try { presenceAbort.abort(); } catch (_) {}
-                presenceAbort = null;
-            }
+            if (presenceTimer) { clearInterval(presenceTimer); presenceTimer = null; }
+            if (presenceAbort) { try { presenceAbort.abort(); } catch (_) {} presenceAbort = null; }
         }
 
         function startPresence() {
@@ -1914,77 +1239,35 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         document.addEventListener("visibilitychange", () => {
-            if (document.hidden) {
-                // Stop heartbeats. Do NOT force an immediate DB offline write here.
-                // The server's 2-second lastSeen timeout is the single source of truth.
-                stopPresence();
-            } else {
-                // Coming back to this tab: send heartbeat immediately.
-                startPresence();
-            }
+            if (document.hidden) stopPresence();
+            else startPresence();
         });
 
-        window.addEventListener("pagehide", () => {
-            stopPresence();
-            markPresenceOffline();
-        });
-
-        // Initial state
+        window.addEventListener("pagehide", () => { stopPresence(); markPresenceOffline(); });
         if (!document.hidden) startPresence();
 
-        let wallet = 0;
-
-        let totalEarn = 0;
-
-        let quizReward = 0;
-
-        let dailyReward = 0;
-
-        let spinReward = 0;
-
-        // Daily quiz progress: 100 answered questions are required for Spin.
-        let dailyQuestionsAnswered = 0;
-        let dailyQuestionsDate = "";
-        let totalQuestionsAnswered = 0;
-
-        let lastClaim = "";
-
-        let lastSpin = "";
-
-        // let spinCount = Number(localStorage.getItem("spinCount")) || 0;
-        // let lastSpinDate = localStorage.getItem("lastSpinDate") || "";
-
-        let quizData = [];
+        let wallet = 0, totalEarn = 0, quizReward = 0, dailyReward = 0, spinReward = 0;
+        let dailyQuestionsAnswered = 0, dailyQuestionsDate = "", totalQuestionsAnswered = 0, spinCycleQuestionsAnswered = 0;
+        let lastClaim = "", lastSpin = "", quizData = [];
 
         async function loadQuestionBank() {
             try {
                 const currentToken = localStorage.getItem("token") || "";
-                if (!currentToken) {
-                    window.location.replace("login.html");
-                    return [];
-                }
+                if (!currentToken) { window.location.replace("login.html"); return []; }
 
-                // Do not download the complete 100k+ question bank in the browser.
-                // Fetch a small random batch so Start Quiz renders immediately.
                 let list = [];
                 try {
                     const res = await fetch("/api/questions/random?count=20", {
                         method: "GET",
                         cache: "no-store",
-                        headers: {
-                            "Authorization": "Bearer " + currentToken,
-                            "Accept": "application/json"
-                        }
+                        headers: { "Authorization": "Bearer " + currentToken, "Accept": "application/json" }
                     });
                     const data = await res.json().catch(() => null);
-                    if (res.ok && data && data.success && Array.isArray(data.questions)) {
-                        list = data.questions;
-                    }
+                    if (res.ok && data && data.success && Array.isArray(data.questions)) list = data.questions;
                 } catch (apiErr) {
                     console.warn("Random question API unavailable, using fallback.", apiErr);
                 }
 
-                // Server-side bundled JSON fallback.
                 if (!list.length) {
                     const fallback = await fetch("/question-bank.json", { cache: "no-store" });
                     if (fallback.ok) {
@@ -2005,7 +1288,6 @@ body.notification-locked #notificationRequiredOverlay button{
                 }));
 
                 if (!quizData.length) throw new Error("Question bank is empty or invalid.");
-                console.log("Quiz question bank loaded:", quizData.length);
                 return quizData;
             } catch (err) {
                 console.error("Question Bank Error:", err);
@@ -2013,44 +1295,29 @@ body.notification-locked #notificationRequiredOverlay button{
                 const qEl = document.getElementById("question");
                 const optEl = document.getElementById("options");
                 if (qEl) qEl.innerText = "⚠️ Question load failed";
-                if (optEl) optEl.innerHTML =
-                    '<button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry Questions</button>';
+                if (optEl) optEl.innerHTML = '<button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry Questions</button>';
                 return [];
             }
         }
 
         async function loadWallet(retry = 0) {
-
-            // Always load the wallet from MongoDB using the current login token.
-            // Do not depend on the cached localStorage user object for balance.
             const currentToken = localStorage.getItem("token");
-            if (!currentToken) {
-                window.location.replace("login.html");
-                return false;
-            }
+            if (!currentToken) { window.location.replace("login.html"); return false; }
 
             try {
                 const res = await fetch("/api/wallet", {
-                    method: "GET",
-                    cache: "no-store",
-                    headers: {
-                        "Authorization": "Bearer " + currentToken,
-                        "Accept": "application/json"
-                    }
+                    method: "GET", cache: "no-store",
+                    headers: { "Authorization": "Bearer " + currentToken, "Accept": "application/json" }
                 });
 
                 if (res.status === 401) {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
+                    localStorage.removeItem("token"); localStorage.removeItem("user");
                     window.location.replace("login.html");
                     return false;
                 }
 
                 const data = await res.json();
-
-                if (!res.ok || !data.success) {
-                    throw new Error(data.message || "Wallet could not be loaded");
-                }
+                if (!res.ok || !data.success) throw new Error(data.message || "Wallet could not be loaded");
 
                 wallet = Number(data.wallet || 0);
                 lastClaim = data.lastClaim || "";
@@ -2064,7 +1331,6 @@ body.notification-locked #notificationRequiredOverlay button{
                 totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
                 dailyQuestionsDate = data.dailyQuestionsDate || "";
 
-                // Update every wallet display immediately.
                 const walletEl = document.getElementById("wallet");
                 if (walletEl) walletEl.textContent = wallet.toFixed(2);
 
@@ -2077,9 +1343,6 @@ body.notification-locked #notificationRequiredOverlay button{
 
             } catch (err) {
                 console.error("Wallet Load Error:", err);
-
-                // A newly deployed Vercel function can take a moment to respond.
-                // Retry a couple of times instead of leaving the student at ©0.00.
                 if (retry < 2) {
                     await new Promise(resolve => setTimeout(resolve, 700 * (retry + 1)));
                     return loadWallet(retry + 1);
@@ -2102,12 +1365,8 @@ body.notification-locked #notificationRequiredOverlay button{
             lastSpin = data.lastSpin || "";
 
             document.getElementById("wallet").innerText = wallet.toFixed(2);
-
-            // Quiz Wallet પણ Update કરો
             const quizWallet = document.getElementById("quizWallet");
-            if (quizWallet) {
-                quizWallet.innerText = wallet.toFixed(2);
-            }
+            if (quizWallet) quizWallet.innerText = wallet.toFixed(2);
 
             document.querySelectorAll("#activityWalletBalance").forEach(el => {
                 el.innerText = "©" + wallet.toFixed(2);
@@ -2120,16 +1379,11 @@ body.notification-locked #notificationRequiredOverlay button{
         async function claimDailyReward() {
             try {
                 const res = await fetch("/api/wallet/daily-reward", {
-                    method: "POST",
-                    headers: { Authorization: "Bearer " + token }
+                    method: "POST", headers: { Authorization: "Bearer " + token }
                 });
-
                 const data = await res.json();
 
-                if (!data.success) {
-                    alert(data.message || "Daily Reward failed");
-                    return;
-                }
+                if (!data.success) { alert(data.message || "Daily Reward failed"); return; }
 
                 applyWalletData(data);
                 alert("🎁 Daily Reward મળ્યું! +©" + Number(data.reward).toFixed(2));
@@ -2143,19 +1397,12 @@ body.notification-locked #notificationRequiredOverlay button{
             try {
                 const res = await fetch("/api/wallet/quiz", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
-                    },
+                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
                     body: JSON.stringify({ correct: Boolean(correct) })
                 });
 
                 const data = await res.json();
-
-                if (!data.success) {
-                    alert(data.message || "Quiz reward failed");
-                    return false;
-                }
+                if (!data.success) { alert(data.message || "Quiz reward failed"); return false; }
 
                 applyWalletData(data);
                 return true;
@@ -2167,16 +1414,13 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         function updateQuestionProgress() {
-            // Today's total answer count never resets after Spin.
             const todayCount = Number(dailyQuestionsAnswered || 0);
             const count = Math.min(100, Number(spinCycleQuestionsAnswered || 0));
             const remaining = 100 - count;
 
             const remainBox = document.getElementById("remainingQuestions");
+            if (remainBox) remainBox.innerText = remaining;
 
-            if (remainBox) {
-                remainBox.innerText = remaining;
-            }
             const progress = document.getElementById("questionProgress");
             const spinBtn = document.getElementById("spinBtn");
 
@@ -2186,7 +1430,6 @@ body.notification-locked #notificationRequiredOverlay button{
 
             if (spinBtn) {
                 const unlocked = count >= 100;
-
                 spinBtn.disabled = !unlocked;
 
                 if (unlocked) {
@@ -2194,8 +1437,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     spinBtn.style.opacity = "1";
                     spinBtn.style.cursor = "pointer";
                 } else {
-                    spinBtn.innerText =
-                        `🔒 Spin Wheel — ${100 - count} Questions Left`;
+                    spinBtn.innerText = `🔒 Spin Wheel — ${100 - count} Questions Left`;
                     spinBtn.style.opacity = "0.65";
                     spinBtn.style.cursor = "not-allowed";
                 }
@@ -2207,9 +1449,7 @@ body.notification-locked #notificationRequiredOverlay button{
             updateQuestionProgress();
         }
 
-        // Screen navigation with browser/mobile back support
-        let currentScreen = 'dashboard';
-        let navigatingBack = false;
+        let currentScreen = 'dashboard', navigatingBack = false;
 
         function setScreenVisibility(id) {
             ['dashboard', 'quiz', 'activities', 'activityPlay'].forEach(screenId => {
@@ -2224,12 +1464,10 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         function showScreen(id, pushHistory = true) {
-            if (!document.getElementById(id) && id !== 'activityPlay') {
-                return;
-            }
+            if (!document.getElementById(id) && id !== 'activityPlay') return;
 
             if (pushHistory && !navigatingBack && currentScreen !== id) {
-                history.pushState({ appScreen: id }, '', '#'+id);
+                history.pushState({ appScreen: id }, '', '#' + id);
             }
 
             currentScreen = id;
@@ -2259,37 +1497,26 @@ body.notification-locked #notificationRequiredOverlay button{
             });
         }
 
-        // Browser/mobile system Back button
         window.addEventListener('popstate', function () {
             navigatingBack = true;
             const hash = (location.hash || '#dashboard').replace('#', '');
             const target = hash || 'dashboard';
 
-            // Activity play -> activity list -> dashboard
-            if (target === 'dashboard' || target === 'activities' || target === 'quiz') {
+            if (['dashboard', 'activities', 'quiz'].includes(target)) {
                 showScreen(target, false);
             } else {
                 history.replaceState({ appScreen: 'dashboard' }, '', '#dashboard');
                 showScreen('dashboard', false);
             }
-
             navigatingBack = false;
         });
 
-        // Start with dashboard without creating an extra history entry.
         window.addEventListener('DOMContentLoaded', function () {
             const initial = (location.hash || '#dashboard').replace('#', '');
-            showScreen(
-                ['dashboard','quiz','activities','activityPlay'].includes(initial) ? initial : 'dashboard',
-                false
-            );
+            showScreen(['dashboard','quiz','activities','activityPlay'].includes(initial) ? initial : 'dashboard', false);
         });
 
-        // ==========================================
-        // RELOAD QUESTION WHEN STUDENT CHANGES TAB
-        // ==========================================
-        let tabWasChanged = false;
-        let tabChangedScreen = null;
+        let tabWasChanged = false, tabChangedScreen = null;
 
         document.addEventListener("visibilitychange", async () => {
             if (document.hidden) {
@@ -2300,9 +1527,9 @@ body.notification-locked #notificationRequiredOverlay button{
                     tabChangedScreen = activityOpen ? "activity" : "quiz";
                     recordSecurityEvent("tab_change");
                     if (activityOpen && typeof activityType !== "undefined" && activityType) {
-                        fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {
-                            method:"POST", headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                        }).catch(()=>{});
+                        fetch("/api/activities/" + encodeURIComponent(activityType) + "/tab-change", {
+                            method: "POST", headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+                        }).catch(() => {});
                     }
                 }
                 return;
@@ -2319,9 +1546,10 @@ body.notification-locked #notificationRequiredOverlay button{
 
             if (tabChangedScreen === "activity" && !document.getElementById("activityPlay")?.classList.contains("hidden")) {
                 const oldId = activityQuestions?.[activityIndex]?.id;
-                const res = await fetch("/api/activities/"+encodeURIComponent(activityType), {
-                    headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                }).catch(()=>null);
+                const res = await fetch("/api/activities/" + encodeURIComponent(activityType), {
+                    headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+                }).catch(() => null);
+
                 if (res && res.ok) {
                     const data = await res.json();
                     if (data.success && Array.isArray(data.questions) && data.questions.length) {
@@ -2333,7 +1561,7 @@ body.notification-locked #notificationRequiredOverlay button{
                             const realIndex = activityQuestions.findIndex(q => q.id === selected.id);
                             activityIndex = realIndex >= 0 ? realIndex : 0;
                         }
-                        arrangeWords=[];
+                        arrangeWords = [];
                         renderActivity();
                         updateActivityWallet();
                     }
@@ -2342,14 +1570,11 @@ body.notification-locked #notificationRequiredOverlay button{
             tabChangedScreen = null;
         });
 
-
         async function spinWheel() {
             try {
                 const res = await fetch("/api/wallet/spin", {
-                    method: "POST",
-                    headers: { Authorization: "Bearer " + token }
+                    method: "POST", headers: { Authorization: "Bearer " + token }
                 });
-
                 const data = await res.json();
 
                 if (!data.success) {
@@ -2359,13 +1584,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
 
                 applyWalletData(data);
-
-                alert(
-                    "Congratulations! 🎉\n\n" +
-                    "Spin પર તમને ©" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
-                    "Spin #" + Number(data.spinCount || 0) + " complete.\n" +
-                    "હવે ફરી 100 પ્રશ્નો પૂરા કરો અને ફરી Spin કરો."
-                );
+                alert("Congratulations! 🎉\n\nSpin પર તમને ©" + Number(data.prize).toFixed(2) + " મળ્યા!\n\nSpin #" + Number(data.spinCount || 0) + " complete.\nહવે ફરી 100 પ્રશ્નો પૂરા કરો અને ફરી Spin કરો.");
             } catch (err) {
                 console.error("Spin Error:", err);
                 alert("Server સાથે connect થવામાં error આવ્યો.");
@@ -2373,79 +1592,34 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         async function submitWithdraw() {
-
             const paymentMethod = document.getElementById("paymentMethod").value;
-
             const upiId = document.getElementById("upiId").value;
-
             const bankName = document.getElementById("bankName").value;
-
-            const accountHolderName =
-                document.getElementById("accountHolderName").value;
-
-            const accountNumber =
-                document.getElementById("accountNumber").value;
-
-            const ifscCode =
-                document.getElementById("ifscCode").value;
+            const accountHolderName = document.getElementById("accountHolderName").value;
+            const accountNumber = document.getElementById("accountNumber").value;
+            const ifscCode = document.getElementById("ifscCode").value;
 
             try {
-
                 const res = await fetch("/api/wallet/withdraw", {
-
                     method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
-                    },
-
-                    body: JSON.stringify({
-
-                        amount: wallet,
-
-                        paymentMethod,
-
-                        upiId,
-
-                        bankName,
-
-                        accountHolderName,
-
-                        accountNumber,
-
-                        ifscCode
-
-                    })
-
+                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+                    body: JSON.stringify({ amount: wallet, paymentMethod, upiId, bankName, accountHolderName, accountNumber, ifscCode })
                 });
 
                 const data = await res.json();
-
                 if (data.success) {
-
                     closeWithdrawPopup();
-
                     applyWalletData(data);
-
                     alert("Withdraw Request Submitted");
-
                 } else {
-
                     alert(data.message);
-
                 }
-
             } catch (err) {
-
                 console.log(err);
-
             }
-
         }
 
-        let quizLoading = false;
-        let quizQuestionRequest = 0;
+        let quizLoading = false, quizQuestionRequest = 0;
 
         async function loadQuiz() {
             if (quizLoading) return;
@@ -2459,23 +1633,17 @@ body.notification-locked #notificationRequiredOverlay button{
             if (optDiv) optDiv.innerHTML = '<div style="padding:14px;text-align:center;color:#64748b;font-weight:700;">Please wait...</div>';
 
             try {
-                if (!quizData.length) {
-                    await loadQuestionBank();
-                }
-
+                if (!quizData.length) await loadQuestionBank();
                 if (!quizData.length) {
                     if (questionEl) questionEl.innerText = "⚠️ No questions available.";
                     if (optDiv) optDiv.innerHTML = "";
                     return;
                 }
 
-                // Prevent an old async request from replacing a newer question.
                 if (requestId !== quizQuestionRequest) return;
 
                 const q = quizData[Math.floor(Math.random() * quizData.length)];
-                if (!q || !Array.isArray(q.options) || q.options.length < 2) {
-                    throw new Error("Invalid question received.");
-                }
+                if (!q || !Array.isArray(q.options) || q.options.length < 2) throw new Error("Invalid question received.");
 
                 if (questionEl) questionEl.innerText = String(q.q);
                 questionStartTime = Date.now();
@@ -2489,10 +1657,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     b.onclick = async () => {
                         if (b.disabled) return;
 
-                        optDiv.querySelectorAll("button").forEach(btn => {
-                            btn.disabled = true;
-                        });
-
+                        optDiv.querySelectorAll("button").forEach(btn => btn.disabled = true);
                         const timeTaken = (Date.now() - questionStartTime) / 1000;
 
                         if (timeTaken < 1.5) {
@@ -2531,9 +1696,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         startWarningMonitor();
 
                         setTimeout(() => {
-                            if (!document.getElementById("quiz")?.classList.contains("hidden")) {
-                                loadQuiz();
-                            }
+                            if (!document.getElementById("quiz")?.classList.contains("hidden")) loadQuiz();
                         }, 1500);
                     };
                     optDiv.appendChild(b);
@@ -2542,209 +1705,213 @@ body.notification-locked #notificationRequiredOverlay button{
                 console.error("Quiz Render Error:", err);
                 if (questionEl) questionEl.innerText = "⚠️ Question display error";
                 if (optDiv) {
-                    optDiv.innerHTML =
-                        '<div style="padding:14px;text-align:center;color:#dc2626;font-weight:700;">' +
-                        (err.message || "Question could not be displayed.") +
-                        '</div>' +
-                        '<button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry</button>';
+                    optDiv.innerHTML = '<div style="padding:14px;text-align:center;color:#dc2626;font-weight:700;">' + (err.message || "Question could not be displayed.") + '</div><button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry</button>';
                 }
             } finally {
                 quizLoading = false;
             }
         }
 
+        /* ==========================================================================
+           INTERACTIVE ACTIVITIES LOGIC
+           ========================================================================== */
+        let activityType = '', activityQuestions = [], activityIndex = 0, activityData = null, arrangeWords = [];
 
-        // ==========================================
-        // INTERACTIVE ENGLISH EARNING ACTIVITIES
-        // ==========================================
-        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[];
-        function showActivityScreen(id){
-            ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
+        function showActivityScreen(id) {
+            ['dashboard', 'quiz', 'activities', 'activityPlay'].forEach(x => {
+                const e = document.getElementById(x);
+                if (e) {
+                    e.classList.toggle('hidden', x !== id);
+                    e.style.visibility = x === id ? 'visible' : 'hidden';
+                    e.setAttribute('aria-hidden', x === id ? 'false' : 'true');
+                }
+            });
         }
-        async function openActivity(type){
-            // Open the activity screen immediately. Do not wait for the API.
-            activityType = type;
-            activityQuestions = [];
-            activityIndex = 0;
-            arrangeWords = [];
+
+        async function openActivity(type) {
+            activityType = type; activityQuestions = []; activityIndex = 0; arrangeWords = [];
 
             const titles = {
-                arrange:'🔀 Arrange Sentence',
-                fill:'🧩 Fill in the Blank',
-                correction:'🛠️ Fix the Sentence',
-                translate:'🔄 Translate to English',
-                word:'🔤 Word Builder',
-                listening:'🎧 Listen & Type',
-                speaking:'🎤 Speak & Earn',
-                reading:'📖 Reading Challenge'
+                arrange: '🔀 Arrange Sentence', fill: '🧩 Fill in the Blank', correction: '🛠️ Fix the Sentence',
+                translate: '🔄 Translate to English', word: '🔤 Word Builder', listening: '🎧 Listen & Type',
+                speaking: '🎤 Speak & Earn', reading: '📖 Reading Challenge'
             };
-            const rewards = {
-                arrange:10, fill:10, correction:15, translate:15,
-                word:5, listening:15, speaking:20, reading:15
-            };
+            const rewards = { arrange: 10, fill: 10, correction: 15, translate: 15, word: 5, listening: 15, speaking: 20, reading: 15 };
 
-            const nameEl=document.getElementById('activityName');
-            const metaEl=document.getElementById('activityMeta');
-            const box=document.getElementById('activityContent');
-            const fb=document.getElementById('activityFeedback');
+            const nameEl = document.getElementById('activityName');
+            const metaEl = document.getElementById('activityMeta');
+            const box = document.getElementById('activityContent');
+            const fb = document.getElementById('activityFeedback');
 
-            if(nameEl) nameEl.textContent=titles[type] || 'English Activity';
-            if(metaEl) metaEl.textContent='💰 Earn up to '+(rewards[type]||10)+' points';
-            if(box) box.innerHTML='<div class="activity-question">⏳ Loading questions...</div>';
-            if(fb) fb.textContent='';
+            if (nameEl) nameEl.textContent = titles[type] || 'English Activity';
+            if (metaEl) metaEl.textContent = '💰 Earn up to ' + (rewards[type] || 10) + ' points';
+            if (box) box.innerHTML = '<div class="activity-question">⏳ Loading questions...</div>';
+            if (fb) fb.textContent = '';
 
-            // Use the normal navigation so mobile/browser Back works.
             showScreen('activityPlay');
 
-            try{
-                const token=localStorage.getItem('token') || localStorage.getItem('studentToken') || '';
-                const res=await fetch('/api/activities/'+encodeURIComponent(type),{
-                    method:'GET',
-                    headers: token ? {Authorization:'Bearer '+token} : {}
+            try {
+                const token = localStorage.getItem('token') || localStorage.getItem('studentToken') || '';
+                const res = await fetch('/api/activities/' + encodeURIComponent(type), {
+                    method: 'GET',
+                    headers: token ? { Authorization: 'Bearer ' + token } : {}
                 });
 
-                let data={};
-                try { data=await res.json(); } catch(e){}
+                let data = {};
+                try { data = await res.json(); } catch (e) {}
 
-                if(!res.ok || !data.success){
-                    throw new Error(data.message || ('Unable to load '+type+' activity'));
-                }
+                if (!res.ok || !data.success) throw new Error(data.message || ('Unable to load ' + type + ' activity'));
 
-                activityQuestions=Array.isArray(data.questions)?data.questions:[];
-                activityData=data;
+                activityQuestions = Array.isArray(data.questions) ? data.questions : [];
+                activityData = data;
 
-                if(!activityQuestions.length){
-                    throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
-                }
+                if (!activityQuestions.length) throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
 
-                activityIndex=Math.floor(Math.random()*activityQuestions.length);
-                arrangeWords=[];
+                activityIndex = Math.floor(Math.random() * activityQuestions.length);
+                arrangeWords = [];
 
-                if(nameEl) nameEl.textContent=data.title || titles[type];
-                if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • Today limit '+data.dailyLimit;
+                if (nameEl) nameEl.textContent = data.title || titles[type];
+                if (metaEl) metaEl.textContent = '💰 +' + Number(data.reward * 100).toFixed(0) + ' points • Today limit ' + data.dailyLimit;
                 renderActivity();
                 updateActivityWallet();
-            }catch(e){
-                console.error('Activity load error:',e);
-                if(box){
-                    box.innerHTML=
-                        '<div class="activity-question">⚠️ Questions load થઈ શક્યા નથી.</div>'+
-                        '<p style="text-align:center;color:#64748b">'+
-                        'Please login again and try this activity.</p>'+
-                        '<button class="activity-action" type="button" onclick="openActivity('+JSON.stringify(type)+')">↻ Try Again</button>';
+            } catch (e) {
+                console.error('Activity load error:', e);
+                if (box) {
+                    box.innerHTML = '<div class="activity-question">⚠️ Questions load થઈ શક્યા નથી.</div><p style="text-align:center;color:#64748b">Please login again and try this activity.</p><button class="activity-action" type="button" onclick="openActivity(' + JSON.stringify(type) + ')">↻ Try Again</button>';
                 }
-                if(fb) fb.textContent=e.message || 'Activity load failed';
+                if (fb) fb.textContent = e.message || 'Activity load failed';
             }
         }
-        function nextActivityQuestion(){ if(!activityQuestions.length)return; activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
-        function renderActivity(){
-            const q=activityQuestions[activityIndex], box=document.getElementById('activityContent'), fb=document.getElementById('activityFeedback'); fb.textContent='';
-            if(activityType==='arrange'){
-                const words=q.prompt.split('/').map(x=>x.trim()).sort(()=>Math.random()-.5); arrangeWords=[];
-                box.innerHTML='<div class="activity-question">Arrange these words:</div><div class="word-bank" id="wordBank"></div><div class="answer-box" id="arranged">Tap words in the correct order</div><button class="activity-action" onclick="submitArrange()">✅ Check Sentence</button><button class="activity-action" style="background:#64748b" onclick="renderActivity()">↻ Reset</button>';
-                const wb=document.getElementById('wordBank'); words.forEach((w,i)=>{const b=document.createElement('button');b.className='word-chip';b.textContent=w;b.onclick=()=>{arrangeWords.push(w);b.disabled=true;document.getElementById('arranged').textContent=arrangeWords.join(' ')};wb.appendChild(b)});
-            } else if(activityType==='fill'){
-                box.innerHTML='<div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
-            } else if(activityType==='correction'||activityType==='translate'||activityType==='word'){
-                box.innerHTML='<div class="activity-question">'+q.prompt+'</div><input id="activityAnswer" class="activity-input" placeholder="Type your answer here" autocomplete="off"><button class="activity-action" onclick="submitTypedActivity()">💰 Submit & Earn</button>';
-            } else if(activityType==='listening'){
-                box.innerHTML='<div class="activity-question">🎧 Listen carefully and type the sentence</div><button class="activity-action" onclick="speakCurrent()">🔊 Play Audio</button><input id="activityAnswer" class="activity-input" placeholder="Type what you hear" autocomplete="off"><button class="activity-action" onclick="submitTypedActivity()">💰 Submit & Earn</button>';
-            } else if(activityType==='speaking'){
-                box.innerHTML='<div class="activity-question">🎤 '+q.prompt+'</div><button class="activity-action" onclick="startSpeaking()">🎙️ Start Speaking</button><div class="mic-status" id="micStatus">Microphone permission may be required.</div><button class="activity-action" onclick="submitSpeaking()">💰 Submit & Earn</button>';
-            } else if(activityType==='reading'){
-                box.innerHTML='<div class="passage">'+q.passage+'</div><div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
+
+        function nextActivityQuestion() {
+            if (!activityQuestions.length) return;
+            activityIndex = (activityIndex + 1) % activityQuestions.length;
+            arrangeWords = [];
+            renderActivity();
+        }
+
+        function renderActivity() {
+            const q = activityQuestions[activityIndex], box = document.getElementById('activityContent'), fb = document.getElementById('activityFeedback');
+            fb.textContent = '';
+
+            if (activityType === 'arrange') {
+                const words = q.prompt.split('/').map(x => x.trim()).sort(() => Math.random() - .5);
+                arrangeWords = [];
+                box.innerHTML = '<div class="activity-question">Arrange these words:</div><div class="word-bank" id="wordBank"></div><div class="answer-box" id="arranged">Tap words in the correct order</div><button class="activity-action" onclick="submitArrange()">✅ Check Sentence</button><button class="activity-action" style="background:#64748b" onclick="renderActivity()">↻ Reset</button>';
+                const wb = document.getElementById('wordBank');
+                words.forEach((w, i) => {
+                    const b = document.createElement('button');
+                    b.className = 'word-chip';
+                    b.textContent = w;
+                    b.onclick = () => { arrangeWords.push(w); b.disabled = true; document.getElementById('arranged').textContent = arrangeWords.join(' '); };
+                    wb.appendChild(b);
+                });
+            } else if (activityType === 'fill') {
+                box.innerHTML = '<div class="activity-question">' + q.prompt + '</div>' + q.options.map((o, i) => `<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
+            } else if (activityType === 'correction' || activityType === 'translate' || activityType === 'word') {
+                box.innerHTML = '<div class="activity-question">' + q.prompt + '</div><input id="activityAnswer" class="activity-input" placeholder="Type your answer here" autocomplete="off"><button class="activity-action" onclick="submitTypedActivity()">💰 Submit & Earn</button>';
+            } else if (activityType === 'listening') {
+                box.innerHTML = '<div class="activity-question">🎧 Listen carefully and type the sentence</div><button class="activity-action" onclick="speakCurrent()">🔊 Play Audio</button><input id="activityAnswer" class="activity-input" placeholder="Type what you hear" autocomplete="off"><button class="activity-action" onclick="submitTypedActivity()">💰 Submit & Earn</button>';
+            } else if (activityType === 'speaking') {
+                box.innerHTML = '<div class="activity-question">🎤 ' + q.prompt + '</div><button class="activity-action" onclick="startSpeaking()">🎙️ Start Speaking</button><div class="mic-status" id="micStatus">Microphone permission may be required.</div><button class="activity-action" onclick="submitSpeaking()">💰 Submit & Earn</button>';
+            } else if (activityType === 'reading') {
+                box.innerHTML = '<div class="passage">' + q.passage + '</div><div class="activity-question">' + q.prompt + '</div>' + q.options.map((o, i) => `<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
             }
         }
-        function setFeedback(ok,msg){const e=document.getElementById('activityFeedback');e.textContent=msg;e.style.color=ok?'#16a34a':'#dc2626';}
-        async function submitArrange(){submitActivity(arrangeWords.join(' '));}
-        async function submitTypedActivity(){const e=document.getElementById('activityAnswer');if(!e||!e.value.trim()){setFeedback(false,'Answer લખો.');return}submitActivity(e.value.trim());}
-        async function submitActivity(answer){
-            const q=activityQuestions[activityIndex];
-            try{
-                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
-                const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
+
+        function setFeedback(ok, msg) {
+            const e = document.getElementById('activityFeedback');
+            e.textContent = msg;
+            e.style.color = ok ? '#16a34a' : '#dc2626';
+        }
+
+        async function submitArrange() { submitActivity(arrangeWords.join(' ')); }
+
+        async function submitTypedActivity() {
+            const e = document.getElementById('activityAnswer');
+            if (!e || !e.value.trim()) { setFeedback(false, 'Answer લખો.'); return; }
+            submitActivity(e.value.trim());
+        }
+
+        async function submitActivity(answer) {
+            const q = activityQuestions[activityIndex];
+            try {
+                const res = await fetch('/api/activities/' + activityType + '/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('token') },
+                    body: JSON.stringify({ questionId: q.id, answer })
+                });
+                const data = await res.json();
+                if (!data.success) { setFeedback(false, data.message || 'Try again'); return; }
+
                 applyWalletData(data);
-                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ©'+Number(data.wallet).toFixed(2));}
-                else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
-                setTimeout(()=>nextActivityQuestion(),1200);
-            }catch(e){setFeedback(false,'Network error. Please try again.');}
+                if (data.correct) {
+                    setFeedback(true, '🎉 Correct! +' + (data.reward * 100).toFixed(0) + ' points earned. Wallet: ©' + Number(data.wallet).toFixed(2));
+                } else {
+                    setFeedback(false, '❌ Wrong. Correct answer: ' + (data.correctAnswer || 'Try again'));
+                }
+                setTimeout(() => nextActivityQuestion(), 1200);
+            } catch (e) {
+                setFeedback(false, 'Network error. Please try again.');
+            }
         }
-        let spokenText='';
-        function startSpeaking(){
-            const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-            if(!SR){document.getElementById('micStatus').textContent='Speech recognition is not supported in this browser. Try Chrome.';return;}
-            const r=new SR();r.lang='en-US';r.interimResults=false;r.maxAlternatives=1;
-            document.getElementById('micStatus').textContent='🎙️ Listening... speak now';
-            r.onresult=e=>{spokenText=e.results[0][0].transcript||'';document.getElementById('micStatus').textContent='You said: '+spokenText};
-            r.onerror=e=>document.getElementById('micStatus').textContent='Microphone error: '+e.error;
-            r.onend=()=>{if(!spokenText)document.getElementById('micStatus').textContent='No speech detected. Try again.'};r.start();
+
+        let spokenText = '';
+        function startSpeaking() {
+            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SR) { document.getElementById('micStatus').textContent = 'Speech recognition is not supported in this browser. Try Chrome.'; return; }
+            const r = new SR(); r.lang = 'en-US'; r.interimResults = false; r.maxAlternatives = 1;
+            document.getElementById('micStatus').textContent = '🎙️ Listening... speak now';
+            r.onresult = e => { spokenText = e.results[0][0].transcript || ''; document.getElementById('micStatus').textContent = 'You said: ' + spokenText; };
+            r.onerror = e => document.getElementById('micStatus').textContent = 'Microphone error: ' + e.error;
+            r.onend = () => { if (!spokenText) document.getElementById('micStatus').textContent = 'No speech detected. Try again.'; };
+            r.start();
         }
-        function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
-        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+
+        function submitSpeaking() {
+            if (!spokenText) { setFeedback(false, 'પહેલા Englishમાં બોલો.'); return; }
+            submitActivity(spokenText);
+            spokenText = '';
+        }
+
+        function speakCurrent() {
+            const q = activityQuestions[activityIndex];
+            const u = new SpeechSynthesisUtterance(q.answer);
+            u.lang = 'en-US'; u.rate = .82;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(u);
+        }
+
         loadQuestionBank();
-        // Wallet is fetched from the server; do not overwrite it with the initial 0.
         loadWallet();
-        // Disable right click
+
+        /* Protection logic */
         document.addEventListener("contextmenu", e => e.preventDefault());
-
-        // Disable text selection
         document.addEventListener("selectstart", e => e.preventDefault());
-
-        // Disable copy, cut and paste
-        ["copy", "cut", "paste"].forEach(event => {
-            document.addEventListener(event, e => e.preventDefault());
-        });
-
-        // Disable common shortcut keys
+        ["copy", "cut", "paste"].forEach(event => document.addEventListener(event, e => e.preventDefault()));
         document.addEventListener("keydown", function (e) {
-            if (
-                e.ctrlKey &&
-                ["c", "u", "s", "a", "p"].includes(e.key.toLowerCase())
-            ) {
-                e.preventDefault();
-            }
-
-            // Disable F12
+            if (e.ctrlKey && ["c", "u", "s", "a", "p"].includes(e.key.toLowerCase())) e.preventDefault();
             if (e.key === "F12") e.preventDefault();
-
-            // Disable Ctrl+Shift+I / J / C
-            if (
-                e.ctrlKey &&
-                e.shiftKey &&
-                ["I", "J", "C"].includes(e.key.toUpperCase())
-            ) {
-                e.preventDefault();
-            }
+            if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) e.preventDefault();
         });
 
-        // Open Withdraw Popup
+        /* Withdraw popup logic */
         function openWithdrawPopup() {
-
             document.getElementById("withdrawPopup").style.display = "flex";
-
-            document.getElementById("withdrawAmountText").innerText =
-                "Withdraw Amount : ©" + wallet;
-
+            document.getElementById("withdrawAmountText").innerText = "Withdraw Amount : ©" + wallet;
             changePaymentMethod();
         }
 
-        // Close Popup
         function closeWithdrawPopup() {
             document.getElementById("withdrawPopup").style.display = "none";
         }
 
-        // Show / Hide Payment Fields
         function changePaymentMethod() {
-
             const method = document.getElementById("paymentMethod").value;
-
-            document.getElementById("upiSection").style.display =
-                method === "UPI" ? "block" : "none";
-
-            document.getElementById("bankSection").style.display =
-                method === "Bank" ? "block" : "none";
+            document.getElementById("upiSection").style.display = method === "UPI" ? "block" : "none";
+            document.getElementById("bankSection").style.display = method === "Bank" ? "block" : "none";
         }
-        // Refresh the authoritative wallet once the page UI is ready.
+
         loadWallet();
 
         function claimBonus() {
@@ -2753,200 +1920,141 @@ body.notification-locked #notificationRequiredOverlay button{
 
         function toggleTheme() {
             document.body.classList.toggle("dark");
-
             const btn = document.getElementById("themeBtn");
-
             if (document.body.classList.contains("dark")) {
                 btn.innerHTML = "☀️ Light Mode";
             } else {
                 btn.innerHTML = "🌙 Dark Mode";
             }
         }
-
     </script>
-    <!-- Withdraw Popup -->
-    <div id="withdrawPopup" class="withdraw-popup">
 
-        <div class="withdraw-box">
+    <!-- Student Notification Enable Script -->
+    <script id="student-notification-button-script">
+        (function(){
+            async function enableStudentNotifications(){
+                const btn = document.getElementById("studentEnableNotificationBtn");
+                const text = document.getElementById("studentNotificationText");
+                if(btn){ btn.disabled = true; btn.innerText = "⏳ Enabling..."; }
 
-            <h2>Withdraw Request</h2>
+                try{
+                    if(!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)){
+                        throw new Error("આ browser notifications support કરતું નથી.");
+                    }
+                    if(!window.isSecureContext){
+                        throw new Error("App Notifications માટે HTTPS જરૂરી છે.");
+                    }
 
-            <p id="withdrawAmountText"></p>
+                    let permission = Notification.permission;
+                    if(permission === "denied"){
+                        throw new Error("Notifications Block છે. Browser settingsમાં આ site માટે Notifications → Allow કરો.");
+                    }
+                    if(permission !== "granted"){
+                        permission = await Notification.requestPermission();
+                    }
+                    if(permission !== "granted"){
+                        throw new Error("Notifications માટે Allow પસંદ કરવું જરૂરી છે.");
+                    }
 
-            <label>Payment Method</label>
+                    const token = localStorage.getItem("token");
+                    if(!token) throw new Error("Login session મળી નથી. ફરી login કરો.");
 
-            <select id="paymentMethod" onchange="changePaymentMethod()">
-                <option value="UPI">UPI</option>
-                <option value="Bank">Bank</option>
-            </select>
+                    const registration = await navigator.serviceWorker.register("/sw.js", {scope:"/"});
+                    await navigator.serviceWorker.ready;
 
-            <!-- UPI -->
-            <div id="upiSection">
-                <input type="text" id="upiId" placeholder="Enter UPI ID">
-            </div>
+                    const keyRes = await fetch("/api/notifications/vapid-public-key", {
+                        headers:{ Authorization: "Bearer " + token }
+                    });
+                    const keyData = await keyRes.json();
+                    if(!keyRes.ok || !keyData.publicKey){
+                        throw new Error(keyData.message || "VAPID public key મળ્યો નથી.");
+                    }
 
-            <!-- Bank -->
-            <div id="bankSection" style="display:none;">
+                    let sub = await registration.pushManager.getSubscription();
+                    if(!sub){
+                        sub = await registration.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: urlBase64ToUint8Array(keyData.publicKey)
+                        });
+                    }
 
-                <input type="text" id="bankName" placeholder="Bank Name">
+                    const saveRes = await fetch("/api/notifications/subscribe", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+                        body: JSON.stringify(sub.toJSON())
+                    });
+                    const saveData = await saveRes.json();
+                    if(!saveRes.ok || !saveData.success){
+                        throw new Error(saveData.message || "Notification subscription save થઈ નથી.");
+                    }
 
-                <input type="text" id="accountHolderName" placeholder="Account Holder Name">
-
-                <input type="text" id="accountNumber" placeholder="Account Number">
-
-                <input type="text" id="ifscCode" placeholder="IFSC Code">
-
-            </div>
-
-            <div class="withdraw-buttons">
-
-                <button onclick="submitWithdraw()">
-                    Submit Request
-                </button>
-
-                <button onclick="closeWithdrawPopup()">
-                    Cancel
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-<script id="student-notification-button-script">
-(function(){
-    async function enableStudentNotifications(){
-        const btn=document.getElementById("studentEnableNotificationBtn");
-        const text=document.getElementById("studentNotificationText");
-        if(btn){
-            btn.disabled=true;
-            btn.innerText="⏳ Enabling...";
-        }
-
-        try{
-            if(!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)){
-                throw new Error("આ browser notifications support કરતું નથી.");
-            }
-            if(!window.isSecureContext){
-                throw new Error("App Notifications માટે HTTPS જરૂરી છે.");
-            }
-
-            let permission=Notification.permission;
-            if(permission==="denied"){
-                throw new Error("Notifications Block છે. Browser settingsમાં આ site માટે Notifications → Allow કરો.");
-            }
-            if(permission!=="granted"){
-                permission=await Notification.requestPermission();
-            }
-            if(permission!=="granted"){
-                throw new Error("Notifications માટે Allow પસંદ કરવું જરૂરી છે.");
-            }
-
-            const token=localStorage.getItem("token");
-            if(!token) throw new Error("Login session મળી નથી. ફરી login કરો.");
-
-            const registration=await navigator.serviceWorker.register("/sw.js",{scope:"/"});
-            await navigator.serviceWorker.ready;
-
-            const keyRes=await fetch("/api/notifications/vapid-public-key",{
-                headers:{Authorization:"Bearer "+token}
-            });
-            const keyData=await keyRes.json();
-            if(!keyRes.ok || !keyData.publicKey){
-                throw new Error(keyData.message || "VAPID public key મળ્યો નથી.");
-            }
-
-            let sub=await registration.pushManager.getSubscription();
-            if(!sub){
-                sub=await registration.pushManager.subscribe({
-                    userVisibleOnly:true,
-                    applicationServerKey:urlBase64ToUint8Array(keyData.publicKey)
-                });
-            }
-
-            const saveRes=await fetch("/api/notifications/subscribe",{
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json",
-                    Authorization:"Bearer "+token
-                },
-                body:JSON.stringify(sub.toJSON())
-            });
-            const saveData=await saveRes.json();
-            if(!saveRes.ok || !saveData.success){
-                throw new Error(saveData.message || "Notification subscription save થઈ નથી.");
-            }
-
-            if(text) text.innerHTML="<b style='color:#16a34a'>✅ App Notifications Enabled</b><br>હવે Update notifications તમને મળશે.";
-            if(btn){
-                btn.disabled=false;
-                btn.innerText="✅ App Notifications Enabled";
-                btn.style.background="linear-gradient(135deg,#16a34a,#059669)";
-            }
-        }catch(err){
-            console.error("Student notification error:",err);
-            if(text) text.innerHTML='<span style="color:#dc2626">❌ '+(err.message||"Notification enable થઈ નથી.")+'</span>';
-            if(btn){
-                btn.disabled=false;
-                btn.innerText="🔔 Enable App Notifications";
-            }
-        }
-    }
-
-    async function checkStudentNotificationStatus(){
-        const btn=document.getElementById("studentEnableNotificationBtn");
-        const text=document.getElementById("studentNotificationText");
-        if(!btn) return;
-
-        try{
-            if("Notification" in window && Notification.permission==="granted" && "serviceWorker" in navigator){
-                const reg=await navigator.serviceWorker.getRegistration("/");
-                const sub=reg ? await reg.pushManager.getSubscription() : null;
-                if(sub){
-                    btn.innerText="✅ App Notifications Enabled";
-                    btn.style.background="linear-gradient(135deg,#16a34a,#059669)";
-                    text.innerHTML="<b style='color:#16a34a'>Notifications ચાલુ છે.</b><br>Adminના notifications તમને મળશે.";
+                    if(text) text.innerHTML = "<b style='color:#16a34a'>✅ App Notifications Enabled</b><br>હવે Update notifications તમને મળશે.";
+                    if(btn){
+                        btn.disabled = false;
+                        btn.innerText = "✅ App Notifications Enabled";
+                        btn.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                    }
+                } catch(err){
+                    console.error("Student notification error:", err);
+                    if(text) text.innerHTML = '<span style="color:#dc2626">❌ ' + (err.message || "Notification enable થઈ નથી.") + '</span>';
+                    if(btn){
+                        btn.disabled = false;
+                        btn.innerText = "🔔 Enable App Notifications";
+                    }
                 }
             }
-        }catch(e){
-            console.log("Notification status:",e);
-        }
-    }
 
-    window.enableStudentNotifications=enableStudentNotifications;
-    window.addEventListener("load",function(){
-        setTimeout(checkStudentNotificationStatus,300);
-    });
-})();
-</script>
+            async function checkStudentNotificationStatus(){
+                const btn = document.getElementById("studentEnableNotificationBtn");
+                const text = document.getElementById("studentNotificationText");
+                if(!btn) return;
 
+                try{
+                    if("Notification" in window && Notification.permission === "granted" && "serviceWorker" in navigator){
+                        const reg = await navigator.serviceWorker.getRegistration("/");
+                        const sub = reg ? await reg.pushManager.getSubscription() : null;
+                        if(sub){
+                            btn.innerText = "✅ App Notifications Enabled";
+                            btn.style.background = "linear-gradient(135deg,#16a34a,#059669)";
+                            text.innerHTML = "<b style='color:#16a34a'>Notifications ચાલુ છે.</b><br>Adminના notifications તમને મળશે.";
+                        }
+                    }
+                } catch(e){
+                    console.log("Notification status:", e);
+                }
+            }
 
-<script id="fill-reading-answer-handler">
-document.addEventListener('click', function(e){
-    const btn = e.target.closest('#activityContent .activity-option[data-activity-answer]');
-    if (!btn) return;
+            window.enableStudentNotifications = enableStudentNotifications;
+            window.addEventListener("load", function(){
+                setTimeout(checkStudentNotificationStatus, 300);
+            });
+        })();
+    </script>
 
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    <!-- Fill/Reading Event Handler -->
+    <script id="fill-reading-answer-handler">
+        document.addEventListener('click', function(e){
+            const btn = e.target.closest('#activityContent .activity-option[data-activity-answer]');
+            if (!btn) return;
 
-    if (typeof window.submitActivity !== 'function') {
-        console.error('submitActivity is not available');
-        return;
-    }
+            e.preventDefault();
+            e.stopImmediatePropagation();
 
-    if (btn.disabled) return;
-    btn.disabled = true;
+            if (typeof window.submitActivity !== 'function') {
+                console.error('submitActivity is not available');
+                return;
+            }
 
-    const answer = decodeURIComponent(btn.getAttribute('data-activity-answer') || '');
+            if (btn.disabled) return;
+            btn.disabled = true;
 
-    // Use the real server-backed submitActivity function.
-    window.submitActivity(answer).finally(function(){
-        // renderActivity() creates fresh buttons for the next question.
-        // If the server rejects the answer, re-enable this button.
-        if (document.body.contains(btn)) btn.disabled = false;
-    });
-}, true);
-</script></body>
+            const answer = decodeURIComponent(btn.getAttribute('data-activity-answer') || '');
+
+            window.submitActivity(answer).finally(function(){
+                if (document.body.contains(btn)) btn.disabled = false;
+            });
+        }, true);
+    </script>
+</body>
 
 </html>
