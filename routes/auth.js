@@ -66,6 +66,33 @@ router.post("/login", async (req, res) => {
 
         const { mobile, password } = req.body;
 
+        // Repair legacy/corrupt activity date values before Mongoose hydrates
+        // the document. Older records can contain {} in activeActivityStartedAt,
+        // which causes: "Cast to date failed for value {}" during user.save().
+        // This is a direct MongoDB update, so it works even when the existing
+        // value cannot be cast by Mongoose.
+        try {
+            await User.collection.updateMany(
+                {
+                    $or: [
+                        { activeActivityStartedAt: { $type: "object" } },
+                        { activeActivityStartedAt: { $type: "array" } },
+                        { activeQuizStartedAt: { $type: "object" } },
+                        { activeQuizStartedAt: { $type: "array" } }
+                    ]
+                },
+                {
+                    $set: {
+                        activeActivityStartedAt: null,
+                        activeQuizStartedAt: null
+                    }
+                }
+            );
+        } catch (repairError) {
+            console.error("Activity date repair warning:", repairError.message);
+            // Do not block login just because the cleanup query failed.
+        }
+
         const user = await User.findOne({ mobile, isDeleted: { $ne: true } });
 
         if (!user) {

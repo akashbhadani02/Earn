@@ -1,5 +1,18 @@
 const mongoose = require("mongoose");
 
+// MongoDB may contain legacy/corrupted values such as {} in these fields.
+// Mongoose Date fields must receive a real Date, null, or an empty value.
+function safeDateValue(value) {
+    if (value === null || value === undefined || value === "") return null;
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+    if (typeof value === "number" || typeof value === "string") {
+        const d = new Date(value);
+        return Number.isNaN(d.getTime()) ? null : d;
+    }
+    // Never allow objects/arrays such as {} to reach Mongoose Date casting.
+    return null;
+}
+
 const userSchema = new mongoose.Schema(
     {
         name: {
@@ -78,7 +91,8 @@ const userSchema = new mongoose.Schema(
         },
         activeQuizStartedAt: {
             type: Date,
-            default: null
+            default: null,
+            set: safeDateValue
         },
 
         isOnline: {
@@ -159,7 +173,7 @@ const userSchema = new mongoose.Schema(
         // needs to be stored in the browser; the server resolves this index.
         activeActivityType: { type: String, default: "" },
         activeActivityQuestionId: { type: Number, default: null },
-        activeActivityStartedAt: { type: Date, default: null },
+        activeActivityStartedAt: { type: Date, default: null, set: safeDateValue },
         activeActivityToken: { type: String, default: "" },
 
         lastClaim: {
