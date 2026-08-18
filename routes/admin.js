@@ -189,6 +189,9 @@ function todayKey() {
 router.get("/users", adminAuth, async (req, res) => {
 
     try {
+        res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        res.set("Pragma", "no-cache");
+        res.set("Expires", "0");
 
         const users = await User.find({ isDeleted: { $ne: true } }).select("-password");
 
@@ -207,7 +210,7 @@ router.get("/users", adminAuth, async (req, res) => {
                 const difference =
                     currentTime - lastSeenTime;
 
-                const ONLINE_TIMEOUT = 3000; // ~3 seconds after heartbeat stops
+                const ONLINE_TIMEOUT = 3500; // student is offline only after ~3.5s without heartbeat
 
                 if (difference <= ONLINE_TIMEOUT) {
                     online = true;
