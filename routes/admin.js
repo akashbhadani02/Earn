@@ -197,7 +197,7 @@ router.get("/presence", adminAuth, async (req, res) => {
         res.set("Pragma", "no-cache");
         res.set("Expires", "0");
 
-        const ONLINE_TIMEOUT = 3000;
+        const ONLINE_TIMEOUT = 7000;
         const now = Date.now();
         const users = await User.find({ isDeleted: { $ne: true } })
             .select("name lastSeen isBlocked")
@@ -246,7 +246,7 @@ router.get("/users", adminAuth, async (req, res) => {
                 const difference =
                     currentTime - lastSeenTime;
 
-                const ONLINE_TIMEOUT = 3000; // Offline after 3 seconds without heartbeat
+                const ONLINE_TIMEOUT = 7000; // Offline after 3 seconds without heartbeat
 
                 if (difference <= ONLINE_TIMEOUT) {
                     online = true;
@@ -1011,7 +1011,7 @@ router.get("/control-center", adminAuth, async (req, res) => {
             .lean();
 
         const now = Date.now();
-        const onlineTimeout = 3000;
+        const onlineTimeout = 7000;
 
         const mapped = users.map(u => ({
             ...u,
@@ -1182,7 +1182,7 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
     try{
         const today=proTodayKey();
         const users=await User.find({}).select("-password").lean();
-        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=3000);
+        const active=users.filter(u=>u.lastSeen && Date.now()-new Date(u.lastSeen).getTime()<=7000);
         const stats={
             students:users.length,
             online:active.length,

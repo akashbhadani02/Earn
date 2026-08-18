@@ -1781,7 +1781,7 @@ body.notification-locked #notificationRequiredOverlay button{
         // ===============================
         // STUDENT ONLINE PRESENCE
         // Active tab = Online. Hidden tab = Offline.
-        // Heartbeat about every 0.9 second; server timeout = 3 seconds.
+        // Heartbeat about every 1 second; server timeout = 7 seconds.
         // ===============================
 
         let presenceTimer = null;
@@ -1834,18 +1834,6 @@ body.notification-locked #notificationRequiredOverlay button{
             }
         }
 
-        async function markPresenceOffline() {
-            if (!token) return;
-            try {
-                await fetch("/api/auth/offline", {
-                    method: "POST",
-                    headers: { "Authorization": "Bearer " + token, "X-Presence-Id": presenceId },
-                    keepalive: true,
-                    cache: "no-store"
-                });
-            } catch (_) {}
-        }
-
         function stopPresence() {
             if (presenceTimer) {
                 clearInterval(presenceTimer);
@@ -1861,13 +1849,13 @@ body.notification-locked #notificationRequiredOverlay button{
             if (!token || document.hidden) return;
             stopPresence();
             sendPresenceHeartbeat();
-            presenceTimer = setInterval(sendPresenceHeartbeat, 900);
+            presenceTimer = setInterval(sendPresenceHeartbeat, 1000);
         }
 
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) {
                 // Stop heartbeats. Do NOT force an immediate DB offline write here.
-                // The server's 2-second lastSeen timeout is the single source of truth.
+                // The server's 7-second lastSeen timeout is the single source of truth.
                 stopPresence();
             } else {
                 // Coming back to this tab: send heartbeat immediately.
