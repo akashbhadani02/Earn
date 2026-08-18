@@ -1056,7 +1056,7 @@ body.notification-locked #notificationRequiredOverlay button{
 <div class="activity-reward" id="activityMeta">Earn points</div>
 <div id="activityContent"></div>
 <div class="activity-feedback" id="activityFeedback"></div>
-<button id="activityBackBtn" class="btn" style="background:#374151" type="button" onclick="requestActivityExit()">Back to Activities</button>
+<button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to Activities</button>
 </div>
 
 <div id="quiz" class="card hidden" aria-hidden="true" style="visibility:hidden;">
@@ -1620,11 +1620,67 @@ body.notification-locked #notificationRequiredOverlay button{
 
         let quizData = [];
 
-        // Question answers are intentionally never downloaded to the browser.
-        // The actual quiz uses /api/questions/next and /api/questions/answer.
         async function loadQuestionBank() {
-            quizData = [];
-            return quizData;
+            try {
+                const currentToken = localStorage.getItem("token") || "";
+                if (!currentToken) {
+                    window.location.replace("login.html");
+                    return [];
+                }
+
+                // Do not download the complete 100k+ question bank in the browser.
+                // Fetch a small random batch so Start Quiz renders immediately.
+                let list = [];
+                try {
+                    const res = await fetch("/api/questions/random?count=20", {
+                        method: "GET",
+                        cache: "no-store",
+                        headers: {
+                            "Authorization": "Bearer " + currentToken,
+                            "Accept": "application/json"
+                        }
+                    });
+                    const data = await res.json().catch(() => null);
+                    if (res.ok && data && data.success && Array.isArray(data.questions)) {
+                        list = data.questions;
+                    }
+                } catch (apiErr) {
+                    console.warn("Random question API unavailable, using fallback.", apiErr);
+                }
+
+                // Server-side bundled JSON fallback.
+                if (!list.length) {
+                    const fallback = await fetch("/question-bank.json", { cache: "no-store" });
+                    if (fallback.ok) {
+                        const fallbackData = await fallback.json();
+                        list = Array.isArray(fallbackData) ? fallbackData : [];
+                    }
+                }
+
+                quizData = list.filter(q => {
+                    const correct = Number(q?.correct);
+                    return q && typeof q.q === "string" && q.q.trim() &&
+                        Array.isArray(q.options) && q.options.length >= 2 &&
+                        Number.isInteger(correct) && correct >= 0 && correct < q.options.length;
+                }).map(q => ({
+                    q: String(q.q).trim(),
+                    options: q.options.map(String),
+                    correct: Number(q.correct)
+                }));
+
+                if (!quizData.length) throw new Error("Question bank is empty or invalid.");
+                console.log("Quiz question bank loaded:", quizData.length);
+                return quizData;
+            } catch (err) {
+                console.error("Question Bank Error:", err);
+                quizData = [];
+                const qEl = document.getElementById("question");
+                const optEl = document.getElementById("options");
+                if (qEl) qEl.innerText = "⚠️ Question load failed";
+                if (optEl) optEl.innerHTML =
+                    '<button type="button" class="btn" onclick="quizData=[];loadQuiz()">↻ Retry Questions</button>';
+                return [];
+            }
         }
 
         async function loadWallet(retry = 0) {
@@ -1945,11 +2001,6 @@ body.notification-locked #notificationRequiredOverlay button{
                 alert('પહેલા આ પ્રશ્નનો જવાબ આપો. જવાબ આપ્યા વગર પાછા જઈને બીજો પ્રશ્ન લઈ શકાશે નહીં.');
                 return;
             }
-            if (currentScreen === 'activityPlay' && !activityQuestionAnswered) {
-                history.pushState({ appScreen: 'activityPlay' }, '', '#activityPlay');
-                alert('પહેલા આ question નો answer આપો. Answer આપ્યા વગર પાછા જઈને બીજો question લઈ શકાશે નહીં.');
-                return;
-            }
 
             navigatingBack = true;
             const hash = (location.hash || '#dashboard').replace('#', '');
@@ -1977,12 +2028,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 history.replaceState({ appScreen: 'quiz' }, '', '#quiz');
                 history.pushState({ appScreen: 'quiz' }, '', '#quiz');
             }
-            if (startScreen === 'activityPlay' && !activityQuestionAnswered) {
-                history.replaceState({ appScreen: 'activityPlay' }, '', '#activityPlay');
-                history.pushState({ appScreen: 'activityPlay' }, '', '#activityPlay');
-            }
             setQuizExitState();
-            setActivityExitState();
         });
 
         // ==========================================
@@ -2025,12 +2071,26 @@ body.notification-locked #notificationRequiredOverlay button{
             }
 
             if (tabChangedScreen === "activity" && !document.getElementById("activityPlay")?.classList.contains("hidden")) {
-                activityQuestionAnswered=false;
-                setActivityExitState();
-                const box=document.getElementById("activityContent");
-                if(box) box.innerHTML='<div class="activity-question">🔒 This question was invalidated because you changed the tab/window.</div><p style="text-align:center;color:#64748b;margin-top:10px">Please wait for the short security lock, then reopen this activity.</p>';
-                const fb=document.getElementById('activityFeedback');
-                if(fb) fb.textContent='';
+                const oldId = activityQuestions?.[activityIndex]?.id;
+                const res = await fetch("/api/activities/"+encodeURIComponent(activityType), {
+                    headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+                }).catch(()=>null);
+                if (res && res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.questions) && data.questions.length) {
+                        activityQuestions = data.questions;
+                        const candidates = activityQuestions.filter(q => q.id !== oldId);
+                        activityIndex = Math.floor(Math.random() * (candidates.length ? candidates.length : activityQuestions.length));
+                        if (candidates.length) {
+                            const selected = candidates[activityIndex];
+                            const realIndex = activityQuestions.findIndex(q => q.id === selected.id);
+                            activityIndex = realIndex >= 0 ? realIndex : 0;
+                        }
+                        arrangeWords=[];
+                        renderActivity();
+                        updateActivityWallet();
+                    }
+                }
             }
             tabChangedScreen = null;
         });
@@ -2336,12 +2396,8 @@ body.notification-locked #notificationRequiredOverlay button{
                     throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
                 }
 
-                // The server returns exactly one locked question. Never pick a
-                // different question on the client.
-                activityIndex=0;
-                activityQuestionAnswered=false;
+                activityIndex=Math.floor(Math.random()*activityQuestions.length);
                 arrangeWords=[];
-                setActivityExitState();
 
                 if(nameEl) nameEl.textContent=data.title || titles[type];
                 if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • Today limit '+data.dailyLimit;
@@ -2354,54 +2410,34 @@ body.notification-locked #notificationRequiredOverlay button{
                         '<div class="activity-question">⚠️ Questions load થઈ શક્યા નથી.</div>'+
                         '<p style="text-align:center;color:#64748b">'+
                         'Please login again and try this activity.</p>'+
-                        '<button class="activity-action" type="button" onclick="openActivity('+JSON.stringify(type)+')">↻ Try Again</button>';
+                        '<button id="activityRetryBtn" class="activity-action" type="button">↻ Try Again</button>';
                 }
                 if(fb) fb.textContent=e.message || 'Activity load failed';
+                bindActivityRetry(type);
             }
         }
-        async function requestActivityExit(){
-            if(!activityQuestionAnswered){
-                alert('પહેલા આ પ્રશ્નનો જવાબ આપો. જવાબ આપ્યા વગર પાછા જઈને બીજો question લઈ શકાશે નહીં.');
-                return false;
-            }
-            showScreen('activities');
-            return true;
-        }
-        function setActivityExitState(){
-            const b=document.getElementById('activityBackBtn');
-            if(!b)return;
-            b.disabled=!activityQuestionAnswered;
-            b.style.opacity=activityQuestionAnswered?'1':'0.55';
-            b.style.cursor=activityQuestionAnswered?'pointer':'not-allowed';
-        }
-        async function nextActivityQuestion(){
-            if(!activityType)return;
-            activityQuestionAnswered=false;
-            setActivityExitState();
-            arrangeWords=[];
-            const token=localStorage.getItem('token') || localStorage.getItem('studentToken') || '';
-            try{
-                const res=await fetch('/api/activities/'+encodeURIComponent(activityType),{
-                    headers: token ? {Authorization:'Bearer '+token} : {}
+        // Reliable retry handler: use a real event listener instead of inline onclick.
+        // This also prevents stale/blocked handlers after the activity panel is rebuilt.
+        function bindActivityRetry(type){
+            const btn=document.getElementById('activityRetryBtn');
+            if(!btn) return;
+            btn.disabled=false;
+            btn.style.pointerEvents='auto';
+            btn.addEventListener('click', function(ev){
+                ev.preventDefault();
+                ev.stopPropagation();
+                if(btn.disabled) return;
+                btn.disabled=true;
+                btn.textContent='⏳ Retrying...';
+                Promise.resolve(openActivity(type)).finally(()=>{
+                    const fresh=document.getElementById('activityRetryBtn');
+                    if(fresh){ fresh.disabled=false; fresh.textContent='↻ Try Again'; }
                 });
-                const data=await res.json().catch(()=>({}));
-                if(!res.ok || !data.success){
-                    const box=document.getElementById('activityContent');
-                    if(box) box.innerHTML='<div class="activity-question">⚠️ '+(data.message||'Activity temporarily unavailable.')+'</div>';
-                    return;
-                }
-                activityQuestions=Array.isArray(data.questions)?data.questions:[];
-                activityData=data;
-                activityIndex=0;
-                renderActivity();
-                updateActivityWallet();
-            }catch(e){
-                setFeedback(false,'Network error. Please try again.');
-            }
+            }, {once:true});
         }
+
+        function nextActivityQuestion(){ if(!activityQuestions.length)return; activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
         function renderActivity(){
-            activityQuestionAnswered=false;
-            setActivityExitState();
             const q=activityQuestions[activityIndex], box=document.getElementById('activityContent'), fb=document.getElementById('activityFeedback'); fb.textContent='';
             if(activityType==='arrange'){
                 const words=q.prompt.split('/').map(x=>x.trim()).sort(()=>Math.random()-.5); arrangeWords=[];
@@ -2428,14 +2464,11 @@ body.notification-locked #notificationRequiredOverlay button{
                 const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
                 const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
-                activityQuestionAnswered=true;
-                setActivityExitState();
                 if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ©'+Number(data.wallet).toFixed(2));}
-                else{setFeedback(false,'❌ Wrong answer. No answer is shown here.');}
+                else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
                 setTimeout(()=>nextActivityQuestion(),1200);
             }catch(e){setFeedback(false,'Network error. Please try again.');}
         }
-        let activityQuestionAnswered = false;
         let spokenText='';
         function startSpeaking(){
             const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -2447,7 +2480,7 @@ body.notification-locked #notificationRequiredOverlay button{
             r.onend=()=>{if(!spokenText)document.getElementById('micStatus').textContent='No speech detected. Try again.'};r.start();
         }
         function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
-        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.prompt);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
         loadQuestionBank();
         // Wallet is fetched from the server; do not overwrite it with the initial 0.
         loadWallet();

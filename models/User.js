@@ -300,13 +300,7 @@ const userSchema = new mongoose.Schema(
         activityEarn: { type: Map, of: Number, default: {} },
         activityDeduct: { type: Map, of: Number, default: {} },
         activityTabChanges: { type: Map, of: Number, default: {} },
-        activityLastQuestion: { type: Map, of: Number, default: {} },
-
-        // Server-side lock for English Learning & Earning activities.
-        // The active question and answer are never stored/sent to the browser.
-        activityActiveQuestion: { type: Map, of: Number, default: {} },
-        activityActiveStartedAt: { type: Map, of: Date, default: {} },
-        activityLockedUntil: { type: Map, of: Date, default: {} }
+        activityLastQuestion: { type: Map, of: Number, default: {} }
     },
     {
         timestamps: true,
