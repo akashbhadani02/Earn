@@ -81,6 +81,20 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
+        // One locked English activity question per user. The answer stays on the server.
+        activeActivityType: {
+            type: String,
+            default: ""
+        },
+        activeActivityQuestionId: {
+            type: String,
+            default: ""
+        },
+        activeActivityStartedAt: {
+            type: Date,
+            default: null
+        },
+
         isOnline: {
             type: Boolean,
             default: false

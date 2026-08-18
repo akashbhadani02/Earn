@@ -98,65 +98,19 @@ router.post("/answer", auth, async (req,res) => {
 });
 
 router.post("/abandon", auth, async (req,res) => {
-    try {
-        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null}});
-        return res.json({success:true});
-    } catch(err) {
-        return res.status(500).json({success:false,message:err.message});
-    }
+    // Do not let a student discard an unanswered question and obtain a fresh one.
+    // The active question is cleared only by /answer after submission.
+    return res.status(409).json({success:false,message:"You must answer the current question before leaving it."});
 });
 
-// Fast student quiz endpoint: return a small random batch instead of the full question bank.
+// Legacy student question-bank endpoints are intentionally disabled.
+// They must never expose the correct answer to the browser. Students use /next only.
 router.get("/random", auth, async (req, res) => {
-    try {
-        const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
-        await ensureQuestionsSeeded();
-        let questions = await Question.aggregate([
-            { $match: { q: { $type: "string" }, options: { $type: "array" } } },
-            { $sample: { size: count } },
-            { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
-        ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
-            q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
-            Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
-        if (!questions.length && seedQuestions.length) {
-            const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
-                Array.isArray(q.options) && q.options.length >= 2 &&
-                Number.isInteger(Number(q.correct)) && Number(q.correct) >= 0 &&
-                Number(q.correct) < q.options.length);
-            for (let i = valid.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [valid[i], valid[j]] = [valid[j], valid[i]];
-            }
-            questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
-            }));
-        }
-        return res.json({ success: true, totalQuestions: questions.length, questions });
-    } catch (err) {
-        console.error("Random Questions Error:", err);
-        return res.status(500).json({ success: false, message: err.message });
-    }
+    return res.status(410).json({ success:false, message:"Question bank download is disabled. Use the active question endpoint." });
 });
 
-// Student quiz question bank.
 router.get("/", auth, async (req, res) => {
-    try {
-        await ensureQuestionsSeeded();
-
-        const questions = await Question.find()
-            .select("q options correct")
-            .lean();
-
-        return res.json({
-            success: true,
-            totalQuestions: questions.length,
-            questions
-        });
-    } catch (err) {
-        console.error("Load Questions Error:", err);
-        return res.status(500).json({ success: false, message: err.message });
-    }
+    return res.status(410).json({ success:false, message:"Question bank download is disabled. Use the active question endpoint." });
 });
 
 // Admin question list with optional search + pagination.

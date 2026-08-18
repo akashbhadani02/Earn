@@ -1593,12 +1593,13 @@ function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolka
 function normalize(s){return String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
 function fieldName(type){return `activity_${type}`;}
 function publicQuestion(type,q){
-  if(type==='arrange') return {prompt:q[0],answer:q[1]};
-  if(type==='correction'||type==='translate') return {prompt:q[0],answer:q[1]};
-  if(type==='word') return {prompt:q[0],answer:q[1]};
-  if(type==='fill') return {prompt:q[0],options:q[1],answer:q[2]};
-  if(type==='listening') return {prompt:q,answer:q};
-  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2],answer:q[3]};
+  if(type==='arrange') return {prompt:q[0]};
+  if(type==='correction'||type==='translate') return {prompt:q[0]};
+  if(type==='word') return {prompt:q[0]};
+  if(type==='fill') return {prompt:q[0],options:q[1]};
+  // Browser speech needs the sentence to synthesize audio. No reward/answer check is done client-side.
+  if(type==='listening') return {prompt:q};
+  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
   return {prompt:q};
 }
 
@@ -1621,11 +1622,31 @@ function pickRandomQuestions(type, activity, user) {
 }
 
 router.get('/:type', auth, async (req,res)=>{
-  const type=req.params.type; const activity=ACTIVITIES[type];
-  if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const user=await User.findById(req.user.id).select('activityLastQuestion');
-  const items=pickRandomQuestions(type,activity,user);
-  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
+  try {
+    const type=req.params.type; const activity=ACTIVITIES[type];
+    if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
+    const user=await User.findById(req.user.id);
+    if(!user) return res.status(404).json({success:false,message:'User not found'});
+
+    // If a question is already active, return the same locked question.
+    if(String(user.activeActivityType||'')===type && String(user.activeActivityQuestionId||'')!=='') {
+      const idx=Number(user.activeActivityQuestionId);
+      const q=activity.questions[idx];
+      if(q) return res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[{id:idx,...publicQuestion(type,q)}]});
+    }
+
+    const items=pickRandomQuestions(type,activity,user);
+    const item=items[0];
+    if(!item) return res.status(404).json({success:false,message:'No questions available'});
+    user.activeActivityType=type;
+    user.activeActivityQuestionId=String(item.id);
+    user.activeActivityStartedAt=new Date();
+    await user.save();
+    res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:[item]});
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({success:false,message:e.message});
+  }
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1637,6 +1658,11 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     user.tabChanges=Number(user.tabChanges||0)+1;
     const current=mapGet(user.activityTabChanges,type);
     mapSet(user.activityTabChanges,type,current+1);
+    if(String(user.activeActivityType||'')===type){
+      user.activeActivityType='';
+      user.activeActivityQuestionId='';
+      user.activeActivityStartedAt=null;
+    }
     await user.save();
     res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
@@ -1648,11 +1674,13 @@ router.post('/:type/submit', auth, async (req,res)=>{
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
+    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+    if(String(user.activeActivityType||'')!==type || String(user.activeActivityQuestionId||'')!==String(index))
+      return res.status(409).json({success:false,message:'This question is no longer active. Open the current question again.'});
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
-    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
     if(!user.activityCounts) user.activityCounts={};
@@ -1675,6 +1703,9 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
+    user.activeActivityType='';
+    user.activeActivityQuestionId='';
+    user.activeActivityStartedAt=null;
     await user.save();
     res.json({
       success:true,
@@ -1687,8 +1718,7 @@ router.post('/:type/submit', auth, async (req,res)=>{
       correctCount:correct?correctCount+1:correctCount,
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
-      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
-      correctAnswer:expected
+      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)
     });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });
