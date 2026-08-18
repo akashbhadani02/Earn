@@ -107,42 +107,26 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Permanent block has no timer and can only be cleared by Admin.
-        if (user.permanentBlocked) {
-            return res.status(403).json({
-                success:false, blocked:true, permanentBlocked:true,
-                message:"Your account is permanently blocked. Only Admin can unblock it.",
-                reason:user.blockReason || "Permanent anti-cheating block",
-                remainingMs:null
-            });
-        }
-
-        // Temporary 12-hour block. Admin and Student use the SAME expiry.
+        // Blocks 1-3 are temporary (12 hours). Block 4+ is permanent and
+        // can only be cleared by an administrator.
         if (user.isBlocked) {
-            const now = Date.now();
-            const blockTime = getBlockRemainingMs(user, now);
-
+            const blockCount = Number(user.blockCount || 0);
+            if (blockCount >= 4 || !user.blockUntil) {
+                return res.status(403).json({
+                    success: false, blocked: true, permanent: true, blockCount,
+                    message: "Your account is permanently blocked. Only an administrator can unblock it.",
+                    reason: user.blockReason
+                });
+            }
+            const blockTime = getBlockRemainingMs(user, Date.now());
             if (blockTime.remainingMs <= 0) {
-                user.isBlocked = false;
-                user.blockUntil = null;
-                user.blockReason = "";
-                // Keep warning/block history across temporary block expiry.
+                user.isBlocked = false; user.blockUntil = null; user.blockReason = ""; user.warningCount = 0;
                 await user.save();
             } else {
-                // Persist the fallback expiry for legacy records so every
-                // future Admin/Student request sees exactly the same end time.
-                if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
-                    user.blockUntil = new Date(blockTime.untilMs);
-                    await user.save();
-                }
-
                 return res.status(403).json({
-                    success: false,
-                    blocked: true,
-                    message: "Your account is blocked for 12 hours.",
-                    reason: user.blockReason,
-                    blockUntil: new Date(blockTime.untilMs).toISOString(),
-                    remainingMs: blockTime.remainingMs
+                    success:false, blocked:true, permanent:false, blockCount,
+                    message:`Your account is temporarily blocked. Block ${blockCount}/3 timer is active.`,
+                    reason:user.blockReason, blockUntil:new Date(blockTime.untilMs).toISOString(), remainingMs:blockTime.remainingMs
                 });
             }
         }
@@ -291,58 +275,155 @@ router.post("/offline", async (req, res) => {
 // 4th violation = Account Blocked
 // ==========================
 const auth = require("../middleware/auth");
-const { registerViolation, BLOCK_DURATION_MS } = require("../services/antiCheat");
 
 router.post("/block-me", auth, async (req, res) => {
     try {
-        const reason = String(req.body?.reason || "Cheating Detected").slice(0, 500);
+        const { reason } = req.body || {};
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        if (user.permanentBlocked) {
-            user.isBlocked = true; user.blockUntil = null; user.wallet = 0; await user.save();
-            return res.json({ success:true, blocked:true, permanentBlocked:true, warning:false,
-                warningCount:Number(user.warningCount||0), blockCount:Number(user.blockCount||0), remainingMs:null,
-                message:"Account permanently blocked. Only Admin can unblock this account." });
+        const blockCount = Number(user.blockCount || 0);
+        if (blockCount >= 4 || (user.isBlocked && !user.blockUntil)) {
+            user.isBlocked = true; user.blockUntil = null; user.wallet = 0; user.isOnline = false;
+            await user.save();
+            return res.json({success:true,blocked:true,permanent:true,blockCount:Math.max(4,blockCount),warning:false,wallet:0,message:"Permanent block. Only admin can unblock this student."});
         }
 
         if (user.isBlocked) {
-            const blockTime = getBlockRemainingMs(user, Date.now());
+            const blockTime = getBlockRemainingMs(user);
             if (blockTime.remainingMs > 0) {
-                user.wallet = 0; await user.save();
-                return res.json({ success:true, blocked:true, permanentBlocked:false, warning:false,
-                    warningCount:Number(user.warningCount||0), blockCount:Number(user.blockCount||0),
-                    blockUntil:new Date(blockTime.untilMs).toISOString(), remainingMs:blockTime.remainingMs,
-                    message:"Account is already temporarily blocked" });
+                return res.json({success:true,blocked:true,permanent:false,warning:false,blockCount,warningCount:Number(user.warningCount||0),wallet:0,blockUntil:new Date(blockTime.untilMs).toISOString(),remainingMs:blockTime.remainingMs,message:"Temporary block is still active."});
             }
-            user.isBlocked = false; user.blockUntil = null; user.blockReason = "";
+            user.isBlocked=false; user.blockUntil=null; user.blockReason=""; user.warningCount=0;
         }
 
-        const result = await registerViolation(user, reason);
-        return res.json({ success:true, ...result, remainingWarnings:Math.max(0,3-Number(user.warningCount||0)) });
-    } catch (err) {
-        console.error("Warning/Block Error:", err);
-        return res.status(500).json({ success:false, message:err.message });
+        user.warningCount = Number(user.warningCount || 0) + 1;
+        user.blockReason = String(reason || "Cheating Detected").slice(0,300);
+        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
+        user.warningHistory.push({time:new Date(),reason:user.blockReason});
+        if (user.warningHistory.length > 300) user.warningHistory=user.warningHistory.slice(-300);
+
+        if (user.warningCount < 3) {
+            await user.save();
+            return res.json({success:true,blocked:false,warning:true,warningCount:user.warningCount,blockCount,remainingWarnings:3-user.warningCount,wallet:Number(user.wallet||0),message:`Warning ${user.warningCount}/3`});
+        }
+
+        // Every 3 warnings = one block. Wallet is immediately reset to zero.
+        user.warningCount=0;
+        user.blockCount=blockCount+1;
+        user.isBlocked=true;
+        user.wallet=0;
+        user.isOnline=false;
+        user.activeQuizQuestionId=null;
+        user.activeQuizStartedAt=null;
+        user.activeQuizRewardBlocked=false;
+        user.quizRewardPending=false;
+        user.quizRewardCorrect=false;
+
+        if (user.blockCount <= 3) {
+            user.blockUntil=new Date(Date.now()+12*60*60*1000);
+            await user.save();
+            return res.json({success:true,blocked:true,permanent:false,warning:false,blockCount:user.blockCount,warningCount:0,wallet:0,blockUntil:user.blockUntil.toISOString(),remainingMs:12*60*60*1000,message:`Student blocked (${user.blockCount}/3). Timer is active.`});
+        }
+
+        // 4th block = permanent. No timer and no more warnings.
+        user.blockUntil=null;
+        user.blockReason="Permanent block after 4 anti-cheating blocks";
+        await user.save();
+        return res.json({success:true,blocked:true,permanent:true,warning:false,blockCount:user.blockCount,warningCount:0,wallet:0,message:"Permanent block. Only admin can unblock this student."});
+    } catch(err) {
+        console.error("Warning/Block Error:",err);
+        return res.status(500).json({success:false,message:err.message});
     }
 });
 
-// ==========================
-// Security Event Tracking
-// Tracks tab changes, fast answers and unique devices.
-// ==========================
+
 router.post("/security-event", auth, async (req, res) => {
     try {
-        const { type, deviceId } = req.body || {};
+        const { type, deviceId, activityType } = req.body || {};
         const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
         if (type === "tab_change") {
             user.tabChanges = Number(user.tabChanges || 0) + 1;
-        } else if (type === "fast_answer") {
+
+            const aType = String(activityType || "").trim();
+            if (aType) {
+                user.activityTabViolation = user.activityTabViolation || new Map();
+                user.activityTabViolation.set(aType, true);
+                user.activityTabChanges = user.activityTabChanges || new Map();
+                const previousActivityChanges = Number(user.activityTabChanges.get(aType) || 0);
+                user.activityTabChanges.set(aType, previousActivityChanges + 1);
+            } else {
+                user.quizTabViolation = true;
+                user.activeQuizQuestionId = null;
+                user.activeQuizStartedAt = null;
+                user.activeQuizRewardBlocked = false;
+                user.quizRewardPending = false;
+                user.quizRewardCorrect = false;
+            }
+
+            // A tab/window switch while answering is one anti-cheating violation.
+            // Exactly 3 warnings create one temporary block; after 3 such blocks,
+            // the 4th block is permanent and only admin can unblock.
+            const reason = "Tab / web change detected while answering";
+            const currentBlockCount = Number(user.blockCount || 0);
+            if (currentBlockCount >= 4 || (user.isBlocked && !user.blockUntil)) {
+                user.isBlocked = true;
+                user.blockUntil = null;
+                user.wallet = 0;
+                user.isOnline = false;
+                user.blockReason = "Permanent block after 4 anti-cheating blocks";
+                await user.save();
+                return res.json({success:true,warning:false,blocked:true,permanent:true,blockCount:Math.max(4,currentBlockCount),warningCount:0,wallet:0});
+            }
+
+            if (user.isBlocked) {
+                const blockTime = getBlockRemainingMs(user);
+                if (blockTime.remainingMs > 0) {
+                    await user.save();
+                    return res.json({success:true,warning:false,blocked:true,permanent:false,blockCount:currentBlockCount,warningCount:0,wallet:0,remainingMs:blockTime.remainingMs,blockUntil:new Date(blockTime.untilMs).toISOString()});
+                }
+                user.isBlocked=false; user.blockUntil=null; user.blockReason=""; user.warningCount=0;
+            }
+
+            user.warningCount = Number(user.warningCount || 0) + 1;
+            user.blockReason = reason;
+            user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
+            user.warningHistory.push({time:new Date(),reason});
+            if(user.warningHistory.length>300) user.warningHistory=user.warningHistory.slice(-300);
+
+            if(user.warningCount < 3){
+                await user.save();
+                return res.json({success:true,warning:true,blocked:false,warningCount:user.warningCount,blockCount:currentBlockCount,remainingWarnings:3-user.warningCount,wallet:Number(user.wallet||0)});
+            }
+
+            user.warningCount=0;
+            user.blockCount=currentBlockCount+1;
+            user.isBlocked=true;
+            user.wallet=0;
+            user.isOnline=false;
+            user.activeQuizQuestionId=null;
+            user.activeQuizStartedAt=null;
+            user.activeQuizRewardBlocked=false;
+            user.quizRewardPending=false;
+            user.quizRewardCorrect=false;
+            if(user.blockCount<=3){
+                user.blockUntil=new Date(Date.now()+12*60*60*1000);
+                await user.save();
+                return res.json({success:true,warning:false,blocked:true,permanent:false,warningCount:0,blockCount:user.blockCount,wallet:0,remainingMs:12*60*60*1000,blockUntil:user.blockUntil.toISOString()});
+            }
+            user.blockUntil=null;
+            user.blockReason="Permanent block after 4 anti-cheating blocks";
+            await user.save();
+            return res.json({success:true,warning:false,blocked:true,permanent:true,warningCount:0,blockCount:user.blockCount,wallet:0});
+        }
+
+        if (type === "fast_answer") {
             user.fastAnswers = Number(user.fastAnswers || 0) + 1;
         } else if (type === "device") {
             const id = String(deviceId || "").trim().slice(0, 200);
-            if (!id) return res.status(400).json({ success: false, message: "Device ID required" });
+            if (!id) return res.status(400).json({ success:false, message:"Device ID required" });
             user.deviceIds = Array.isArray(user.deviceIds) ? user.deviceIds : [];
             if (!user.deviceIds.includes(id)) {
                 user.deviceIds.push(id);
@@ -350,21 +431,14 @@ router.post("/security-event", auth, async (req, res) => {
             }
             user.deviceCount = user.deviceIds.length;
         } else {
-            return res.status(400).json({ success: false, message: "Unknown security event" });
+            return res.status(400).json({ success:false, message:"Unknown security event" });
         }
 
         await user.save();
-        return res.json({
-            success: true,
-            fastAnswers: Number(user.fastAnswers || 0),
-            tabChanges: Number(user.tabChanges || 0),
-            deviceCount: Number(user.deviceCount || 0),
-            warningCount: Number(user.warningCount || 0),
-            loginCount: Array.isArray(user.loginHistory) ? user.loginHistory.length : 0
-        });
+        return res.json({success:true,fastAnswers:Number(user.fastAnswers||0),tabChanges:Number(user.tabChanges||0),deviceCount:Number(user.deviceCount||0),warningCount:Number(user.warningCount||0),blockCount:Number(user.blockCount||0),loginCount:Array.isArray(user.loginHistory)?user.loginHistory.length:0});
     } catch (err) {
         console.error("Security event error:", err);
-        return res.status(500).json({ success: false, message: err.message });
+        return res.status(500).json({ success:false, message:err.message });
     }
 });
 

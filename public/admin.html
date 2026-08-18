@@ -1536,9 +1536,22 @@
 
             allUsers = data.users || [];
 
-            showUsers(allUsers);
+            const searchValue = String(document.getElementById("search")?.value || "").trim().toLowerCase();
+            if (searchValue) {
+                showUsers(allUsers.filter(user =>
+                    String(user.name || "").toLowerCase().includes(searchValue) ||
+                    String(user.mobile || "").toLowerCase().includes(searchValue)
+                ));
+            } else {
+                showUsers(allUsers);
+            }
 
         }
+
+        // Keep Online/Offline status and green/red row background live.
+        setInterval(() => {
+            if (document.visibilityState === "visible") loadUsers().catch(() => {});
+        }, 2000);
 
         //==========================
         // last seen format
@@ -1551,7 +1564,7 @@
 
             const diff = Date.now() - new Date(lastSeen).getTime();
 
-            if (diff <= 3000) {
+            if (diff <= 2000) {
                 return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
             }
 
@@ -1586,12 +1599,20 @@
 
             users.forEach(user => {
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
-                const isOnline = !user.isBlocked && !user.permanentBlocked && lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
+                const isOnline = typeof user.isOnline === 'boolean'
+                    ? user.isOnline
+                    : (lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 2000);
 
                 html += `
 
-<tr data-student-status="${isOnline ? 'online' : 'offline'}" style="background:${isOnline ? '#dcfce7' : '#fee2e2'};transition:background .2s ease;">
-    <td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;background:${isOnline ? '#22c55e' : '#ef4444'};box-shadow:${isOnline ? '0 0 10px #22c55e' : 'none'};"></span>${user.name}<br><span style="display:inline-block;margin-top:4px;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:800;background:${isOnline ? '#dcfce7' : '#fee2e2'};color:${isOnline ? '#166534' : '#991b1b'};">${isOnline ? '🟢 Online' : '🔴 Offline'}</span></td>
+<tr style="background:${isOnline ? '#dcfce7' : '#fee2e2'};transition:background .2s;">
+    <td>
+        <span style="display:inline-flex;align-items:center;gap:7px;font-weight:800;color:${isOnline ? '#166534' : '#991b1b'};">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${isOnline ? '#22c55e' : '#ef4444'};box-shadow:0 0 0 3px ${isOnline ? '#bbf7d0' : '#fecaca'};"></span>
+            ${user.name}
+            <span style="font-size:11px;padding:3px 7px;border-radius:999px;background:${isOnline ? '#bbf7d0' : '#fecaca'};color:${isOnline ? '#166534' : '#991b1b'};">${isOnline ? 'ONLINE' : 'OFFLINE'}</span>
+        </span>
+    </td>
     <td>${user.mobile}</td>
 
     <td>${formatLastSeen(user.lastSeen)}</td>
@@ -3199,9 +3220,9 @@ ${w.status === "Approved" ? `
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
                 const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
-                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000 ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>⚠️ ${Number(u.warningCount || 0)}/3<br>🚫 Blocks: ${Number(u.blockCount || 0)}/3${u.permanentBlocked ? '<br><b style="color:#dc2626">Permanent</b>' : ''}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 2000 ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
-            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}/3</span></div><div><b>Anti-Cheat Blocks</b><span>${u.blockCount || 0}/3${u.permanentBlocked ? ' — Permanent' : ''}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
+            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
             window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
             window.ap2Block = async (id, blocked) => { try { await api("/pro/block/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ blocked, reason: "Admin action" }) }); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { registerViolation } = require("../services/antiCheat");
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 
@@ -1594,12 +1593,12 @@ function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolka
 function normalize(s){return String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
 function fieldName(type){return `activity_${type}`;}
 function publicQuestion(type,q){
-  if(type==='arrange') return {prompt:q[0]};
-  if(type==='correction'||type==='translate') return {prompt:q[0]};
-  if(type==='word') return {prompt:q[0]};
-  if(type==='fill') return {prompt:q[0],options:q[1]};
-  if(type==='listening') return {prompt:q};
-  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
+  if(type==='arrange') return {prompt:q[0],answer:q[1]};
+  if(type==='correction'||type==='translate') return {prompt:q[0],answer:q[1]};
+  if(type==='word') return {prompt:q[0],answer:q[1]};
+  if(type==='fill') return {prompt:q[0],options:q[1],answer:q[2]};
+  if(type==='listening') return {prompt:q,answer:q};
+  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2],answer:q[3]};
   return {prompt:q};
 }
 
@@ -1624,31 +1623,17 @@ function pickRandomQuestions(type, activity, user) {
 router.get('/:type', auth, async (req,res)=>{
   const type=req.params.type; const activity=ACTIVITIES[type];
   if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const user=await User.findById(req.user.id).select('activityLastQuestion activityInvalidated activityActiveQuestion activityTabChanges isBlocked permanentBlocked');
-  if(!user) return res.status(404).json({success:false,message:'User not found'});
-  if(user.isBlocked || user.permanentBlocked) return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,message:'Account is blocked.'});
-
-  // resetSecurity is only a fresh activity start; it never bypasses an active question.
-  if(String(req.query.resetSecurity || '') === '1'){
-    mapSet(user.activityInvalidated,type,false);
-    mapSet(user.activityActiveQuestion,type,null);
+  const user=await User.findById(req.user.id).select('activityLastQuestion activityTabViolation activityRewardBlocked');
+  const items=pickRandomQuestions(type,activity,user);
+  const wasViolated=Boolean(user?.activityTabViolation?.get ? user.activityTabViolation.get(type) : user?.activityTabViolation?.[type]);
+  if (user) {
+    user.activityTabViolation=user.activityTabViolation||new Map();
+    user.activityRewardBlocked=user.activityRewardBlocked||new Map();
+    user.activityTabViolation.set(type,false);
+    user.activityRewardBlocked.set(type,wasViolated);
     await user.save();
   }
-
-  let activeId=mapGet(user.activityActiveQuestion,type);
-  let items;
-  if(Number.isFinite(activeId) && activeId >= 0 && activity.questions[activeId]){
-    items=[{id:activeId,...publicQuestion(type,activity.questions[activeId])}];
-  }else{
-    items=pickRandomQuestions(type,activity,user);
-    if(items.length){
-      activeId=Number(items[0].id);
-      mapSet(user.activityActiveQuestion,type,activeId);
-      mapSet(user.activityInvalidated,type,false);
-      await user.save();
-    }
-  }
-  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
+  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items,rewardBlocked:wasViolated});
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1657,30 +1642,11 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     if(!ACTIVITIES[type]) return res.status(404).json({success:false,message:'Activity not found'});
     const user=await User.findById(req.user.id);
     if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.isBlocked || user.permanentBlocked){
-      user.wallet=0;
-      await user.save();
-      return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,wallet:0,message:'Account is blocked.'});
-    }
-
-    // Only an active unanswered activity question is a security violation.
-    const activeQuestion=mapGet(user.activityActiveQuestion,type);
-    if(!Number.isFinite(activeQuestion) || activeQuestion < 0){
-      return res.json({success:true,violation:false,tabChanges:Number(user.tabChanges||0),activityTabChanges:mapGet(user.activityTabChanges,type),wallet:Number(user.wallet||0),message:'No active activity question.'});
-    }
-
-    const walletBefore=Number(user.wallet||0);
     user.tabChanges=Number(user.tabChanges||0)+1;
-    mapSet(user.activityTabChanges,type,mapGet(user.activityTabChanges,type)+1);
-    mapSet(user.activityInvalidated,type,true);
-    mapSet(user.activityActiveQuestion,type,null);
-    const result=await registerViolation(user,'Tab/window changed while an English Learning & Earning question was active');
-    // First 3 violations are warnings and MUST NOT change wallet.
-    if(result.warning && Number(user.wallet||0)!==walletBefore){
-      user.wallet=walletBefore;
-      await user.save();
-    }
-    return res.json({success:true,...result,tabChanges:Number(user.tabChanges||0),activityTabChanges:mapGet(user.activityTabChanges,type),wallet:Number(user.wallet||0)});
+    const current=mapGet(user.activityTabChanges,type);
+    mapSet(user.activityTabChanges,type,current+1);
+    await user.save();
+    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
 });
 
@@ -1695,25 +1661,25 @@ router.post('/:type/submit', auth, async (req,res)=>{
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
     const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
-    if(user.isBlocked || user.permanentBlocked) return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,wallet:Number(user.wallet||0),message:'Account is blocked.'});
-    if(mapGet(user.activityInvalidated,type)) {
-      return res.status(409).json({success:false,securityViolation:true,message:'This question was invalidated because the tab/window was changed. Wallet was not updated.',wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0)});
-    }
-    const activeQuestion=mapGet(user.activityActiveQuestion,type);
-    if(activeQuestion !== index) return res.status(409).json({success:false,message:'This question is not the active question. Please continue with the current question.',wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0)});
-
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
     if(!user.activityCounts) user.activityCounts={};
     const count=Number(user.activityCounts.get ? user.activityCounts.get(type)||0 : user.activityCounts[type]||0);
     if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
+    const rewardBlocked = Boolean(user.activityRewardBlocked?.get ? user.activityRewardBlocked.get(type) : user.activityRewardBlocked?.[type]);
+    mapSet(user.activityRewardBlocked,type,false);
     mapSet(user.activityCounts,type,count+1);
     mapSet(user.activityLastQuestion,type,index);
     const correctCount=mapGet(user.activityCorrect,type);
     const wrongCount=mapGet(user.activityWrong,type);
     const earned=mapGet(user.activityEarn,type);
     const deducted=mapGet(user.activityDeduct,type);
-    if(correct){
+    if(rewardBlocked){
+      // Tab/window changed while the question was open. The answer may be
+      // checked, but this attempt can NEVER modify the wallet.
+      if(correct) mapSet(user.activityCorrect,type,correctCount+1);
+      else mapSet(user.activityWrong,type,wrongCount+1);
+    } else if(correct){
       user.wallet=Number(user.wallet||0)+activity.reward;
       user.totalEarn=Number(user.totalEarn||0)+activity.reward;
       mapSet(user.activityCorrect,type,correctCount+1);
@@ -1728,15 +1694,17 @@ router.post('/:type/submit', auth, async (req,res)=>{
     res.json({
       success:true,
       correct,
-      reward:correct?activity.reward:-activity.reward,
+      reward:rewardBlocked?0:(correct?activity.reward:-activity.reward),
       wallet:Number(user.wallet||0),
       totalEarn:Number(user.totalEarn||0),
       used:count+1,
       remaining:Math.max(0,activity.dailyLimit-count-1),
       correctCount:correct?correctCount+1:correctCount,
       wrongCount:correct?wrongCount:wrongCount+1,
-      activityEarn:correct?earned+activity.reward:earned,
-      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)
+      activityEarn:rewardBlocked?earned:(correct?earned+activity.reward:earned),
+      activityDeduct:rewardBlocked?deducted:(correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward)),
+      correctAnswer:expected,
+      rewardBlocked
     });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });

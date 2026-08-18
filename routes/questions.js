@@ -1,15 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const QUIZ_CORRECT_REWARD = 0.20;
-const QUIZ_WRONG_PENALTY = 0.30;
-function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
-
 const Question = require("../models/Question");
 const User = require("../models/User");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
-const { registerViolation } = require("../services/antiCheat");
 const seedQuestions = require("../questions.json");
 
 let seedPromise = null;
@@ -51,17 +46,11 @@ router.get("/next", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        // A tab-changed question is permanently invalidated. It can only be cleared
-        // when the student starts a fresh Quiz screen, never during answer submission.
-        if (user.quizInvalidated) {
-            user.quizInvalidated = false;
-            await user.save();
-        }
-
         let question = user.activeQuizQuestionId
             ? await Question.findById(user.activeQuizQuestionId).select("_id q options").lean()
             : null;
 
+        let rewardBlocked = false;
         if (!question) {
             const picked = await Question.aggregate([
                 { $match:{ q:{ $type:"string" }, options:{ $type:"array" } } },
@@ -72,9 +61,14 @@ router.get("/next", auth, async (req, res) => {
             if (!question) return res.status(404).json({ success:false, message:"No questions available" });
             user.activeQuizQuestionId = question._id;
             user.activeQuizStartedAt = new Date();
+            rewardBlocked = Boolean(user.quizTabViolation);
+            user.activeQuizRewardBlocked = rewardBlocked;
+            user.quizTabViolation = false;
             await user.save();
+        } else {
+            rewardBlocked = Boolean(user.activeQuizRewardBlocked);
         }
-        return res.json({ success:true, question });
+        return res.json({ success:true, question, rewardBlocked });
     } catch(err) {
         console.error("Next Question Error:",err);
         return res.status(500).json({ success:false, message:err.message });
@@ -90,9 +84,6 @@ router.post("/answer", auth, async (req,res) => {
 
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
-        if (user.isBlocked || user.permanentBlocked) return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,wallet:Number(user.wallet||0),message:"Account is blocked."});
-        if (user.quizInvalidated)
-            return res.status(409).json({ success:false, securityViolation:true, message:"This question was invalidated because the tab/window was changed. Wallet was not updated." });
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
             return res.status(409).json({ success:false, message:"This question is no longer active." });
 
@@ -101,78 +92,24 @@ router.post("/answer", auth, async (req,res) => {
             return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
-
-        // Wallet/reward is calculated ONLY here on the server. The old
-        // /wallet/quiz endpoint no longer accepts a client-supplied boolean.
-        const today=todayKey();
-        if(user.dailyQuestionsDate!==today){
-            user.dailyQuestionsDate=today;
-            user.dailyQuestionsAnswered=0;
-            user.spinCycleQuestionsAnswered=0;
-        }
-        user.dailyQuestionsAnswered=Number(user.dailyQuestionsAnswered||0)+1;
-        user.spinCycleQuestionsAnswered=Number(user.spinCycleQuestionsAnswered||0)+1;
-        user.totalQuestionsAnswered=Number(user.totalQuestionsAnswered||0)+1;
-        const amount=correct?QUIZ_CORRECT_REWARD:-QUIZ_WRONG_PENALTY;
-        user.wallet=Math.max(0,Number(user.wallet||0)+amount);
-        if(correct){
-            user.totalEarn=Number(user.totalEarn||0)+QUIZ_CORRECT_REWARD;
-            user.quizScore=Number(user.quizScore||0)+QUIZ_CORRECT_REWARD;
-        }
+        const rewardBlocked = Boolean(user.activeQuizRewardBlocked);
+        user.quizRewardPending = !rewardBlocked;
+        user.quizRewardCorrect = correct;
         user.activeQuizQuestionId = null;
         user.activeQuizStartedAt = null;
+        user.activeQuizRewardBlocked = false;
         await user.save();
 
-        return res.json({
-            success:true, correct, correctIndex:Number(question.correct), reward:amount,
-            wallet:Number(user.wallet||0), totalEarn:Number(user.totalEarn||0),
-            quizScore:Number(user.quizScore||0), dailyReward:Number(user.dailyReward||0),
-            spinReward:Number(user.spinReward||0), dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),
-            dailyQuestionsDate:user.dailyQuestionsDate||'', totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0),
-            spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0),
-            spinQuestionsRemaining:Math.max(0,100-Number(user.spinCycleQuestionsAnswered||0)),
-            canSpinAfterQuestions:Number(user.spinCycleQuestionsAnswered||0)>=100,
-            withdrawRequests:user.withdrawRequests||[]
-        });
+        return res.json({ success:true, correct, correctIndex:Number(question.correct), rewardBlocked });
     } catch(err) {
         console.error("Answer Check Error:",err);
         return res.status(500).json({ success:false, message:err.message });
     }
 });
 
-router.post("/tab-change", auth, async (req,res) => {
-    try {
-        const user=await User.findById(req.user.id);
-        if(!user) return res.status(404).json({success:false,message:"User not found"});
-        if(user.isBlocked || user.permanentBlocked){
-            user.wallet=0;
-            await user.save();
-            return res.status(403).json({success:false,blocked:true,permanentBlocked:!!user.permanentBlocked,wallet:0,message:"Account is blocked."});
-        }
-
-        // Only an actually active unanswered Quiz question is a violation.
-        // This prevents normal tab switching on the dashboard/result screen
-        // from consuming one of the student's three warnings.
-        if(!user.activeQuizQuestionId){
-            return res.json({success:true,violation:false,tabChanges:Number(user.tabChanges||0),wallet:Number(user.wallet||0),message:"No active Quiz question."});
-        }
-
-        const walletBefore=Number(user.wallet||0);
-        user.tabChanges=Number(user.tabChanges||0)+1;
-        user.quizInvalidated=true; user.activeQuizQuestionId=null; user.activeQuizStartedAt=null;
-        const result=await registerViolation(user,"Tab/window changed while a Quiz question was active");
-        // Warnings never change wallet. A block always forces wallet to 0.
-        if(result.warning && Number(user.wallet||0)!==walletBefore){
-            user.wallet=walletBefore;
-            await user.save();
-        }
-        return res.json({success:true,...result,tabChanges:Number(user.tabChanges||0),wallet:Number(user.wallet||0)});
-    }catch(e){return res.status(500).json({success:false,message:e.message});}
-});
-
 router.post("/abandon", auth, async (req,res) => {
     try {
-        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null}});
+        await User.findByIdAndUpdate(req.user.id, {$set:{activeQuizQuestionId:null,activeQuizStartedAt:null,activeQuizRewardBlocked:false,quizRewardPending:false,quizRewardCorrect:false}});
         return res.json({success:true});
     } catch(err) {
         return res.status(500).json({success:false,message:err.message});
@@ -184,29 +121,19 @@ router.get("/random", auth, async (req, res) => {
     try {
         const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
         await ensureQuestionsSeeded();
-        let questions = await Question.aggregate([
+        const questions = await Question.aggregate([
             { $match: { q: { $type: "string" }, options: { $type: "array" } } },
             { $sample: { size: count } },
             { $project: { q: 1, options: 1, _id: 0 } }
         ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) && q.options.length >= 2);
-        if (!questions.length && seedQuestions.length) {
-            const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
-                Array.isArray(q.options) && q.options.length >= 2 &&
-                Number.isInteger(Number(q.correct)) && Number(q.correct) >= 0 &&
-                Number(q.correct) < q.options.length);
-            for (let i = valid.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [valid[i], valid[j]] = [valid[j], valid[i]];
-            }
-            questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String)
-            }));
-        }
-        return res.json({ success: true, totalQuestions: questions.length, questions });
-    } catch (err) {
-        console.error("Random Questions Error:", err);
-        return res.status(500).json({ success: false, message: err.message });
+        return res.json({
+            success:true,
+            totalQuestions:questions.length,
+            questions:questions.map(q => ({q:q.q, options:q.options}))
+        });
+    } catch(err) {
+        console.error("Random Questions Error:",err);
+        return res.status(500).json({success:false,message:err.message});
     }
 });
 

@@ -72,10 +72,45 @@ router.get("/", auth, async (req, res) => {
 // the selected answer was correct.
 // =============================
 router.post("/quiz", auth, async (req, res) => {
-    return res.status(410).json({
-        success:false,
-        message:"Quiz rewards are processed only by the secure quiz answer endpoint."
-    });
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({success:false,message:"User not found"});
+
+        // A reward is created only by /api/questions/answer after the server
+        // validates the currently active question. The client cannot invent
+        // a correct/incorrect result or call this endpoint to create money.
+        if (!user.quizRewardPending) {
+            return res.status(409).json({success:false,message:"No valid quiz reward is pending. Answer the active question first."});
+        }
+
+        const correct = Boolean(user.quizRewardCorrect);
+        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
+        user.quizRewardPending = false;
+        user.quizRewardCorrect = false;
+
+        const today = todayKey();
+        if (user.dailyQuestionsDate !== today) {
+            user.dailyQuestionsDate = today;
+            user.dailyQuestionsAnswered = 0;
+            user.spinCycleQuestionsAnswered = 0;
+        }
+
+        user.dailyQuestionsAnswered = Number(user.dailyQuestionsAnswered || 0) + 1;
+        user.spinCycleQuestionsAnswered = Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
+        user.totalQuestionsAnswered = Number(user.totalQuestionsAnswered || 0) + 1;
+        user.wallet = Math.max(0, Number(user.wallet || 0) + amount);
+
+        if (correct) {
+            user.totalEarn = Number(user.totalEarn || 0) + QUIZ_CORRECT_REWARD;
+            user.quizScore = Number(user.quizScore || 0) + QUIZ_CORRECT_REWARD;
+        }
+
+        await user.save();
+        return res.json({...walletResponse(user),reward:amount,correct});
+    } catch(err) {
+        console.error("Quiz Reward Error:",err);
+        return res.status(500).json({success:false,message:err.message});
+    }
 });
 
 // =============================

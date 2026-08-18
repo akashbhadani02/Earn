@@ -80,8 +80,16 @@ const userSchema = new mongoose.Schema(
             type: Date,
             default: null
         },
-
-        quizInvalidated: {
+        // If true, the active quiz answer may be checked but must not change wallet.
+        activeQuizRewardBlocked: {
+            type: Boolean,
+            default: false
+        },
+        quizRewardPending: {
+            type: Boolean,
+            default: false
+        },
+        quizRewardCorrect: {
             type: Boolean,
             default: false
         },
@@ -154,9 +162,32 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
 
-        // Anti-cheating blocks: blocks 1-3 are temporary (timer), block 4 is permanent/admin-only.
-        blockCount: { type: Number, default: 0 },
-        permanentBlocked: { type: Boolean, default: false },
+        // Number of completed anti-cheating temporary blocks.
+        // Blocks 1-3 have a timer; block 4+ is permanent until admin unblocks.
+        blockCount: {
+            type: Number,
+            default: 0
+        },
+
+        // True when the current question was invalidated by a tab/window change.
+        // The corresponding answer must never update the wallet.
+        quizTabViolation: {
+            type: Boolean,
+            default: false
+        },
+
+        // Per-activity tab-change invalidation flags.
+        activityTabViolation: {
+            type: Map,
+            of: Boolean,
+            default: {}
+        },
+
+        activityRewardBlocked: {
+            type: Map,
+            of: Boolean,
+            default: {}
+        },
 
         lastClaim: {
             type: String,
@@ -309,9 +340,7 @@ const userSchema = new mongoose.Schema(
         activityEarn: { type: Map, of: Number, default: {} },
         activityDeduct: { type: Map, of: Number, default: {} },
         activityTabChanges: { type: Map, of: Number, default: {} },
-        activityLastQuestion: { type: Map, of: Number, default: {} },
-        activityActiveQuestion: { type: Map, of: Number, default: {} },
-        activityInvalidated: { type: Map, of: Boolean, default: {} }
+        activityLastQuestion: { type: Map, of: Number, default: {} }
     },
     {
         timestamps: true,
