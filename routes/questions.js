@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
+const QUIZ_CORRECT_REWARD = 0.20;
+const QUIZ_WRONG_PENALTY = 0.30;
+function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
+
 const Question = require("../models/Question");
 const User = require("../models/User");
 const auth = require("../middleware/auth");
@@ -46,6 +50,13 @@ router.get("/next", auth, async (req, res) => {
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
+        if (user.quizInvalidated) {
+            user.quizInvalidated = false;
+            user.activeQuizQuestionId = null;
+            user.activeQuizStartedAt = null;
+            await user.save();
+        }
+
         let question = user.activeQuizQuestionId
             ? await Question.findById(user.activeQuizQuestionId).select("_id q options").lean()
             : null;
@@ -78,6 +89,8 @@ router.post("/answer", auth, async (req,res) => {
 
         const user = await User.findById(req.user.id);
         if (!user) return res.status(404).json({ success:false, message:"User not found" });
+        if (user.quizInvalidated)
+            return res.status(409).json({ success:false, securityViolation:true, message:"This question was invalidated because the tab/window was changed. Wallet was not updated." });
         if (!user.activeQuizQuestionId || String(user.activeQuizQuestionId)!==String(questionId))
             return res.status(409).json({ success:false, message:"This question is no longer active." });
 
@@ -86,15 +99,66 @@ router.post("/answer", auth, async (req,res) => {
             return res.status(400).json({ success:false, message:"Invalid question or answer" });
 
         const correct = index === Number(question.correct);
+
+        // Wallet/reward is calculated ONLY here on the server. The old
+        // /wallet/quiz endpoint no longer accepts a client-supplied boolean.
+        const today=todayKey();
+        if(user.dailyQuestionsDate!==today){
+            user.dailyQuestionsDate=today;
+            user.dailyQuestionsAnswered=0;
+            user.spinCycleQuestionsAnswered=0;
+        }
+        user.dailyQuestionsAnswered=Number(user.dailyQuestionsAnswered||0)+1;
+        user.spinCycleQuestionsAnswered=Number(user.spinCycleQuestionsAnswered||0)+1;
+        user.totalQuestionsAnswered=Number(user.totalQuestionsAnswered||0)+1;
+        const amount=correct?QUIZ_CORRECT_REWARD:-QUIZ_WRONG_PENALTY;
+        user.wallet=Math.max(0,Number(user.wallet||0)+amount);
+        if(correct){
+            user.totalEarn=Number(user.totalEarn||0)+QUIZ_CORRECT_REWARD;
+            user.quizScore=Number(user.quizScore||0)+QUIZ_CORRECT_REWARD;
+        }
         user.activeQuizQuestionId = null;
         user.activeQuizStartedAt = null;
         await user.save();
 
-        return res.json({ success:true, correct, correctIndex:Number(question.correct) });
+        return res.json({
+            success:true, correct, correctIndex:Number(question.correct), reward:amount,
+            wallet:Number(user.wallet||0), totalEarn:Number(user.totalEarn||0),
+            quizScore:Number(user.quizScore||0), dailyReward:Number(user.dailyReward||0),
+            spinReward:Number(user.spinReward||0), dailyQuestionsAnswered:Number(user.dailyQuestionsAnswered||0),
+            dailyQuestionsDate:user.dailyQuestionsDate||'', totalQuestionsAnswered:Number(user.totalQuestionsAnswered||0),
+            spinCycleQuestionsAnswered:Number(user.spinCycleQuestionsAnswered||0),
+            spinQuestionsRemaining:Math.max(0,100-Number(user.spinCycleQuestionsAnswered||0)),
+            canSpinAfterQuestions:Number(user.spinCycleQuestionsAnswered||0)>=100,
+            withdrawRequests:user.withdrawRequests||[]
+        });
     } catch(err) {
         console.error("Answer Check Error:",err);
         return res.status(500).json({ success:false, message:err.message });
     }
+});
+
+router.post("/tab-change", auth, async (req,res) => {
+    try {
+        const user=await User.findById(req.user.id);
+        if(!user) return res.status(404).json({success:false,message:"User not found"});
+        user.tabChanges=Number(user.tabChanges||0)+1;
+        user.quizInvalidated=true; user.activeQuizQuestionId=null; user.activeQuizStartedAt=null;
+        user.warningCount=Number(user.warningCount||0); user.blockCount=Number(user.blockCount||0);
+        const reason="Tab/window changed while a Quiz question was active";
+        user.warningHistory=Array.isArray(user.warningHistory)?user.warningHistory:[];
+        user.warningHistory.push({time:new Date(),reason});
+        if(user.warningHistory.length>200) user.warningHistory=user.warningHistory.slice(-200);
+        let warning=false, blocked=false, permanentBlocked=false;
+        if(user.warningCount<3){ user.warningCount+=1; warning=true; }
+        else{
+            user.blockCount+=1; user.wallet=0; user.isOnline=false;
+            if(user.blockCount>=4){ user.permanentBlocked=true; user.isBlocked=true; user.blockUntil=null; user.blockReason="Permanent block after 4 anti-cheating blocks"; blocked=true; permanentBlocked=true; }
+            else{ user.isBlocked=true; user.blockUntil=new Date(Date.now()+12*60*60*1000); user.blockReason=`Temporary block #${user.blockCount}: ${reason}`; blocked=true; }
+        }
+        await user.save();
+        return res.json({success:true,warning,blocked,permanentBlocked,warningCount:Number(user.warningCount||0),blockCount:Number(user.blockCount||0),wallet:Number(user.wallet||0),remainingMs:user.permanentBlocked?null:(user.blockUntil?Math.max(0,new Date(user.blockUntil).getTime()-Date.now()):0),message:permanentBlocked?'Permanent block — Admin unblock required':blocked?`Temporary block #${user.blockCount}`:warning?`Warning ${user.warningCount}/3`:'Security event recorded'});
+    }catch(e){return res.status(500).json({success:false,message:e.message});}
 });
 
 router.post("/abandon", auth, async (req,res) => {
@@ -114,11 +178,9 @@ router.get("/random", auth, async (req, res) => {
         let questions = await Question.aggregate([
             { $match: { q: { $type: "string" }, options: { $type: "array" } } },
             { $sample: { size: count } },
-            { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
+            { $project: { q: 1, options: 1, _id: 0 } }
         ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
-            q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
-            Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
+        questions = questions.filter(q => q.q && Array.isArray(q.options) && q.options.length >= 2);
         if (!questions.length && seedQuestions.length) {
             const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
                 Array.isArray(q.options) && q.options.length >= 2 &&
@@ -129,7 +191,7 @@ router.get("/random", auth, async (req, res) => {
                 [valid[i], valid[j]] = [valid[j], valid[i]];
             }
             questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
+                q: String(q.q).trim(), options: q.options.map(String)
             }));
         }
         return res.json({ success: true, totalQuestions: questions.length, questions });
@@ -145,7 +207,7 @@ router.get("/", auth, async (req, res) => {
         await ensureQuestionsSeeded();
 
         const questions = await Question.find()
-            .select("q options correct")
+            .select("q options")
             .lean();
 
         return res.json({

@@ -81,16 +81,9 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
-        // Active English Learning & Earning question per activity.
-        activeActivityQuestions: {
-            type: Map,
-            of: Number,
-            default: {}
-        },
-        activeActivityStartedAt: {
-            type: Map,
-            of: Date,
-            default: {}
+        quizInvalidated: {
+            type: Boolean,
+            default: false
         },
 
         isOnline: {

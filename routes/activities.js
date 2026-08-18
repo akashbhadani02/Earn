@@ -1593,12 +1593,12 @@ function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolka
 function normalize(s){return String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
 function fieldName(type){return `activity_${type}`;}
 function publicQuestion(type,q){
-  if(type==='arrange') return {prompt:q[0],answer:q[1]};
-  if(type==='correction'||type==='translate') return {prompt:q[0],answer:q[1]};
-  if(type==='word') return {prompt:q[0],answer:q[1]};
-  if(type==='fill') return {prompt:q[0],options:q[1],answer:q[2]};
-  if(type==='listening') return {prompt:q,answer:q};
-  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2],answer:q[3]};
+  if(type==='arrange') return {prompt:q[0]};
+  if(type==='correction'||type==='translate') return {prompt:q[0]};
+  if(type==='word') return {prompt:q[0]};
+  if(type==='fill') return {prompt:q[0],options:q[1]};
+  if(type==='listening') return {prompt:q};
+  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
   return {prompt:q};
 }
 
@@ -1623,21 +1623,13 @@ function pickRandomQuestions(type, activity, user) {
 router.get('/:type', auth, async (req,res)=>{
   const type=req.params.type; const activity=ACTIVITIES[type];
   if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const user=await User.findById(req.user.id).select('activityLastQuestion activeActivityQuestions activeActivityStartedAt');
-  let items=pickRandomQuestions(type,activity,user);
-  const activeId=mapGet(user?.activeActivityQuestions,type);
-  let active=Number.isInteger(activeId) ? items.find(x=>Number(x.id)===activeId) : null;
-  if(!active){
-    const pool=activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
-    active=pool[Math.floor(Math.random()*pool.length)];
-    mapSet(user.activeActivityQuestions,type,Number(active.id));
-    mapSet(user.activeActivityStartedAt,type,new Date());
-    user.markModified('activeActivityQuestions');
-    user.markModified('activeActivityStartedAt');
+  const user=await User.findById(req.user.id).select('activityLastQuestion activityInvalidated');
+  if(!user) return res.status(404).json({success:false,message:'User not found'});
+  const items=pickRandomQuestions(type,activity,user);
+  // Only an explicit fresh start from the Activities menu clears a prior tab-change invalidation.
+  if(String(req.query.resetSecurity || '') === '1'){
+    mapSet(user.activityInvalidated,type,false);
     await user.save();
-    items=[active,...items.filter(x=>Number(x.id)!==Number(active.id))];
-  } else {
-    items=[active,...items.filter(x=>Number(x.id)!==Number(active.id))];
   }
   res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
 });
@@ -1649,14 +1641,39 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     const user=await User.findById(req.user.id);
     if(!user) return res.status(404).json({success:false,message:'User not found'});
     user.tabChanges=Number(user.tabChanges||0)+1;
-    const current=mapGet(user.activityTabChanges,type);
-    mapSet(user.activityTabChanges,type,current+1);
-    mapSet(user.activeActivityQuestions,type,-1);
-    mapSet(user.activeActivityStartedAt,type,null);
-    user.markModified('activeActivityQuestions');
-    user.markModified('activeActivityStartedAt');
+    mapSet(user.activityTabChanges,type,mapGet(user.activityTabChanges,type)+1);
+    mapSet(user.activityInvalidated,type,true);
+
+    // Tab/window change is a confirmed anti-cheating violation. First 3 are
+    // warnings; blocks 1-3 have a 12h timer; block 4 is permanent.
+    const reason='Tab/window changed while an English Learning & Earning question was active';
+    user.warningCount=Number(user.warningCount||0);
+    user.blockCount=Number(user.blockCount||0);
+    user.warningHistory=Array.isArray(user.warningHistory)?user.warningHistory:[];
+    user.warningHistory.push({time:new Date(),reason});
+    if(user.warningHistory.length>200) user.warningHistory=user.warningHistory.slice(-200);
+
+    let result={warning:false,blocked:false,permanentBlocked:false};
+    if(user.warningCount<3){
+      user.warningCount+=1;
+      result.warning=true;
+    }else{
+      user.blockCount+=1;
+      user.wallet=0;
+      user.isOnline=false;
+      if(user.blockCount>=4){
+        user.permanentBlocked=true; user.isBlocked=true; user.blockUntil=null;
+        user.blockReason='Permanent block after 4 anti-cheating blocks';
+        result.blocked=true; result.permanentBlocked=true;
+      }else{
+        user.isBlocked=true;
+        user.blockUntil=new Date(Date.now()+12*60*60*1000);
+        user.blockReason=`Temporary block #${user.blockCount}: ${reason}`;
+        result.blocked=true;
+      }
+    }
     await user.save();
-    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1,questionInvalidated:true,wallet:Number(user.wallet||0)});
+    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:mapGet(user.activityTabChanges,type),warningCount:Number(user.warningCount||0),blockCount:Number(user.blockCount||0),wallet:Number(user.wallet||0),...result,remainingMs:user.permanentBlocked?null:(user.blockUntil?Math.max(0,new Date(user.blockUntil).getTime()-Date.now()):0),message:result.permanentBlocked?'Permanent block — Admin unblock required':result.blocked?`Temporary block #${user.blockCount}`:result.warning?`Warning ${user.warningCount}/3`:'Security event recorded'});
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
 });
 
@@ -1665,16 +1682,15 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const type=req.params.type; const activity=ACTIVITIES[type];
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
-    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
-    const activeId=mapGet(user.activeActivityQuestions,type);
-    if(!Number.isInteger(activeId) || activeId < 0 || activeId !== index){
-      return res.status(409).json({success:false,message:'This question is no longer active. Tab change detected; no wallet reward was added.',wallet:Number(user.wallet||0),tabChanged:true});
-    }
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
     else correct=normalize(answer)===normalize(expected);
+    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
+    if(mapGet(user.activityInvalidated,type)) {
+      return res.status(409).json({success:false,securityViolation:true,message:'This question was invalidated because the tab/window was changed. Wallet was not updated.',wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0)});
+    }
     const today=todayKey();
     if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
     if(!user.activityCounts) user.activityCounts={};
@@ -1697,11 +1713,6 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
-    // Consume the active question so the same question cannot be submitted twice.
-    mapSet(user.activeActivityQuestions,type,-1);
-    mapSet(user.activeActivityStartedAt,type,null);
-    user.markModified('activeActivityQuestions');
-    user.markModified('activeActivityStartedAt');
     await user.save();
     res.json({
       success:true,

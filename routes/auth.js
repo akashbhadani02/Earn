@@ -107,36 +107,42 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // First 3 anti-cheating blocks are timed. From the 4th block onward
-        // there is NO timer; only an admin can unblock the student.
+        // Permanent block has no timer and can only be cleared by Admin.
+        if (user.permanentBlocked) {
+            return res.status(403).json({
+                success:false, blocked:true, permanentBlocked:true,
+                message:"Your account is permanently blocked. Only Admin can unblock it.",
+                reason:user.blockReason || "Permanent anti-cheating block",
+                remainingMs:null
+            });
+        }
+
+        // Temporary 12-hour block. Admin and Student use the SAME expiry.
         if (user.isBlocked) {
-            if (user.permanentBlocked || Number(user.blockCount || 0) >= 4) {
-                return res.status(403).json({
-                    success: false, blocked: true, permanent: true,
-                    message: "Your account is permanently blocked. Only an admin can unblock it.",
-                    reason: user.blockReason || "Security violation"
-                });
-            }
             const now = Date.now();
             const blockTime = getBlockRemainingMs(user, now);
+
             if (blockTime.remainingMs <= 0) {
                 user.isBlocked = false;
                 user.blockUntil = null;
                 user.blockReason = "";
-                user.warningCount = 0;
+                // Keep warning/block history across temporary block expiry.
                 await user.save();
             } else {
+                // Persist the fallback expiry for legacy records so every
+                // future Admin/Student request sees exactly the same end time.
                 if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
                     user.blockUntil = new Date(blockTime.untilMs);
                     await user.save();
                 }
+
                 return res.status(403).json({
-                    success: false, blocked: true, timedBlock: true,
-                    message: "Your account is temporarily blocked.",
+                    success: false,
+                    blocked: true,
+                    message: "Your account is blocked for 12 hours.",
                     reason: user.blockReason,
                     blockUntil: new Date(blockTime.untilMs).toISOString(),
-                    remainingMs: blockTime.remainingMs,
-                    blockCount: Number(user.blockCount || 0)
+                    remainingMs: blockTime.remainingMs
                 });
             }
         }
@@ -216,7 +222,7 @@ const verifyPresenceToken = async (req) => {
     if (!token) throw new Error("No token provided");
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked permanentBlocked blockUntil");
+    const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked");
     if (!user || user.isDeleted || user.isBlocked) throw new Error("Account is not available");
 
     if (Number(decoded.sessionVersion ?? 0) !== Number(user.sessionVersion || 0)) {
@@ -287,106 +293,103 @@ router.post("/offline", async (req, res) => {
 const auth = require("../middleware/auth");
 
 router.post("/block-me", auth, async (req, res) => {
-
     try {
-
-        const { reason } = req.body;
-
+        const reason = String(req.body?.reason || "Cheating Detected").slice(0, 500);
         const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success:false, message:"User not found" });
 
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
-
-        // Already blocked
-        if (user.isBlocked) {
-            const now = Date.now();
-            const blockTime = getBlockRemainingMs(user, now);
-
-            if (blockTime.remainingMs <= 0) {
-                user.isBlocked = false;
-                user.blockUntil = null;
-                user.blockReason = "";
-                user.warningCount = 0;
-                await user.save();
-                return res.json({ success: true, blocked: false, warning: false, warningCount: 0, message: "Block expired" });
-            }
-
-            if (!user.blockUntil || Number.isNaN(new Date(user.blockUntil).getTime())) {
-                user.blockUntil = new Date(blockTime.untilMs);
-                await user.save();
-            }
-
-            return res.json({
-                success: true,
-                blocked: true,
-                warning: false,
-                warningCount: user.warningCount || 0,
-                message: "Account is already blocked",
-                blockUntil: new Date(blockTime.untilMs).toISOString(),
-                remainingMs: blockTime.remainingMs
-            });
-        }
-
-        // Every confirmed tab/security violation is a block event.
-        // Blocks 1-3: 12-hour timer. Block 4+: permanent; admin only.
-        user.blockCount = Number(user.blockCount || 0) + 1;
-        user.warningCount = Number(user.warningCount || 0) + 1;
-        user.blockReason = reason || "Cheating Detected";
-        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
-        user.warningHistory.push({ time: new Date(), reason: user.blockReason });
-        if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
-
-        // Any security block immediately removes the student's spendable wallet.
-        user.wallet = 0;
-        user.activeQuizQuestionId = null;
-        user.activeQuizStartedAt = null;
-        if (user.activeActivityQuestions) user.activeActivityQuestions = new Map();
-        if (user.activeActivityStartedAt) user.activeActivityStartedAt = new Map();
-        user.isOnline = false;
-
-        if (user.blockCount <= 3) {
+        // Permanent block: only Admin can clear it.
+        if (user.permanentBlocked) {
             user.isBlocked = true;
-            user.permanentBlocked = false;
-            user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
+            user.blockUntil = null;
+            user.wallet = 0;
             await user.save();
             return res.json({
-                success: true, blocked: true, timedBlock: true, permanent: false,
-                warning: false, warningCount: user.warningCount,
-                blockCount: user.blockCount,
-                message: `Security block ${user.blockCount}/3. Timer started.`,
-                blockUntil: user.blockUntil.toISOString(),
-                remainingMs: 12 * 60 * 60 * 1000, wallet: 0
+                success:true, blocked:true, permanentBlocked:true,
+                warning:false, warningCount:Number(user.warningCount||0),
+                blockCount:Number(user.blockCount||0), remainingMs:null,
+                message:"Account permanently blocked. Only Admin can unblock this account."
+            });
+        }
+
+        // A temporary block is already active. Do not count the same event again.
+        if (user.isBlocked) {
+            const blockTime = getBlockRemainingMs(user, Date.now());
+            if (blockTime.remainingMs > 0) {
+                user.wallet = 0;
+                await user.save();
+                return res.json({
+                    success:true, blocked:true, permanentBlocked:false,
+                    warning:false, warningCount:Number(user.warningCount||0),
+                    blockCount:Number(user.blockCount||0),
+                    blockUntil:new Date(blockTime.untilMs).toISOString(),
+                    remainingMs:blockTime.remainingMs,
+                    message:"Account is already temporarily blocked"
+                });
+            }
+            // Timer expired: unlock automatically, but keep history.
+            user.isBlocked = false;
+            user.blockUntil = null;
+            user.blockReason = "";
+        }
+
+        // The first 3 violations are warnings. Wallet is untouched for warnings.
+        // Violation #4 starts temporary block #1.
+        user.warningCount = Number(user.warningCount || 0);
+        user.blockCount = Number(user.blockCount || 0);
+        user.blockReason = reason;
+        user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
+        user.warningHistory.push({ time:new Date(), reason });
+        if (user.warningHistory.length > 200) user.warningHistory = user.warningHistory.slice(-200);
+
+        if (user.warningCount < 3) {
+            user.warningCount += 1;
+            await user.save();
+            return res.json({
+                success:true, blocked:false, warning:true,
+                warningCount:user.warningCount, remainingWarnings:3-user.warningCount,
+                blockCount:Number(user.blockCount||0), permanentBlocked:false,
+                message:`Warning ${user.warningCount}/3`
+            });
+        }
+
+        // From here on, every violation creates block #1, #2, #3, then #4 permanent.
+        user.blockCount += 1;
+        user.wallet = 0;
+        user.isOnline = false;
+
+        if (user.blockCount >= 4) {
+            user.permanentBlocked = true;
+            user.isBlocked = true;
+            user.blockUntil = null;
+            user.blockReason = `Permanent block after ${user.blockCount} anti-cheating blocks`;
+            await user.save();
+            return res.json({
+                success:true, blocked:true, permanentBlocked:true,
+                warning:false, warningCount:Number(user.warningCount||0),
+                blockCount:user.blockCount, remainingMs:null,
+                message:"Permanent block. Only Admin can unblock this account."
             });
         }
 
         user.isBlocked = true;
-        user.permanentBlocked = true;
-        user.blockUntil = null;
+        user.blockUntil = new Date(Date.now() + 12 * 60 * 60 * 1000);
+        user.blockReason = `Temporary block #${user.blockCount}: ${reason}`;
         await user.save();
 
         return res.json({
-            success: true, blocked: true, timedBlock: false, permanent: true,
-            warning: false, warningCount: user.warningCount, blockCount: user.blockCount,
-            message: "Permanent block. Only admin can unblock this student.",
-            wallet: 0
+            success:true, blocked:true, permanentBlocked:false,
+            warning:false, warningCount:Number(user.warningCount||0),
+            blockCount:user.blockCount, blockNumber:user.blockCount,
+            blockUntil:user.blockUntil.toISOString(),
+            remainingMs:12*60*60*1000,
+            message:`Temporary block #${user.blockCount} for 12 hours`
         });
     } catch (err) {
-
         console.error("Warning/Block Error:", err);
-
-        return res.status(500).json({
-            success: false,
-            message: err.message
-        });
-
+        return res.status(500).json({ success:false, message:err.message });
     }
-
 });
-
 
 // ==========================
 // Security Event Tracking

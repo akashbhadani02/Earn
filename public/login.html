@@ -501,14 +501,15 @@ async function performLogin(mobile, password){
         const data = await res.json();
 
         if(data.blocked){
-            if(data.permanent){
-                const box = document.getElementById("blockedTimerBox");
-                if(box){ box.style.display="block"; box.innerHTML="🚫 <b>Permanent Block</b><br><small>Only admin can unblock this account.</small>"; }
+            if(data.permanentBlocked){
                 document.getElementById("message").innerHTML =
-                    "🚫 Account permanently blocked.<br>Only admin can unblock this account.";
-            }else{
+                    "🚫 <b>Account Permanently Blocked</b><br>Only Admin can unblock this account.";
+                const timerBox=document.getElementById("blockedTimerBox");
+                if(timerBox){ timerBox.style.display="block"; timerBox.innerHTML="🚫 Permanent Block<br><small>Admin unblock required</small>"; }
+            } else {
                 document.getElementById("message").innerHTML =
-                    "🚫 Account blocked.<br>Block is active. નીચે actual remaining time દેખાશે.";
+                    "🚫 Account blocked.<br>" +
+                    "Block is active. નીચે actual remaining time દેખાશે.";
                 startBlockedCountdown(data.remainingMs);
             }
             if(loginButton){

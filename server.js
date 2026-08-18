@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const publicQuestionBank = require("./questions.json");
 
 const connectDB = require("./db");
 
@@ -34,7 +35,9 @@ app.use("/api/activities", activityRoutes);
 // Public fallback for the bundled quiz question bank.
 app.get("/question-bank.json", (req, res) => {
     res.set("Cache-Control", "no-store");
-    res.sendFile(path.join(__dirname, "questions.json"));
+    // Never expose correct answers to the student browser.
+    const questions = publicQuestionBank.map(q => ({ q:String(q.q||""), options:Array.isArray(q.options)?q.options.map(String):[] }));
+    res.json(questions);
 });
 
 app.use(express.static(path.join(__dirname, "public")));
