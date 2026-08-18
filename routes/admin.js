@@ -186,9 +186,48 @@ function todayKey() {
 // Online / Offline Status
 // ===========================
 
+// ===========================
+// LIVE STUDENT PRESENCE (lightweight)
+// ===========================
+// This endpoint is intentionally separate from /users so the admin can poll
+// presence every second without repeatedly loading all wallet/activity data.
+router.get("/presence", adminAuth, async (req, res) => {
+    try {
+        res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        res.set("Pragma", "no-cache");
+        res.set("Expires", "0");
+
+        const ONLINE_TIMEOUT = 3000;
+        const now = Date.now();
+        const users = await User.find({ isDeleted: { $ne: true } })
+            .select("name lastSeen isBlocked")
+            .lean();
+
+        const presence = users.map(u => {
+            const lastSeenMs = u.lastSeen ? new Date(u.lastSeen).getTime() : 0;
+            const isOnline = lastSeenMs > 0 && (now - lastSeenMs) <= ONLINE_TIMEOUT;
+            return {
+                id: String(u._id),
+                name: u.name || "Unknown",
+                lastSeen: u.lastSeen || null,
+                isBlocked: !!u.isBlocked,
+                isOnline
+            };
+        });
+
+        return res.json({ success: true, serverTime: now, onlineTimeout: ONLINE_TIMEOUT, users: presence });
+    } catch (err) {
+        console.error("Admin presence error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 router.get("/users", adminAuth, async (req, res) => {
 
     try {
+        res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        res.set("Pragma", "no-cache");
+        res.set("Expires", "0");
 
         const users = await User.find({ isDeleted: { $ne: true } }).select("-password");
 

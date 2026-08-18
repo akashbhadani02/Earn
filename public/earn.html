@@ -1781,12 +1781,13 @@ body.notification-locked #notificationRequiredOverlay button{
         // ===============================
         // STUDENT ONLINE PRESENCE
         // Active tab = Online. Hidden tab = Offline.
-        // Heartbeat every 1 second; server timeout = 3 seconds.
+        // Heartbeat about every 0.9 second; server timeout = 3 seconds.
         // ===============================
 
         let presenceTimer = null;
         let presenceInFlight = false;
         let presenceAbort = null;
+        let lastHeartbeatAt = 0;
         // sessionStorage gives every browser tab its own stable presence id.
         const presenceId = sessionStorage.getItem("presenceTabId") || (
             (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + "-" + Math.random()))
@@ -1801,7 +1802,7 @@ body.notification-locked #notificationRequiredOverlay button{
             // Allow normal Mongo/network/serverless latency. Keep the request alive
             // long enough so normal Vercel/Render cold starts do not cause
             // false Offline states.
-            const timeout = setTimeout(() => presenceAbort.abort(), 5000);
+            const timeout = setTimeout(() => presenceAbort.abort(), 2500);
 
             try {
                 const res = await fetch("/api/auth/heartbeat", {
@@ -1810,6 +1811,10 @@ body.notification-locked #notificationRequiredOverlay button{
                     cache: "no-store",
                     signal: presenceAbort.signal
                 });
+
+                if (res.ok) {
+                    lastHeartbeatAt = Date.now();
+                }
 
                 if (res.status === 401) {
                     const data = await res.json().catch(() => ({}));
@@ -1856,7 +1861,7 @@ body.notification-locked #notificationRequiredOverlay button{
             if (!token || document.hidden) return;
             stopPresence();
             sendPresenceHeartbeat();
-            presenceTimer = setInterval(sendPresenceHeartbeat, 1000);
+            presenceTimer = setInterval(sendPresenceHeartbeat, 900);
         }
 
         document.addEventListener("visibilitychange", () => {
@@ -1871,8 +1876,10 @@ body.notification-locked #notificationRequiredOverlay button{
         });
 
         window.addEventListener("pagehide", () => {
+            // Do not mark offline immediately. The admin/server decides Offline
+            // only after 3 seconds without a heartbeat. This prevents a real
+            // active student from being shown Offline during tab/page changes.
             stopPresence();
-            markPresenceOffline();
         });
 
         // Initial state
