@@ -423,7 +423,7 @@ async function registerAdminPushSubscription(token){
     const keyData = await keyResponse.json();
 
     if (!keyResponse.ok || !keyData.success || !keyData.publicKey) {
-        throw new Error(keyData.message || "Push notification server configuration missing. Vercel Environment Variables check કરો.");
+        throw new Error(keyData.message || "Push notification server configuration missing.");
     }
 
     let subscription = await registration.pushManager.getSubscription();
@@ -535,8 +535,7 @@ async function performLogin(mobile, password){
     }catch(error){
         console.error(error);
         document.getElementById("message").innerHTML =
-            "❌ " + (error.message || "Login/notification setup failed.") +
-            "<br><small>Admin → Student notifications માટે Vercelમાં VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY અને VAPID_SUBJECT set હોવા જરૂરી છે.</small>";
+            "❌ " + (error.message || "Login/notification setup failed.");
         if(loginButton){
             loginButton.disabled = false;
             loginButton.innerText = "Login";

@@ -918,6 +918,7 @@
   line-height: 1.2 !important;
   text-transform: uppercase;
 }
+/* <style id="activity-stats-color-fix"> */
 /* English Learning & Earning popup - stronger, clear colors */
 #closeActivityStats{
   border:0 !important;
@@ -1819,8 +1820,7 @@ style="background:#16a34a;">
                         "Devices reached: " + (data.devicesSent || 0)
                     );
                 } else {
-                    alert("❌ " + (data.message || "Notification failed") +
-                        "\n\nStudent side પર Notifications → Allow અને Push subscription enabled હોવી જરૂરી છે.");
+                    alert("❌ " + (data.message || "Notification failed"));
                 }
             } catch (err) {
                 console.error("Notification Error:", err);

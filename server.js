@@ -17,23 +17,10 @@ const activityRoutes = require("./routes/activities");
 const app = express();
 app.disable("x-powered-by");
 
+connectDB().catch((err) => console.error("❌ MongoDB connection error:", err.message));
+
 app.use(cors());
 app.use(express.json());
-
-// Vercel/serverless-safe DB connection: connect only when an API request needs it.
-// This prevents an unhandled MongoDB connection rejection during cold starts.
-app.use("/api", async (req, res, next) => {
-    try {
-        await connectDB();
-        next();
-    } catch (err) {
-        console.error("❌ MongoDB connection failed:", err.message);
-        return res.status(503).json({
-            success: false,
-            message: "Database connection failed. Check MONGODB_URI in Vercel Environment Variables."
-        });
-    }
-});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);
