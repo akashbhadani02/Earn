@@ -863,6 +863,30 @@
 @media(max-width:600px){.admin-main-menu{gap:6px}admin-main-menu button{padding:9px 11px!important;font-size:13px}}
 </style>
 
+<style id="all-users-presence-fix">
+/* All Users presence is authoritative and visually cannot be overridden by zebra/hover CSS. */
+#userTable tr.student-online-row,
+#userTable tr.student-online-row:hover,
+#userTable tr.student-online-row:nth-child(even) {
+  background: #f0fdf4 !important;
+}
+#userTable tr.student-offline-row,
+#userTable tr.student-offline-row:hover,
+#userTable tr.student-offline-row:nth-child(even) {
+  background: #fef2f2 !important;
+}
+#userTable .student-name-presence.student-online {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border-color: #86efac !important;
+}
+#userTable .student-name-presence.student-offline {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+  border-color: #fca5a5 !important;
+}
+</style>
+
 <style id="live-status-colors">
 .live-status,
 .status-badge,
@@ -1542,7 +1566,7 @@
         //==========================
         // last seen format
         //==========================
-        function formatLastSeen(lastSeen, isOnline) {
+        function formatLastSeen(lastSeen) {
 
             if (!lastSeen) {
                 return "<span style='color:#dc2626;font-weight:bold;'>🔴 Never</span>";
@@ -1550,7 +1574,7 @@
 
             const diff = Date.now() - new Date(lastSeen).getTime();
 
-            if (isOnline === true && diff <= 3000) {
+            if (diff <= 3000) {
                 return "<span style='color:#16a34a;font-weight:bold;'>🟢 Online</span>";
             }
 
@@ -1585,24 +1609,30 @@
 
             users.forEach(user => {
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
-                const isOnline = user.isOnline === true && lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
+                // Server calculates presence from lastSeen. Never trust a stale isOnline flag.
+                const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 3000;
+                const rowBg = isOnline ? '#f0fdf4' : '#fef2f2';
+                const nameBg = isOnline ? '#dcfce7' : '#fee2e2';
+                const nameColor = isOnline ? '#166534' : '#991b1b';
+                const dotColor = isOnline ? '#22c55e' : '#ef4444';
+                const dotRing = isOnline ? '#bbf7d0' : '#fecaca';
 
                 html += `
 
-<tr style="background:${isOnline ? '#f0fdf4' : '#fef2f2'}; transition:background .25s ease;">
+<tr class="student-presence-row ${isOnline ? 'student-online-row' : 'student-offline-row'}" data-user-id="${user._id}" style="background:${rowBg} !important; transition:background .25s ease;">
     <td>
-        <span style="display:inline-flex;align-items:center;gap:8px;font-weight:800;padding:7px 11px;border-radius:10px;
-            background:${isOnline ? '#dcfce7' : '#fee2e2'};
-            color:${isOnline ? '#166534' : '#991b1b'};
-            border:1px solid ${isOnline ? '#86efac' : '#fca5a5'};
+        <span class="student-name-presence ${isOnline ? 'student-online' : 'student-offline'}" style="display:inline-flex !important;align-items:center;gap:8px;font-weight:800;padding:7px 11px;border-radius:10px;
+            background:${nameBg} !important;
+            color:${nameColor} !important;
+            border:1px solid ${isOnline ? '#86efac' : '#fca5a5'} !important;
             transition:all .25s ease;">
-            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${isOnline ? '#22c55e' : '#ef4444'};box-shadow:0 0 0 3px ${isOnline ? '#bbf7d0' : '#fecaca'};"></span>
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${dotColor} !important;box-shadow:0 0 0 3px ${dotRing};"></span>
             ${user.name}
         </span>
     </td>
     <td>${user.mobile}</td>
 
-    <td>${formatLastSeen(user.lastSeen, isOnline)}</td>
+    <td>${formatLastSeen(user.lastSeen)}</td>
 
     <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
 
@@ -2754,7 +2784,13 @@ ${w.status === "Approved" ? `
                 adminRefreshBusy = false;
             }
         }
+        // Run immediately, then every second. This keeps the admin view in sync
+        // with the students that are actually sending heartbeats right now.
+        runAdminPresenceRefresh();
         adminRefreshTimer = setInterval(runAdminPresenceRefresh, 1000);
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) runAdminPresenceRefresh();
+        });
 
         async function deleteAllQuestions() {
 
@@ -3207,7 +3243,7 @@ ${w.status === "Approved" ? `
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
                 const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
-                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><span class="ap2-student-name" style="display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border-radius:9px;font-weight:800;background:${(u.isOnline === true && u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000) ? '#dcfce7' : '#fee2e2'};color:${(u.isOnline === true && u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000) ? '#166534' : '#991b1b'};border:1px solid ${(u.isOnline === true && u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000) ? '#86efac' : '#fca5a5'};"><span style="width:9px;height:9px;border-radius:50%;background:${(u.isOnline === true && u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000) ? '#22c55e' : '#ef4444'};"></span>${esc(name(u))}</span><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.isOnline === true && u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.isOnline === true || (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 3000)) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
             window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
             window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
