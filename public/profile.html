@@ -432,7 +432,7 @@
 
 
         /* =========================
-           LOGOUT BUTTON
+           BACK BUTTON
         ========================= */
 
         button {
@@ -791,11 +791,11 @@
         </div>
 
 
-        <!-- LOGOUT -->
+        <!-- BACK -->
 
-        <button onclick="logout()">
+        <button type="button" onclick="goBack()">
 
-            Logout
+            ← Back
 
         </button>
 
@@ -1001,17 +1001,20 @@
 
 
         // =========================
-        // LOGOUT
+        // BACK
         // =========================
 
-        function logout() {
+        function goBack() {
 
-            localStorage.removeItem(
-                "token"
-            );
+            if (document.referrer) {
 
-            location.href =
-                "login.html";
+                history.back();
+
+            } else {
+
+                location.href = "earn.html";
+
+            }
 
         }
 
