@@ -1322,21 +1322,21 @@ body.notification-locked #notificationRequiredOverlay button{
             •
         </a>
     </span>
-    <div class="tc-note">
-        <strong>Note:</strong>
-        This app is only for educational purposes. All rights reserved to the respective owners.
+    
+    <!-- Kept in the DOM so existing notification functionality continues to work. -->
+    <div id="studentNotificationCard" class="notification-card-hidden">
+        <div id="studentNotificationText">Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો.</div>
+        <button id="studentEnableNotificationBtn" type="button" onclick="enableStudentNotifications()">🔔 Enable App Notifications</button>
     </div>
+    
+    <!-- Existing admin/profile functionality is now available from the top-right icons. -->
+    <button class="btn btn-Admin legacy-admin-btn" onclick="location.href='admin.html'">👤 Admin</button>
+</div>
+<div class="tc-note">
+    <strong>Note:</strong>
+    This app is only for educational purposes. All rights reserved to the respective owners.
+</div>
 
-        </div>
-
-        <!-- Kept in the DOM so existing notification functionality continues to work. -->
-        <div id="studentNotificationCard" class="notification-card-hidden">
-            <div id="studentNotificationText">Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો.</div>
-            <button id="studentEnableNotificationBtn" type="button" onclick="enableStudentNotifications()">🔔 Enable App Notifications</button>
-        </div>
-
-        <!-- Existing admin/profile functionality is now available from the top-right icons. -->
-        <button class="btn btn-Admin legacy-admin-btn" onclick="location.href='admin.html'">👤 Admin</button>
     </div>
 
 
