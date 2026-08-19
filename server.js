@@ -17,10 +17,23 @@ const activityRoutes = require("./routes/activities");
 const app = express();
 app.disable("x-powered-by");
 
-connectDB().catch((err) => console.error("❌ MongoDB connection error:", err.message));
-
 app.use(cors());
 app.use(express.json());
+
+// Always wait for MongoDB before any API route runs.
+// This prevents Mongoose "users.findOne() buffering timed out" errors.
+app.use("/api", async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error("❌ MongoDB unavailable:", err.message);
+        return res.status(503).json({
+            success: false,
+            message: "Database connection failed. Please try again."
+        });
+    }
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/wallet", walletRoutes);

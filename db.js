@@ -1,20 +1,36 @@
 const mongoose = require("mongoose");
 
-let cached = global.__mongooseCache;
-if (!cached) {
-    cached = global.__mongooseCache = { conn: null, promise: null };
-}
+// Reuse the MongoDB connection in Vercel/serverless environments.
+const cached = global.__mongooseCache || (global.__mongooseCache = {
+    conn: null,
+    promise: null
+});
 
 async function connectDB() {
-    if (!process.env.MONGODB_URI) {
-        throw new Error("MONGODB_URI is not configured in Vercel Environment Variables");
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+
+    if (!mongoUri) {
+        throw new Error("MONGODB_URI or MONGO_URI is not configured in Environment Variables");
     }
 
-    if (cached.conn) return cached.conn;
+    // A cached connection is usable only while mongoose is actually connected.
+    if (cached.conn && mongoose.connection.readyState === 1) {
+        return cached.conn;
+    }
+
+    if (mongoose.connection.readyState === 0) {
+        cached.conn = null;
+        cached.promise = null;
+    }
 
     if (!cached.promise) {
-        cached.promise = mongoose.connect(process.env.MONGODB_URI, {
+        cached.promise = mongoose.connect(mongoUri, {
             serverSelectionTimeoutMS: 10000,
+            connectTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
+            maxPoolSize: 10,
+            minPoolSize: 0,
+            bufferCommands: false
         });
     }
 
@@ -23,8 +39,9 @@ async function connectDB() {
         console.log("✅ MongoDB Connected");
         return cached.conn;
     } catch (err) {
+        cached.conn = null;
         cached.promise = null;
-        console.error("❌ MongoDB Error:", err.message);
+        console.error("❌ MongoDB Connection Error:", err.message);
         throw err;
     }
 }
