@@ -2567,36 +2567,33 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             await loadDashboard();
         }
 
-        async function permanentlyDeleteUser(id) {
+        async function makePermanentUser(id) {
             if (!confirm(
-                "Permanently delete this USER?\\n\\n" +
-                "This user will be removed from the Recycle Bin and cannot be restored.\\n" +
-                "This action cannot be undone."
+                "Make this deleted user a Permanent User?\n\n" +
+                "The user will be restored and protected from future deletion."
             )) return;
 
             try {
-                const res = await fetch("/api/admin/permanent-delete-user/" + encodeURIComponent(id), {
-                    method: "DELETE",
+                const res = await fetch("/api/admin/permanent-user/" + id, {
+                    method: "PUT",
                     headers: { Authorization: "Bearer " + token }
                 });
-
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    alert(data.message || "Permanent user deletion failed");
+                    alert(data.message || "Permanent user action failed");
                     return;
                 }
 
-                alert("🗑️ User permanently deleted.");
+                alert("✅ User restored and marked as Permanent User.");
                 await loadDeletedUsers();
                 await loadUsers();
                 await loadDashboard();
             } catch (err) {
-                console.error("Permanent Delete User Error:", err);
+                console.error("Permanent User Error:", err);
                 alert("❌ " + err.message);
             }
         }
-
 
         function escapeHtml(value) {
             return String(value ?? "")
@@ -2896,9 +2893,9 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                                     ♻️ Restore
                                 </button>
                                 <button
-                                    onclick="permanentlyDeleteUser('${user._id}')"
-                                    style="background:linear-gradient(135deg,#dc2626,#991b1b);">
-                                    🗑️ Delete Permanently
+                                    onclick="makePermanentUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                                    ⭐ Permanent User
                                 </button>
                             </td>
                         </tr>
@@ -4339,6 +4336,179 @@ window.ap2PermanentDelete = async id => {
   .admin-user-actions button{font-size:8px !important;min-height:28px !important}
 }
 </style>
+
+/* ==========================================================
+   CARD VIEW FOR ALL REMAINING TABLE DATA
+   Questions + withdrawals + deleted users + Command Center
+   ========================================================== */
+<style>
+/* Turn every admin data row into an individual card. */
+#adminSectionWithdrawals table,
+#adminSectionDeleted table,
+#adminSectionQuestions table,
+#questionRecycleBin table,
+.ap2-tablewrap .ap2-table{
+  width:100% !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+  display:block !important;
+  overflow:visible !important;
+}
+#adminSectionWithdrawals table thead,
+#adminSectionDeleted table thead,
+#adminSectionQuestions table thead,
+#questionRecycleBin table thead,
+.ap2-tablewrap .ap2-table thead{display:none !important}
+#adminSectionWithdrawals table tbody,
+#adminSectionDeleted table tbody,
+#adminSectionQuestions table tbody,
+#questionRecycleBin table tbody,
+.ap2-tablewrap .ap2-table tbody{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(230px,1fr)) !important;
+  gap:14px !important;
+  width:100% !important;
+}
+#adminSectionWithdrawals table tr,
+#adminSectionDeleted table tr,
+#adminSectionQuestions table tr,
+#questionRecycleBin table tr,
+.ap2-tablewrap .ap2-table tbody tr{
+  display:block !important;
+  min-width:0 !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:14px !important;
+  border:1px solid #dbe4ee !important;
+  border-radius:16px !important;
+  background:linear-gradient(145deg,#ffffff,#f8fafc) !important;
+  box-shadow:0 7px 20px rgba(15,23,42,.08) !important;
+  box-sizing:border-box !important;
+  transition:transform .15s ease,box-shadow .15s ease !important;
+}
+#adminSectionWithdrawals table tr:hover,
+#adminSectionDeleted table tr:hover,
+#adminSectionQuestions table tr:hover,
+#questionRecycleBin table tr:hover,
+.ap2-tablewrap .ap2-table tbody tr:hover{
+  transform:translateY(-2px) !important;
+  box-shadow:0 10px 24px rgba(15,23,42,.12) !important;
+}
+#adminSectionWithdrawals table td,
+#adminSectionDeleted table td,
+#adminSectionQuestions table td,
+#questionRecycleBin table td,
+.ap2-tablewrap .ap2-table tbody td{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:none !important;
+  box-sizing:border-box !important;
+  padding:7px 0 !important;
+  border:0 !important;
+  border-bottom:1px solid #e8eef5 !important;
+  text-align:left !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  color:#172033 !important;
+  background:transparent !important;
+  line-height:1.4 !important;
+}
+#adminSectionWithdrawals table td:last-child,
+#adminSectionDeleted table td:last-child,
+#adminSectionQuestions table td:last-child,
+#questionRecycleBin table td:last-child,
+.ap2-tablewrap .ap2-table tbody td:last-child{
+  border-bottom:0 !important;
+  padding-bottom:0 !important;
+}
+/* Field labels make cards easy to scan. */
+#adminSectionWithdrawals table td::before,
+#adminSectionDeleted table td::before,
+#adminSectionQuestions table td::before,
+#questionRecycleBin table td::before,
+.ap2-tablewrap .ap2-table tbody td::before{
+  display:block !important;
+  font-size:10px !important;
+  font-weight:800 !important;
+  color:#64748b !important;
+  text-transform:uppercase !important;
+  letter-spacing:.45px !important;
+  margin-bottom:3px !important;
+}
+#adminSectionWithdrawals table td:nth-child(1)::before{content:'Student';}
+#adminSectionWithdrawals table td:nth-child(2)::before{content:'Mobile';}
+#adminSectionWithdrawals table td:nth-child(3)::before{content:'Amount';}
+#adminSectionWithdrawals table td:nth-child(4)::before{content:'Payment Method';}
+#adminSectionWithdrawals table td:nth-child(5)::before{content:'Payment Details';}
+#adminSectionWithdrawals table td:nth-child(6)::before{content:'Status';}
+#adminSectionWithdrawals table td:nth-child(7)::before{content:'Transaction ID';}
+#adminSectionWithdrawals table td:nth-child(8)::before{content:'Requested Date';}
+#adminSectionWithdrawals table td:nth-child(9)::before{content:'Paid Date';}
+#adminSectionWithdrawals table td:nth-child(10)::before{content:'Actions';}
+#adminSectionDeleted table td:nth-child(1)::before{content:'Student Name';}
+#adminSectionDeleted table td:nth-child(2)::before{content:'Mobile';}
+#adminSectionDeleted table td:nth-child(3)::before{content:'Deleted Date';}
+#adminSectionDeleted table td:nth-child(4)::before{content:'Wallet';}
+#adminSectionDeleted table td:nth-child(5)::before{content:'Total Earn';}
+#adminSectionDeleted table td:nth-child(6)::before{content:'Actions';}
+#adminSectionQuestions table td:nth-child(1)::before{content:'Question #';}
+#adminSectionQuestions table td:nth-child(2)::before{content:'Question';}
+#adminSectionQuestions table td:nth-child(3)::before{content:'Options';}
+#adminSectionQuestions table td:nth-child(4)::before{content:'Correct Answer';}
+#adminSectionQuestions table td:nth-child(5)::before{content:'Actions';}
+#questionRecycleBin table td:nth-child(1)::before{content:'Question #';}
+#questionRecycleBin table td:nth-child(2)::before{content:'Question & Options';}
+#questionRecycleBin table td:nth-child(3)::before{content:'Deleted At';}
+#questionRecycleBin table td:nth-child(4)::before{content:'Actions';}
+/* Question cards get extra emphasis for the question and options. */
+#adminSectionQuestions table td:nth-child(2),
+#questionRecycleBin table td:nth-child(2){font-size:14px !important;font-weight:700 !important;color:#0f172a !important;}
+#adminSectionQuestions table td:nth-child(3) div,
+#questionRecycleBin table td:nth-child(2) div{padding:5px 8px !important;margin:4px 0 !important;border-radius:7px !important;background:#f1f5f9 !important;font-size:12px !important;font-weight:500 !important;}
+#adminSectionQuestions table td:nth-child(4){font-weight:800 !important;color:#166534 !important;}
+#adminSectionQuestions table td:last-child button,
+#questionRecycleBin table td:last-child button,
+#adminSectionWithdrawals table td:last-child button,
+#adminSectionDeleted table td:last-child button{margin:3px 4px 3px 0 !important;min-height:36px !important;border-radius:8px !important;}
+/* Command Center card rows. */
+.ap2-tablewrap .ap2-table tbody td:nth-child(1)::before{content:'Student';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(2)::before{content:'Status / Mobile';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(3)::before{content:'Questions / Type';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(4)::before{content:'Amount / Wallet';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(5)::before{content:'Earn / Reason';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(6)::before{content:'Warnings / Status';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(7)::before{content:'Spin / Last Seen';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(8)::before{content:'Actions / Risk';}
+.ap2-tablewrap .ap2-table tbody td:nth-child(9)::before{content:'Details';}
+.ap2-tablewrap .ap2-table tbody tr.ap2-presence-online{background:linear-gradient(145deg,#f0fdf4,#dcfce7) !important;border-left:5px solid #16a34a !important;}
+.ap2-tablewrap .ap2-table tbody tr.ap2-presence-offline{background:linear-gradient(145deg,#fff7f7,#fee2e2) !important;border-left:5px solid #dc2626 !important;}
+.ap2-tablewrap .ap2-table tbody td{background:transparent !important;}
+/* Special cards for empty/loading states should span the row. */
+#adminSectionWithdrawals table tbody tr:has(td[colspan]),
+#adminSectionDeleted table tbody tr:has(td[colspan]),
+#adminSectionQuestions table tbody tr:has(td[colspan]),
+#questionRecycleBin table tbody tr:has(td[colspan]),
+.ap2-tablewrap .ap2-table tbody tr:has(td[colspan]){grid-column:1/-1 !important;text-align:center !important;}
+@media (max-width:1100px){
+  #adminSectionWithdrawals table tbody,#adminSectionDeleted table tbody,#adminSectionQuestions table tbody,#questionRecycleBin table tbody,.ap2-tablewrap .ap2-table tbody{grid-template-columns:repeat(3,minmax(210px,1fr)) !important;}
+}
+@media (max-width:700px){
+  #adminSectionWithdrawals table tbody,#adminSectionDeleted table tbody,#adminSectionQuestions table tbody,#questionRecycleBin table tbody,.ap2-tablewrap .ap2-table tbody{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:8px !important;}
+  #adminSectionWithdrawals table tr,#adminSectionDeleted table tr,#adminSectionQuestions table tr,#questionRecycleBin table tr,.ap2-tablewrap .ap2-table tbody tr{padding:9px !important;border-radius:12px !important;}
+  #adminSectionWithdrawals table td,#adminSectionDeleted table td,#adminSectionQuestions table td,#questionRecycleBin table td,.ap2-tablewrap .ap2-table tbody td{font-size:11px !important;padding:5px 0 !important;line-height:1.3 !important;}
+  #adminSectionWithdrawals table td::before,#adminSectionDeleted table td::before,#adminSectionQuestions table td::before,#questionRecycleBin table td::before,.ap2-tablewrap .ap2-table tbody td::before{font-size:8px !important;margin-bottom:2px !important;}
+  #adminSectionQuestions table td:nth-child(2),#questionRecycleBin table td:nth-child(2){font-size:12px !important;}
+  #adminSectionQuestions table td:nth-child(3) div,#questionRecycleBin table td:nth-child(2) div{font-size:10px !important;padding:4px 5px !important;}
+  #adminSectionWithdrawals table td:last-child button,#adminSectionDeleted table td:last-child button,#adminSectionQuestions table td:last-child button,#questionRecycleBin table td:last-child button{min-height:29px !important;font-size:9px !important;padding:5px 6px !important;}
+}
+@media (max-width:390px){
+  #adminSectionWithdrawals table tbody,#adminSectionDeleted table tbody,#adminSectionQuestions table tbody,#questionRecycleBin table tbody,.ap2-tablewrap .ap2-table tbody{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:6px !important;}
+  #adminSectionWithdrawals table tr,#adminSectionDeleted table tr,#adminSectionQuestions table tr,#questionRecycleBin table tr,.ap2-tablewrap .ap2-table tbody tr{padding:7px !important;}
+  #adminSectionWithdrawals table td,#adminSectionDeleted table td,#adminSectionQuestions table td,#questionRecycleBin table td,.ap2-tablewrap .ap2-table tbody td{font-size:10px !important;}
+}
+</style>
+
 </body>
 
 </html>

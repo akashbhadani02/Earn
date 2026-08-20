@@ -545,39 +545,6 @@ router.put("/restore-user/:id", adminAuth, async (req, res) => {
 
 });
 
-// ===========================
-// Permanently Delete User from Recycle Bin
-// ===========================
-
-router.delete("/permanent-delete-user/:id", adminAuth, async (req, res) => {
-    try {
-        const user = await User.findOne({
-            _id: req.params.id,
-            isDeleted: true
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "Deleted user not found"
-            });
-        }
-
-        // Only a deleted USER can be permanently removed from the Recycle Bin.
-        await User.deleteOne({ _id: user._id, isDeleted: true });
-
-        return res.json({
-            success: true,
-            message: "User permanently deleted"
-        });
-    } catch (err) {
-        return res.status(500).json({
-            success: false,
-            message: err.message
-        });
-    }
-});
-
 router.get("/withdraws", adminAuth, async (req, res) => {
     try {
         const users = await User.find({ isDeleted: { $ne: true } }).select("-password");
