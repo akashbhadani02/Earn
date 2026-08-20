@@ -976,8 +976,11 @@
         <h2>Admin Dashboard</h2>
 
         <div style="display:flex;gap:8px;align-items:center;">
-            <button onclick="forceLogoutAllUsers()" style="background:#b91c1c;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
+            <button id="logoutAllUsersBtn" onclick="forceLogoutAllUsers()" style="background:#b91c1c;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 🚪 Logout All Users
+            </button>
+            <button onclick="sendNotificationToAll()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
+                🔔 Notify All Users
             </button>
             <button onclick="logout()" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 Logout
@@ -2112,6 +2115,34 @@ style="background:#16a34a;">
             await loadDashboard();
         }
 
+        async function makePermanentUser(id) {
+            if (!confirm(
+                "Make this deleted user a Permanent User?\n\n" +
+                "The user will be restored and protected from future deletion."
+            )) return;
+
+            try {
+                const res = await fetch("/api/admin/permanent-user/" + id, {
+                    method: "PUT",
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    alert(data.message || "Permanent user action failed");
+                    return;
+                }
+
+                alert("✅ User restored and marked as Permanent User.");
+                await loadDeletedUsers();
+                await loadUsers();
+                await loadDashboard();
+            } catch (err) {
+                console.error("Permanent User Error:", err);
+                alert("❌ " + err.message);
+            }
+        }
+
         function escapeHtml(value) {
             return String(value ?? "")
                 .replace(/&/g, "&amp;")
@@ -2409,6 +2440,11 @@ style="background:#16a34a;">
                                     style="background:linear-gradient(135deg,#16a34a,#15803d);">
                                     ♻️ Restore
                                 </button>
+                                <button
+                                    onclick="makePermanentUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                                    ⭐ Permanent User
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -2449,6 +2485,34 @@ style="background:#16a34a;">
             await loadDeletedUsers();
             await loadUsers();
             await loadDashboard();
+        }
+
+        async function makePermanentUser(id) {
+            if (!confirm(
+                "Make this deleted user a Permanent User?\n\n" +
+                "The user will be restored and protected from future deletion."
+            )) return;
+
+            try {
+                const res = await fetch("/api/admin/permanent-user/" + id, {
+                    method: "PUT",
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    alert(data.message || "Permanent user action failed");
+                    return;
+                }
+
+                alert("✅ User restored and marked as Permanent User.");
+                await loadDeletedUsers();
+                await loadUsers();
+                await loadDashboard();
+            } catch (err) {
+                console.error("Permanent User Error:", err);
+                alert("❌ " + err.message);
+            }
         }
 
         function escapeHtml(value) {
@@ -2653,50 +2717,133 @@ ${w.status === "Approved" ? `
         // Force logout every student currently using the app
         //==========================
 
-        async function forceLogoutAllUsers() {
+        async function loadUserLoginLockStatus() {
+            try {
+                const res = await fetch("/api/admin/user-login-lock-status", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) return;
+                const btn = document.getElementById("logoutAllUsersBtn");
+                if (!btn) return;
 
-            const confirmed = confirm(
-                "⚠️ Logout ALL students?\n\nEvery currently logged-in student will be signed out and must login again."
-            );
-
-            if (!confirmed) return;
-
-            const adminToken = localStorage.getItem("adminToken");
-
-            if (!adminToken) {
-                alert("Admin session expired. Please login again.");
-                window.location.href = "admin-login.html";
-                return;
+                if (data.userLoginLocked) {
+                    btn.textContent = "🔓 Enable All Users";
+                    btn.style.background = "#16a34a";
+                    btn.onclick = enableAllUsers;
+                } else {
+                    btn.textContent = "🚪 Logout All Users";
+                    btn.style.background = "#b91c1c";
+                    btn.onclick = forceLogoutAllUsers;
+                }
+            } catch (err) {
+                console.error("Login lock status error:", err);
             }
+        }
+
+        async function forceLogoutAllUsers() {
+            const confirmed = confirm(
+                "⚠️ Logout ALL students?\n\n" +
+                "Every currently logged-in student will be signed out AND new student logins will stay disabled until you enable them again."
+            );
+            if (!confirmed) return;
 
             try {
                 const res = await fetch("/api/admin/force-logout-all-users", {
                     method: "POST",
                     headers: {
-                        "Authorization": "Bearer " + adminToken,
+                        "Authorization": "Bearer " + token,
                         "Content-Type": "application/json"
                     }
                 });
-
-                const data = await res.json().catch(() => ({}));
-
-                if (res.status === 401) {
-                    localStorage.removeItem("adminToken");
-                    alert("Admin session expired. Please login again.");
-                    window.location.href = "admin-login.html";
-                    return;
-                }
+                const data = await res.json();
 
                 if (!res.ok || !data.success) {
                     throw new Error(data.message || "Could not logout all users");
                 }
 
-                alert("✅ All student sessions have been logged out.\n\nAffected users: " + (data.affectedUsers ?? 0));
+                alert("✅ All student sessions logged out.\n\nStudent login is now OFF until you click Enable All Users.");
                 await loadUsers();
-
+                await loadUserLoginLockStatus();
             } catch (err) {
                 console.error("Force Logout All Error:", err);
                 alert("❌ Logout all failed: " + err.message);
+            }
+        }
+
+        async function enableAllUsers() {
+            if (!confirm("Enable student login again for all users?")) return;
+
+            try {
+                const res = await fetch("/api/admin/enable-all-users", {
+                    method: "POST",
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.message || "Could not enable users");
+                }
+
+                alert("✅ Student login is enabled again.");
+                await loadUserLoginLockStatus();
+            } catch (err) {
+                console.error("Enable Users Error:", err);
+                alert("❌ Enable users failed: " + err.message);
+            }
+        }
+
+        async function sendNotificationToAll() {
+            if (!(await checkPushConfiguration())) return;
+
+            const title = prompt("Notification Title", "New Notification");
+            if (title === null) return;
+            const cleanTitle = title.trim();
+            if (!cleanTitle) {
+                alert("Notification title is required.");
+                return;
+            }
+
+            const message = prompt("Notification Message for all users", "");
+            if (message === null) return;
+            const cleanMessage = message.trim();
+            if (!cleanMessage) {
+                alert("Notification message is required.");
+                return;
+            }
+
+            if (!confirm(
+                "Send this notification to ALL users who have enabled notifications?\n\n" +
+                cleanTitle + "\n" + cleanMessage
+            )) return;
+
+            try {
+                const res = await fetch("/api/admin/notification/send-all", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        title: cleanTitle,
+                        message: cleanMessage,
+                        url: "/earn.html"
+                    })
+                });
+
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    alert("❌ " + (data.message || "Notification failed"));
+                    return;
+                }
+
+                alert(
+                    "✅ Notification sent to all subscribed users.\n" +
+                    "Devices reached: " + (data.devicesSent || 0)
+                );
+            } catch (err) {
+                console.error("Send All Notification Error:", err);
+                alert("❌ Server error while sending notification.");
             }
         }
 
@@ -3643,9 +3790,19 @@ ${w.status === "Approved" ? `
                 }).join("");
                 document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
             }
-            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
+            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button><button class="ap2-btn" style="background:#7c3aed;color:#fff" onclick="ap2MakePermanent('${esc(uid(u))}')">⭐ Permanent User</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
-            window.ap2PermanentDelete = async id => {
+            window.ap2MakePermanent = async id => {
+    if (!confirm("Make this deleted user a Permanent User?\n\nThe user will be restored and protected from future deletion.")) return;
+    try {
+        await api("/pro/permanent-user/" + encodeURIComponent(id), { method: "PUT" });
+        await ap2Refresh();
+        alert("User restored and marked as Permanent User");
+    } catch (e) {
+        alert(e.message);
+    }
+};
+window.ap2PermanentDelete = async id => {
                 if (!confirm("⚠️ Permanently delete this student?\n\nThis action cannot be undone and all student data will be removed permanently.")) return;
                 try {
                     await api("/pro/permanent-delete/" + encodeURIComponent(id), { method: "DELETE" });
@@ -3683,7 +3840,11 @@ ${w.status === "Approved" ? `
                 ap2Refresh();
             });
         })();
-    </script>
+    
+        window.addEventListener("load", () => {
+            loadUserLoginLockStatus();
+        });
+</script>
 </body>
 
 </html>

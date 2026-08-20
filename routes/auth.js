@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 
 const User = require("../models/User");
+const Admin = require("../models/Admin");
 
 const router = express.Router();
 const { registerViolation, getBlockRemainingMs, BLOCK_DURATION_MS, WARNINGS_PER_BLOCK } = require("../services/antiCheat");
@@ -76,6 +77,17 @@ router.post("/login", async (req, res) => {
                 message: "User Not Found"
             });
 
+        }
+
+        // Admin-wide login lock: after "Logout All Users", students remain
+        // unable to login until the admin explicitly enables users again.
+        const loginLock = await Admin.findOne({ userLoginLocked: true }).select("_id").lean();
+        if (loginLock) {
+            return res.status(403).json({
+                success: false,
+                loginLocked: true,
+                message: "Student login is temporarily disabled by admin. Please try again later."
+            });
         }
 
         const match = await bcrypt.compare(password, user.password);

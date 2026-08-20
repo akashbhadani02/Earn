@@ -67,34 +67,63 @@ router.post("/login", async (req, res) => {
 });
 
 // ===========================
-// Force logout all students
+// Force logout all students + keep student login locked
 // ===========================
-router.post("/force-logout-all-users", adminAuth, async (req, res) => {
-
+router.get("/user-login-lock-status", adminAuth, async (req, res) => {
     try {
+        const admin = await Admin.findById(req.user.id).select("userLoginLocked").lean();
+        return res.json({
+            success: true,
+            userLoginLocked: !!admin?.userLoginLocked
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post("/force-logout-all-users", adminAuth, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.user.id);
+        if (!admin) return res.status(401).json({ success: false, message: "Admin Not Found" });
+
         const result = await User.updateMany(
             { isDeleted: { $ne: true } },
             {
                 $inc: { sessionVersion: 1 },
-                // IMPORTANT: Do not change lastSeen during Force Logout All.
-                // lastSeen must remain the student's real last activity time.
-                $set: {
-                    isOnline: false
-                }
+                $set: { isOnline: false }
             }
         );
 
+        admin.userLoginLocked = true;
+        await admin.save();
+
         res.json({
             success: true,
-            message: "All student sessions have been logged out.",
+            userLoginLocked: true,
+            message: "All student sessions have been logged out. Student login is now locked until admin enables it.",
             affectedUsers: result.modifiedCount ?? result.nModified ?? 0
         });
     } catch (err) {
         console.error("Force Logout All Error:", err);
-        res.status(500).json({
-            success: false,
-            message: err.message
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post("/enable-all-users", adminAuth, async (req, res) => {
+    try {
+        const admin = await Admin.findByIdAndUpdate(
+            req.user.id,
+            { userLoginLocked: false },
+            { new: true }
+        );
+        if (!admin) return res.status(401).json({ success: false, message: "Admin Not Found" });
+        return res.json({
+            success: true,
+            userLoginLocked: false,
+            message: "Student login has been enabled again."
         });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
     }
 });
 
@@ -415,6 +444,14 @@ router.delete("/user/:id", adminAuth, async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: "User Not Found"
+            });
+        }
+
+        // Permanent users are protected from deletion.
+        if (user.isPermanent) {
+            return res.status(400).json({
+                success: false,
+                message: "Permanent user cannot be deleted."
             });
         }
 
@@ -1006,6 +1043,78 @@ router.post("/notification/send/:userId", adminAuth, async (req, res) => {
 
 
 // ===========================
+// Send Push Notification to All Students
+// ===========================
+router.post("/notification/send-all", adminAuth, async (req, res) => {
+    try {
+        const cleanTitle = String(req.body?.title || "").trim();
+        const cleanMessage = String(req.body?.message || "").trim();
+
+        if (!cleanTitle) return res.status(400).json({ success: false, message: "Notification title is required" });
+        if (!cleanMessage) return res.status(400).json({ success: false, message: "Notification message is required" });
+
+        const users = await User.find({
+            isDeleted: { $ne: true },
+            "pushSubscriptions.0": { $exists: true }
+        });
+
+        configureWebPush();
+
+        const payload = JSON.stringify({
+            title: cleanTitle.slice(0, 100),
+            body: cleanMessage.slice(0, 500),
+            url: String(req.body?.url || "/earn.html"),
+            icon: "/icon-192.png",
+            badge: "/icon-192.png",
+            tag: "admin-notification-all",
+            requireInteraction: false
+        });
+
+        let sent = 0;
+        let devices = 0;
+        let staleRemoved = 0;
+
+        for (const user of users) {
+            const subscriptions = Array.isArray(user.pushSubscriptions) ? user.pushSubscriptions : [];
+            devices += subscriptions.length;
+
+            const results = await Promise.allSettled(
+                subscriptions.map(subscription =>
+                    webpush.sendNotification(
+                        subscription.toObject ? subscription.toObject() : subscription,
+                        payload
+                    )
+                )
+            );
+
+            const stale = [];
+            results.forEach((result, index) => {
+                if (result.status === "fulfilled") sent++;
+                else if ([404, 410].includes(result.reason?.statusCode)) stale.push(subscriptions[index].endpoint);
+            });
+
+            if (stale.length) {
+                user.pushSubscriptions = subscriptions.filter(sub => !stale.includes(sub.endpoint));
+                staleRemoved += stale.length;
+                await user.save();
+            }
+        }
+
+        return res.json({
+            success: true,
+            message: `Notification sent to all subscribed students. Devices delivered: ${sent}.`,
+            usersTargeted: users.length,
+            devicesTargeted: devices,
+            devicesSent: sent,
+            staleDevicesRemoved: staleRemoved
+        });
+    } catch (err) {
+        console.error("Send all notification error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ===========================
 // Admin Control Center - Real DB Data
 // ===========================
 router.get("/control-center", adminAuth, async (req, res) => {
@@ -1370,6 +1479,45 @@ router.put("/pro/restore/:id", adminAuth, async(req,res)=>{
         const u=await User.findById(req.params.id);if(!u)return res.status(404).json({success:false,message:"Student not found"});
         u.isDeleted=false;u.deletedAt=null;u.deletedReason="";await u.save();res.json({success:true});
     }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/permanent-user/:id", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: "Student not found" });
+        if (!user.isDeleted) return res.status(400).json({ success: false, message: "Student must be in Deleted Users first" });
+
+        user.isDeleted = false;
+        user.deletedAt = null;
+        user.deletedReason = "";
+        user.isPermanent = true;
+        await user.save();
+
+        return res.json({
+            success: true,
+            message: "User restored and marked as Permanent User."
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/pro/permanent-user/:id", adminAuth, async (req, res) => {
+    try {
+        const u = await User.findById(req.params.id);
+        if (!u) return res.status(404).json({ success: false, message: "Student not found" });
+        if (!u.isDeleted) return res.status(400).json({ success: false, message: "Student must be in Recycle Bin first" });
+
+        u.isDeleted = false;
+        u.deletedAt = null;
+        u.deletedReason = "";
+        u.isPermanent = true;
+        await u.save();
+
+        return res.json({ success: true, message: "User restored and marked as Permanent User." });
+    } catch (e) {
+        return res.status(500).json({ success: false, message: e.message });
+    }
 });
 
 router.get("/pro/blocked-students", adminAuth, async(req,res)=>{

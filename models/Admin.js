@@ -11,6 +11,12 @@ const adminSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+
+    // When true, students cannot login until admin enables them again.
+    userLoginLocked:{
+        type:Boolean,
+        default:false
     }
 
 });
