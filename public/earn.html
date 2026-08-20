@@ -1961,16 +1961,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         list = data.questions;
                     }
                 } catch (apiErr) {
-                    console.warn("Random question API unavailable, using fallback.", apiErr);
-                }
-
-                // Server-side bundled JSON fallback.
-                if (!list.length) {
-                    const fallback = await fetch("/question-bank.json", { cache: "no-store" });
-                    if (fallback.ok) {
-                        const fallbackData = await fallback.json();
-                        list = Array.isArray(fallbackData) ? fallbackData : [];
-                    }
+                    console.warn("Random question API unavailable.", apiErr);
                 }
 
                 quizData = list.filter(q => {

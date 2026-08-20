@@ -19,6 +19,15 @@ const questionSchema = new mongoose.Schema(
             type: Number,
             required: true,
             min: 0
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false,
+            index: true
+        },
+        deletedAt: {
+            type: Date,
+            default: null
         }
     },
     { timestamps: true }

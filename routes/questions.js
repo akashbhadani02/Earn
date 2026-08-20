@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Question = require("../models/Question");
+const QuestionBankState = require("../models/QuestionBankState");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
 const seedQuestions = require("../questions.json");
@@ -12,8 +13,10 @@ async function ensureQuestionsSeeded() {
     if (seedPromise) return seedPromise;
 
     seedPromise = (async () => {
-        const count = await Question.countDocuments();
+        let state = await QuestionBankState.findOne();
+        if (state?.initialized) return;
 
+        const count = await Question.countDocuments();
         if (count === 0 && seedQuestions.length) {
             const docs = seedQuestions.map(item => ({
                 q: String(item.q || "").trim(),
@@ -30,6 +33,10 @@ async function ensureQuestionsSeeded() {
                 await Question.insertMany(docs, { ordered: false });
             }
         }
+
+        if (!state) state = new QuestionBankState({ initialized: true });
+        else state.initialized = true;
+        await state.save();
     })().catch(err => {
         seedPromise = null;
         throw err;
@@ -43,28 +50,19 @@ router.get("/random", auth, async (req, res) => {
     try {
         const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
         await ensureQuestionsSeeded();
-        let questions = await Question.aggregate([
-            { $match: { q: { $type: "string" }, options: { $type: "array" } } },
+        const questions = await Question.aggregate([
+            { $match: {
+                isDeleted: { $ne: true },
+                q: { $type: "string" },
+                options: { $type: "array" }
+            } },
             { $sample: { size: count } },
             { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
         ]);
-        questions = questions.filter(q => q.q && Array.isArray(q.options) &&
+        const validQuestions = questions.filter(q => q.q && Array.isArray(q.options) &&
             q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
             Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
-        if (!questions.length && seedQuestions.length) {
-            const valid = seedQuestions.filter(q => q && typeof q.q === "string" &&
-                Array.isArray(q.options) && q.options.length >= 2 &&
-                Number.isInteger(Number(q.correct)) && Number(q.correct) >= 0 &&
-                Number(q.correct) < q.options.length);
-            for (let i = valid.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [valid[i], valid[j]] = [valid[j], valid[i]];
-            }
-            questions = valid.slice(0, count).map(q => ({
-                q: String(q.q).trim(), options: q.options.map(String), correct: Number(q.correct)
-            }));
-        }
-        return res.json({ success: true, totalQuestions: questions.length, questions });
+        return res.json({ success: true, totalQuestions: validQuestions.length, questions: validQuestions });
     } catch (err) {
         console.error("Random Questions Error:", err);
         return res.status(500).json({ success: false, message: err.message });
@@ -76,7 +74,7 @@ router.get("/", auth, async (req, res) => {
     try {
         await ensureQuestionsSeeded();
 
-        const questions = await Question.find()
+        const questions = await Question.find({ isDeleted: { $ne: true } })
             .select("q options correct")
             .lean();
 
@@ -99,7 +97,9 @@ router.get("/admin", adminAuth, async (req, res) => {
         const page = Math.max(1, Number(req.query.page) || 1);
         const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
         const search = String(req.query.search || "").trim();
-        const filter = search ? { q: { $regex: search, $options: "i" } } : {};
+        const filter = search
+            ? { isDeleted: { $ne: true }, q: { $regex: search, $options: "i" } }
+            : { isDeleted: { $ne: true } };
 
         const [questions, total] = await Promise.all([
             Question.find(filter)
@@ -130,7 +130,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
     try {
         await ensureQuestionsSeeded();
 
-        const questions = await Question.find()
+        const questions = await Question.find({ isDeleted: { $ne: true } })
             .select("q options correct")
             .sort({ _id: 1 })
             .lean();
@@ -173,7 +173,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
 
 router.get("/download", async (req, res) => {
     try {
-        const questions = await Question.find().lean();
+        const questions = await Question.find({ isDeleted: { $ne: true } }).lean();
 
         const jsonData = questions.map(q => ({
             q: q.q,
@@ -201,7 +201,7 @@ router.delete("/admin/repeated/remove", adminAuth, async (req, res) => {
     try {
         await ensureQuestionsSeeded();
 
-        const questions = await Question.find()
+        const questions = await Question.find({ isDeleted: { $ne: true } })
             .select("_id q")
             .sort({ _id: 1 })
             .lean();
@@ -223,8 +223,11 @@ router.delete("/admin/repeated/remove", adminAuth, async (req, res) => {
 
         let deleted = 0;
         if (duplicateIds.length) {
-            const result = await Question.deleteMany({ _id: { $in: duplicateIds } });
-            deleted = Number(result.deletedCount || 0);
+            const result = await Question.updateMany(
+                { _id: { $in: duplicateIds }, isDeleted: { $ne: true } },
+                { $set: { isDeleted: true, deletedAt: new Date() } }
+            );
+            deleted = Number(result.modifiedCount || 0);
         }
 
         return res.json({
@@ -316,17 +319,17 @@ router.put("/admin/:id", adminAuth, async (req, res) => {
 // Admin: Delete ALL Questions
 router.delete("/admin/all", adminAuth, async (req, res) => {
     try {
-        const result = await Question.deleteMany({});
-
+        const result = await Question.updateMany(
+            { isDeleted: { $ne: true } },
+            { $set: { isDeleted: true, deletedAt: new Date() } }
+        );
         return res.json({
             success: true,
-            deleted: Number(result.deletedCount || 0),
-            message: `${result.deletedCount || 0} question(s) deleted successfully.`
+            deleted: Number(result.modifiedCount || 0),
+            message: `${result.modifiedCount || 0} question(s) moved to Recycle Bin.`
         });
-
     } catch (err) {
         console.error("Delete All Questions Error:", err);
-
         return res.status(500).json({
             success: false,
             message: err.message || "Could not delete all questions"
@@ -338,15 +341,78 @@ router.delete("/admin/all", adminAuth, async (req, res) => {
 // Admin can delete a question.
 router.delete("/admin/:id", adminAuth, async (req, res) => {
     try {
-        const question = await Question.findByIdAndDelete(req.params.id);
-
+        const question = await Question.findOneAndUpdate(
+            { _id: req.params.id, isDeleted: { $ne: true } },
+            { $set: { isDeleted: true, deletedAt: new Date() } },
+            { new: true }
+        );
         if (!question) {
             return res.status(404).json({ success: false, message: "Question Not Found" });
         }
-
-        return res.json({ success: true, message: "Question Deleted" });
+        return res.json({ success: true, message: "Question moved to Recycle Bin" });
     } catch (err) {
         console.error("Delete Question Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// Admin Question Recycle Bin
+router.get("/admin/recycle-bin", adminAuth, async (req, res) => {
+    try {
+        const questions = await Question.find({ isDeleted: true })
+            .select("q options correct deletedAt")
+            .sort({ deletedAt: -1, _id: -1 })
+            .lean();
+        return res.json({ success: true, questions });
+    } catch (err) {
+        console.error("Question Recycle Bin Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/admin/recycle-bin/:id/restore", adminAuth, async (req, res) => {
+    try {
+        const question = await Question.findOneAndUpdate(
+            { _id: req.params.id, isDeleted: true },
+            { $set: { isDeleted: false, deletedAt: null } },
+            { new: true }
+        );
+        if (!question) {
+            return res.status(404).json({ success: false, message: "Deleted question not found" });
+        }
+        return res.json({ success: true, message: "Question restored", question });
+    } catch (err) {
+        console.error("Restore Question Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.delete("/admin/recycle-bin/:id/permanent", adminAuth, async (req, res) => {
+    try {
+        const question = await Question.findOneAndDelete({
+            _id: req.params.id,
+            isDeleted: true
+        });
+        if (!question) {
+            return res.status(404).json({ success: false, message: "Deleted question not found" });
+        }
+        return res.json({ success: true, message: "Question permanently deleted" });
+    } catch (err) {
+        console.error("Permanent Question Delete Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.delete("/admin/recycle-bin", adminAuth, async (req, res) => {
+    try {
+        const result = await Question.deleteMany({ isDeleted: true });
+        return res.json({
+            success: true,
+            deleted: Number(result.deletedCount || 0),
+            message: `${result.deletedCount || 0} question(s) permanently deleted.`
+        });
+    } catch (err) {
+        console.error("Permanent Question Recycle Bin Clear Error:", err);
         return res.status(500).json({ success: false, message: err.message });
     }
 });

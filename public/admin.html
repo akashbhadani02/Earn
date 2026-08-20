@@ -1343,6 +1343,7 @@
             <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
             <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
             <button onclick="deleteAllQuestions()" style="background:#dc2626;">🗑️ Delete All Questions</button>
+            <button onclick="loadQuestionRecycleBin()" style="background:#7c3aed;">♻️ Question Recycle Bin</button>
             <button id="downloadBtn" class="btn btn-success">📥 Download Questions JSON</button>
         </div>
         <div class="page-info" id="repeatInfo"></div>
@@ -1364,6 +1365,30 @@
         <div class="question-actions" style="margin-top:12px;">
             <button onclick="changeQuestionPage(-1)" style="background-color: #1d4ed8;">◀ Previous</button>
             <button onclick="changeQuestionPage(1)" style="background-color: #1d4ed8;">Next ▶</button>
+        </div>
+
+        <div id="questionRecycleBin" style="display:none;margin-top:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <h3 style="margin:0;">♻️ Question Recycle Bin</h3>
+                <div>
+                    <button onclick="loadQuestionRecycleBin()" style="background:#2563eb;">🔄 Refresh</button>
+                    <button onclick="permanentDeleteAllQuestions()" style="background:#dc2626;">🗑️ Permanently Delete All</button>
+                </div>
+            </div>
+            <div class="page-info" id="questionRecycleInfo"></div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Deleted Question</th>
+                            <th>Deleted At</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="questionRecycleTable"></tbody>
+                </table>
+            </div>
         </div>
     </section>
 
@@ -2063,7 +2088,7 @@ style="background:#16a34a;">
 
             const ok = confirm(
                 `Found ${checkData.repeatedCount} entries in ${checkData.duplicateGroups} repeated group(s).\n\n` +
-                `Click OK to keep ONE copy of each question and delete the extra repeated copies.`
+                `Click OK to keep ONE copy of each question and move the extra repeated copies to the Recycle Bin.`
             );
             if (!ok) return;
 
@@ -2078,7 +2103,7 @@ style="background:#16a34a;">
                 return;
             }
 
-            alert(`Done! ${data.deleted} repeated question(s) removed. One copy of each question was kept.`);
+            alert(`Done! ${data.deleted} repeated question(s) moved to Recycle Bin. One copy of each question was kept.`);
             document.getElementById("repeatInfo").innerText = "✅ Repeated questions removed; one copy kept for each question.";
             questionPage = 1;
             await loadQuestions();
@@ -2186,6 +2211,103 @@ style="background:#16a34a;">
 
             await loadQuestions();
             await loadDashboard();
+        }
+
+        async function loadQuestionRecycleBin() {
+            const box = document.getElementById("questionRecycleBin");
+            const table = document.getElementById("questionRecycleTable");
+            const info = document.getElementById("questionRecycleInfo");
+            if (!box || !table) return;
+
+            box.style.display = "block";
+            table.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+
+            try {
+                const res = await fetch("/api/questions/admin/recycle-bin", {
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    table.innerHTML = `<tr><td colspan="4">${escapeHtml(data.message || "Failed to load Question Recycle Bin")}</td></tr>`;
+                    return;
+                }
+
+                const questions = data.questions || [];
+                info.innerText = `${questions.length} deleted question(s) in Recycle Bin`;
+
+                table.innerHTML = questions.map((question, index) => {
+                    const deletedAt = question.deletedAt
+                        ? new Date(question.deletedAt).toLocaleString("en-IN")
+                        : "-";
+                    return `<tr>
+                        <td>${index + 1}</td>
+                        <td style="min-width:320px;white-space:normal;">
+                            <b>${escapeHtml(question.q)}</b>
+                            ${(question.options || []).map((option, i) =>
+                                `<div style="margin-top:3px;">${i + 1}. ${escapeHtml(option)}</div>`
+                            ).join("")}
+                        </td>
+                        <td>${escapeHtml(deletedAt)}</td>
+                        <td>
+                            <button onclick="restoreQuestion('${question._id}')" style="background:#16a34a;">♻️ Restore</button>
+                            <button onclick="permanentDeleteQuestion('${question._id}')" style="background:#dc2626;">🗑️ Permanent Delete</button>
+                        </td>
+                    </tr>`;
+                }).join("") || `<tr><td colspan="4">Question Recycle Bin is empty.</td></tr>`;
+            } catch (err) {
+                console.error("Question Recycle Bin Error:", err);
+                table.innerHTML = `<tr><td colspan="4">Failed to load Question Recycle Bin</td></tr>`;
+            }
+        }
+
+        async function restoreQuestion(id) {
+            if (!confirm("Restore this question to the Question Bank?")) return;
+            const res = await fetch("/api/questions/admin/recycle-bin/" + id + "/restore", {
+                method: "PUT",
+                headers: { Authorization: "Bearer " + token }
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Question restore failed");
+                return;
+            }
+            await loadQuestions();
+            await loadQuestionRecycleBin();
+            await loadDashboard();
+            alert("✅ Question restored to Question Bank.");
+        }
+
+        async function permanentDeleteQuestion(id) {
+            if (!confirm("⚠️ Permanently delete this question?\n\nThis cannot be undone.")) return;
+            const res = await fetch("/api/questions/admin/recycle-bin/" + id + "/permanent", {
+                method: "DELETE",
+                headers: { Authorization: "Bearer " + token }
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Permanent delete failed");
+                return;
+            }
+            await loadQuestionRecycleBin();
+            await loadDashboard();
+            alert("✅ Question permanently deleted.");
+        }
+
+        async function permanentDeleteAllQuestions() {
+            if (!confirm("⚠️ Permanently delete ALL questions currently in the Question Recycle Bin?\n\nThis cannot be undone.")) return;
+            const res = await fetch("/api/questions/admin/recycle-bin", {
+                method: "DELETE",
+                headers: { Authorization: "Bearer " + token }
+            });
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                alert(data.message || "Permanent delete all failed");
+                return;
+            }
+            await loadQuestionRecycleBin();
+            await loadDashboard();
+            alert(`✅ ${Number(data.deleted || 0)} question(s) permanently deleted.`);
         }
 
         //==========================
