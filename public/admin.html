@@ -1374,6 +1374,49 @@ button[onclick^="deleteUser"],button[onclick^="rejectWithdraw"]{box-shadow:0 5px
 </style>
 
 
+<style id="adminUserCardGrid">
+/* All users: clear responsive card grid instead of a dense table. */
+.admin-user-cards{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(260px,1fr));
+  gap:16px;
+  align-items:stretch;
+}
+.admin-user-card{
+  min-width:0; padding:17px; border-radius:18px; border:1px solid #dbe4ee;
+  box-shadow:0 8px 24px rgba(15,23,42,.08); color:#172033;
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+.admin-user-card:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(15,23,42,.12);}
+.admin-user-card.is-online{background:linear-gradient(145deg,#f0fdf4,#dcfce7);border-color:#86efac;border-left:6px solid #16a34a;}
+.admin-user-card.is-offline{background:linear-gradient(145deg,#fff7f7,#fee2e2);border-color:#fca5a5;border-left:6px solid #dc2626;}
+.admin-user-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.admin-user-identity{display:flex;align-items:center;gap:10px;min-width:0;}
+.admin-status-dot{width:13px;height:13px;border-radius:50%;flex:0 0 13px;box-shadow:0 0 0 4px rgba(255,255,255,.7);}
+.is-online .admin-status-dot{background:#16a34a}.is-offline .admin-status-dot{background:#dc2626}
+.admin-user-name{font-size:17px;font-weight:900;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+.admin-user-mobile{font-size:12px;font-weight:700;color:#475569;margin-top:4px;}
+.admin-user-status{font-size:10px;font-weight:900;padding:6px 9px;border-radius:999px;letter-spacing:.5px;white-space:nowrap;}
+.is-online .admin-user-status{background:#16a34a;color:#fff}.is-offline .admin-user-status{background:#dc2626;color:#fff}
+.admin-user-lastseen{margin:12px 0;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.68);font-size:12px;font-weight:800;color:#334155;}
+.admin-user-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.admin-stat{background:rgba(255,255,255,.8);border:1px solid rgba(148,163,184,.25);border-radius:11px;padding:9px 10px;min-width:0;}
+.admin-stat span{display:block;font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.25px;}
+.admin-stat strong{display:block;font-size:15px;color:#172033;margin-top:3px;overflow:hidden;text-overflow:ellipsis;}
+.admin-stat strong.warning{color:#b45309}.admin-stat strong.danger{color:#b91c1c}
+.admin-user-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px;}
+.admin-user-actions button{min-height:38px!important;padding:8px 9px!important;font-size:12px!important;font-weight:800!important;border-radius:10px!important;}
+.admin-user-actions .gold{background:linear-gradient(135deg,#f59e0b,#d97706)!important;color:#fff!important;}
+.admin-user-actions .blue{background:linear-gradient(135deg,#2563eb,#4f46e5)!important;color:#fff!important;}
+.admin-user-actions .purple{background:linear-gradient(135deg,#7c3aed,#6d28d9)!important;color:#fff!important;}
+.admin-user-actions .red{background:linear-gradient(135deg,#ef4444,#dc2626)!important;color:#fff!important;}
+.admin-user-actions .green{background:#16a34a!important;color:#fff!important;}
+.admin-user-empty{grid-column:1/-1;text-align:center;padding:35px;border:2px dashed #cbd5e1;border-radius:18px;background:#f8fafc;color:#64748b;font-weight:800;}
+@media(max-width:1250px){.admin-user-cards{grid-template-columns:repeat(3,minmax(250px,1fr));}}
+@media(max-width:900px){.admin-user-cards{grid-template-columns:repeat(2,minmax(240px,1fr));}}
+@media(max-width:600px){.admin-user-cards{grid-template-columns:1fr;gap:12px}.admin-user-name{max-width:220px}.admin-user-card{padding:14px;border-radius:16px;}}
+</style>
+
 <style id="adminFinalVisibilityAndPresence">
 /* FINAL ADMIN UI PASS: clear text, strong contrast, live presence cards */
 :root{
@@ -1544,33 +1587,8 @@ body, body *{text-shadow:none;}
     <input id="search" placeholder="Search User" onkeyup="searchUser()">
 
     <h2>All Users</h2>
-    <div class="table-wrap">
-        <table>
-
-            <thead>
-
-                <tr>
-
-                    <th>Name</th>
-                    <th>Mobile</th>
-                    <th>Last Seen</th>
-                    <th>Wallet</th>
-                    <th>Today</th>
-                    <th>Total</th>
-                    <th>Spin Remaining</th>
-                    <th>Warnings</th>
-                    <th>Action</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="userTable">
-
-            </tbody>
-
-        </table>
-    </div>
+    <div id="userCards" class="admin-user-cards" aria-live="polite"></div>
+    <div id="userTable" style="display:none"></div>
     </section>
 
 
@@ -2072,120 +2090,53 @@ body, body *{text-shadow:none;}
         //==========================
 
         function showUsers(users) {
+            const container = document.getElementById("userCards");
+            if (!container) return;
+            if (!users.length) {
+                container.innerHTML = '<div class="admin-user-empty">👥 No users found.</div>';
+                return;
+            }
 
-            let html = "";
-
-            users.forEach(user => {
+            container.innerHTML = users.map(user => {
                 const lastSeenMs = user.lastSeen ? new Date(user.lastSeen).getTime() : 0;
                 const isOnline = lastSeenMs > 0 && (Date.now() - lastSeenMs) <= 7000;
+                const spinRemaining = Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0));
+                const warnings = Number(user.warningCount || 0);
+                const statusClass = isOnline ? 'is-online' : 'is-offline';
+                return `
+                <article class="admin-user-card ${statusClass}" data-user-id="${user._id}">
+                    <div class="admin-user-card-head">
+                        <div class="admin-user-identity">
+                            <span class="admin-status-dot"></span>
+                            <div>
+                                <div class="admin-user-name">${user.name || 'Student'}</div>
+                                <div class="admin-user-mobile">📱 ${user.mobile || '-'}</div>
+                            </div>
+                        </div>
+                        <span class="admin-user-status">${isOnline ? 'ONLINE' : 'OFFLINE'}</span>
+                    </div>
 
-                html += `
+                    <div class="admin-user-lastseen">${isOnline ? '🟢 Active now' : '🔴 ' + formatLastSeen(user.lastSeen)}</div>
 
-<tr data-user-id="${user._id}" class="${isOnline ? 'student-online-row' : 'student-offline-row'}" style="background:${isOnline ? '#f0fdf4' : '#fef2f2'}; transition:background .25s ease;">
-    <td>
-        <span data-presence-name style="display:inline-flex;align-items:center;gap:8px;font-weight:800;padding:7px 11px;border-radius:10px;
-            background:${isOnline ? '#dcfce7' : '#fee2e2'};
-            color:${isOnline ? '#166534' : '#991b1b'};
-            border:1px solid ${isOnline ? '#86efac' : '#fca5a5'};
-            transition:all .25s ease;">
-            <span data-presence-dot style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${isOnline ? '#22c55e' : '#ef4444'};box-shadow:0 0 0 3px ${isOnline ? '#bbf7d0' : '#fecaca'};"></span>
-            ${user.name}
-        </span>
-    </td>
-    <td>${user.mobile}</td>
+                    <div class="admin-user-stats">
+                        <div class="admin-stat"><span>Wallet</span><strong>₹${Number(user.wallet || 0).toFixed(2)}</strong></div>
+                        <div class="admin-stat"><span>Today</span><strong>${Number(user.dailyQuestionsAnswered || 0)}</strong></div>
+                        <div class="admin-stat"><span>Total</span><strong>${Number(user.totalQuestionsAnswered || 0)}</strong></div>
+                        <div class="admin-stat"><span>Spin Left</span><strong>${spinRemaining}</strong></div>
+                        <div class="admin-stat"><span>Warnings</span><strong class="${warnings >= 4 ? 'danger' : 'warning'}">⚠️ ${warnings}/4</strong></div>
+                        <div class="admin-stat"><span>Total Earn</span><strong>₹${Number(user.totalEarn || 0).toFixed(2)}</strong></div>
+                    </div>
 
-    <td data-presence-status>${formatLastSeen(user.lastSeen)}</td>
-
-    <td>₹${Number(user.wallet || 0).toFixed(2)}</td>
-
-    <td>
-        <span style="
-            font-weight:800;
-            color:#0369a1;
-            background:#ffffff;
-            padding:6px 10px;
-            border-radius:12px;
-            display:inline-block;
-        ">${Number(user.dailyQuestionsAnswered || 0)}</span>
-        <div style="font-size:10px;color:#64748b;margin-top:4px;">Today</div>
-    </td>
-
-    <td>
-        <span style="
-            font-weight:800;
-            color:#6d28d9;
-            background:#ffffff;
-            padding:6px 10px;
-            border-radius:12px;
-            display:inline-block;
-        ">${Number(user.totalQuestionsAnswered || 0)}</span>
-        <div style="font-size:10px;color:#64748b;margin-top:4px;">Lifetime</div>
-    </td>
-
-    <td>
-        <span style="
-            font-weight:900;
-            color:${Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0)) === 0 ? '#15803d' : '#b45309'};
-            background:${Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0)) === 0 ? '#dcfce7' : '#fef3c7'};
-            padding:6px 10px;
-            border-radius:12px;
-            display:inline-block;
-        ">${Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0))}</span>
-        <div style="font-size:10px;color:#64748b;margin-top:4px;">Questions to Spin</div>
-    </td>
-
-<td>
-    <span style="
-        font-weight:bold;
-        color:${Number(user.warningCount || 0) >= 4 ? '#dc2626' : '#d97706'};
-        background:${Number(user.warningCount || 0) >= 4 ? '#fee2e2' : '#fef3c7'};
-        padding:5px 9px;
-        border-radius:12px;
-        display:inline-block;
-    ">⚠️ ${Number(user.warningCount || 0)}/4</span>
-</td>
-
-<td>
-
-<button onclick="editWallet('${user._id}',${user.wallet || 0})">
-💰
-</button>
-
-<button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})"
-style="background:linear-gradient(135deg,#f59e0b,#d97706);"
-title="Edit Total Earn">
-✏️
-</button>
-
-<button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})'
-style="background:linear-gradient(135deg,#2563eb,#7c3aed);">
-🔔
-</button>
-
-<button onclick="deleteUser('${user._id}')">
-⛔
-</button>
-<button onclick="showActivityStats('${user._id}')" title="English Learning Activity">
-📚
-</button>
-
-${user.isBlocked ? `
-<button onclick="unblockUser('${user._id}')"
-style="background:#16a34a;">
-🟢
-</button>
-` : ""}
-
-</td>
-
-</tr>
-
-`;
-
-            });
-
-            document.getElementById("userTable").innerHTML = html;
-
+                    <div class="admin-user-actions">
+                        <button onclick="editWallet('${user._id}',${user.wallet || 0})" title="Edit Wallet">💰 Wallet</button>
+                        <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
+                        <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
+                        <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
+                        <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
+                        ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
+                    </div>
+                </article>`;
+            }).join('');
         }
 
         //==========================
