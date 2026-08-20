@@ -1460,6 +1460,8 @@ button[onclick^="deleteUser"],button[onclick^="rejectWithdraw"]{box-shadow:0 5px
 .admin-question-deleted{margin-top:8px;color:#991b1b;font-size:11px;font-weight:800;}
 .online-users-dashboard-btn{border:0;border-radius:14px;padding:16px 18px;background:linear-gradient(135deg,#166534,#22c55e);color:#fff;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(22,101,52,.2);text-align:left;}
 .online-users-dashboard-btn strong{display:block;font-size:30px;line-height:1.1;margin-top:5px;}
+.online-users-widget{position:relative;min-width:220px;max-width:360px;z-index:20}.online-users-hint{display:block;font-size:11px;font-weight:700;opacity:.9;margin-top:5px}.online-users-list{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#fff;border:1px solid #d1d5db;border-radius:14px;box-shadow:0 18px 45px rgba(15,23,42,.18);padding:8px;max-height:320px;overflow:auto}.online-user-item{width:100%;border:0;background:#f0fdf4;border-left:4px solid #16a34a;border-radius:10px;padding:10px 12px;margin:4px 0;text-align:left;cursor:pointer;display:flex;align-items:center;gap:9px;color:#14532d}.online-user-item:hover{background:#dcfce7}.online-user-item .online-user-name{font-weight:900;font-size:14px;overflow-wrap:anywhere;word-break:break-word}.online-user-item .online-user-mobile{font-size:11px;color:#166534;margin-top:2px}.online-users-empty{padding:16px;text-align:center;color:#64748b;font-weight:700;font-size:13px}
+
 @media(max-width:1250px){.admin-question-cards{grid-template-columns:repeat(3,minmax(230px,1fr));}}
 @media(max-width:900px){.admin-question-cards{grid-template-columns:repeat(2,minmax(220px,1fr));}}
 @media(max-width:600px){.admin-question-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.admin-question-card{padding:10px;border-radius:12px}.admin-question-text{font-size:13px}.admin-question-option{font-size:11px;padding:6px}.admin-question-actions{grid-template-columns:1fr;gap:5px}.admin-question-actions button{min-height:34px!important;font-size:11px!important}.online-users-dashboard-btn{padding:12px;font-size:14px}.online-users-dashboard-btn strong{font-size:24px;}}
@@ -1678,9 +1680,12 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             <h1 id="questionBankTotal">0</h1>
         </div>
 
-        <button id="onlineUsersDashboardBtn" class="online-users-dashboard-btn" onclick="showOnlineUsers()">
-            🟢 Online Users <strong id="onlineUsersCount">0</strong>
-        </button>
+        <div class="online-users-widget">
+            <button id="onlineUsersDashboardBtn" class="online-users-dashboard-btn" onclick="toggleOnlineUsersList()">
+                🟢 Online Users <strong id="onlineUsersCount">0</strong><span class="online-users-hint">Click to view students</span>
+            </button>
+            <div id="onlineUsersList" class="online-users-list" hidden></div>
+        </div>
 
     </div>
     </section>
@@ -2294,7 +2299,55 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             if (el) el.textContent = count;
             const ap2 = document.getElementById("ap2Online");
             if (ap2) ap2.textContent = count;
+            renderOnlineUsersList();
             return count;
+        }
+
+        function renderOnlineUsersList() {
+            const list = document.getElementById("onlineUsersList");
+            if (!list) return;
+            const onlineUsers = allUsers.filter(isUserOnlineNow);
+            if (!onlineUsers.length) {
+                list.innerHTML = '<div class="online-users-empty">🟢 No student is online right now.</div>';
+                return;
+            }
+            list.innerHTML = onlineUsers.map(user => `
+                <button class="online-user-item" type="button" onclick="openOnlineStudent('${user._id}')">
+                    <span>🟢</span>
+                    <span>
+                        <span class="online-user-name">${escapeHtml(user.name || 'Student')}</span>
+                        <span class="online-user-mobile">📱 ${escapeHtml(user.mobile || '-')}</span>
+                    </span>
+                </button>
+            `).join('');
+        }
+
+        function toggleOnlineUsersList() {
+            const list = document.getElementById("onlineUsersList");
+            if (!list) return;
+            renderOnlineUsersList();
+            list.hidden = !list.hidden;
+            if (!list.hidden) {
+                setTimeout(() => document.addEventListener('click', closeOnlineUsersOnOutsideClick, { once: true }), 0);
+            }
+        }
+
+        function closeOnlineUsersOnOutsideClick(e) {
+            const widget = document.querySelector('.online-users-widget');
+            const list = document.getElementById('onlineUsersList');
+            if (widget && list && !widget.contains(e.target)) list.hidden = true;
+        }
+
+        function openOnlineStudent(id) {
+            const list = document.getElementById("onlineUsersList");
+            if (list) list.hidden = true;
+            const usersSection = document.getElementById("adminSectionUsers");
+            if (typeof showAdminSection === "function") showAdminSection("users");
+            const search = document.getElementById("search");
+            if (search) search.value = "";
+            // Render all users so the selected student's actual card is available.
+            showUsers(allUsers);
+            setTimeout(() => focusUserCard(id), 100);
         }
 
         function showOnlineUsers() {
@@ -4455,10 +4508,6 @@ window.ap2PermanentDelete = async id => {
 }
 </style>
 
-/* ==========================================================
-   CARD VIEW FOR ALL REMAINING TABLE DATA
-   Questions + withdrawals + deleted users + Command Center
-   ========================================================== */
 <style>
 /* Turn every admin data row into an individual card. */
 #adminSectionWithdrawals table,
