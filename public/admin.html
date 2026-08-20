@@ -2306,7 +2306,13 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
         function renderOnlineUsersList() {
             const list = document.getElementById("onlineUsersList");
             if (!list) return;
-            const onlineUsers = allUsers.filter(isUserOnlineNow);
+            const onlineUsers = allUsers
+                .filter(isUserOnlineNow)
+                .sort((a, b) => {
+                    const aTime = a?.lastSeen ? new Date(a.lastSeen).getTime() : 0;
+                    const bTime = b?.lastSeen ? new Date(b.lastSeen).getTime() : 0;
+                    return bTime - aTime;
+                });
             if (!onlineUsers.length) {
                 list.innerHTML = '<div class="online-users-empty">🟢 No student is online right now.</div>';
                 return;
@@ -2314,10 +2320,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             list.innerHTML = onlineUsers.map(user => `
                 <button class="online-user-item" type="button" onclick="openOnlineStudent('${user._id}')">
                     <span>🟢</span>
-                    <span>
-                        <span class="online-user-name">${escapeHtml(user.name || 'Student')}</span>
-                        <span class="online-user-mobile">📱 ${escapeHtml(user.mobile || '-')}</span>
-                    </span>
+                    <span class="online-user-name">${escapeHtml(user.name || 'Student')}</span>
                 </button>
             `).join('');
         }
@@ -2351,7 +2354,13 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
         }
 
         function showOnlineUsers() {
-            const onlineUsers = allUsers.filter(isUserOnlineNow);
+            const onlineUsers = allUsers
+                .filter(isUserOnlineNow)
+                .sort((a, b) => {
+                    const aTime = a?.lastSeen ? new Date(a.lastSeen).getTime() : 0;
+                    const bTime = b?.lastSeen ? new Date(b.lastSeen).getTime() : 0;
+                    return bTime - aTime;
+                });
             const usersSection = document.getElementById("adminSectionUsers");
             if (typeof showAdminSection === "function") showAdminSection("users");
             showUsers(onlineUsers);
