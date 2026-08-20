@@ -877,12 +877,12 @@
 .users-online-top-head h3{margin:0;font-size:18px;color:#172033;font-weight:900;}
 .users-online-top-head h3 span{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:24px;padding:0 7px;margin-left:6px;border-radius:999px;background:#16a34a;color:#fff;font-size:13px;}
 .users-online-name-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
-.users-online-name-item{border:1px solid #e5e7eb;background:#fff;border-radius:10px;padding:9px 11px;text-align:left;cursor:pointer;color:#172033;font-weight:800;font-size:13px;line-height:1.25;box-shadow:0 2px 7px rgba(15,23,42,.06);transition:.15s;}
-.users-online-name-item:hover{background:#f8fafc;border-color:#cbd5e1;transform:translateY(-1px);}
+.users-online-name-item{border:0;background:#f8fafc;border-radius:7px;padding:6px 8px;text-align:left;cursor:pointer;color:#172033;font-weight:800;font-size:12px;line-height:1.2;box-shadow:none;transition:.15s;}
+.users-online-name-item:hover{background:#eef2f7;transform:translateY(-1px);}
 .users-online-name-item .dot{color:#16a34a;margin-right:5px;}
 .users-online-empty{padding:10px 0;color:#64748b;font-size:13px;font-weight:700;}
 @media(max-width:900px){.users-online-name-list{grid-template-columns:repeat(3,minmax(0,1fr));}}
-@media(max-width:600px){.users-online-name-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.users-online-name-item{font-size:12px;padding:8px 9px}.users-online-top-head h3{font-size:16px;}}
+@media(max-width:600px){.users-online-name-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.users-online-name-item{font-size:11px;padding:6px 7px}.users-online-top-head h3{font-size:15px;}}
 
 /* Online = Green */
 .online,
@@ -902,13 +902,13 @@
 .users-online-name-item:active {
   color: #172033 !important;
   background: #ffffff !important;
-  border: 1px solid #dbe3ee !important;
+  border: 0 !important;
   outline: none !important;
-  box-shadow: 0 2px 7px rgba(15,23,42,.06) !important;
+  box-shadow: none !important;
 }
 .users-online-name-item:hover {
   background: #f8fafc !important;
-  border-color: #cbd5e1 !important;
+  border-color: transparent !important;
 }
 .users-online-name-item .dot { color: #16a34a !important; }
 
@@ -3706,7 +3706,17 @@ ${w.status === "Approved" ? `
                 const d = await r.json();
                 if (d.success) {
                     window.__presenceServerTime = Number(d.serverTime || Date.now());
-                    applyLivePresence(d.users || []);
+                    const presence = d.users || [];
+                    const presenceById = new Map(presence.map(u => [String(u.id || u._id), u]));
+                    allUsers.forEach(u => {
+                        const pu = presenceById.get(String(u._id));
+                        if (pu) {
+                            if (pu.lastSeen) u.lastSeen = pu.lastSeen;
+                            if (typeof pu.isOnline !== "undefined") u.isOnline = pu.isOnline;
+                        }
+                    });
+                    renderOnlineUsersList();
+                    applyLivePresence(presence);
                     // Keep Command Center student list/counter in sync with the same
                     // lightweight presence source, instead of waiting for the 5-second
                     // full dashboard refresh.
