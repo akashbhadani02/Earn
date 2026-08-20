@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
 // ===========================
 router.get("/user-login-lock-status", adminAuth, async (req, res) => {
     try {
-        const admin = await Admin.findById(req.user.id).select("userLoginLocked").lean();
+        const admin = await Admin.findById(req.admin.id).select("userLoginLocked").lean();
         return res.json({
             success: true,
             userLoginLocked: !!admin?.userLoginLocked
@@ -83,7 +83,7 @@ router.get("/user-login-lock-status", adminAuth, async (req, res) => {
 
 router.post("/force-logout-all-users", adminAuth, async (req, res) => {
     try {
-        const admin = await Admin.findById(req.user.id);
+        const admin = await Admin.findById(req.admin.id);
         if (!admin) return res.status(401).json({ success: false, message: "Admin Not Found" });
 
         const result = await User.updateMany(
@@ -112,7 +112,7 @@ router.post("/force-logout-all-users", adminAuth, async (req, res) => {
 router.post("/enable-all-users", adminAuth, async (req, res) => {
     try {
         const admin = await Admin.findByIdAndUpdate(
-            req.user.id,
+            req.admin.id,
             { userLoginLocked: false },
             { new: true }
         );
