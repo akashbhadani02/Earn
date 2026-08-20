@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const auth = require("../middleware/auth");
 
 const User = require("../models/User");
@@ -148,7 +149,10 @@ router.post("/login", async (req, res) => {
         }
 
         // Security audit: record every successful login and unique device.
+        // Only ONE active session is allowed for a student. A new login creates
+        // a new session id, which immediately invalidates the previous device.
         const clientDeviceId = String(req.headers["x-device-id"] || "").trim().slice(0, 200);
+        const activeSessionId = crypto.randomUUID();
         user.deviceIds = Array.isArray(user.deviceIds) ? user.deviceIds : [];
         if (clientDeviceId && !user.deviceIds.includes(clientDeviceId)) {
             user.deviceIds.push(clientDeviceId);
@@ -167,6 +171,15 @@ router.post("/login", async (req, res) => {
             user.loginHistory = user.loginHistory.slice(-100);
         }
 
+        // Replace the previous login completely. This makes the old device
+        // fail its next authenticated request/heartbeat and log out.
+        user.activeSessionId = activeSessionId;
+        user.activeDeviceId = clientDeviceId;
+
+        // Push notifications belong ONLY to the latest logged-in device.
+        // The new device will save its subscription immediately after login.
+        user.pushSubscriptions = [];
+
         // Student ને Online કરો
         user.isOnline = true;
         user.lastSeen = new Date();
@@ -177,7 +190,8 @@ router.post("/login", async (req, res) => {
 
             {
                 id: user._id,
-                sessionVersion: Number(user.sessionVersion || 0)
+                sessionVersion: Number(user.sessionVersion || 0),
+                activeSessionId
             },
 
             process.env.JWT_SECRET,
@@ -222,11 +236,17 @@ const verifyPresenceToken = async (req) => {
     if (!token) throw new Error("No token provided");
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked");
+    const user = await User.findById(decoded.id).select("sessionVersion activeSessionId isDeleted isBlocked");
     if (!user || user.isDeleted || user.isBlocked) throw new Error("Account is not available");
 
     if (Number(decoded.sessionVersion ?? 0) !== Number(user.sessionVersion || 0)) {
         const e = new Error("Session ended by admin. Please login again.");
+        e.forceLogout = true;
+        throw e;
+    }
+
+    if (!decoded.activeSessionId || decoded.activeSessionId !== String(user.activeSessionId || "")) {
+        const e = new Error("You logged in on another device. This device has been logged out.");
         e.forceLogout = true;
         throw e;
     }

@@ -58,25 +58,10 @@ router.post("/subscribe", auth, async (req, res) => {
             }
         };
 
-        if (!Array.isArray(user.pushSubscriptions)) {
-            user.pushSubscriptions = [];
-        }
-
-        const existingIndex = user.pushSubscriptions.findIndex(
-            item => item.endpoint === cleanSubscription.endpoint
-        );
-
-        if (existingIndex >= 0) {
-            user.pushSubscriptions[existingIndex] = cleanSubscription;
-        } else {
-            user.pushSubscriptions.push(cleanSubscription);
-        }
-
-        // Keep Security deviceCount based on unique browser/device IDs.
-        // Push subscriptions are separate from security device tracking.
-        if (!Array.isArray(user.deviceIds) || user.deviceIds.length === 0) {
-            user.deviceCount = Math.max(Number(user.deviceCount || 0), user.pushSubscriptions.length);
-        }
+        // Only the latest logged-in device receives student notifications.
+        // Login clears the previous subscription; saving here replaces any
+        // leftover/older subscription with this device's current subscription.
+        user.pushSubscriptions = [cleanSubscription];
         await user.save();
 
         return res.json({

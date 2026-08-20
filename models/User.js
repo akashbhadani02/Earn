@@ -96,6 +96,19 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
 
+        // Only one active student login session is allowed at a time.
+        // A new login replaces this value and immediately invalidates the old device/session.
+        activeSessionId: {
+            type: String,
+            default: ""
+        },
+
+        // Persistent browser/device identifier used for the latest active login.
+        activeDeviceId: {
+            type: String,
+            default: ""
+        },
+
         lastSeen: {
             type: Date,
             default: null

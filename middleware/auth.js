@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await User.findById(decoded.id).select("sessionVersion isDeleted isBlocked");
+        const user = await User.findById(decoded.id).select("sessionVersion activeSessionId isDeleted isBlocked");
 
         if (!user || user.isDeleted || user.isBlocked) {
             return res.status(401).json({
@@ -30,6 +30,16 @@ module.exports = async (req, res, next) => {
             return res.status(401).json({
                 success: false,
                 message: "Session ended by admin. Please login again.",
+                forceLogout: true
+            });
+        }
+
+        // Only the latest login session remains valid. If the student logs in
+        // from another device, the previous device is forced out on its next request.
+        if (!decoded.activeSessionId || decoded.activeSessionId !== String(user.activeSessionId || "")) {
+            return res.status(401).json({
+                success: false,
+                message: "You logged in on another device. This device has been logged out.",
                 forceLogout: true
             });
         }
