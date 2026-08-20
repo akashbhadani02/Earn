@@ -40,7 +40,12 @@ router.get("/random", auth, async (req, res) => {
         };
         if (answeredIds.length) baseMatch._id = { $nin: answeredIds };
 
-        const availableCount = await Question.countDocuments(baseMatch);
+        const availableCountResult = await Question.aggregate([
+            { $match: baseMatch },
+            { $group: { _id: { $toLower: { $trim: { input: "$q" } } } } },
+            { $count: "count" }
+        ]);
+        const availableCount = Number(availableCountResult[0]?.count || 0);
         if (availableCount <= 0) {
             return res.json({
                 success: true,
@@ -51,8 +56,18 @@ router.get("/random", auth, async (req, res) => {
             });
         }
 
+        // De-duplicate by normalized question text before sampling. This prevents
+        // the same visible question from appearing again when the database contains
+        // multiple records with different _ids but identical wording.
         const questions = await Question.aggregate([
             { $match: baseMatch },
+            {
+                $group: {
+                    _id: { $toLower: { $trim: { input: "$q" } } },
+                    question: { $first: "$$ROOT" }
+                }
+            },
+            { $replaceRoot: { newRoot: "$question" } },
             { $sample: { size: Math.min(count, availableCount) } },
             { $project: { q: 1, options: 1, correct: 1 } }
         ]);

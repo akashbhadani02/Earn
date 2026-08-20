@@ -2133,6 +2133,10 @@ body.notification-locked #notificationRequiredOverlay button{
                 const data = await res.json();
 
                 if (!data.success) {
+                    if (data.repeated || res.status === 409 || /already answered|cannot be repeated|repeat/i.test(String(data.message || ""))) {
+                        // Do not show the technical duplicate message to students.
+                        return false;
+                    }
                     alert(data.message || "Quiz reward failed");
                     return false;
                 }
@@ -2485,9 +2489,24 @@ body.notification-locked #notificationRequiredOverlay button{
                         const saved = await updateWallet(isCorrect, q._id);
 
                         if (!saved) {
-                            optDiv.querySelectorAll("button").forEach(btn => btn.disabled = false);
+                            // A duplicate answer is never shown as an error to the student.
+                            // Remove the question from the local batch and immediately move on.
+                            quizData = quizData.filter(item => String(item?._id) !== String(q._id));
+                            if (!quizData.length) {
+                                await loadQuestionBank();
+                            }
+                            if (quizData.length) {
+                                setTimeout(() => {
+                                    if (!document.getElementById("quiz")?.classList.contains("hidden")) loadQuiz();
+                                }, 50);
+                            }
                             return;
                         }
+
+                        // IMPORTANT: remove the answered question from the in-memory batch
+                        // immediately. Otherwise random selection can show the same question
+                        // again before the next API request.
+                        quizData = quizData.filter(item => String(item?._id) !== String(q._id));
 
                         const buttons = optDiv.querySelectorAll(".option-btn");
                         buttons.forEach(btn => btn.disabled = true);
