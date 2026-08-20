@@ -2567,33 +2567,36 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             await loadDashboard();
         }
 
-        async function makePermanentUser(id) {
+        async function permanentlyDeleteUser(id) {
             if (!confirm(
-                "Make this deleted user a Permanent User?\n\n" +
-                "The user will be restored and protected from future deletion."
+                "Permanently delete this USER?\\n\\n" +
+                "This user will be removed from the Recycle Bin and cannot be restored.\\n" +
+                "This action cannot be undone."
             )) return;
 
             try {
-                const res = await fetch("/api/admin/permanent-user/" + id, {
-                    method: "PUT",
+                const res = await fetch("/api/admin/permanent-delete-user/" + encodeURIComponent(id), {
+                    method: "DELETE",
                     headers: { Authorization: "Bearer " + token }
                 });
+
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    alert(data.message || "Permanent user action failed");
+                    alert(data.message || "Permanent user deletion failed");
                     return;
                 }
 
-                alert("✅ User restored and marked as Permanent User.");
+                alert("🗑️ User permanently deleted.");
                 await loadDeletedUsers();
                 await loadUsers();
                 await loadDashboard();
             } catch (err) {
-                console.error("Permanent User Error:", err);
+                console.error("Permanent Delete User Error:", err);
                 alert("❌ " + err.message);
             }
         }
+
 
         function escapeHtml(value) {
             return String(value ?? "")
@@ -2893,9 +2896,9 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                                     ♻️ Restore
                                 </button>
                                 <button
-                                    onclick="makePermanentUser('${user._id}')"
-                                    style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
-                                    ⭐ Permanent User
+                                    onclick="permanentlyDeleteUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#dc2626,#991b1b);">
+                                    🗑️ Delete Permanently
                                 </button>
                             </td>
                         </tr>
