@@ -4258,6 +4258,45 @@ window.ap2PermanentDelete = async id => {
             loadUserLoginLockStatus();
         });
 </script>
+
+<style id="adminMobileCompactCards">
+/* Mobile user cards: keep the compact desktop density; do not enlarge cards/fonts. */
+@media (max-width: 600px){
+  .admin-user-cards{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+  }
+  .admin-user-card{
+    padding:10px !important;
+    border-radius:12px !important;
+    border-left-width:4px !important;
+    box-shadow:0 5px 14px rgba(15,23,42,.08) !important;
+  }
+  .admin-user-card-head{gap:6px !important}
+  .admin-user-identity{gap:6px !important}
+  .admin-status-dot{width:9px !important;height:9px !important;flex-basis:9px !important;box-shadow:0 0 0 2px rgba(255,255,255,.7) !important}
+  .admin-user-name{font-size:13px !important;max-width:105px !important}
+  .admin-user-mobile{font-size:10px !important;margin-top:2px !important}
+  .admin-user-status{font-size:8px !important;padding:4px 5px !important;letter-spacing:.2px !important}
+  .admin-user-lastseen{margin:7px 0 !important;padding:5px 6px !important;font-size:9px !important;border-radius:7px !important}
+  .admin-user-stats{gap:5px !important}
+  .admin-stat{padding:6px !important;border-radius:7px !important}
+  .admin-stat span{font-size:7px !important;letter-spacing:0 !important}
+  .admin-stat strong{font-size:11px !important;margin-top:1px !important}
+  .admin-user-actions{gap:5px !important;margin-top:7px !important}
+  .admin-user-actions button{min-height:30px !important;padding:5px 4px !important;font-size:9px !important;border-radius:7px !important}
+}
+@media (max-width:380px){
+  .admin-user-cards{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:6px !important}
+  .admin-user-card{padding:8px !important}
+  .admin-user-name{font-size:12px !important;max-width:92px !important}
+  .admin-user-mobile{font-size:9px !important}
+  .admin-stat{padding:5px !important}
+  .admin-stat span{font-size:6.5px !important}
+  .admin-stat strong{font-size:10px !important}
+  .admin-user-actions button{font-size:8px !important;min-height:28px !important}
+}
+</style>
 </body>
 
 </html>
