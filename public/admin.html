@@ -1343,6 +1343,7 @@
             <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
             <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
             <button onclick="deleteAllQuestions()" style="background:#dc2626;">🗑️ Delete All Questions</button>
+            <button onclick="resetAllStudentQuestionProgress()" style="background:#7c3aed;">🔄 Reset Student Question Progress</button>
             <button onclick="permanentlyDeleteAllQuestions()" style="background:#991b1b;border:2px solid #fecaca;">☠️ Permanently Delete ALL From Database</button>
             <button onclick="loadQuestionRecycleBin()" style="background:#7c3aed;">♻️ Question Recycle Bin</button>
             <button id="downloadBtn" class="btn btn-success">📥 Download Questions JSON</button>
@@ -2309,6 +2310,20 @@ style="background:#16a34a;">
             await loadQuestionRecycleBin();
             await loadDashboard();
             alert(`✅ ${Number(data.deleted || 0)} question(s) permanently deleted.`);
+        }
+
+        async function resetAllStudentQuestionProgress() {
+            if (!confirm("⚠️ Reset question progress for ALL students?\n\nThis will allow every student to receive previously answered questions again.")) return;
+            if (!confirm("Final confirmation: reset ALL students' answered-question history?")) return;
+            try {
+                const res = await fetch("/api/questions/admin/reset-student-progress", {
+                    method: "PUT",
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) { alert(data.message || "Question reset failed"); return; }
+                alert("✅ " + data.message);
+            } catch (err) { alert("Question reset failed: " + err.message); }
         }
 
         //==========================

@@ -1957,8 +1957,16 @@ body.notification-locked #notificationRequiredOverlay button{
                         }
                     });
                     const data = await res.json().catch(() => null);
-                    if (res.ok && data && data.success && Array.isArray(data.questions)) {
-                        list = data.questions;
+                    if (res.ok && data && data.success) {
+                        if (data.completed) {
+                            quizData = [];
+                            const qEl = document.getElementById("question");
+                            const optEl = document.getElementById("options");
+                            if (qEl) qEl.innerText = "🎉 બધા questions પૂરા થઈ ગયા છે!";
+                            if (optEl) optEl.innerHTML = '<div style="padding:14px;text-align:center;color:#16a34a;font-weight:800;">આ student માટે Question Bankના બધા questions complete થઈ ગયા છે. Repeat question નહીં આવે.</div>';
+                            return [];
+                        }
+                        if (Array.isArray(data.questions)) list = data.questions;
                     }
                 } catch (apiErr) {
                     console.warn("Random question API unavailable.", apiErr);
@@ -1970,6 +1978,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         Array.isArray(q.options) && q.options.length >= 2 &&
                         Number.isInteger(correct) && correct >= 0 && correct < q.options.length;
                 }).map(q => ({
+                    _id: q._id,
                     q: String(q.q).trim(),
                     options: q.options.map(String),
                     correct: Number(q.correct)
@@ -2110,7 +2119,7 @@ body.notification-locked #notificationRequiredOverlay button{
             }
         }
 
-        async function updateWallet(correct) {
+        async function updateWallet(correct, questionId) {
             try {
                 const res = await fetch("/api/wallet/quiz", {
                     method: "POST",
@@ -2118,7 +2127,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + token
                     },
-                    body: JSON.stringify({ correct: Boolean(correct) })
+                    body: JSON.stringify({ correct: Boolean(correct), questionId })
                 });
 
                 const data = await res.json();
@@ -2473,7 +2482,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         }
 
                         const isCorrect = i === Number(q.correct);
-                        const saved = await updateWallet(isCorrect);
+                        const saved = await updateWallet(isCorrect, q._id);
 
                         if (!saved) {
                             optDiv.querySelectorAll("button").forEach(btn => btn.disabled = false);

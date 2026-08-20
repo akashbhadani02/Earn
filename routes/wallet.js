@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("../models/User");
+const Question = require("../models/Question");
 const auth = require("../middleware/auth");
 
 const DAILY_REWARD_AMOUNT = 5;
@@ -73,12 +74,12 @@ router.get("/", auth, async (req, res) => {
 // =============================
 router.post("/quiz", auth, async (req, res) => {
     try {
-        const { correct } = req.body;
+        const { correct, questionId } = req.body;
 
-        if (typeof correct !== "boolean") {
+        if (typeof correct !== "boolean" || !questionId) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid quiz result"
+                message: "Invalid quiz result or question"
             });
         }
 
@@ -94,6 +95,21 @@ router.post("/quiz", auth, async (req, res) => {
                 message: "User not found"
             });
         }
+
+        const question = await Question.findOne({ _id: questionId, isDeleted: { $ne: true } }).select("_id").lean();
+        if (!question) {
+            return res.status(404).json({ success: false, message: "Question is no longer available" });
+        }
+
+        const answered = Array.isArray(user.answeredQuestionIds) ? user.answeredQuestionIds : [];
+        if (answered.some(id => String(id) === String(question._id))) {
+            return res.status(409).json({
+                success: false,
+                repeated: true,
+                message: "This question was already answered and cannot be repeated."
+            });
+        }
+        user.answeredQuestionIds = answered.concat(question._id);
 
         // =============================
         // Count today's answered questions

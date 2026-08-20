@@ -66,6 +66,13 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        // Question IDs already answered by this student. These are cleared only when
+        // an admin resets the student's question progress.
+        answeredQuestionIds: {
+            type: [mongoose.Schema.Types.ObjectId],
+            default: []
+        },
+
         totalEarn: {
             type: Number,
             default: 0,

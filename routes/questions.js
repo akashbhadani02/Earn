@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Question = require("../models/Question");
+const User = require("../models/User");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
 
@@ -27,19 +28,38 @@ router.get("/random", auth, async (req, res) => {
     try {
         const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
         await ensureQuestionsSeeded();
+        const user = await User.findById(req.user.id).select("answeredQuestionIds").lean();
+        const answeredIds = Array.isArray(user?.answeredQuestionIds)
+            ? user.answeredQuestionIds.map(String)
+            : [];
+
+        const baseMatch = {
+            isDeleted: { $ne: true },
+            q: { $type: "string" },
+            options: { $type: "array" }
+        };
+        if (answeredIds.length) baseMatch._id = { $nin: answeredIds };
+
+        const availableCount = await Question.countDocuments(baseMatch);
+        if (availableCount <= 0) {
+            return res.json({
+                success: true,
+                completed: true,
+                totalQuestions: 0,
+                questions: [],
+                message: "🎉 All available questions are completed. No repeat questions will be shown."
+            });
+        }
+
         const questions = await Question.aggregate([
-            { $match: {
-                isDeleted: { $ne: true },
-                q: { $type: "string" },
-                options: { $type: "array" }
-            } },
-            { $sample: { size: count } },
-            { $project: { q: 1, options: 1, correct: 1, _id: 0 } }
+            { $match: baseMatch },
+            { $sample: { size: Math.min(count, availableCount) } },
+            { $project: { q: 1, options: 1, correct: 1 } }
         ]);
         const validQuestions = questions.filter(q => q.q && Array.isArray(q.options) &&
             q.options.length >= 2 && Number.isInteger(Number(q.correct)) &&
             Number(q.correct) >= 0 && Number(q.correct) < q.options.length);
-        return res.json({ success: true, totalQuestions: validQuestions.length, questions: validQuestions });
+        return res.json({ success: true, completed: false, totalQuestions: validQuestions.length, questions: validQuestions });
     } catch (err) {
         console.error("Random Questions Error:", err);
         return res.status(500).json({ success: false, message: err.message });
@@ -341,6 +361,24 @@ router.delete("/admin/permanent-all", adminAuth, async (req, res) => {
             success: false,
             message: err.message || "Could not permanently delete all questions"
         });
+    }
+});
+
+// Admin: reset answered-question history for every student.
+router.put("/admin/reset-student-progress", adminAuth, async (req, res) => {
+    try {
+        const result = await User.updateMany(
+            {},
+            { $set: { answeredQuestionIds: [], dailyQuestionsAnswered: 0, spinCycleQuestionsAnswered: 0 } }
+        );
+        return res.json({
+            success: true,
+            students: Number(result.modifiedCount || 0),
+            message: `Question progress reset for ${Number(result.modifiedCount || 0)} student(s).`
+        });
+    } catch (err) {
+        console.error("Reset Student Question Progress Error:", err);
+        return res.status(500).json({ success: false, message: err.message || "Could not reset question progress" });
     }
 });
 

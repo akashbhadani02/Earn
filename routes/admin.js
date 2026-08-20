@@ -1185,6 +1185,7 @@ router.put("/control-center/reset-questions/:id", adminAuth, async (req,res) => 
         user.dailyQuestionsAnswered=0;
         user.spinCycleQuestionsAnswered=0;
         user.dailyQuestionsDate=todayKey();
+        user.answeredQuestionIds=[];
         await user.save();
         return res.json({success:true,message:"Today's question count reset"});
     } catch(err){ return res.status(500).json({success:false,message:err.message}); }
@@ -1334,7 +1335,7 @@ router.put("/pro/wallet/:id", adminAuth, async(req,res)=>{
 router.put("/pro/reset-questions/:id", adminAuth, async(req,res)=>{
     try{
         const u=await User.findById(req.params.id);if(!u)return res.status(404).json({success:false,message:"Student not found"});
-        u.dailyQuestionsAnswered=0;u.dailyQuestionsDate=proTodayKey();await proAdminLog(u,"RESET_QUESTIONS","Daily question counter reset");await u.save();
+        u.dailyQuestionsAnswered=0;u.dailyQuestionsDate=proTodayKey();u.spinCycleQuestionsAnswered=0;u.answeredQuestionIds=[];await proAdminLog(u,"RESET_QUESTIONS","Question progress and answered-question history reset");await u.save();
         res.json({success:true});
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
