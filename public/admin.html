@@ -895,6 +895,23 @@
   border: 1px solid #22c55e !important;
 }
 
+/* Online student name buttons use the admin theme, not the status green border */
+.users-online-name-item,
+.users-online-name-item:hover,
+.users-online-name-item:focus,
+.users-online-name-item:active {
+  color: #172033 !important;
+  background: #ffffff !important;
+  border: 1px solid #dbe3ee !important;
+  outline: none !important;
+  box-shadow: 0 2px 7px rgba(15,23,42,.06) !important;
+}
+.users-online-name-item:hover {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+.users-online-name-item .dot { color: #16a34a !important; }
+
 /* Offline = Red */
 .offline,
 .status-offline,
