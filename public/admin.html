@@ -4216,6 +4216,28 @@ ${w.status === "Approved" ? `
             margin-top: 4px
         }
 
+
+        /* Security details: colorful, readable and mobile-friendly */
+        .ap2-security-panel{color:#172033}
+        .ap2-security-summary{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;margin:14px 0 20px}
+        .ap2-security-card{background:linear-gradient(145deg,#ffffff,#f8fafc);border:1px solid #dbe5ef;border-radius:13px;padding:12px;box-shadow:0 4px 12px rgba(15,23,42,.06)}
+        .ap2-security-card:nth-child(1){border-top:4px solid #2563eb}.ap2-security-card:nth-child(2){border-top:4px solid #7c3aed}.ap2-security-card:nth-child(3){border-top:4px solid #16a34a}.ap2-security-card:nth-child(4){border-top:4px solid #f59e0b}.ap2-security-card:nth-child(5){border-top:4px solid #dc2626}
+        .ap2-security-card b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:5px}
+        .ap2-security-card span{display:block;font-size:15px;font-weight:800;color:#0f172a;overflow-wrap:anywhere}
+        .ap2-security-section{margin:18px 0;padding:14px;border:1px solid #e2e8f0;border-radius:15px;background:#fff;box-shadow:0 5px 16px rgba(15,23,42,.06)}
+        .ap2-security-section h3{margin:0 0 10px;color:#0f172a;font-size:16px}
+        .ap2-security-table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #e2e8f0;border-radius:10px;background:#fff}
+        .ap2-security-table th{background:linear-gradient(90deg,#1e3a8a,#2563eb);color:#fff;padding:9px;text-align:left;font-size:11px}
+        .ap2-security-table td{background:#fff;color:#172033;padding:9px;border-bottom:1px solid #e8eef5;font-size:11px;vertical-align:top;overflow-wrap:anywhere}
+        .ap2-security-table tr:last-child td{border-bottom:0}
+        .ap2-security-table tr:nth-child(even) td{background:#f8fafc}
+        .ap2-security-agent{max-width:360px;word-break:break-word;color:#475569!important}
+        .ap2-security-risk-high{background:#dc2626!important;color:#fff!important;border:1px solid #b91c1c!important}
+        .ap2-security-risk-medium{background:#f59e0b!important;color:#111827!important;border:1px solid #d97706!important}
+        .ap2-security-risk-low{background:#16a34a!important;color:#fff!important;border:1px solid #15803d!important}
+        @media(max-width:900px){.ap2-security-summary{grid-template-columns:repeat(3,minmax(120px,1fr))}}
+        @media(max-width:600px){.ap2-security-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.ap2-security-card{padding:9px}.ap2-security-card span{font-size:13px}.ap2-security-section{padding:9px;margin:12px 0}.ap2-security-table{display:block;overflow-x:auto;white-space:normal}.ap2-security-table th,.ap2-security-table td{padding:7px;font-size:10px;min-width:80px}.ap2-security-agent{max-width:220px}}
+
         @media(max-width:600px) {
             #adminProV2 {
                 padding: 14px
@@ -4394,29 +4416,38 @@ ${w.status === "Approved" ? `
                 const warnings = Array.isArray(u.warningHistory) ? u.warningHistory.slice().reverse() : [];
                 const activity = Array.isArray(u.adminActivity) ? u.adminActivity.slice().reverse() : [];
                 const risk = ap2SecurityRisk(u);
-                document.getElementById("ap2Title").textContent = "🔐 Security — " + name(u);
+                const riskClass = risk === "HIGH" ? "ap2-security-risk-high" : risk === "MEDIUM" ? "ap2-security-risk-medium" : "ap2-security-risk-low";
+                document.getElementById("ap2Title").textContent = "🔐 Security Details — " + name(u);
                 document.getElementById("ap2Body").innerHTML = `
-                    <div class="ap2-kv">
-                        <div><b>Student ID</b><span>${esc(uid(u))}</span></div>
-                        <div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
-                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"ap2-red":risk==="MEDIUM"?"ap2-yellow":"ap2-green"}">${risk}</span></span></div>
-                        <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
-                        <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
-                        <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
-                        <div><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
-                        <div><b>Login Records</b><span>${history.length}</span></div>
-                        <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
-                        <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
-                    </div>
-                    <h3>🔑 Login History</h3>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
-                    ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
-                    <h3>⚠️ Warning History</h3>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
-                    ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
-                    <h3>🛡️ Admin Security Activity</h3>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
-                    ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
+                    <div class="ap2-security-panel">
+                        <div class="ap2-security-summary">
+                            <div class="ap2-security-card"><b>Student ID</b><span>${esc(uid(u))}</span></div>
+                            <div class="ap2-security-card"><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
+                            <div class="ap2-security-card"><b>Risk Level</b><span><span class="ap2-badge ${riskClass}">${risk}</span></span></div>
+                            <div class="ap2-security-card"><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
+                            <div class="ap2-security-card"><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
+                            <div class="ap2-security-card"><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
+                            <div class="ap2-security-card"><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
+                            <div class="ap2-security-card"><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
+                            <div class="ap2-security-card"><b>Login Records</b><span>${history.length}</span></div>
+                            <div class="ap2-security-card"><b>Account Status</b><span>${u.isBlocked ? "🚫 Blocked" : "🟢 Active"}</span></div>
+                        </div>
+                        <div class="ap2-security-section">
+                            <h3>🔑 Login History <span class="ap2-badge ap2-blue">${history.length}</span></h3>
+                            <div class="ap2-tablewrap"><table class="ap2-security-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
+                            ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td class="ap2-security-agent">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
+                        </div>
+                        <div class="ap2-security-section">
+                            <h3>⚠️ Warning History <span class="ap2-badge ap2-yellow">${warnings.length}</span></h3>
+                            <div class="ap2-tablewrap"><table class="ap2-security-table"><tr><th>Time</th><th>Reason</th></tr>
+                            ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
+                        </div>
+                        <div class="ap2-security-section">
+                            <h3>🛡️ Admin Security Activity <span class="ap2-badge ap2-blue">${activity.length}</span></h3>
+                            <div class="ap2-tablewrap"><table class="ap2-security-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
+                            ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td><span class="ap2-badge ap2-blue">${esc(x.action||"-")}</span></td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>
+                        </div>
+                    </div>`;
                 document.getElementById("ap2Modal").classList.add("show");
             };
             function ap2RenderSecurity() {
