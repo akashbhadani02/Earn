@@ -154,10 +154,8 @@ router.get("/dashboard", adminAuth, async (req, res) => {
 
                 user.withdrawRequests.forEach(w => {
 
-                    if (w.status === "Pending") {
-
+                    if (String(w.status || "Pending").toLowerCase() === "pending") {
                         pendingWithdraw++;
-
                     }
 
                 });

@@ -1353,7 +1353,14 @@ h2::after{background:linear-gradient(90deg,#2563eb,#7c3aed) !important}
   box-shadow:var(--admin-shadow) !important;
 }
 .card h3{color:#64748b !important;font-size:13px !important}
-.card h1{font-size:34px !important}
+ .card h1{font-size:34px !important}
+.card #withdraw,.card #questionBankTotal{display:block !important;color:#0f172a !important;font-weight:950 !important;opacity:1 !important;visibility:visible !important;}
+#adminSectionDashboard .card:nth-child(5){background:linear-gradient(135deg,#fff7ed,#ffedd5) !important;border-color:#fdba74 !important;}
+#adminSectionDashboard .card:nth-child(5) h3{color:#9a3412 !important;}
+#adminSectionDashboard .card:nth-child(5) h1{color:#c2410c !important;}
+#adminSectionDashboard .card:nth-child(6){background:linear-gradient(135deg,#eff6ff,#dbeafe) !important;border-color:#93c5fd !important;}
+#adminSectionDashboard .card:nth-child(6) h3{color:#1d4ed8 !important;}
+#adminSectionDashboard .card:nth-child(6) h1{color:#1e40af !important;}
 
 /* Tables: readable on desktop */
 .table-wrap{
@@ -2045,83 +2052,6 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
 }
 </style>
 
-
-<style id="final-command-center-color-fix">
-/* Final theme correction: Command Center controls/cards must never fall back to browser black. */
-#adminSectionCommand.adminProV2 .ap2-btn,
-#adminSectionCommand.adminProV2 button.ap2-btn {
-  background: #2563eb !important;
-  border: 1px solid #2563eb !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  box-shadow: 0 3px 10px rgba(37,99,235,.25) !important;
-}
-#adminSectionCommand.adminProV2 .ap2-head .ap2-flex .ap2-btn:first-child {
-  background: #2563eb !important; border-color:#2563eb !important;
-}
-#adminSectionCommand.adminProV2 .ap2-head .ap2-flex .ap2-btn:last-child {
-  background: #16a34a !important; border-color:#16a34a !important;
-}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(1) {background:#2563eb !important;border-color:#2563eb !important;color:#fff !important;}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(2) {background:#16a34a !important;border-color:#16a34a !important;color:#fff !important;}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(3) {background:#f59e0b !important;border-color:#f59e0b !important;color:#111827 !important;-webkit-text-fill-color:#111827 !important;}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(4) {background:#dc2626 !important;border-color:#dc2626 !important;color:#fff !important;}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(5) {background:#7c3aed !important;border-color:#7c3aed !important;color:#fff !important;}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(6) {background:#0891b2 !important;border-color:#0891b2 !important;color:#fff !important;}
-#adminSectionCommand.adminProV2 .ap2-tabs .ap2-btn:nth-child(7) {background:#ea580c !important;border-color:#ea580c !important;color:#fff !important;}
-
-#adminSectionCommand.adminProV2 .ap2-card {
-  background: linear-gradient(135deg,#1d4ed8,#2563eb) !important;
-  border: 1px solid rgba(255,255,255,.16) !important;
-  color:#fff !important;
-}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(2) {background:linear-gradient(135deg,#059669,#16a34a) !important;}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(3) {background:linear-gradient(135deg,#7c3aed,#9333ea) !important;}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(4) {background:linear-gradient(135deg,#d97706,#f59e0b) !important;}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(5) {background:linear-gradient(135deg,#0891b2,#06b6d4) !important;}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(6) {background:linear-gradient(135deg,#db2777,#ec4899) !important;}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(7) {background:linear-gradient(135deg,#dc2626,#ef4444) !important;}
-#adminSectionCommand.adminProV2 .ap2-card:nth-child(8) {background:linear-gradient(135deg,#4f46e5,#7c3aed) !important;}
-#adminSectionCommand.adminProV2 .ap2-card .ap2-lbl,
-#adminSectionCommand.adminProV2 .ap2-card .ap2-val {color:#fff !important;-webkit-text-fill-color:#fff !important;}
-
-#adminSectionCommand.adminProV2 .ap2-pane .ap2-flex .ap2-btn {
-  background:#2563eb !important;border-color:#2563eb !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
-}
-#adminSectionCommand.adminProV2 .ap2-pane .ap2-table td:last-child .ap2-btn {
-  background:#2563eb !important;border-color:#2563eb !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
-}
-#adminSectionCommand.adminProV2 .ap2-pane .ap2-table td:last-child .ap2-btn:nth-child(2) {
-  background:#16a34a !important;border-color:#16a34a !important;
-}
-#adminSectionCommand.adminProV2 .ap2-pane .ap2-table td:last-child .ap2-btn:nth-child(3) {
-  background:#f59e0b !important;border-color:#f59e0b !important;color:#111827 !important;-webkit-text-fill-color:#111827 !important;
-}
-#adminSectionCommand.adminProV2 .ap2-pane .ap2-table td:last-child .ap2-btn:nth-child(4) {
-  background:#dc2626 !important;border-color:#dc2626 !important;
-}
-#adminSectionCommand.adminProV2 .ap2-input {
-  color:#111827 !important;background:#fff !important;border:1px solid #cbd5e1 !important;
-}
-#adminSectionCommand.adminProV2 .ap2-modal .ap2-btn {background:#dc2626 !important;border-color:#dc2626 !important;color:#fff !important;}
-
-@media(max-width:600px){
-  #adminSectionCommand.adminProV2 .ap2-head .ap2-flex,
-  #adminSectionCommand.adminProV2 .ap2-tabs {width:100% !important;}
-  #adminSectionCommand.adminProV2 .ap2-btn {min-height:42px !important;font-size:11px !important;}
-}
-
-/* Deleted-student actions: clear theme colors and no browser-black fallback. */
-#adminSectionDeleted button[onclick*="restoreUser"] {
-  background:linear-gradient(135deg,#16a34a,#15803d) !important;
-  border-color:#15803d !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
-}
-#adminSectionDeleted button[onclick*="permanentDeleteUser"] {
-  background:linear-gradient(135deg,#dc2626,#991b1b) !important;
-  border-color:#991b1b !important;color:#fff !important;-webkit-text-fill-color:#fff !important;
-}
-</style>
-
 </head>
 
 <body>
@@ -2604,43 +2534,27 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
         //==========================
 
         async function loadDashboard() {
+            try {
+                const res = await fetch("/api/admin/dashboard?_=" + Date.now(), {
+                    cache: "no-store",
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Dashboard data load failed");
 
-            const res = await fetch("/api/admin/dashboard", {
-
-                headers: {
-
-                    Authorization: "Bearer " + token
-
-                }
-
-            });
-
-            const data = await res.json();
-
-            if (!data.success) {
-
-                alert(data.message);
-
-                return;
-
+                const setValue = (id, value) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = String(value ?? 0);
+                };
+                setValue("totalUsers", Number(data.totalUsers || 0));
+                setValue("wallet", Number(data.totalWallet || 0).toFixed(2));
+                setValue("earn", Number(data.totalEarn || 0).toFixed(2));
+                setValue("totalQuestions", Number(data.totalQuestionsAnswered || 0));
+                setValue("questionBankTotal", Number(data.questionBankTotal || 0));
+                setValue("withdraw", Number(data.pendingWithdraw || 0));
+            } catch (err) {
+                console.error("Dashboard load error:", err);
             }
-
-            document.getElementById("totalUsers").innerHTML = data.totalUsers;
-            document.getElementById("wallet").innerHTML =
-                Number(data.totalWallet).toFixed(2);
-
-            document.getElementById("earn").innerHTML =
-                Number(data.totalEarn).toFixed(2);
-
-            document.getElementById("totalQuestions").innerHTML =
-                Number(data.totalQuestionsAnswered || 0);
-
-            document.getElementById("questionBankTotal").innerHTML =
-                Number(data.questionBankTotal || 0);
-
-            document.getElementById("withdraw").innerHTML =
-                Number(data.pendingWithdraw || 0);
-
         }
 
         //==========================
