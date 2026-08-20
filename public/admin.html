@@ -1374,6 +1374,27 @@ button[onclick^="deleteUser"],button[onclick^="rejectWithdraw"]{box-shadow:0 5px
 </style>
 
 
+<style id="adminQuestionCardGrid">
+.admin-question-cards{display:grid;grid-template-columns:repeat(4,minmax(240px,1fr));gap:14px;margin-top:14px;}
+.admin-question-card{background:#fff;border:1px solid #dbe4ee;border-radius:16px;padding:15px;box-shadow:0 7px 22px rgba(15,23,42,.08);min-width:0;}
+.admin-question-card:hover{box-shadow:0 11px 28px rgba(15,23,42,.12);transform:translateY(-1px);}
+.admin-question-number{font-size:11px;font-weight:900;color:#64748b;margin-bottom:7px;}
+.admin-question-text{font-size:15px;font-weight:900;line-height:1.4;color:#172033;word-break:break-word;margin-bottom:10px;}
+.admin-question-options{display:grid;gap:6px;}
+.admin-question-option{padding:8px 9px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px;line-height:1.35;color:#334155;word-break:break-word;}
+.admin-question-option.correct{background:#dcfce7;border-color:#86efac;color:#166534;font-weight:900;}
+.admin-question-meta{margin-top:10px;padding:8px 9px;border-radius:9px;background:#eff6ff;color:#1e40af;font-size:11px;font-weight:900;}
+.admin-question-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px;}
+.admin-question-actions button{min-height:38px!important;border-radius:9px!important;font-size:12px!important;font-weight:800!important;}
+.admin-question-card.deleted{background:#fff7f7;border-color:#fecaca;}
+.admin-question-deleted{margin-top:8px;color:#991b1b;font-size:11px;font-weight:800;}
+.online-users-dashboard-btn{border:0;border-radius:14px;padding:16px 18px;background:linear-gradient(135deg,#166534,#22c55e);color:#fff;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 8px 20px rgba(22,101,52,.2);text-align:left;}
+.online-users-dashboard-btn strong{display:block;font-size:30px;line-height:1.1;margin-top:5px;}
+@media(max-width:1250px){.admin-question-cards{grid-template-columns:repeat(3,minmax(230px,1fr));}}
+@media(max-width:900px){.admin-question-cards{grid-template-columns:repeat(2,minmax(220px,1fr));}}
+@media(max-width:600px){.admin-question-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.admin-question-card{padding:10px;border-radius:12px}.admin-question-text{font-size:13px}.admin-question-option{font-size:11px;padding:6px}.admin-question-actions{grid-template-columns:1fr;gap:5px}.admin-question-actions button{min-height:34px!important;font-size:11px!important}.online-users-dashboard-btn{padding:12px;font-size:14px}.online-users-dashboard-btn strong{font-size:24px;}}
+</style>
+
 <style id="adminUserCardGrid">
 /* All users: clear responsive card grid instead of a dense table. */
 .admin-user-cards{
@@ -1586,6 +1607,10 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             <h3>Question Bank</h3>
             <h1 id="questionBankTotal">0</h1>
         </div>
+
+        <button id="onlineUsersDashboardBtn" class="online-users-dashboard-btn" onclick="showOnlineUsers()">
+            🟢 Online Users <strong id="onlineUsersCount">0</strong>
+        </button>
 
     </div>
     </section>
@@ -1872,20 +1897,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
         </div>
         <div class="page-info" id="repeatInfo"></div>
         <div class="page-info" id="questionInfo">Loading questions...</div>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Question</th>
-                        <th>Options</th>
-                        <th>Correct</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody id="questionTable"></tbody>
-            </table>
-        </div>
+        <div id="questionTable" class="admin-question-cards" aria-live="polite"></div>
         <div class="question-actions" style="margin-top:12px;">
             <button onclick="changeQuestionPage(-1)" style="background-color: #1d4ed8;">◀ Previous</button>
             <button onclick="changeQuestionPage(1)" style="background-color: #1d4ed8;">Next ▶</button>
@@ -1900,19 +1912,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                 </div>
             </div>
             <div class="page-info" id="questionRecycleInfo"></div>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Deleted Question</th>
-                            <th>Deleted At</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="questionRecycleTable"></tbody>
-                </table>
-            </div>
+            <div id="questionRecycleTable" class="admin-question-cards recycle" aria-live="polite"></div>
         </div>
     </section>
 
@@ -2085,6 +2085,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             allUsers = data.users || [];
 
             showUsers(allUsers);
+            updateOnlineUsersCount();
 
         }
 
@@ -2143,7 +2144,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                 const warnings = Number(user.warningCount || 0);
                 const statusClass = isOnline ? 'is-online' : 'is-offline';
                 return `
-                <article class="admin-user-card ${statusClass}" data-user-id="${user._id}">
+                <article class="admin-user-card ${statusClass}" data-user-id="${user._id}" onclick="focusUserCard('${user._id}')">
                     <div class="admin-user-card-head">
                         <div class="admin-user-identity">
                             <span class="admin-status-dot"></span>
@@ -2166,7 +2167,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                         <div class="admin-stat"><span>Total Earn</span><strong>₹${Number(user.totalEarn || 0).toFixed(2)}</strong></div>
                     </div>
 
-                    <div class="admin-user-actions">
+                    <div class="admin-user-actions" onclick="event.stopPropagation()">
                         <button onclick="editWallet('${user._id}',${user.wallet || 0})" title="Edit Wallet">💰 Wallet</button>
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
@@ -2210,6 +2211,47 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             document.body.appendChild(modal);
             modal.querySelector('#closeActivityStats').onclick=()=>modal.remove();
             modal.addEventListener('click',e=>{if(e.target===modal)modal.remove()});
+        }
+
+        function isUserOnlineNow(user) {
+            const t = user?.lastSeen ? new Date(user.lastSeen).getTime() : 0;
+            return t > 0 && (Date.now() - t) <= 7000;
+        }
+
+        function updateOnlineUsersCount() {
+            const count = allUsers.filter(isUserOnlineNow).length;
+            const el = document.getElementById("onlineUsersCount");
+            if (el) el.textContent = count;
+            const ap2 = document.getElementById("ap2Online");
+            if (ap2) ap2.textContent = count;
+            return count;
+        }
+
+        function showOnlineUsers() {
+            const onlineUsers = allUsers.filter(isUserOnlineNow);
+            const usersSection = document.getElementById("adminSectionUsers");
+            if (typeof showAdminSection === "function") showAdminSection("users");
+            showUsers(onlineUsers);
+            const search = document.getElementById("search");
+            if (search) search.value = "";
+            setTimeout(() => usersSection?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+            updateOnlineUsersCount();
+        }
+
+        function focusUserCard(id) {
+            if (typeof showAdminSection === "function") showAdminSection("users");
+            const card = document.querySelector(`.admin-user-card[data-user-id="${CSS.escape(String(id))}"]`);
+            if (card) {
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+                card.style.outline = "4px solid #2563eb";
+                setTimeout(() => card.style.outline = "", 1800);
+            } else {
+                const user = allUsers.find(u => String(u._id) === String(id));
+                if (user) {
+                    showUsers([user]);
+                    setTimeout(() => document.querySelector(`.admin-user-card[data-user-id="${CSS.escape(String(id))}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
+                }
+            }
         }
 
         //==========================
@@ -2463,16 +2505,19 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                     `<div style="${i === Number(question.correct) ? 'font-weight:800;text-decoration:underline;' : ''}">${i + 1}. ${escapeHtml(option)}</div>`
                 ).join("");
 
-                return `<tr>
-                    <td>${startNumber + index + 1}</td>
-                    <td style="min-width:280px;max-width:500px;white-space:normal;">${escapeHtml(question.q)}</td>
-                    <td style="min-width:220px;white-space:normal;">${options}</td>
-                    <td>Option ${Number(question.correct) + 1}</td>
-                    <td>
-                        <button onclick="openQuestionEditorById('${question._id}')" style="background:#22c55e;">✏️ Edit</button>
+                const optionCards = (question.options || []).map((option, i) =>
+                    `<div class="admin-question-option ${i === Number(question.correct) ? 'correct' : ''}">${i === Number(question.correct) ? '✅ ' : ''}${i + 1}. ${escapeHtml(option)}</div>`
+                ).join("");
+                return `<article class="admin-question-card">
+                    <div class="admin-question-number">Question #${startNumber + index + 1}</div>
+                    <div class="admin-question-text">${escapeHtml(question.q)}</div>
+                    <div class="admin-question-options">${optionCards}</div>
+                    <div class="admin-question-meta">✅ Correct Answer: Option ${Number(question.correct) + 1}</div>
+                    <div class="admin-question-actions">
+                        <button onclick="openQuestionEditorById('${question._id}')" style="background:#22c55e;">✏️ Edit Question</button>
                         <button onclick="deleteQuestion('${question._id}')" style="background:#ef4444;">🗑️ Delete</button>
-                    </td>
-                </tr>`;
+                    </div>
+                </article>`;
             }).join("");
 
             document.getElementById("questionTable").innerHTML = html ||
@@ -2506,17 +2551,19 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                         `<div style="${i === Number(question.correct) ? 'font-weight:800;text-decoration:underline;' : ''}">${i + 1}. ${escapeHtml(option)}</div>`
                     ).join("");
 
-                    rows.push(`<tr>
-                        <td>${groupIndex + 1}</td>
-                        <td style="min-width:280px;max-width:500px;white-space:normal;">${escapeHtml(question.q)}</td>
-                        <td style="min-width:220px;white-space:normal;">${options}</td>
-                        <td>Option ${Number(question.correct) + 1}</td>
-                        <td>
-                            <span style="display:inline-block;padding:5px 9px;border-radius:999px;background:#7c2d12;color:#fed7aa;margin-bottom:5px;">Repeat ${index + 1}/${group.count}</span><br>
-                            <button onclick="openQuestionEditorById('${question._id}')">✏️ Edit</button>
+                    const optionCards = (question.options || []).map((option, i) =>
+                        `<div class="admin-question-option ${i === Number(question.correct) ? 'correct' : ''}">${i === Number(question.correct) ? '✅ ' : ''}${i + 1}. ${escapeHtml(option)}</div>`
+                    ).join("");
+                    rows.push(`<article class="admin-question-card">
+                        <div class="admin-question-number">Repeated Group ${groupIndex + 1} • Copy ${index + 1}/${group.count}</div>
+                        <div class="admin-question-text">${escapeHtml(question.q)}</div>
+                        <div class="admin-question-options">${optionCards}</div>
+                        <div class="admin-question-meta">✅ Correct Answer: Option ${Number(question.correct) + 1}</div>
+                        <div class="admin-question-actions">
+                            <button onclick="openQuestionEditorById('${question._id}')" style="background:#22c55e;">✏️ Edit Question</button>
                             <button onclick="deleteQuestion('${question._id}')" style="background:#ef4444;">🗑️ Delete</button>
-                        </td>
-                    </tr>`);
+                        </div>
+                    </article>`);
                 });
             });
 
@@ -2705,7 +2752,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             if (!box || !table) return;
 
             box.style.display = "block";
-            table.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+            table.innerHTML = `<div class="admin-question-card">Loading...</div>`;
 
             try {
                 const res = await fetch("/api/questions/admin/recycle-bin", {
@@ -2714,7 +2761,7 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    table.innerHTML = `<tr><td colspan="4">${escapeHtml(data.message || "Failed to load Question Recycle Bin")}</td></tr>`;
+                    table.innerHTML = `<div class="admin-question-card deleted">${escapeHtml(data.message || "Failed to load Question Recycle Bin")}</div>`;
                     return;
                 }
 
@@ -2725,24 +2772,23 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                     const deletedAt = question.deletedAt
                         ? new Date(question.deletedAt).toLocaleString("en-IN")
                         : "-";
-                    return `<tr>
-                        <td>${index + 1}</td>
-                        <td style="min-width:320px;white-space:normal;">
-                            <b>${escapeHtml(question.q)}</b>
-                            ${(question.options || []).map((option, i) =>
-                                `<div style="margin-top:3px;">${i + 1}. ${escapeHtml(option)}</div>`
-                            ).join("")}
-                        </td>
-                        <td>${escapeHtml(deletedAt)}</td>
-                        <td>
+                    const optionCards = (question.options || []).map((option, i) =>
+                        `<div class="admin-question-option ${i === Number(question.correct) ? 'correct' : ''}">${i === Number(question.correct) ? '✅ ' : ''}${i + 1}. ${escapeHtml(option)}</div>`
+                    ).join("");
+                    return `<article class="admin-question-card deleted">
+                        <div class="admin-question-number">Deleted Question #${index + 1}</div>
+                        <div class="admin-question-text">${escapeHtml(question.q)}</div>
+                        <div class="admin-question-options">${optionCards}</div>
+                        <div class="admin-question-meta">🗑️ Deleted: ${escapeHtml(deletedAt)}</div>
+                        <div class="admin-question-actions">
                             <button onclick="restoreQuestion('${question._id}')" style="background:#16a34a;">♻️ Restore</button>
                             <button onclick="permanentDeleteQuestion('${question._id}')" style="background:#dc2626;">🗑️ Permanent Delete</button>
-                        </td>
-                    </tr>`;
+                        </div>
+                    </article>`;
                 }).join("") || `<tr><td colspan="4">Question Recycle Bin is empty.</td></tr>`;
             } catch (err) {
                 console.error("Question Recycle Bin Error:", err);
-                table.innerHTML = `<tr><td colspan="4">Failed to load Question Recycle Bin</td></tr>`;
+                table.innerHTML = `<div class="admin-question-card deleted">Failed to load Question Recycle Bin</div>`;
             }
         }
 
@@ -3471,6 +3517,8 @@ ${w.status === "Approved" ? `
             }).length;
             const onlineCounter = document.getElementById("ap2Online");
             if (onlineCounter) onlineCounter.textContent = onlineCount;
+            const dashboardOnline = document.getElementById("onlineUsersCount");
+            if (dashboardOnline) dashboardOnline.textContent = onlineCount;
 
             document.querySelectorAll("#userTable tr[data-user-id]").forEach(row => {
                 const u = byId.get(String(row.dataset.userId));
