@@ -1638,6 +1638,382 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
 }
 </style>
 
+
+<style id="mobile-app-ready">
+/* ===== Mobile app-style admin UI (desktop untouched) ===== */
+@media (max-width: 700px) {
+  html { scroll-behavior:smooth; }
+  body {
+    padding: 10px !important;
+    padding-bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+    overflow-x:hidden !important;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* Header */
+  body > div:first-child {
+    gap:10px !important;
+    margin-bottom:14px !important;
+    align-items:stretch !important;
+    flex-wrap:wrap !important;
+  }
+  body > div:first-child h2 {
+    width:100% !important;
+    margin:0 !important;
+    font-size:20px !important;
+    line-height:1.25 !important;
+  }
+  body > div:first-child > div {
+    width:100% !important;
+    display:grid !important;
+    grid-template-columns:1fr 1fr 1fr !important;
+    gap:7px !important;
+  }
+  body > div:first-child > div button {
+    width:100% !important;
+    min-width:0 !important;
+    min-height:42px !important;
+    padding:8px 6px !important;
+    font-size:11px !important;
+    line-height:1.15 !important;
+    white-space:normal !important;
+  }
+
+  /* Main navigation */
+  .admin-main-menu {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+    padding:8px !important;
+    position:sticky !important;
+    top:6px !important;
+    z-index:50 !important;
+    border-radius:15px !important;
+    backdrop-filter:blur(12px) !important;
+  }
+  .admin-main-menu button {
+    width:100% !important;
+    min-height:43px !important;
+    padding:9px 7px !important;
+    font-size:12px !important;
+    line-height:1.2 !important;
+    white-space:normal !important;
+    margin:0 !important;
+  }
+
+  h2 { font-size:19px !important; line-height:1.25 !important; }
+  h3 { font-size:16px !important; line-height:1.3 !important; }
+
+  /* Dashboard cards */
+  .cards {
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+  }
+  .card {
+    min-width:0 !important;
+    min-height:92px !important;
+    padding:12px 9px !important;
+    overflow:hidden !important;
+  }
+  .card h3 { font-size:9px !important; }
+  .card h1 { font-size:21px !important; }
+
+  /* Online students */
+  .users-online-top {
+    padding:10px !important;
+    margin-bottom:12px !important;
+  }
+  .users-online-top-head h3 { font-size:14px !important; margin:0 !important; }
+  .users-online-name-list {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:5px !important;
+    margin-top:8px !important;
+  }
+  .users-online-name-list > * {
+    min-width:0 !important;
+    padding:7px 8px !important;
+    font-size:11px !important;
+    line-height:1.2 !important;
+    overflow-wrap:anywhere !important;
+  }
+
+  #search, .ap2-input, .question-toolbar input {
+    width:100% !important;
+    min-width:0 !important;
+    min-height:42px !important;
+    box-sizing:border-box !important;
+    font-size:13px !important;
+  }
+
+  /* User cards: compact 2-column app grid */
+  .admin-user-cards {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+  }
+  .admin-user-card {
+    min-width:0 !important;
+    padding:10px !important;
+    border-radius:13px !important;
+    overflow:hidden !important;
+  }
+  .admin-user-name {
+    font-size:12px !important;
+    line-height:1.25 !important;
+    overflow-wrap:anywhere !important;
+  }
+  .admin-user-mobile, .admin-user-card small {
+    font-size:9px !important;
+    overflow-wrap:anywhere !important;
+  }
+  .admin-user-card button {
+    min-height:34px !important;
+    padding:6px 7px !important;
+    font-size:9px !important;
+    line-height:1.15 !important;
+    white-space:normal !important;
+  }
+
+  /* Every normal button becomes touch-friendly without becoming huge */
+  button, .btn {
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    touch-action:manipulation !important;
+  }
+
+  /* Convert legacy tables to mobile cards */
+  .table-wrap { overflow:visible !important; border:0 !important; }
+  .table-wrap table,
+  .ap2-tablewrap table {
+    width:100% !important;
+    min-width:0 !important;
+    border-collapse:separate !important;
+    border-spacing:0 !important;
+    display:block !important;
+  }
+  .table-wrap thead,
+  .ap2-tablewrap thead { display:none !important; }
+  .table-wrap tbody,
+  .ap2-tablewrap tbody {
+    display:grid !important;
+    gap:8px !important;
+  }
+  .table-wrap tr,
+  .ap2-tablewrap tr {
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:4px !important;
+    padding:10px !important;
+    border-radius:13px !important;
+    margin:0 !important;
+    overflow:hidden !important;
+  }
+  .table-wrap td,
+  .ap2-tablewrap td {
+    display:flex !important;
+    align-items:flex-start !important;
+    justify-content:space-between !important;
+    gap:8px !important;
+    width:100% !important;
+    min-width:0 !important;
+    box-sizing:border-box !important;
+    padding:6px 0 !important;
+    border:0 !important;
+    font-size:11px !important;
+    line-height:1.3 !important;
+    overflow-wrap:anywhere !important;
+  }
+  .table-wrap td::before,
+  .ap2-tablewrap td::before {
+    flex:0 0 40% !important;
+    font-weight:800 !important;
+    opacity:.75 !important;
+    content:"Data" !important;
+  }
+  #withdrawTable td:nth-child(1)::before {content:"Name";}
+  #withdrawTable td:nth-child(2)::before {content:"Mobile";}
+  #withdrawTable td:nth-child(3)::before {content:"Amount";}
+  #withdrawTable td:nth-child(4)::before {content:"Payment";}
+  #withdrawTable td:nth-child(5)::before {content:"Details";}
+  #withdrawTable td:nth-child(6)::before {content:"Status";}
+  #withdrawTable td:nth-child(7)::before {content:"Transaction";}
+  #withdrawTable td:nth-child(8)::before {content:"Date";}
+  #withdrawTable td:nth-child(9)::before {content:"Paid Date";}
+  #withdrawTable td:nth-child(10)::before {content:"Action";}
+
+  #deletedUserTable td:nth-child(1)::before {content:"Name";}
+  #deletedUserTable td:nth-child(2)::before {content:"Mobile";}
+  #deletedUserTable td:nth-child(3)::before {content:"Deleted";}
+  #deletedUserTable td:nth-child(4)::before {content:"Wallet";}
+  #deletedUserTable td:nth-child(5)::before {content:"Action";}
+
+  .table-wrap td button,
+  .ap2-tablewrap td button {
+    min-height:32px !important;
+    padding:6px 8px !important;
+    font-size:9px !important;
+    white-space:normal !important;
+  }
+
+  /* Command center */
+  .adminProV2 { padding:0 !important; }
+  .ap2-head {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:8px !important;
+  }
+  .ap2-head .ap2-flex,
+  .ap2-flex {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+  .ap2-btn {
+    min-width:0 !important;
+    min-height:40px !important;
+    padding:8px 7px !important;
+    font-size:10px !important;
+    line-height:1.2 !important;
+    white-space:normal !important;
+  }
+  .ap2-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+  .ap2-card {
+    min-width:0 !important;
+    padding:10px !important;
+    border-radius:12px !important;
+  }
+  .ap2-lbl { font-size:9px !important; }
+  .ap2-val { font-size:20px !important; }
+  .ap2-tabs {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+  .ap2-tabs .ap2-btn { width:100% !important; }
+  .ap2-pane { overflow:hidden !important; }
+
+  /* Command tables become cards */
+  .ap2-tablewrap tr {
+    background:var(--panel,#fff) !important;
+    border:1px solid rgba(148,163,184,.22) !important;
+  }
+  #ap2StudentRows td:nth-child(1)::before {content:"Student";}
+  #ap2StudentRows td:nth-child(2)::before {content:"Status";}
+  #ap2StudentRows td:nth-child(3)::before {content:"Questions";}
+  #ap2StudentRows td:nth-child(4)::before {content:"Wallet";}
+  #ap2StudentRows td:nth-child(5)::before {content:"Earn";}
+  #ap2StudentRows td:nth-child(6)::before {content:"Warnings";}
+  #ap2StudentRows td:nth-child(7)::before {content:"Spin";}
+  #ap2StudentRows td:nth-child(8)::before {content:"Actions";}
+
+  /* Questions */
+  .question-toolbar {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+  .question-toolbar input {
+    grid-column:1/-1 !important;
+  }
+  .question-toolbar button,
+  .question-actions button {
+    width:100% !important;
+    min-height:39px !important;
+    padding:7px 6px !important;
+    font-size:10px !important;
+    line-height:1.15 !important;
+    white-space:normal !important;
+  }
+  .question-actions {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:7px !important;
+  }
+  .admin-question-cards {
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+  }
+  .question-editor-modal {
+    padding:8px !important;
+    align-items:flex-end !important;
+  }
+  .question-editor-box {
+    width:100% !important;
+    max-height:92vh !important;
+    padding:14px !important;
+    border-radius:17px 17px 0 0 !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+  .question-editor-box h2 { font-size:18px !important; }
+  .question-editor-box textarea {
+    min-height:100px !important;
+    font-size:13px !important;
+  }
+  .question-option {
+    gap:6px !important;
+    align-items:center !important;
+  }
+  .question-option input[type="text"] {
+    min-width:0 !important;
+    font-size:12px !important;
+    padding:9px !important;
+  }
+  .question-option input[type="radio"] {
+    flex:0 0 auto !important;
+    width:17px !important;
+    height:17px !important;
+  }
+  .modal-actions {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:7px !important;
+    position:sticky !important;
+    bottom:-14px !important;
+    padding:10px 0 14px !important;
+    background:linear-gradient(transparent,#0b1423 25%) !important;
+  }
+  .modal-actions button { min-height:42px !important; }
+
+  /* Command modals */
+  .ap2-modal {
+    padding:8px !important;
+    align-items:flex-end !important;
+  }
+  .ap2-box {
+    width:100% !important;
+    max-height:92vh !important;
+    border-radius:17px 17px 0 0 !important;
+    overflow:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+  }
+
+  /* Prevent long text from breaking the layout */
+  input, textarea, select, td, th, h1, h2, h3, p, span, div {
+    overflow-wrap:anywhere;
+  }
+}
+
+/* Very small phones */
+@media (max-width:380px) {
+  body { padding:7px !important; }
+  body > div:first-child > div { grid-template-columns:1fr 1fr 1fr !important; gap:5px !important; }
+  body > div:first-child > div button { font-size:9px !important; min-height:39px !important; }
+  .admin-main-menu { gap:6px !important; }
+  .admin-main-menu button { font-size:10px !important; min-height:40px !important; }
+  .admin-user-cards, .cards, .ap2-grid { gap:6px !important; }
+  .admin-user-card { padding:8px !important; }
+  .admin-user-name { font-size:11px !important; }
+  .question-toolbar { gap:5px !important; }
+}
+</style>
+
 </head>
 
 <body>
@@ -2752,28 +3128,31 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             await loadQuestions();
             await loadDashboard();
         }
-        async function permanentDeleteUser(id) {
+
+        async function makePermanentUser(id) {
             if (!confirm(
-                "⚠️ Permanently delete this deleted user?\n\n" +
-                "This will remove the student from the Recycle Bin permanently and cannot be undone."
+                "Make this deleted user a Permanent User?\n\n" +
+                "The user will be restored and protected from future deletion."
             )) return;
 
             try {
-                const res = await fetch("/api/admin/permanent-delete/" + id, {
-                    method: "DELETE",
+                const res = await fetch("/api/admin/permanent-user/" + id, {
+                    method: "PUT",
                     headers: { Authorization: "Bearer " + token }
                 });
-                const data = await res.json().catch(() => ({}));
+                const data = await res.json();
+
                 if (!res.ok || !data.success) {
-                    alert(data.message || "Permanent delete failed");
+                    alert(data.message || "Permanent user action failed");
                     return;
                 }
-                alert("✅ Student permanently deleted.");
+
+                alert("✅ User restored and marked as Permanent User.");
                 await loadDeletedUsers();
                 await loadUsers();
                 await loadDashboard();
             } catch (err) {
-                console.error("Permanent Delete Error:", err);
+                console.error("Permanent User Error:", err);
                 alert("❌ " + err.message);
             }
         }
@@ -3075,9 +3454,9 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                                     ♻️ Restore
                                 </button>
                                 <button
-                                    onclick="permanentDeleteUser('${user._id}')"
-                                    style="background:linear-gradient(135deg,#dc2626,#991b1b);">
-                                    🗑️ Permanent Delete
+                                    onclick="makePermanentUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+                                    ⭐ Permanent User
                                 </button>
                             </td>
                         </tr>
@@ -3120,28 +3499,31 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             await loadUsers();
             await loadDashboard();
         }
-        async function permanentDeleteUser(id) {
+
+        async function makePermanentUser(id) {
             if (!confirm(
-                "⚠️ Permanently delete this deleted user?\n\n" +
-                "This will remove the student from the Recycle Bin permanently and cannot be undone."
+                "Make this deleted user a Permanent User?\n\n" +
+                "The user will be restored and protected from future deletion."
             )) return;
 
             try {
-                const res = await fetch("/api/admin/permanent-delete/" + id, {
-                    method: "DELETE",
+                const res = await fetch("/api/admin/permanent-user/" + id, {
+                    method: "PUT",
                     headers: { Authorization: "Bearer " + token }
                 });
-                const data = await res.json().catch(() => ({}));
+                const data = await res.json();
+
                 if (!res.ok || !data.success) {
-                    alert(data.message || "Permanent delete failed");
+                    alert(data.message || "Permanent user action failed");
                     return;
                 }
-                alert("✅ Student permanently deleted.");
+
+                alert("✅ User restored and marked as Permanent User.");
                 await loadDeletedUsers();
                 await loadUsers();
                 await loadDashboard();
             } catch (err) {
-                console.error("Permanent Delete Error:", err);
+                console.error("Permanent User Error:", err);
                 alert("❌ " + err.message);
             }
         }
@@ -4216,28 +4598,6 @@ ${w.status === "Approved" ? `
             margin-top: 4px
         }
 
-
-        /* Security details: colorful, readable and mobile-friendly */
-        .ap2-security-panel{color:#172033}
-        .ap2-security-summary{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;margin:14px 0 20px}
-        .ap2-security-card{background:linear-gradient(145deg,#ffffff,#f8fafc);border:1px solid #dbe5ef;border-radius:13px;padding:12px;box-shadow:0 4px 12px rgba(15,23,42,.06)}
-        .ap2-security-card:nth-child(1){border-top:4px solid #2563eb}.ap2-security-card:nth-child(2){border-top:4px solid #7c3aed}.ap2-security-card:nth-child(3){border-top:4px solid #16a34a}.ap2-security-card:nth-child(4){border-top:4px solid #f59e0b}.ap2-security-card:nth-child(5){border-top:4px solid #dc2626}
-        .ap2-security-card b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:5px}
-        .ap2-security-card span{display:block;font-size:15px;font-weight:800;color:#0f172a;overflow-wrap:anywhere}
-        .ap2-security-section{margin:18px 0;padding:14px;border:1px solid #e2e8f0;border-radius:15px;background:#fff;box-shadow:0 5px 16px rgba(15,23,42,.06)}
-        .ap2-security-section h3{margin:0 0 10px;color:#0f172a;font-size:16px}
-        .ap2-security-table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border:1px solid #e2e8f0;border-radius:10px;background:#fff}
-        .ap2-security-table th{background:linear-gradient(90deg,#1e3a8a,#2563eb);color:#fff;padding:9px;text-align:left;font-size:11px}
-        .ap2-security-table td{background:#fff;color:#172033;padding:9px;border-bottom:1px solid #e8eef5;font-size:11px;vertical-align:top;overflow-wrap:anywhere}
-        .ap2-security-table tr:last-child td{border-bottom:0}
-        .ap2-security-table tr:nth-child(even) td{background:#f8fafc}
-        .ap2-security-agent{max-width:360px;word-break:break-word;color:#475569!important}
-        .ap2-security-risk-high{background:#dc2626!important;color:#fff!important;border:1px solid #b91c1c!important}
-        .ap2-security-risk-medium{background:#f59e0b!important;color:#111827!important;border:1px solid #d97706!important}
-        .ap2-security-risk-low{background:#16a34a!important;color:#fff!important;border:1px solid #15803d!important}
-        @media(max-width:900px){.ap2-security-summary{grid-template-columns:repeat(3,minmax(120px,1fr))}}
-        @media(max-width:600px){.ap2-security-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.ap2-security-card{padding:9px}.ap2-security-card span{font-size:13px}.ap2-security-section{padding:9px;margin:12px 0}.ap2-security-table{display:block;overflow-x:auto;white-space:normal}.ap2-security-table th,.ap2-security-table td{padding:7px;font-size:10px;min-width:80px}.ap2-security-agent{max-width:220px}}
-
         @media(max-width:600px) {
             #adminProV2 {
                 padding: 14px
@@ -4416,38 +4776,29 @@ ${w.status === "Approved" ? `
                 const warnings = Array.isArray(u.warningHistory) ? u.warningHistory.slice().reverse() : [];
                 const activity = Array.isArray(u.adminActivity) ? u.adminActivity.slice().reverse() : [];
                 const risk = ap2SecurityRisk(u);
-                const riskClass = risk === "HIGH" ? "ap2-security-risk-high" : risk === "MEDIUM" ? "ap2-security-risk-medium" : "ap2-security-risk-low";
-                document.getElementById("ap2Title").textContent = "🔐 Security Details — " + name(u);
+                document.getElementById("ap2Title").textContent = "🔐 Security — " + name(u);
                 document.getElementById("ap2Body").innerHTML = `
-                    <div class="ap2-security-panel">
-                        <div class="ap2-security-summary">
-                            <div class="ap2-security-card"><b>Student ID</b><span>${esc(uid(u))}</span></div>
-                            <div class="ap2-security-card"><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
-                            <div class="ap2-security-card"><b>Risk Level</b><span><span class="ap2-badge ${riskClass}">${risk}</span></span></div>
-                            <div class="ap2-security-card"><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
-                            <div class="ap2-security-card"><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
-                            <div class="ap2-security-card"><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
-                            <div class="ap2-security-card"><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
-                            <div class="ap2-security-card"><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
-                            <div class="ap2-security-card"><b>Login Records</b><span>${history.length}</span></div>
-                            <div class="ap2-security-card"><b>Account Status</b><span>${u.isBlocked ? "🚫 Blocked" : "🟢 Active"}</span></div>
-                        </div>
-                        <div class="ap2-security-section">
-                            <h3>🔑 Login History <span class="ap2-badge ap2-blue">${history.length}</span></h3>
-                            <div class="ap2-tablewrap"><table class="ap2-security-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
-                            ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td class="ap2-security-agent">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
-                        </div>
-                        <div class="ap2-security-section">
-                            <h3>⚠️ Warning History <span class="ap2-badge ap2-yellow">${warnings.length}</span></h3>
-                            <div class="ap2-tablewrap"><table class="ap2-security-table"><tr><th>Time</th><th>Reason</th></tr>
-                            ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
-                        </div>
-                        <div class="ap2-security-section">
-                            <h3>🛡️ Admin Security Activity <span class="ap2-badge ap2-blue">${activity.length}</span></h3>
-                            <div class="ap2-tablewrap"><table class="ap2-security-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
-                            ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td><span class="ap2-badge ap2-blue">${esc(x.action||"-")}</span></td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>
-                        </div>
-                    </div>`;
+                    <div class="ap2-kv">
+                        <div><b>Student ID</b><span>${esc(uid(u))}</span></div>
+                        <div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
+                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"ap2-red":risk==="MEDIUM"?"ap2-yellow":"ap2-green"}">${risk}</span></span></div>
+                        <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
+                        <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
+                        <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
+                        <div><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
+                        <div><b>Login Records</b><span>${history.length}</span></div>
+                        <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
+                        <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
+                    </div>
+                    <h3>🔑 Login History</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
+                    ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
+                    <h3>⚠️ Warning History</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
+                    ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
+                    <h3>🛡️ Admin Security Activity</h3>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
+                    ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
                 document.getElementById("ap2Modal").classList.add("show");
             };
             function ap2RenderSecurity() {
@@ -4464,8 +4815,18 @@ ${w.status === "Approved" ? `
                 }).join("");
                 document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
             }
-            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
+            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button><button class="ap2-btn" style="background:#7c3aed;color:#fff" onclick="ap2MakePermanent('${esc(uid(u))}')">⭐ Permanent User</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
+            window.ap2MakePermanent = async id => {
+    if (!confirm("Make this deleted user a Permanent User?\n\nThe user will be restored and protected from future deletion.")) return;
+    try {
+        await api("/pro/permanent-user/" + encodeURIComponent(id), { method: "PUT" });
+        await ap2Refresh();
+        alert("User restored and marked as Permanent User");
+    } catch (e) {
+        alert(e.message);
+    }
+};
 window.ap2PermanentDelete = async id => {
                 if (!confirm("⚠️ Permanently delete this student?\n\nThis action cannot be undone and all student data will be removed permanently.")) return;
                 try {

@@ -1481,18 +1481,6 @@ router.put("/pro/restore/:id", adminAuth, async(req,res)=>{
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
-router.delete("/permanent-delete/:id", adminAuth, async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ success: false, message: "Student not found" });
-        if (!user.isDeleted) return res.status(400).json({ success: false, message: "Student must be in Deleted Users first" });
-        await User.deleteOne({ _id: req.params.id });
-        return res.json({ success: true, message: "Student permanently deleted" });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-});
-
 router.put("/permanent-user/:id", adminAuth, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
