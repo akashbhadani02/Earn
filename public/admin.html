@@ -1343,6 +1343,7 @@
             <button onclick="showRepeatedQuestions()" style="background:#f59e0b;">🔁 Repeated Questions</button>
             <button onclick="removeRepeatedQuestions()" style="background:#ef4444;">🧹 Make Questions Single</button>
             <button onclick="deleteAllQuestions()" style="background:#dc2626;">🗑️ Delete All Questions</button>
+            <button onclick="permanentlyDeleteAllQuestions()" style="background:#991b1b;border:2px solid #fecaca;">☠️ Permanently Delete ALL From Database</button>
             <button onclick="loadQuestionRecycleBin()" style="background:#7c3aed;">♻️ Question Recycle Bin</button>
             <button id="downloadBtn" class="btn btn-success">📥 Download Questions JSON</button>
         </div>
@@ -2953,6 +2954,61 @@ ${w.status === "Approved" ? `
             }
         }
         setInterval(refreshAdminDataLive, 5000);
+
+        async function permanentlyDeleteAllQuestions() {
+            const firstConfirm = confirm(
+                "🚨 DANGER — PERMANENT DATABASE PURGE!\\n\\n" +
+                "This will permanently delete EVERY question from the MongoDB Question collection.\\n" +
+                "Questions in the active bank AND Recycle Bin will both be removed.\\n" +
+                "This cannot be undone or restored.\\n\\n" +
+                "Continue?"
+            );
+
+            if (!firstConfirm) return;
+
+            const secondConfirm = confirm(
+                "FINAL CONFIRMATION\\n\\n" +
+                "ALL questions will be permanently removed from the server database.\\n" +
+                "The automatic questions.json seeding will NOT recreate them.\\n\\n" +
+                "Click OK only if you really want to permanently purge everything."
+            );
+
+            if (!secondConfirm) return;
+
+            const typed = prompt('Type DELETE ALL to confirm permanent deletion:');
+            if (typed !== "DELETE ALL") {
+                alert("Permanent deletion cancelled. Exact confirmation text was not entered.");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/questions/admin/permanent-all", {
+                    method: "DELETE",
+                    headers: { Authorization: "Bearer " + token }
+                });
+
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    alert(data.message || "Could not permanently delete all questions");
+                    return;
+                }
+
+                questionPage = 1;
+                await loadQuestions();
+                await loadQuestionRecycleBin();
+                await loadDashboard();
+
+                alert(
+                    "✅ Permanent database purge complete.\\n\\n" +
+                    data.deleted +
+                    " question(s) were permanently deleted from MongoDB."
+                );
+            } catch (err) {
+                console.error("Permanent Delete All Questions Error:", err);
+                alert("❌ Error permanently deleting questions.\\n\\n" + err.message);
+            }
+        }
 
         async function deleteAllQuestions() {
 

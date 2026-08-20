@@ -338,6 +338,34 @@ router.delete("/admin/all", adminAuth, async (req, res) => {
 });
 
 
+// Admin: PERMANENTLY delete ALL questions from MongoDB.
+// This bypasses the Recycle Bin and cannot be restored.
+router.delete("/admin/permanent-all", adminAuth, async (req, res) => {
+    try {
+        const result = await Question.deleteMany({});
+
+        // Keep the seed state initialized so the server never recreates
+        // questions automatically after this permanent purge.
+        await QuestionBankState.findOneAndUpdate(
+            {},
+            { $set: { initialized: true } },
+            { upsert: true, new: true }
+        );
+
+        return res.json({
+            success: true,
+            deleted: Number(result.deletedCount || 0),
+            message: `${result.deletedCount || 0} question(s) permanently deleted from the database.`
+        });
+    } catch (err) {
+        console.error("Permanent Delete All Questions Error:", err);
+        return res.status(500).json({
+            success: false,
+            message: err.message || "Could not permanently delete all questions"
+        });
+    }
+});
+
 // Admin can delete a question.
 router.delete("/admin/:id", adminAuth, async (req, res) => {
     try {
