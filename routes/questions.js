@@ -7,42 +7,12 @@ const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
 const seedQuestions = require("../questions.json");
 
-let seedPromise = null;
-
+// questions.json is NOT auto-seeded. It can only be imported explicitly by the admin
+// through POST /api/questions/admin/import-json. This guarantees that deleting the
+// Question Bank (including permanent deletion) keeps the database empty until the
+// admin intentionally imports questions.json again.
 async function ensureQuestionsSeeded() {
-    if (seedPromise) return seedPromise;
-
-    seedPromise = (async () => {
-        let state = await QuestionBankState.findOne();
-        if (state?.initialized) return;
-
-        const count = await Question.countDocuments();
-        if (count === 0 && seedQuestions.length) {
-            const docs = seedQuestions.map(item => ({
-                q: String(item.q || "").trim(),
-                options: Array.isArray(item.options) ? item.options.map(String) : [],
-                correct: Number(item.correct)
-            })).filter(item =>
-                item.q &&
-                item.options.length >= 2 &&
-                item.correct >= 0 &&
-                item.correct < item.options.length
-            );
-
-            if (docs.length) {
-                await Question.insertMany(docs, { ordered: false });
-            }
-        }
-
-        if (!state) state = new QuestionBankState({ initialized: true });
-        else state.initialized = true;
-        await state.save();
-    })().catch(err => {
-        seedPromise = null;
-        throw err;
-    });
-
-    return seedPromise;
+    return;
 }
 
 // Fast student quiz endpoint: return a small random batch instead of the full question bank.
