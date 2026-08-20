@@ -2753,30 +2753,30 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             await loadDashboard();
         }
 
-        async function makePermanentUser(id) {
+        async function permanentDeleteUser(id) {
             if (!confirm(
-                "Make this deleted user a Permanent User?\n\n" +
-                "The user will be restored and protected from future deletion."
+                "⚠️ Permanently delete this student?\n\n" +
+                "This will permanently remove the student from the Recycle Bin and cannot be undone."
             )) return;
 
             try {
-                const res = await fetch("/api/admin/permanent-user/" + id, {
-                    method: "PUT",
+                const res = await fetch("/api/admin/permanent-delete/" + id, {
+                    method: "DELETE",
                     headers: { Authorization: "Bearer " + token }
                 });
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    alert(data.message || "Permanent user action failed");
+                    alert(data.message || "Permanent delete failed");
                     return;
                 }
 
-                alert("✅ User restored and marked as Permanent User.");
+                alert("✅ Student permanently deleted.");
                 await loadDeletedUsers();
                 await loadUsers();
                 await loadDashboard();
             } catch (err) {
-                console.error("Permanent User Error:", err);
+                console.error("Permanent Delete Error:", err);
                 alert("❌ " + err.message);
             }
         }
@@ -3078,9 +3078,9 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                                     ♻️ Restore
                                 </button>
                                 <button
-                                    onclick="makePermanentUser('${user._id}')"
-                                    style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
-                                    ⭐ Permanent User
+                                    onclick="permanentDeleteUser('${user._id}')"
+                                    style="background:linear-gradient(135deg,#dc2626,#b91c1c);">
+                                    🗑️ Permanent Delete
                                 </button>
                             </td>
                         </tr>
@@ -3124,30 +3124,30 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             await loadDashboard();
         }
 
-        async function makePermanentUser(id) {
+        async function permanentDeleteUser(id) {
             if (!confirm(
-                "Make this deleted user a Permanent User?\n\n" +
-                "The user will be restored and protected from future deletion."
+                "⚠️ Permanently delete this student?\n\n" +
+                "This will permanently remove the student from the Recycle Bin and cannot be undone."
             )) return;
 
             try {
-                const res = await fetch("/api/admin/permanent-user/" + id, {
-                    method: "PUT",
+                const res = await fetch("/api/admin/permanent-delete/" + id, {
+                    method: "DELETE",
                     headers: { Authorization: "Bearer " + token }
                 });
                 const data = await res.json();
 
                 if (!res.ok || !data.success) {
-                    alert(data.message || "Permanent user action failed");
+                    alert(data.message || "Permanent delete failed");
                     return;
                 }
 
-                alert("✅ User restored and marked as Permanent User.");
+                alert("✅ Student permanently deleted.");
                 await loadDeletedUsers();
                 await loadUsers();
                 await loadDashboard();
             } catch (err) {
-                console.error("Permanent User Error:", err);
+                console.error("Permanent Delete Error:", err);
                 alert("❌ " + err.message);
             }
         }
@@ -4439,19 +4439,9 @@ ${w.status === "Approved" ? `
                 }).join("");
                 document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
             }
-            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button><button class="ap2-btn" style="background:#7c3aed;color:#fff" onclick="ap2MakePermanent('${esc(uid(u))}')">⭐ Permanent User</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
+            async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
-            window.ap2MakePermanent = async id => {
-    if (!confirm("Make this deleted user a Permanent User?\n\nThe user will be restored and protected from future deletion.")) return;
-    try {
-        await api("/pro/permanent-user/" + encodeURIComponent(id), { method: "PUT" });
-        await ap2Refresh();
-        alert("User restored and marked as Permanent User");
-    } catch (e) {
-        alert(e.message);
-    }
-};
-window.ap2PermanentDelete = async id => {
+            window.ap2PermanentDelete = async id => {
                 if (!confirm("⚠️ Permanently delete this student?\n\nThis action cannot be undone and all student data will be removed permanently.")) return;
                 try {
                     await api("/pro/permanent-delete/" + encodeURIComponent(id), { method: "DELETE" });
@@ -4504,7 +4494,7 @@ window.ap2PermanentDelete = async id => {
   }
   .admin-user-card{
     padding:10px !important; 
-    border-radius:12px !important; 
+    border-radius:12px !important;
     border-left-width:4px !important;
     box-shadow:0 5px 14px rgba(15,23,42,.08) !important;
   }
