@@ -1169,6 +1169,210 @@
         }
     </style>
 
+
+<style id="adminCleanPremiumUI">
+:root{
+  --admin-bg:#f4f7fb;
+  --admin-surface:#ffffff;
+  --admin-ink:#172033;
+  --admin-muted:#64748b;
+  --admin-line:#e2e8f0;
+  --admin-primary:#2563eb;
+  --admin-primary2:#4f46e5;
+  --admin-success:#16a34a;
+  --admin-danger:#dc2626;
+  --admin-warning:#d97706;
+  --admin-shadow:0 12px 35px rgba(15,23,42,.09);
+}
+
+/* Cleaner overall admin workspace */
+body{
+  max-width:1600px !important;
+  margin:0 auto !important;
+  padding:20px clamp(12px,2.5vw,32px) 40px !important;
+  background:linear-gradient(180deg,#eef4ff 0,#f8fafc 30%,#f8fafc 100%) !important;
+  color:var(--admin-ink) !important;
+}
+
+body>div:first-child{
+  position:sticky !important;
+  top:10px !important;
+  z-index:1100 !important;
+  min-height:74px !important;
+  margin-bottom:16px !important;
+  padding:14px 18px !important;
+  background:linear-gradient(135deg,#0f172a,#1e3a8a) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  border-radius:18px !important;
+  box-shadow:0 14px 35px rgba(15,23,42,.22) !important;
+}
+body>div:first-child h2{font-size:25px !important;letter-spacing:-.4px !important}
+body>div:first-child h2::before{color:#4ade80 !important}
+
+/* Main navigation: clear sections, not a pile of buttons */
+.admin-main-menu{
+  position:sticky !important;
+  top:94px !important;
+  z-index:1050 !important;
+  padding:7px !important;
+  gap:6px !important;
+  background:#fff !important;
+  border:1px solid #dbe4f0 !important;
+  border-radius:14px !important;
+  box-shadow:0 8px 24px rgba(15,23,42,.08) !important;
+}
+.admin-main-menu button{
+  min-height:42px !important;
+  padding:10px 15px !important;
+  border:1px solid transparent !important;
+  background:#f1f5f9 !important;
+  color:#334155 !important;
+  font-size:14px !important;
+  white-space:nowrap !important;
+}
+.admin-main-menu button:hover{background:#e0e7ff !important;color:#1d4ed8 !important}
+.admin-main-menu button.active{
+  background:linear-gradient(135deg,var(--admin-primary),var(--admin-primary2)) !important;
+  color:#fff !important;
+  box-shadow:0 7px 16px rgba(37,99,235,.22) !important;
+}
+
+/* Section headings */
+section:not(.admin-section-hidden){
+  animation:adminFade .18s ease-out;
+}
+@keyframes adminFade{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+h2{color:#0f172a !important;font-size:24px !important;margin:26px 0 14px !important}
+h2::after{background:linear-gradient(90deg,#2563eb,#7c3aed) !important}
+
+/* Dashboard stat cards */
+.card{
+  min-height:145px !important;
+  padding:22px !important;
+  background:#fff !important;
+  border:1px solid #e2e8f0 !important;
+  box-shadow:var(--admin-shadow) !important;
+}
+.card h3{color:#64748b !important;font-size:13px !important}
+.card h1{font-size:34px !important}
+
+/* Tables: readable on desktop */
+.table-wrap{
+  background:#fff !important;
+  border:1px solid #dbe4f0 !important;
+  border-radius:16px !important;
+  box-shadow:var(--admin-shadow) !important;
+}
+table{background:#fff !important}
+th{font-size:13px !important;padding:14px !important;background:linear-gradient(135deg,#1d4ed8,#4f46e5) !important}
+td{font-size:13px !important;padding:13px !important;color:#172033 !important}
+#userTable td,#withdrawTable td,#deletedUserTable td,#questionTable td,#questionRecycleTable td,
+#userTable td *,#withdrawTable td *,#deletedUserTable td *,#questionTable td *,#questionRecycleTable td *{
+  color:#172033 !important;font-weight:650 !important;
+}
+
+/* Search and controls */
+#search,.question-toolbar input,.ap2-input{
+  min-height:48px !important;
+  border:1px solid #cbd5e1 !important;
+  background:#fff !important;
+  color:#172033 !important;
+  box-shadow:0 5px 16px rgba(15,23,42,.06) !important;
+}
+#search::placeholder,.question-toolbar input::placeholder,.ap2-input::placeholder{color:#94a3b8 !important}
+
+/* Command Center gets a distinct visual hierarchy */
+#adminProV2{
+  background:linear-gradient(180deg,#0f172a,#111827) !important;
+  border:1px solid #334155 !important;
+  border-radius:20px !important;
+  box-shadow:0 18px 45px rgba(15,23,42,.18) !important;
+}
+#adminProV2 .ap2-card{
+  border:1px solid rgba(148,163,184,.16) !important;
+  background:linear-gradient(145deg,#172554,#111827) !important;
+}
+#adminProV2 .ap2-lbl{color:#cbd5e1 !important}
+#adminProV2 .ap2-val{color:#fff !important}
+
+/* Keep buttons visually grouped by meaning */
+button[onclick^="approveWithdraw"],button[onclick^="unblockUser"],button[onclick^="markWithdrawPaid"]{box-shadow:0 5px 13px rgba(22,163,74,.16) !important}
+button[onclick^="deleteUser"],button[onclick^="rejectWithdraw"]{box-shadow:0 5px 13px rgba(220,38,38,.14) !important}
+
+/* Mobile: no tiny text and no confusing horizontal table */
+@media(max-width:600px){
+  body{padding:8px !important;background:linear-gradient(180deg,#eef4ff 0,#f8fafc 42%,#f8fafc 100%) !important}
+  body>div:first-child{position:relative !important;top:auto !important;padding:14px !important;margin-bottom:10px !important}
+  body>div:first-child h2{font-size:20px !important}
+  body>div:first-child>div{flex-wrap:wrap !important;justify-content:flex-end !important}
+  body>div:first-child button{min-height:42px !important;font-size:13px !important;padding:9px 11px !important}
+  .admin-main-menu{position:sticky !important;top:0 !important;margin-bottom:12px !important;display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr)) !important;overflow:visible !important}
+  .admin-main-menu button{width:100% !important;min-height:44px !important;font-size:13px !important}
+  h2{font-size:21px !important;margin:20px 0 12px !important}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:9px !important}
+  .card{min-height:105px !important;padding:15px 13px !important;border-radius:15px !important}
+  .card h3{font-size:11px !important;line-height:1.3 !important}
+  .card h1{font-size:25px !important}
+
+  /* Mobile table cards: white, high contrast, clearly separated */
+  #withdrawTable tr,#userTable tr,#deletedUserTable tr,#questionTable tr,#questionRecycleTable tr,
+  .ap2-table tbody tr{
+    background:#fff !important;
+    border:1px solid #dbe4f0 !important;
+    border-left:4px solid #2563eb !important;
+    box-shadow:0 8px 20px rgba(15,23,42,.08) !important;
+    padding:9px !important;
+  }
+  #withdrawTable td,#userTable td,#deletedUserTable td,#questionTable td,#questionRecycleTable td,
+  .ap2-table tbody td{
+    grid-template-columns:92px minmax(0,1fr) !important;
+    color:#172033 !important;
+    font-size:14px !important;
+    padding:9px 4px !important;
+  }
+  #withdrawTable td::before,#userTable td::before,#deletedUserTable td::before,
+  #questionTable td::before,#questionRecycleTable td::before,.ap2-table tbody td::before{
+    color:#64748b !important;font-size:11px !important;font-weight:800 !important;
+  }
+  #withdrawTable td *,#userTable td *,#deletedUserTable td *,#questionTable td *,#questionRecycleTable td *,
+  .ap2-table tbody td *{color:#172033 !important;font-weight:650 !important}
+  #withdrawTable td:last-child,#userTable td:last-child,#deletedUserTable td:last-child,
+  #questionTable td:last-child,#questionRecycleTable td:last-child,.ap2-table tbody td:last-child{
+    background:#f8fafc !important;border-radius:9px !important;margin-top:5px !important;
+  }
+  #withdrawTable td:last-child::before,#userTable td:last-child::before,#deletedUserTable td:last-child::before,
+  #questionTable td:last-child::before,#questionRecycleTable td:last-child::before,.ap2-table tbody td:last-child::before{
+    color:#1d4ed8 !important;
+  }
+  #withdrawTable td:last-child button,#userTable td:last-child button,#deletedUserTable td:last-child button,
+  #questionTable td:last-child button,#questionRecycleTable td:last-child button{
+    min-height:42px !important;font-size:13px !important;padding:9px 11px !important;
+  }
+  .table-wrap{border-radius:14px !important;box-shadow:0 7px 20px rgba(15,23,42,.07) !important}
+
+  /* Question actions become an organized grid */
+  .question-toolbar{display:grid !important;grid-template-columns:1fr 1fr !important;gap:8px !important}
+  .question-toolbar input{grid-column:1/-1 !important;width:100% !important}
+  .question-toolbar button{width:100% !important;margin:0 !important;min-height:44px !important;font-size:13px !important}
+
+  /* Command center mobile readability */
+  #adminProV2{padding:12px !important;border-radius:18px !important}
+  #adminProV2 .ap2-grid{grid-template-columns:1fr 1fr !important;gap:8px !important}
+  #adminProV2 .ap2-card{border-radius:13px !important;padding:12px !important}
+  #adminProV2 .ap2-val{font-size:22px !important}
+  #adminProV2 .ap2-tabs{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+}
+
+@media(max-width:380px){
+  .admin-main-menu{grid-template-columns:1fr 1fr !important}
+  .cards{grid-template-columns:1fr 1fr !important}
+  .card h1{font-size:23px !important}
+  #withdrawTable td,#userTable td,#deletedUserTable td,#questionTable td,#questionRecycleTable td,.ap2-table tbody td{grid-template-columns:82px minmax(0,1fr) !important;font-size:13px !important}
+  .question-toolbar{grid-template-columns:1fr !important}
+  .question-toolbar input{grid-column:auto !important}
+}
+</style>
+
 </head>
 
 <body>
