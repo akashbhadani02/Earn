@@ -4,6 +4,7 @@
 <head>
 
     <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 
     <style>
@@ -964,6 +965,210 @@
 }
 .activity-stats-table tbody td{padding:9px !important;border-bottom:1px solid #e2e8f0 !important;}
 </style>
+
+    <style id="adminMobileCardView">
+        /* Mobile admin panel: readable, spacious card layout. Desktop is unchanged. */
+        @media (max-width: 600px) {
+            html, body { min-width: 0 !important; }
+            body {
+                padding: 10px !important;
+                font-size: 15px !important;
+            }
+            body > div:first-child {
+                min-height: 68px !important;
+                padding: 14px !important;
+                margin-bottom: 14px !important;
+                border-radius: 18px !important;
+            }
+            body > div:first-child h2 { font-size: 21px !important; }
+            body > div:first-child button {
+                min-width: 0 !important;
+                padding: 10px 13px !important;
+                font-size: 14px !important;
+            }
+
+            h2 { font-size: 21px !important; margin: 22px 0 12px !important; }
+            h3 { font-size: 18px !important; }
+            button, input, select, textarea {
+                font-size: 15px !important;
+            }
+            button { min-height: 42px; }
+
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 10px !important;
+                margin-bottom: 18px !important;
+            }
+            .card {
+                min-height: 112px !important;
+                padding: 17px 15px !important;
+                border-radius: 16px !important;
+            }
+            .card h3 { font-size: 12px !important; }
+            .card h1 { font-size: 27px !important; }
+
+            /* Main admin tables become individual cards instead of tiny horizontal tables. */
+            #withdrawTable, #userTable, #deletedUserTable,
+            #questionTable, #questionRecycleTable,
+            .ap2-table tbody {
+                display: block !important;
+                width: 100% !important;
+            }
+            #withdrawTable tr, #userTable tr, #deletedUserTable tr,
+            #questionTable tr, #questionRecycleTable tr,
+            .ap2-table tbody tr {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 0 12px !important;
+                padding: 10px !important;
+                border: 1px solid rgba(148,163,184,.18) !important;
+                border-radius: 16px !important;
+                background: linear-gradient(145deg, rgba(21,37,62,.94), rgba(10,23,40,.92)) !important;
+                box-shadow: 0 8px 24px rgba(0,0,0,.18) !important;
+            }
+            #withdrawTable td, #userTable td, #deletedUserTable td,
+            #questionTable td, #questionRecycleTable td,
+            .ap2-table tbody td {
+                display: grid !important;
+                grid-template-columns: minmax(88px, 34%) minmax(0, 1fr) !important;
+                gap: 9px !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                padding: 9px 4px !important;
+                border: 0 !important;
+                border-bottom: 1px solid rgba(148,163,184,.10) !important;
+                font-size: 14px !important;
+                line-height: 1.45 !important;
+                overflow-wrap: anywhere !important;
+                word-break: break-word !important;
+            }
+            #withdrawTable td:last-child, #userTable td:last-child, #deletedUserTable td:last-child,
+            #questionTable td:last-child, #questionRecycleTable td:last-child,
+            .ap2-table tbody td:last-child {
+                border-bottom: 0 !important;
+            }
+            #withdrawTable td::before, #userTable td::before, #deletedUserTable td::before,
+            #questionTable td::before, #questionRecycleTable td::before,
+            .ap2-table tbody td::before {
+                color: #94a3b8 !important;
+                font-size: 12px !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: .35px !important;
+                align-self: start !important;
+            }
+            #withdrawTable td:nth-child(1)::before { content: "Name"; }
+            #withdrawTable td:nth-child(2)::before { content: "Mobile"; }
+            #withdrawTable td:nth-child(3)::before { content: "Amount"; }
+            #withdrawTable td:nth-child(4)::before { content: "Method"; }
+            #withdrawTable td:nth-child(5)::before { content: "Details"; }
+            #withdrawTable td:nth-child(6)::before { content: "Status"; }
+            #withdrawTable td:nth-child(7)::before { content: "Transaction"; }
+            #withdrawTable td:nth-child(8)::before { content: "Date"; }
+            #withdrawTable td:nth-child(9)::before { content: "Paid Date"; }
+            #withdrawTable td:nth-child(10)::before { content: "Action"; }
+
+            #userTable td:nth-child(1)::before { content: "Name"; }
+            #userTable td:nth-child(2)::before { content: "Mobile"; }
+            #userTable td:nth-child(3)::before { content: "Last Seen"; }
+            #userTable td:nth-child(4)::before { content: "Wallet"; }
+            #userTable td:nth-child(5)::before { content: "Today"; }
+            #userTable td:nth-child(6)::before { content: "Total"; }
+            #userTable td:nth-child(7)::before { content: "Spin Remaining"; }
+            #userTable td:nth-child(8)::before { content: "Warnings"; }
+            #userTable td:nth-child(9)::before { content: "Action"; }
+
+            #deletedUserTable td:nth-child(1)::before { content: "Name"; }
+            #deletedUserTable td:nth-child(2)::before { content: "Mobile"; }
+            #deletedUserTable td:nth-child(3)::before { content: "Deleted Date"; }
+            #deletedUserTable td:nth-child(4)::before { content: "Wallet"; }
+            #deletedUserTable td:nth-child(5)::before { content: "Action"; }
+
+            #questionTable td:nth-child(1)::before { content: "#"; }
+            #questionTable td:nth-child(2)::before { content: "Question"; }
+            #questionTable td:nth-child(3)::before { content: "Options"; }
+            #questionTable td:nth-child(4)::before { content: "Correct"; }
+            #questionTable td:nth-child(5)::before { content: "Action"; }
+            #questionRecycleTable td:nth-child(1)::before { content: "#"; }
+            #questionRecycleTable td:nth-child(2)::before { content: "Question"; }
+            #questionRecycleTable td:nth-child(3)::before { content: "Deleted At"; }
+            #questionRecycleTable td:nth-child(4)::before { content: "Action"; }
+
+            /* Command Center cards */
+            .ap2-tablewrap { overflow: visible !important; }
+            .ap2-table {
+                min-width: 0 !important;
+                width: 100% !important;
+            }
+            .ap2-table thead { display: none !important; }
+            .ap2-table tbody td:last-child .ap2-btn,
+            #withdrawTable td:last-child button,
+            #userTable td:last-child button,
+            #deletedUserTable td:last-child button,
+            #questionTable td:last-child button,
+            #questionRecycleTable td:last-child button {
+                min-height: 40px !important;
+                padding: 9px 12px !important;
+                font-size: 14px !important;
+                margin: 3px !important;
+            }
+            .ap2-table td:last-child > *,
+            #withdrawTable td:last-child > *,
+            #userTable td:last-child > *,
+            #deletedUserTable td:last-child > * {
+                max-width: 100% !important;
+            }
+
+            #adminProV2 {
+                padding: 12px !important;
+                margin: 14px 0 !important;
+                border-radius: 18px !important;
+            }
+            .ap2-head { align-items: stretch !important; }
+            .ap2-head > * { max-width: 100%; }
+            .ap2-head .ap2-btn { width: 100%; }
+            .ap2-tabs {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 8px !important;
+            }
+            .ap2-tabs .ap2-btn { width: 100% !important; }
+            .ap2-grid { grid-template-columns: 1fr 1fr !important; gap: 9px !important; }
+            .ap2-card { padding: 13px !important; }
+            .ap2-val { font-size: 21px !important; }
+            .ap2-lbl { font-size: 12px !important; }
+            .ap2-flex { width: 100%; }
+            .ap2-flex .ap2-btn { flex: 1 1 140px; }
+
+            /* Search/filter controls stay easy to tap. */
+            input, select, textarea {
+                width: 100% !important;
+                min-height: 44px !important;
+            }
+
+            /* Modals use the full phone width while keeping comfortable margins. */
+            .ap2-modal { padding: 10px !important; }
+            .ap2-box {
+                width: 100% !important;
+                max-height: 92vh !important;
+                padding: 15px !important;
+                border-radius: 16px !important;
+            }
+        }
+
+        @media (max-width: 380px) {
+            body { padding: 7px !important; }
+            .cards { grid-template-columns: 1fr !important; }
+            .ap2-tabs { grid-template-columns: 1fr !important; }
+            #withdrawTable td, #userTable td, #deletedUserTable td,
+            #questionTable td, #questionRecycleTable td,
+            .ap2-table tbody td {
+                grid-template-columns: 82px minmax(0, 1fr) !important;
+                font-size: 13px !important;
+            }
+        }
+    </style>
+
 </head>
 
 <body>
