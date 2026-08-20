@@ -2,21 +2,28 @@ const express = require("express");
 const router = express.Router();
 
 const Question = require("../models/Question");
-const QuestionBankState = require("../models/QuestionBankState");
 const auth = require("../middleware/auth");
 const adminAuth = require("../middleware/adminAuth");
-const seedQuestions = require("../questions.json");
 
 // questions.json is NOT auto-seeded. It can only be imported explicitly by the admin
 // through POST /api/questions/admin/import-json. This guarantees that deleting the
 // Question Bank (including permanent deletion) keeps the database empty until the
 // admin intentionally imports questions.json again.
 async function ensureQuestionsSeeded() {
+    // IMPORTANT: Never auto-import/seed questions.json.
+    // Questions enter MongoDB only through the explicit Admin import button.
     return;
+}
+
+function noStore(res) {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
 }
 
 // Fast student quiz endpoint: return a small random batch instead of the full question bank.
 router.get("/random", auth, async (req, res) => {
+    noStore(res);
     try {
         const count = Math.min(20, Math.max(1, Number(req.query.count) || 10));
         await ensureQuestionsSeeded();
@@ -41,6 +48,7 @@ router.get("/random", auth, async (req, res) => {
 
 // Student quiz question bank.
 router.get("/", auth, async (req, res) => {
+    noStore(res);
     try {
         await ensureQuestionsSeeded();
 
@@ -478,11 +486,14 @@ router.post("/admin/import-json", adminAuth, async (req, res) => {
             docs.push({ q, options, correct });
         }
 
-        if (docs.length) {
-            await Question.insertMany(docs, { ordered: false });
+        // Insert in batches so a large questions.json (100k+ questions) does not
+        // create one oversized MongoDB operation.
+        const batchSize = 1000;
+        for (let i = 0; i < docs.length; i += batchSize) {
+            await Question.insertMany(docs.slice(i, i + batchSize), { ordered: false });
         }
 
-        const total = await Question.countDocuments();
+        const total = await Question.countDocuments({ isDeleted: { $ne: true } });
 
         return res.json({
             success: true,

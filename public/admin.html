@@ -3014,16 +3014,16 @@ ${w.status === "Approved" ? `
 
             const firstConfirm = confirm(
                 "⚠️ WARNING!\n\n" +
-                "Are you sure you want to DELETE ALL QUESTIONS?\n\n" +
-                "This action cannot be undone."
+                "Are you sure you want to move ALL active questions to the Question Recycle Bin?\n\n" +
+                "They can be restored or permanently deleted from the Recycle Bin."
             );
 
             if (!firstConfirm) return;
 
             const secondConfirm = confirm(
                 "FINAL CONFIRMATION!\n\n" +
-                "All questions will be permanently deleted.\n\n" +
-                "Click OK to delete ALL questions."
+                "ALL active questions will be moved to the Question Recycle Bin.\n\n" +
+                "Click OK to continue."
             );
 
             if (!secondConfirm) return;
@@ -3047,7 +3047,7 @@ ${w.status === "Approved" ? `
                 alert(
                     "✅ Successfully deleted " +
                     data.deleted +
-                    " question(s)."
+                    " question(s) to the Recycle Bin."
                 );
 
                 questionPage = 1;
