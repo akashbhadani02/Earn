@@ -923,6 +923,234 @@
     pointer-events:auto !important;
     touch-action:manipulation;
 }
+
+/* =========================================================
+   KBC-STYLE FULLSCREEN QUIZ EXPERIENCE
+   ========================================================= */
+#quiz.kbc-quiz-screen{
+    width:100vw;
+    max-width:none;
+    min-height:100vh;
+    height:100vh;
+    margin:0;
+    padding:clamp(14px,2.2vw,30px);
+    border:0;
+    border-radius:0;
+    overflow-y:auto;
+    overflow-x:hidden;
+    color:#fff;
+    background:
+      radial-gradient(circle at 50% 38%, rgba(61,112,255,.55) 0%, rgba(22,44,130,.30) 24%, transparent 45%),
+      radial-gradient(circle at 15% 90%, rgba(0,204,255,.22), transparent 32%),
+      radial-gradient(circle at 88% 8%, rgba(113,46,255,.24), transparent 30%),
+      linear-gradient(145deg,#050b2e 0%,#0a1452 42%,#030722 100%);
+    box-shadow:none;
+    animation:kbcFade .45s ease;
+}
+@keyframes kbcFade{from{opacity:0}to{opacity:1}}
+#quiz.kbc-quiz-screen::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      repeating-radial-gradient(circle at center, transparent 0 58px, rgba(255,255,255,.025) 59px 60px);
+    opacity:.55;
+}
+.kbc-shell{
+    position:relative;
+    z-index:2;
+    width:min(1120px,100%);
+    min-height:100%;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+.kbc-topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+}
+.kbc-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:900;
+    letter-spacing:.8px;
+    text-transform:uppercase;
+    font-size:clamp(15px,2vw,22px);
+}
+.kbc-orb{
+    width:42px;height:42px;border-radius:50%;
+    display:grid;place-items:center;
+    background:radial-gradient(circle at 35% 30%,#fff 0 8%,#55a4ff 9% 26%,#183bd2 48%,#050b2e 72%);
+    border:2px solid rgba(255,255,255,.75);
+    box-shadow:0 0 18px rgba(69,133,255,.8);
+}
+.kbc-balance{
+    padding:9px 15px;
+    border:1px solid rgba(255,255,255,.28);
+    border-radius:999px;
+    background:rgba(0,0,0,.25);
+    backdrop-filter:blur(8px);
+    font-size:13px;
+    font-weight:800;
+    white-space:nowrap;
+}
+.kbc-progress{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin:2px auto 14px;
+    font-size:12px;
+    font-weight:800;
+    color:#bcd2ff;
+}
+.kbc-dot{width:7px;height:7px;border-radius:50%;background:#46d7ff;box-shadow:0 0 10px #46d7ff}
+.kbc-question-wrap{
+    width:min(940px,100%);
+    margin:0 auto;
+}
+.kbc-question-no{
+    text-align:center;
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    color:#80c8ff;
+    margin-bottom:8px;
+    text-transform:uppercase;
+}
+#quiz.kbc-quiz-screen #question{
+    position:relative;
+    margin:0 auto 22px;
+    width:100%;
+    min-height:105px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:25px clamp(18px,4vw,50px);
+    color:#fff;
+    font-size:clamp(18px,2.35vw,28px);
+    line-height:1.45;
+    font-weight:800;
+    background:linear-gradient(180deg,rgba(18,43,117,.96),rgba(6,18,65,.98));
+    border:2px solid #4c8dff;
+    border-radius:24px;
+    box-shadow:0 0 0 3px rgba(25,74,190,.25),0 15px 45px rgba(0,0,0,.35),inset 0 0 35px rgba(70,125,255,.12);
+}
+#quiz.kbc-quiz-screen #question::before,
+#quiz.kbc-quiz-screen #question::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    width:30px;height:30px;
+    border:2px solid #6aa6ff;
+    border-radius:50%;
+    background:#07133f;
+    transform:translateY(-50%);
+}
+#quiz.kbc-quiz-screen #question::before{left:-17px}
+#quiz.kbc-quiz-screen #question::after{right:-17px}
+#quiz.kbc-quiz-screen #options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px 18px;
+}
+#quiz.kbc-quiz-screen .option-btn{
+    position:relative;
+    min-height:68px;
+    margin:0;
+    padding:13px 18px 13px 55px;
+    border:2px solid #4a82ec;
+    border-radius:18px;
+    background:linear-gradient(180deg,#112b76,#081743);
+    color:#fff;
+    text-align:left;
+    font-size:clamp(13px,1.5vw,17px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 8px 20px rgba(0,0,0,.25);
+    transition:.2s ease;
+}
+#quiz.kbc-quiz-screen .option-btn::before{
+    content:attr(data-option);
+    position:absolute;
+    left:13px;top:50%;
+    transform:translateY(-50%);
+    width:31px;height:31px;
+    border:1px solid #6ba8ff;
+    border-radius:50%;
+    display:grid;place-items:center;
+    color:#9ed0ff;
+    font-weight:900;
+    background:#07123a;
+}
+#quiz.kbc-quiz-screen .option-btn:hover{
+    transform:translateY(-2px);
+    border-color:#f5c542;
+    background:linear-gradient(180deg,#173d9a,#0a1e58);
+    box-shadow:0 0 22px rgba(61,139,255,.35);
+}
+#quiz.kbc-quiz-screen .option-btn:disabled{opacity:.95;cursor:default}
+.kbc-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:18px;
+}
+.kbc-tip{
+    color:#9db8ee;
+    font-size:11px;
+    line-height:1.5;
+}
+#quiz.kbc-quiz-screen .kbc-back{
+    width:auto;
+    min-height:42px;
+    margin:0;
+    padding:8px 15px;
+    border-radius:999px;
+    background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.25);
+    color:#fff;
+    box-shadow:none;
+    font-size:12px;
+}
+#quiz.kbc-quiz-screen .kbc-back:hover{transform:none;background:rgba(255,255,255,.16)}
+body.kbc-fullscreen-active{padding:0!important}
+body.kbc-fullscreen-active #quiz.kbc-quiz-screen{border-radius:0!important}
+@media(max-width:700px){
+    #quiz.kbc-quiz-screen{padding:12px 10px 14px}
+    .kbc-shell{min-height:calc(100vh - 26px)}
+    .kbc-topbar{margin-bottom:10px}
+    .kbc-orb{width:36px;height:36px}
+    .kbc-balance{font-size:11px;padding:8px 11px}
+    #quiz.kbc-quiz-screen #question{
+        min-height:125px;
+        margin-bottom:15px;
+        padding:20px 17px;
+        font-size:18px;
+        border-radius:20px;
+    }
+    #quiz.kbc-quiz-screen #question::before,
+    #quiz.kbc-quiz-screen #question::after{width:22px;height:22px}
+    #quiz.kbc-quiz-screen #question::before{left:-12px}
+    #quiz.kbc-quiz-screen #question::after{right:-12px}
+    #quiz.kbc-quiz-screen #options{grid-template-columns:1fr;gap:10px}
+    #quiz.kbc-quiz-screen .option-btn{min-height:58px;border-radius:15px;padding:11px 14px 11px 52px}
+    .kbc-footer{margin-top:12px;align-items:flex-end}
+    .kbc-tip{font-size:10px}
+}
+@media(max-width:380px){
+    #quiz.kbc-quiz-screen #question{font-size:16px;min-height:112px}
+    #quiz.kbc-quiz-screen .option-btn{font-size:12px;min-height:54px}
+    .kbc-brand{font-size:13px}
+    .kbc-progress{font-size:10px}
+}
+
 </style>
 
 <style id="earn-dashboard-view-style">
@@ -1374,41 +1602,35 @@ body.notification-locked #notificationRequiredOverlay button{
 <button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to Activities</button>
 </div>
 
-<div id="quiz" class="card hidden" aria-hidden="true" style="visibility:hidden;">
+<div id="quiz" class="card hidden kbc-quiz-screen" aria-hidden="true" style="visibility:hidden;">
+    <div class="kbc-shell">
+        <div>
+            <div class="kbc-topbar">
+                <div class="kbc-brand"><span class="kbc-orb">Q</span><span>Quiz Master</span></div>
+                <div class="kbc-balance">Wallet ₹<span id="quizWallet">0.00</span></div>
+            </div>
 
+            <div class="kbc-progress">
+                <span class="kbc-dot"></span>
+                <span>QUESTION JOURNEY</span>
+                <span>•</span>
+                <span><b id="remainingQuestions">100</b> QUESTIONS LEFT</span>
+            </div>
 
-        <div style="
-        text-align:center;
-        margin-bottom:10px;
-        padding:10px;
-        background:linear-gradient(135deg,#ff9800,#ff5722);
-        color:white;
-        border-radius:12px;
-        font-size:18px;
-        font-weight:bold;">
-            📚 Remaining Questions :
-            <span id="remainingQuestions">100</span>/100
+            <div class="kbc-question-wrap">
+                <div class="kbc-question-no">YOUR NEXT QUESTION</div>
+                <h3 id="question">Loading...</h3>
+                <div id="options"></div>
+            </div>
         </div>
 
-        <div style="
-        text-align:center;
-        margin-bottom:15px;
-        padding:12px;
-        background:linear-gradient(135deg,#ae2bf5,#bb00ff);
-        color:white;
-        border-radius:12px;
-        font-size:20px;
-        font-weight:bold;">
-            💰 Wallet Balance : ₹<span id="quizWallet">0.00</span>
+        <div class="kbc-footer">
+            <div class="kbc-tip">💡 સવાલ ધ્યાનથી વાંચો અને પછી જવાબ પસંદ કરો.</div>
+            <button class="btn kbc-back" onclick="showScreen('dashboard')">← Dashboard</button>
         </div>
-
-
-        <h3 id="question">Loading...</h3>
-
-        <div id="options"></div>
-        <button class="btn" style="background:#a048bb;" onclick="showScreen('dashboard')">Back to Dashboard</button>
-        <p id="message" style="color:#000000;"><br>સવાલ વાંચવો પછી જવાબ આપવો નહીંતર બ્લોક થઇ જશો.</p>
+        <p id="message" style="display:none;">Quiz</p>
     </div>
+</div>
 
     <script>
         // ==========================================
@@ -2207,6 +2429,36 @@ body.notification-locked #notificationRequiredOverlay button{
             });
         }
 
+        function enterQuizFullscreen() {
+            const el = document.getElementById("quiz");
+            if (!el) return;
+            document.body.classList.add("kbc-fullscreen-active");
+            if (document.fullscreenElement) return;
+            try {
+                const request = el.requestFullscreen || el.webkitRequestFullscreen;
+                if (request) {
+                    const result = request.call(el);
+                    if (result && typeof result.catch === "function") result.catch(() => {});
+                }
+            } catch (_) {}
+        }
+
+        function exitQuizFullscreen() {
+            document.body.classList.remove("kbc-fullscreen-active");
+            try {
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    const result = document.exitFullscreen();
+                    if (result && typeof result.catch === "function") result.catch(() => {});
+                }
+            } catch (_) {}
+        }
+
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement && currentScreen === "quiz") {
+                document.body.classList.add("kbc-fullscreen-active");
+            }
+        });
+
         function showScreen(id, pushHistory = true) {
             if (!document.getElementById(id) && id !== 'activityPlay') {
                 return;
@@ -2218,6 +2470,8 @@ body.notification-locked #notificationRequiredOverlay button{
 
             currentScreen = id;
             setScreenVisibility(id);
+            if (id === 'quiz') enterQuizFullscreen();
+            else exitQuizFullscreen();
 
             if (id === 'quiz') {
                 const qw = document.getElementById("quizWallet");
@@ -2470,6 +2724,7 @@ body.notification-locked #notificationRequiredOverlay button{
                     b.className = "option-btn";
                     b.type = "button";
                     b.innerText = String(o);
+                    b.setAttribute("data-option", String.fromCharCode(65 + i));
                     b.onclick = async () => {
                         if (b.disabled) return;
 
