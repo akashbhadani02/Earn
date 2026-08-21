@@ -37,6 +37,53 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 
+<style id="ap2-modal-layout-fix">
+/* Command Center modal layout: keep popup centered instead of rendering below the trigger button. */
+.ap2-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  background: rgba(15,23,42,.62) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 18px !important;
+}
+.ap2-modal .ap2-box {
+  width: min(760px, 100%) !important;
+  max-height: 90vh !important;
+  overflow: auto !important;
+  padding: 20px !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 70px rgba(15,23,42,.28) !important;
+}
+.ap2-modal .ap2-head {
+  position: sticky;
+  top: -20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -20px -20px 16px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.blocked-time-card {
+  padding: 15px 16px;
+  margin: 10px 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.blocked-time-card .student-name { font-weight: 800; font-size: 16px; color: var(--text); }
+.blocked-time-card .student-meta { margin-top: 4px; color: var(--muted); font-size: 13px; }
+.blocked-time-card .remaining { margin-top: 9px; font-weight: 800; color: var(--danger); }
+</style>
+
 <style id="admin-modal-initial-state-fix">
 /* ALL admin overlays start CLOSED. JavaScript adds .show/.open only when needed. */
 .modal, .popup, .admin-modal, .question-editor-modal, .modal-overlay, .dialog,
