@@ -2431,6 +2431,117 @@ a:not(.btn):not(.button){
 body *{
  text-shadow:none!important;
 }
+</style><style id="command-center-light-theme">
+/* COMMAND CENTER: light surfaces so black text is always visible */
+:where(
+  .command-center,
+  .command-center *,
+  #commandCenter,
+  #commandCenter *,
+  .command-panel,
+  .command-panel *,
+  .command-card,
+  .command-card *,
+  .admin-command-center,
+  .admin-command-center *
+){
+  color:#000!important;
+}
+
+/* Light backgrounds for every Command Center container/card */
+:where(
+  .command-center,
+  #commandCenter,
+  .command-panel,
+  .command-card,
+  .admin-command-center,
+  .command-section,
+  .command-box,
+  .command-item,
+  .command-row,
+  .command-toolbar,
+  .command-table,
+  .command-table-wrap,
+  .command-form,
+  .command-status,
+  .command-log
+){
+  background:#ffffff!important;
+  background-image:none!important;
+  border-color:#cbd5e1!important;
+  color:#000!important;
+}
+
+/* Nested command-center elements that inherited dark backgrounds */
+:where(
+  .command-center *,
+  #commandCenter *,
+  .command-panel *,
+  .command-card *,
+  .admin-command-center *
+){
+  text-shadow:none!important;
+}
+
+/* Command Center headings/data */
+:where(
+  .command-center h1,.command-center h2,.command-center h3,
+  .command-center h4,.command-center h5,.command-center h6,
+  .command-center p,.command-center span,.command-center label,
+  .command-center strong,.command-center b,.command-center small,
+  #commandCenter h1,#commandCenter h2,#commandCenter h3,
+  #commandCenter h4,#commandCenter h5,#commandCenter h6,
+  #commandCenter p,#commandCenter span,#commandCenter label,
+  #commandCenter strong,#commandCenter b,#commandCenter small
+){
+  color:#000!important;
+  -webkit-text-fill-color:#000!important;
+}
+
+/* Buttons inside Command Center remain visible */
+:where(
+  .command-center button,.command-center .btn,
+  .command-center .button,.command-center input[type=button],
+  .command-center input[type=submit],
+  #commandCenter button,#commandCenter .btn,
+  #commandCenter .button,#commandCenter input[type=button],
+  #commandCenter input[type=submit]
+){
+  background:#dbeafe!important;
+  color:#000!important;
+  -webkit-text-fill-color:#000!important;
+  border:1px solid #93c5fd!important;
+}
+
+/* Tables inside Command Center */
+:where(
+  .command-center table,.command-center table thead,
+  .command-center table tbody,.command-center table tr,
+  #commandCenter table,#commandCenter table thead,
+  #commandCenter table tbody,#commandCenter table tr
+){
+  background:#fff!important;
+  color:#000!important;
+}
+:where(
+  .command-center table th,.command-center table td,
+  #commandCenter table th,#commandCenter table td
+){
+  background:#fff!important;
+  color:#000!important;
+  -webkit-text-fill-color:#000!important;
+  border-color:#cbd5e1!important;
+}
+
+/* Inputs */
+:where(
+  .command-center input,.command-center textarea,.command-center select,
+  #commandCenter input,#commandCenter textarea,#commandCenter select
+){
+  background:#fff!important;
+  color:#000!important;
+  -webkit-text-fill-color:#000!important;
+}
 </style></head>
 
 <body>
