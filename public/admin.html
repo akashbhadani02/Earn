@@ -3227,6 +3227,293 @@ input,select,textarea{color:#172033!important;background:#fff!important;border-c
 @media(max-width:520px){.cards{grid-template-columns:1fr!important}.ap2-grid{grid-template-columns:1fr!important}.body>div:first-child button{width:100%!important}.admin-user-actions button{flex:1 1 calc(50% - 7px)!important}.adminProV2{padding:12px!important}.ap2-pane{padding:10px!important}}
 
 </style>
+
+<style id="admin-final-readable-color-fix">
+/* FINAL READABILITY / CONTRAST PASS
+   Purpose: every admin section, popup, table, form and control remains readable.
+   This is intentionally the last stylesheet so it wins over older theme overrides.
+*/
+:root{
+  --final-bg:#f3f6fb;
+  --final-surface:#ffffff;
+  --final-surface-2:#f8fafc;
+  --final-border:#d7e0ea;
+  --final-border-strong:#b8c6d6;
+  --final-text:#172033;
+  --final-text-2:#334155;
+  --final-muted:#64748b;
+  --final-primary:#2563eb;
+  --final-primary-hover:#1d4ed8;
+  --final-success:#15803d;
+  --final-danger:#dc2626;
+  --final-warning:#b45309;
+}
+
+/* Page */
+html,body{
+  background:var(--final-bg) !important;
+  color:var(--final-text) !important;
+}
+body{
+  color-scheme:light !important;
+}
+body *{
+  text-shadow:none !important;
+}
+body h1,body h2,body h3,body h4,body h5,body h6,
+body p,body span,body label,body small,body strong,
+body b,body li,body td,body th,body dt,body dd,
+body legend{
+  color:var(--final-text) !important;
+}
+body .muted,body .subtle,body .secondary,body .hint,
+body [class*="muted"],body [class*="subtle"],body [class*="hint"]{
+  color:var(--final-muted) !important;
+}
+
+/* Main cards / panels / sections */
+body .card,body .panel,body .section,body .box,
+body .modal-content,body .modal-body,body .modal-header,
+body .drawer,body .popup,body .dialog,
+body .admin-card,body .admin-panel,body .stat-card,
+body .table-wrap,body .table-container,
+body .admin-question-card,body .admin-user-card,
+body .question-card,body .user-card{
+  background:var(--final-surface) !important;
+  color:var(--final-text) !important;
+  border-color:var(--final-border) !important;
+}
+
+/* Command Center and other previously dark areas */
+#adminProV2,
+#adminProV2 .ap2-card,
+#adminProV2 .ap2-stat,
+#adminProV2 .ap2-panel,
+#adminProV2 .ap2-section,
+#commandCenter,
+.command-center,
+.command-panel{
+  background:var(--final-surface) !important;
+  color:var(--final-text) !important;
+  border-color:var(--final-border) !important;
+}
+#adminProV2 *,
+#commandCenter *,
+.command-center *,
+.command-panel *{
+  color:var(--final-text) !important;
+}
+#adminProV2 .ap2-btn,
+#commandCenter button,
+.command-center button,
+.command-panel button{
+  color:#fff !important;
+  background:var(--final-primary) !important;
+  border-color:var(--final-primary) !important;
+}
+#adminProV2 .ap2-btn:hover,
+#commandCenter button:hover,
+.command-center button:hover,
+.command-panel button:hover{
+  background:var(--final-primary-hover) !important;
+}
+
+/* Header / navigation */
+body header,body nav,.admin-main-menu,.admin-nav,.topbar,.admin-header{
+  background:var(--final-surface) !important;
+  color:var(--final-text) !important;
+  border-color:var(--final-border) !important;
+}
+body header *,body nav *,.admin-main-menu *,.admin-nav *,
+.topbar *,.admin-header *{
+  color:var(--final-text) !important;
+}
+body header button,body nav button,.admin-main-menu button,
+.admin-nav button,.topbar button,.admin-header button{
+  color:var(--final-text) !important;
+  background:var(--final-surface-2) !important;
+  border-color:var(--final-border) !important;
+}
+body header button:hover,body nav button:hover,.admin-main-menu button:hover,
+.admin-nav button:hover,.topbar button:hover,.admin-header button:hover{
+  background:#e8f0ff !important;
+  color:#1d4ed8 !important;
+}
+
+/* Buttons: readable text on every action button */
+body button,
+body input[type="button"],
+body input[type="submit"],
+body input[type="reset"],
+body .btn,
+body .button,
+body a.btn,
+body .action-btn{
+  border-color:var(--final-border-strong) !important;
+}
+body button:not(.danger):not(.delete):not(.remove):not(.logout),
+body input[type="button"],
+body input[type="submit"],
+body .btn-primary,
+body .button-primary,
+body .primary-btn,
+body .action-btn.primary{
+  color:#fff !important;
+  background:var(--final-primary) !important;
+  border-color:var(--final-primary) !important;
+}
+body button:not(.danger):not(.delete):not(.remove):not(.logout):hover,
+body input[type="button"]:hover,
+body input[type="submit"]:hover,
+body .btn-primary:hover,
+body .button-primary:hover,
+body .primary-btn:hover,
+body .action-btn.primary:hover{
+  background:var(--final-primary-hover) !important;
+}
+body button.danger,body button.delete,body button.remove,
+body button.logout,.btn-danger,.delete-btn,.remove-btn{
+  color:#fff !important;
+  background:var(--final-danger) !important;
+  border-color:var(--final-danger) !important;
+}
+body button.success,.btn-success,.approve-btn{
+  color:#fff !important;
+  background:var(--final-success) !important;
+  border-color:var(--final-success) !important;
+}
+
+/* Inputs / selects / textareas */
+body input,body select,body textarea{
+  background:#fff !important;
+  color:#172033 !important;
+  border:1px solid var(--final-border-strong) !important;
+  caret-color:#172033 !important;
+}
+body input:focus,body select:focus,body textarea:focus{
+  border-color:var(--final-primary) !important;
+  outline:2px solid rgba(37,99,235,.16) !important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.10) !important;
+}
+body input::placeholder,body textarea::placeholder{
+  color:#64748b !important;
+  opacity:1 !important;
+}
+body option{
+  background:#fff !important;
+  color:#172033 !important;
+}
+
+/* Tables */
+body table{
+  background:#fff !important;
+  color:#172033 !important;
+  border-color:var(--final-border) !important;
+}
+body table thead,body table th{
+  background:#eaf1f8 !important;
+  color:#172033 !important;
+  border-color:var(--final-border) !important;
+}
+body table tbody tr,
+body table tbody td{
+  background:#fff !important;
+  color:#172033 !important;
+  border-color:var(--final-border) !important;
+}
+body table tbody tr:nth-child(even) td{
+  background:#f8fafc !important;
+}
+body table tbody tr:hover td{
+  background:#eef5ff !important;
+}
+
+/* Links */
+body a{
+  color:#1d4ed8 !important;
+}
+body a:hover{
+  color:#1e40af !important;
+}
+
+/* Icons: do not leave dark icons on dark backgrounds */
+body svg:not([data-status-icon]),
+body svg:not([data-status-icon]) *{
+  stroke:currentColor;
+}
+body .icon,body i{
+  color:inherit !important;
+}
+
+/* Form labels and headings inside cards */
+body .card label,body .panel label,body .section label,
+body .modal-content label,body .admin-card label,
+body .admin-panel label{
+  color:#334155 !important;
+  font-weight:600 !important;
+}
+body .card h1,body .card h2,body .card h3,
+body .panel h1,body .panel h2,body .panel h3,
+body .section h1,body .section h2,body .section h3,
+body .modal-content h1,body .modal-content h2,body .modal-content h3{
+  color:#172033 !important;
+}
+
+/* Preserve semantic status colors while improving contrast */
+body .status-online,.online,.active,.success,.approved{
+  color:#166534 !important;
+}
+body .status-offline,.offline,.inactive{
+  color:#475569 !important;
+}
+body .status-danger,.error,.rejected,.blocked{
+  color:#b91c1c !important;
+}
+body .warning,.pending{
+  color:#92400e !important;
+}
+
+/* Toasts / alerts */
+body .toast,body .alert,body .notice,body .notification{
+  color:#172033 !important;
+  background:#fff !important;
+  border-color:var(--final-border) !important;
+}
+body .toast *,body .alert *,body .notice *,body .notification *{
+  color:inherit !important;
+}
+
+/* Modal backdrop must remain dark, modal itself light */
+body .modal-backdrop,.overlay,.popup-overlay{
+  background:rgba(15,23,42,.62) !important;
+}
+body .modal,.dialog,.popup{
+  color:#172033 !important;
+}
+
+/* Disabled controls still readable */
+body button:disabled,body input:disabled,body select:disabled,
+body textarea:disabled{
+  color:#64748b !important;
+  background:#e9eef5 !important;
+  border-color:#d3dce7 !important;
+  opacity:1 !important;
+}
+
+/* Mobile: same contrast rules, no horizontal color/visibility issues */
+@media(max-width:700px){
+  html,body{background:var(--final-bg) !important;color:var(--final-text) !important;}
+  body .card,body .panel,body .section,body .modal,
+  body .modal-content,body .admin-card,body .admin-panel{
+    background:#fff !important;
+    color:#172033 !important;
+  }
+  body button,body input,body select,body textarea{
+    -webkit-tap-highlight-color:transparent;
+  }
+}
+</style>
+
 </head>
 
 <body>
