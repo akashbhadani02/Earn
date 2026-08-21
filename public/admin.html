@@ -2052,6 +2052,27 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
 }
 </style>
 
+
+<style id="admin-visibility-fix">
+/* Admin visibility fix: never allow dark text on dark controls/containers */
+:where(button, .btn, a, input[type="button"], input[type="submit"], select, .action-btn, .tab-btn) {
+  color: #ffffff !important;
+}
+:where(button, .btn, a, input[type="button"], input[type="submit"], select, .action-btn, .tab-btn):disabled {
+  color: #bfc7d5 !important;
+}
+:where(.card, .panel, .modal, .dropdown-menu, .table-wrap, .section, .stat-card, .admin-card) {
+  color: #f8fafc;
+}
+:where(.card, .panel, .modal, .dropdown-menu, .table-wrap, .section, .stat-card, .admin-card) :where(th, td, label, span, p, strong, b, h1, h2, h3, h4, h5, h6) {
+  color: inherit;
+}
+/* Inputs remain readable on light fields */
+:where(input[type="text"], input[type="search"], input[type="number"], input[type="email"], input[type="password"], textarea) {
+  color: #111827 !important;
+  background: #ffffff !important;
+}
+</style>
 </head>
 
 <body>
