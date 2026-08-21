@@ -2910,127 +2910,6 @@ button *,.btn *,.button *,.ap2-btn *{color:inherit!important;-webkit-text-fill-c
 :where(.modal-content,.ap2-box){background:#fff!important;color:var(--p-text)!important;border:1px solid var(--p-border)!important;box-shadow:0 20px 55px rgba(15,23,42,.16)!important;}
 </style>
 
-
-<style id="admin-day-night-final">
-/* =========================================================
-   ADMIN DAY / NIGHT THEME — FINAL GLOBAL OVERRIDE
-   Keeps actions readable in every card, table, modal and command center.
-   ========================================================= */
-:root{
-  --admin-bg:#f4f7fb;
-  --admin-surface:#ffffff;
-  --admin-surface-2:#f8fafc;
-  --admin-text:#172033;
-  --admin-muted:#64748b;
-  --admin-border:#e2e8f0;
-  --admin-primary:#2563eb;
-  --admin-primary-hover:#1d4ed8;
-  --admin-shadow:0 10px 30px rgba(15,23,42,.08);
-  --admin-header:#ffffff;
-}
-body.admin-night{
-  --admin-bg:#0f172a;
-  --admin-surface:#172033;
-  --admin-surface-2:#1e293b;
-  --admin-text:#e5edf8;
-  --admin-muted:#a8b4c7;
-  --admin-border:#334155;
-  --admin-primary:#60a5fa;
-  --admin-primary-hover:#93c5fd;
-  --admin-shadow:0 14px 35px rgba(0,0,0,.28);
-  --admin-header:#172033;
-}
-html,body{background:var(--admin-bg)!important;color:var(--admin-text)!important;transition:background-color .25s ease,color .25s ease}
-body{background-image:none!important}
-body>div:first-child,
-.admin-main-menu,
-.card,.dashboard-card,.admin-card,.student-card,.command-card,.analytics,.history,
-.table-wrap,.table-container,.question-card,.admin-question-card,.user-card,
-.modal-content,.ap2-box,.command-panel,.command-box,.command-item,.command-row,
-.command-toolbar,.command-table,.command-table-wrap,.stat-card,.panel,
-.section-card,.withdraw-card,.activity-card{
-  background:var(--admin-surface)!important;
-  color:var(--admin-text)!important;
-  border-color:var(--admin-border)!important;
-  box-shadow:var(--admin-shadow)!important;
-}
-body>div:first-child{background:var(--admin-header)!important}
-.admin-main-menu button,
-.admin-main-menu .admin-users-btn,
-.action-btn,.tab-btn,.nav-btn,.menu-btn,.reset-btn,.export-btn,
-.question-actions button,.admin-question-actions button,.admin-user-actions button,
-.modal-actions button,.dashboard-actions .btn,.dashboard-actions button,
-.online-users-dashboard-btn,.command-center button,.command-panel button,
-.command-box button,.command-item button,.command-row button,
-.table-wrap button,.table-container button,.student-card button,
-.card button,.dashboard-card button,.admin-card button{
-  background:var(--admin-primary)!important;
-  color:#fff!important;
-  border-color:var(--admin-primary)!important;
-  box-shadow:0 4px 12px rgba(37,99,235,.16)!important;
-}
-.admin-main-menu button:hover,
-.action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover,
-.reset-btn:hover,.export-btn:hover,.question-actions button:hover,
-.admin-question-actions button:hover,.admin-user-actions button:hover,
-.modal-actions button:hover,.command-center button:hover,
-.command-panel button:hover,.command-box button:hover,.command-item button:hover,
-.command-row button:hover,.table-wrap button:hover,.table-container button:hover,
-.student-card button:hover,.card button:hover,.dashboard-card button:hover,.admin-card button:hover{
-  background:var(--admin-primary-hover)!important;color:#fff!important;transform:translateY(-1px)
-}
-/* Preserve semantic action colors, but keep them clean and theme-aware. */
-button[class~="red"],button.danger,.danger-btn,
-button[onclick*="delete"],button[onclick*="reject"]{background:#dc2626!important;color:#fff!important;border-color:#dc2626!important}
-button[class~="green"],button.success,.success-btn,
-button[onclick*="approve"],button[onclick*="Paid"],button[onclick*="Unblock"]{background:#16a34a!important;color:#fff!important;border-color:#16a34a!important}
-button[class~="gold"],button.warning,.warning-btn{background:#d97706!important;color:#fff!important;border-color:#d97706!important}
-button[class~="purple"]{background:#7c3aed!important;color:#fff!important;border-color:#7c3aed!important}
-.admin-logout-btn{background:#dc2626!important;color:#fff!important;border-color:#dc2626!important}
-.theme-toggle-btn{background:var(--admin-primary)!important;color:#fff!important;border:1px solid var(--admin-primary)!important;padding:10px 16px!important;border-radius:8px!important;cursor:pointer!important;font-weight:800!important;box-shadow:0 4px 12px rgba(37,99,235,.16)!important}
-.theme-toggle-btn:hover{background:var(--admin-primary-hover)!important}
-/* Inputs / selects / text areas */
-input,select,textarea,.form-control,.search-input{
-  background:var(--admin-surface)!important;color:var(--admin-text)!important;
-  border-color:var(--admin-border)!important
-}
-input::placeholder,textarea::placeholder{color:var(--admin-muted)!important}
-/* Text */
-h1,h2,h3,h4,h5,h6,p,span,label,td,th,small,strong,li{color:var(--admin-text)}
-.muted,.text-muted,.subtext,.hint{color:var(--admin-muted)!important}
-th{background:var(--admin-surface-2)!important}
-tr,td{border-color:var(--admin-border)!important}
-/* Online/offline indicators stay semantic */
-.online{color:#16a34a!important}.offline{color:#dc2626!important}
-/* Command center lifelines: no black text / black button in either theme */
-.kbc-lifeline,.command-center .kbc-lifeline,.command-panel .kbc-lifeline{
-  background:var(--admin-primary)!important;color:#fff!important;border-color:var(--admin-primary)!important;
-  text-shadow:none!important
-}
-.kbc-lifeline span{color:#eaf2ff!important}
-.kbc-lifeline.used,.kbc-lifeline:disabled{background:#94a3b8!important;color:#fff!important;border-color:#94a3b8!important}
-/* Theme-aware dark mode surfaces */
-body.admin-night .admin-main-menu button,
-body.admin-night .card,body.admin-night .dashboard-card,body.admin-night .admin-card,
-body.admin-night .student-card,body.admin-night .command-card,body.admin-night .analytics,
-body.admin-night .history,body.admin-night .table-wrap,body.admin-night .table-container,
-body.admin-night .modal-content,body.admin-night .ap2-box{box-shadow:0 12px 30px rgba(0,0,0,.22)!important}
-body.admin-night input,body.admin-night select,body.admin-night textarea,
-body.admin-night .search-input{background:#0f172a!important;color:#e5edf8!important}
-body.admin-night th{background:#1e293b!important}
-body.admin-night td,body.admin-night tr{color:#e5edf8!important}
-body.admin-night .theme-toggle-btn{background:#f59e0b!important;border-color:#f59e0b!important;color:#172033!important}
-body.admin-night .theme-toggle-btn:hover{background:#fbbf24!important}
-body.admin-night .admin-logout-btn{background:#ef4444!important}
-/* Kill old decorative gradients on global admin surfaces */
-body .card,body .dashboard-card,body .admin-card,body .student-card,body .command-card,
-body .table-wrap,body .table-container,body .modal-content{background-image:none!important}
-@media(max-width:700px){
-  .theme-toggle-btn{padding:9px 12px!important;font-size:12px!important}
-  .admin-logout-btn{padding:9px 12px!important;font-size:12px!important}
-}
-</style>
-
 </head>
 
 <body>
@@ -3049,10 +2928,7 @@ body .table-wrap,body .table-container,body .modal-content{background-image:none
             <button onclick="sendNotificationToAll()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 🔔 Notify All Users
             </button>
-            <button id="themeToggleBtn" class="theme-toggle-btn" type="button" onclick="toggleAdminTheme()" aria-label="Switch theme">
-                🌙 Night Mode
-            </button>
-            <button onclick="logout()" class="admin-logout-btn" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
+            <button onclick="logout()" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 Logout
             </button>
         </div>
@@ -5328,7 +5204,7 @@ ${w.status === "Approved" ? `
 
         .ap2-lbl {
             font-size: 12px;
-            color: black;
+            color: #e2e8f0 !important;
             -webkit-text-fill-color: #e2e8f0 !important;
         }
 
@@ -6308,23 +6184,112 @@ button:not(.danger):not(.delete):not(.reject):not(.approve):not(.paid):not(.succ
 </style>
 
 
-<script id="admin-day-night-script">
+<style id="admin-day-night-final-theme">
+/* ===== FINAL DAY / NIGHT PROFESSIONAL THEME ===== */
+:root{
+  --adm-bg:#f4f6f9;--adm-surface:#fff;--adm-surface2:#f8fafc;--adm-border:#e2e8f0;
+  --adm-text:#111827;--adm-muted:#4b5563;--adm-primary:#2563eb;--adm-primary2:#1d4ed8;
+  --adm-success:#16a34a;--adm-danger:#dc2626;--adm-warning:#d97706;--adm-shadow:0 6px 22px rgba(15,23,42,.07)
+}
+html,body{background:var(--adm-bg)!important;color:var(--adm-text)!important}
+body,body *{box-sizing:border-box}
+body{color:var(--adm-text)!important}
+body>div:first-child,.card,.table-wrap,.ap2-tablewrap,.admin-main-menu,.modal-content,.analytics,.history,.student-card,.command-card,
+.dropdown-menu,.sidebar,.header,.admin-section,.panel,.section-card,.stats-card,.question-card,.admin-user-card,.online-users-panel{
+ background:var(--adm-surface)!important;color:var(--adm-text)!important;border-color:var(--adm-border)!important;box-shadow:var(--adm-shadow)!important
+}
+body h1,body h2,body h3,body h4,body h5,body h6,body p,body label,body span,body strong,body b,body td,body th,body li,body small{color:var(--adm-text)}
+body .muted,body .subtext,body .subtitle,body .card h3{color:var(--adm-muted)!important}
+input,select,textarea{background:#fff!important;color:#111827!important;border:1px solid #d7dee8!important}
+input::placeholder,textarea::placeholder{color:#6b7280!important}
+button{font-family:inherit}
+/* All ordinary/action buttons: one clean blue family */
+button,.action-btn,.tab-btn,.nav-btn,.menu-btn,.reset-btn,.export-btn,.admin-action-btn,.btn,
+.admin-user-actions button,.admin-question-actions button,.question-actions button,.modal-actions button{
+ background:#2563eb!important;color:#fff!important;border:1px solid #2563eb!important;box-shadow:0 3px 9px rgba(37,99,235,.14)!important;text-shadow:none!important
+}
+button:hover,.action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover,.reset-btn:hover,.export-btn:hover,.admin-action-btn:hover,.btn:hover,
+.admin-user-actions button:hover,.admin-question-actions button:hover,.question-actions button:hover,.modal-actions button:hover{
+ background:#1d4ed8!important;color:#fff!important;border-color:#1d4ed8!important;transform:translateY(-1px)
+}
+/* destructive / status actions */
+button[onclick*="delete"],button[onclick*="Delete"],button[onclick*="reject"],button[onclick*="Reject"],button[onclick*="remove"],button[onclick*="Remove"],
+button[onclick*="block"],button[onclick*="Block"],.red{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important}
+button[onclick*="approve"],button[onclick*="Approve"],button[onclick*="paid"],button[onclick*="Paid"],.green{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important}
+button[onclick*="logout"],#logoutAllUsersBtn{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important}
+.gold,.yellow,.orange{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
+.purple,.cyan,.teal{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
+/* Menus / tabs */
+.admin-main-menu{padding:8px!important}
+.admin-main-menu button{background:#f1f5f9!important;color:#111827!important;border-color:#e2e8f0!important;box-shadow:none!important}
+.admin-main-menu button:hover{background:#e8eef7!important;color:#1d4ed8!important}
+.admin-main-menu button.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+/* tables */
+table,thead,tbody,tr,td{color:#111827!important}
+thead,th{background:#2563eb!important;color:#fff!important}
+td{background:#fff!important;border-bottom-color:#edf1f5!important}
+tbody tr:hover td{background:#f8fafc!important}
+/* badges: keep status meaning but remove random gradients */
+.ap2-badge.ap2-blue{background:#2563eb!important;color:#fff!important}
+.ap2-badge.ap2-green{background:#16a34a!important;color:#fff!important}
+.ap2-badge.ap2-red{background:#dc2626!important;color:#fff!important}
+/* status rows: subtle, not full multicolor cards */
+#ap2StudentRows tr.ap2-presence-online,#ap2StudentRows tr.ap2-presence-offline{background:#fff!important;border-left:4px solid transparent!important}
+#ap2StudentRows tr.ap2-presence-online{border-left-color:#16a34a!important}
+#ap2StudentRows tr.ap2-presence-offline{border-left-color:#dc2626!important}
+#ap2StudentRows tr.ap2-presence-online td,#ap2StudentRows tr.ap2-presence-offline td{background:#fff!important;color:#111827!important}
+/* Theme toggle */
+#adminThemeToggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-width:112px!important;height:42px!important;padding:0 14px!important;border-radius:11px!important;background:#f1f5f9!important;color:#111827!important;border:1px solid #d7dee8!important;box-shadow:none!important;font-weight:800!important;cursor:pointer!important}
+#adminThemeToggle:hover{background:#e8eef7!important;color:#111827!important;border-color:#cbd5e1!important}
+#adminThemeToggle .theme-icon{font-size:17px;line-height:1}
+#adminThemeToggle .theme-label{font-size:12px;letter-spacing:.2px}
+/* Night */
+html[data-admin-theme="night"],html[data-admin-theme="night"] body{background:#0f172a!important;color:#e5e7eb!important}
+html[data-admin-theme="night"] body>div:first-child,html[data-admin-theme="night"] .card,html[data-admin-theme="night"] .table-wrap,html[data-admin-theme="night"] .ap2-tablewrap,
+html[data-admin-theme="night"] .admin-main-menu,html[data-admin-theme="night"] .modal-content,html[data-admin-theme="night"] .analytics,html[data-admin-theme="night"] .history,
+html[data-admin-theme="night"] .student-card,html[data-admin-theme="night"] .command-card,html[data-admin-theme="night"] .dropdown-menu,html[data-admin-theme="night"] .panel,
+html[data-admin-theme="night"] .section-card,html[data-admin-theme="night"] .stats-card,html[data-admin-theme="night"] .question-card,html[data-admin-theme="night"] .admin-user-card,
+html[data-admin-theme="night"] .online-users-panel{background:#111c2e!important;color:#e5e7eb!important;border-color:#26364d!important}
+html[data-admin-theme="night"] body h1,html[data-admin-theme="night"] body h2,html[data-admin-theme="night"] body h3,html[data-admin-theme="night"] body h4,
+html[data-admin-theme="night"] body h5,html[data-admin-theme="night"] body h6,html[data-admin-theme="night"] body p,html[data-admin-theme="night"] body label,
+html[data-admin-theme="night"] body span,html[data-admin-theme="night"] body strong,html[data-admin-theme="night"] body b,html[data-admin-theme="night"] body td,
+html[data-admin-theme="night"] body li,html[data-admin-theme="night"] body small{color:#e5e7eb!important}
+html[data-admin-theme="night"] body .muted,html[data-admin-theme="night"] body .subtext,html[data-admin-theme="night"] body .subtitle,
+html[data-admin-theme="night"] body .card h3{color:#aab7c8!important}
+html[data-admin-theme="night"] input,html[data-admin-theme="night"] select,html[data-admin-theme="night"] textarea{background:#0b1422!important;color:#e5e7eb!important;border-color:#334155!important}
+html[data-admin-theme="night"] input::placeholder,html[data-admin-theme="night"] textarea::placeholder{color:#94a3b8!important}
+html[data-admin-theme="night"] .admin-main-menu button{background:#172338!important;color:#e5e7eb!important;border-color:#2d3c53!important}
+html[data-admin-theme="night"] .admin-main-menu button:hover{background:#22314a!important;color:#bfdbfe!important}
+html[data-admin-theme="night"] .admin-main-menu button.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
+html[data-admin-theme="night"] table,html[data-admin-theme="night"] tbody,html[data-admin-theme="night"] tr,html[data-admin-theme="night"] td{color:#e5e7eb!important;background:#111c2e!important}
+html[data-admin-theme="night"] td{border-bottom-color:#26364d!important}
+html[data-admin-theme="night"] tbody tr:hover td{background:#172338!important}
+html[data-admin-theme="night"] #adminThemeToggle{background:#172338!important;color:#f8fafc!important;border-color:#334155!important}
+html[data-admin-theme="night"] #adminThemeToggle:hover{background:#22314a!important}
+html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-online,html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-offline,
+html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-online td,html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-offline td{background:#111c2e!important;color:#e5e7eb!important}
+</style>
+<script id="admin-day-night-toggle">
 (function(){
-  const saved=localStorage.getItem('adminTheme')||'day';
-  document.body.classList.toggle('admin-night',saved==='night');
-  function update(){
-    const night=document.body.classList.contains('admin-night');
-    const b=document.getElementById('themeToggleBtn');
-    if(b){b.textContent=night?'☀️ Day Mode':'🌙 Night Mode';b.setAttribute('aria-label',night?'Switch to day mode':'Switch to night mode');}
+  const KEY='adminThemeMode';
+  function applyTheme(mode){
+    mode=mode==='night'?'night':'day';
+    document.documentElement.setAttribute('data-admin-theme',mode);
+    localStorage.setItem(KEY,mode);
+    const b=document.getElementById('adminThemeToggle');
+    if(b)b.innerHTML=mode==='night'?'<span class="theme-icon">☀️</span><span class="theme-label">Day Mode</span>':'<span class="theme-icon">🌙</span><span class="theme-label">Night Mode</span>';
   }
-  window.toggleAdminTheme=function(){
-    const night=!document.body.classList.contains('admin-night');
-    document.body.classList.toggle('admin-night',night);
-    localStorage.setItem('adminTheme',night?'night':'day');
-    update();
-  };
-  document.addEventListener('DOMContentLoaded',update);
-  update();
+  function addToggle(){
+    const logout=document.querySelector('button[onclick="logout()"]');
+    if(!logout || document.getElementById('adminThemeToggle')) return;
+    const b=document.createElement('button');
+    b.id='adminThemeToggle'; b.type='button'; b.title='Switch Day / Night Mode';
+    b.onclick=()=>applyTheme(document.documentElement.getAttribute('data-admin-theme')==='night'?'day':'night');
+    logout.parentNode.insertBefore(b,logout);
+    applyTheme(localStorage.getItem(KEY)||'day');
+  }
+  function boot(){addToggle();setTimeout(addToggle,300);setTimeout(addToggle,1000)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
 
