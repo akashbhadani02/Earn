@@ -7,6 +7,8 @@ const jwt = require("jsonwebtoken");
 const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Question = require("../models/Question");
+const LifelineUsage = require("../models/LifelineUsage");
+const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
@@ -1337,6 +1339,97 @@ const proAdminLog = async (user, action, details="") => {
     } catch(e) { console.error("Admin log:", e.message); }
 };
 
+
+// ===========================
+// KBC Lifeline Admin APIs
+// ===========================
+router.get("/pro/lifelines", adminAuth, async (req, res) => {
+    try {
+        const page = Math.max(1, Number(req.query.page || 1));
+        const limit = Math.min(200, Math.max(10, Number(req.query.limit || 100)));
+        const q = String(req.query.q || "").trim();
+        const filter = {};
+        if (q) {
+            const users = await User.find({ $or: [
+                { name: { $regex: q, $options: "i" } },
+                { mobile: { $regex: q, $options: "i" } }
+            ] }).select("_id").lean();
+            filter.userId = { $in: users.map(u => u._id) };
+        }
+        const [items, total] = await Promise.all([
+            LifelineUsage.find(filter).sort({ usedAt: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+            LifelineUsage.countDocuments(filter)
+        ]);
+        res.json({ success:true, items, total, page, limit });
+    } catch(e) { res.status(500).json({success:false,message:e.message}); }
+});
+
+router.get("/pro/lifelines/user/:id", adminAuth, async (req,res) => {
+    try {
+        const user=await User.findById(req.params.id).select("name mobile totalQuestionsAnswered lifelines lifelineCycle").lean();
+        if(!user)return res.status(404).json({success:false,message:"Student not found"});
+        const usage=await LifelineUsage.find({userId:user._id}).sort({usedAt:-1}).lean();
+        const counts={fiftyFifty:0,audiencePoll:0,askExpert:0,skipQuestion:0};
+        usage.forEach(x=>{if(counts[x.type]!==undefined)counts[x.type]++;});
+        res.json({success:true,user,counts,usage});
+    } catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+// Complete question-wise answer history for a student.
+// New answers come from QuizAnswerHistory; older answeredQuestionIds are used as a
+// safe fallback so Admin can still see the question and correct answer.
+router.get("/pro/questions/user/:id", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select("name mobile totalQuestionsAnswered answeredQuestionIds").lean();
+        if (!user) return res.status(404).json({ success:false, message:"Student not found" });
+
+        const history = await QuizAnswerHistory.find({ userId: user._id }).sort({ answeredAt: -1 }).lean();
+        const historyIds = new Set(history.map(x => String(x.questionId)));
+        const missingIds = (user.answeredQuestionIds || []).filter(id => !historyIds.has(String(id)));
+        let fallback = [];
+        if (missingIds.length) {
+            const questions = await Question.find({ _id: { $in: missingIds } }).select("q options correct").lean();
+            fallback = questions.map(q => ({
+                questionId: q._id, questionText: q.q || "", options: q.options || [],
+                correctIndex: Number(q.correct),
+                correctAnswer: Array.isArray(q.options) ? String(q.options[Number(q.correct)] ?? "") : "",
+                selectedIndex: null, selectedAnswer: "", isCorrect: null,
+                answeredAt: null, legacy: true
+            }));
+        }
+
+        res.json({ success:true, user, total: history.length + fallback.length, history: history.concat(fallback) });
+    } catch (e) {
+        res.status(500).json({ success:false, message:e.message });
+    }
+});
+
+router.put("/pro/reset-lifelines/:id", adminAuth, async(req,res)=>{
+    try{
+        const user=await User.findById(req.params.id); if(!user)return res.status(404).json({success:false,message:"Student not found"});
+        user.lifelines={fiftyFifty:true,audiencePoll:true,askExpert:true,skipQuestion:true};
+        user.lifelineCycle=Math.floor(Number(user.totalQuestionsAnswered||0)/500);
+        await proAdminLog(user,"RESET_LIFELINES","Admin manually reset all 4 KBC lifelines");
+        await user.save();
+        res.json({success:true,message:"All lifelines reset successfully",lifelines:user.lifelines,lifelineCycle:user.lifelineCycle});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
+router.put("/pro/reset-lifelines-all", adminAuth, async(req,res)=>{
+    try{
+        const users=await User.find({isDeleted:{$ne:true}});
+        const now=new Date();
+        for(const user of users){
+            user.lifelines={fiftyFifty:true,audiencePoll:true,askExpert:true,skipQuestion:true};
+            user.lifelineCycle=Math.floor(Number(user.totalQuestionsAnswered||0)/500);
+            user.adminActivity=user.adminActivity||[];
+            user.adminActivity.push({time:now,action:"RESET_LIFELINES",details:"Admin reset all students' KBC lifelines"});
+            await user.save();
+        }
+        res.json({success:true,message:`Lifelines reset for ${users.length} students`,count:users.length});
+    }catch(e){res.status(500).json({success:false,message:e.message});}
+});
+
 router.get("/pro/dashboard", adminAuth, async (req,res)=>{
     try{
         const today=proTodayKey();
@@ -1360,6 +1453,10 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
             amount:Number(w.amount||0),status:w.status||"Pending",
             transactionId:w.transactionId||"",date:w.date||null
         })));
+        const lifelineAgg = await LifelineUsage.aggregate([{ $match:{resetByAdmin:{$ne:true}} },{ $group:{_id:"$type",count:{$sum:1}} }]);
+        const lifelineStats={fiftyFifty:0,audiencePoll:0,askExpert:0,skipQuestion:0};
+        lifelineAgg.forEach(x=>{if(lifelineStats[x._id]!==undefined)lifelineStats[x._id]=x.count;});
+        stats.lifelineUses=lifelineStats;
         res.json({success:true,stats,users,withdrawals});
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });

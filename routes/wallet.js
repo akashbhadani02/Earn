@@ -3,6 +3,8 @@ const router = express.Router();
 
 const User = require("../models/User");
 const Question = require("../models/Question");
+const LifelineUsage = require("../models/LifelineUsage");
+const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const auth = require("../middleware/auth");
 
 const DAILY_REWARD_AMOUNT = 5;
@@ -81,7 +83,7 @@ router.get("/", auth, async (req, res) => {
 // =============================
 router.post("/quiz", auth, async (req, res) => {
     try {
-        const { correct, questionId } = req.body;
+        const { correct, questionId, selectedIndex, selectedAnswer } = req.body;
 
         if (typeof correct !== "boolean" || !questionId) {
             return res.status(400).json({
@@ -103,7 +105,7 @@ router.post("/quiz", auth, async (req, res) => {
             });
         }
 
-        const question = await Question.findOne({ _id: questionId, isDeleted: { $ne: true } }).select("_id").lean();
+        const question = await Question.findOne({ _id: questionId, isDeleted: { $ne: true } }).select("_id q options correct").lean();
         if (!question) {
             return res.status(404).json({ success: false, message: "Question is no longer available" });
         }
@@ -117,6 +119,28 @@ router.post("/quiz", auth, async (req, res) => {
             });
         }
         user.answeredQuestionIds = answered.concat(question._id);
+
+        // Permanent question-wise answer history for Admin analytics.
+        // Store the exact question, correct answer and the answer selected by the student.
+        const pickedIndex = Number.isInteger(Number(selectedIndex)) ? Number(selectedIndex) : null;
+        const pickedAnswer = selectedAnswer != null ? String(selectedAnswer) : (pickedIndex != null && question.options?.[pickedIndex] != null ? String(question.options[pickedIndex]) : "");
+        await QuizAnswerHistory.updateOne(
+            { userId: user._id, questionId: question._id },
+            { $setOnInsert: {
+                userId: user._id,
+                userName: user.name || "",
+                userMobile: user.mobile || "",
+                questionId: question._id,
+                questionText: question.q || "",
+                options: Array.isArray(question.options) ? question.options.map(String) : [],
+                correctIndex: Number(question.correct),
+                correctAnswer: Array.isArray(question.options) ? String(question.options[Number(question.correct)] ?? "") : "",
+                selectedIndex: pickedIndex,
+                selectedAnswer: pickedAnswer,
+                isCorrect: Boolean(correct),
+                answeredAt: new Date()
+            }}
+        );
 
         // =============================
         // Count today's answered questions
@@ -141,6 +165,11 @@ router.post("/quiz", auth, async (req, res) => {
         // This never resets when the 100-question spin cycle resets.
         user.totalQuestionsAnswered =
             Number(user.totalQuestionsAnswered || 0) + 1;
+
+        await QuizAnswerHistory.updateOne(
+            { userId: user._id, questionId: question._id },
+            { $set: { totalQuestionsAnswered: user.totalQuestionsAnswered } }
+        );
 
         // Reset every KBC lifeline immediately after each 500th answered question.
         if (user.totalQuestionsAnswered % 500 === 0) {
@@ -187,7 +216,7 @@ router.post("/quiz", auth, async (req, res) => {
 // =============================
 router.post("/lifeline", auth, async (req, res) => {
     try {
-        const { type } = req.body || {};
+        const { type, questionId } = req.body || {};
         const allowed = ["fiftyFifty", "audiencePoll", "askExpert", "skipQuestion"];
         if (!allowed.includes(type)) {
             return res.status(400).json({ success: false, message: "Invalid lifeline" });
@@ -207,8 +236,25 @@ router.post("/lifeline", auth, async (req, res) => {
             return res.status(400).json({ success: false, message: "આ Lifeline આ 500-question cycle માં પહેલેથી વપરાઈ ગઈ છે.", ...walletResponse(user) });
         }
 
+        let question = null;
+        if (questionId) {
+            question = await Question.findOne({ _id: questionId, isDeleted: { $ne: true } }).select("_id q").lean();
+        }
+
         user.lifelines[type] = false;
         await user.save();
+
+        await LifelineUsage.create({
+            userId: user._id,
+            userName: user.name || "",
+            userMobile: user.mobile || "",
+            type,
+            questionId: question?._id || null,
+            questionText: String(question?.q || "").slice(0, 2000),
+            cycle,
+            totalQuestionsAnsweredAtUse: total,
+            usedAt: new Date()
+        });
 
         return res.json({ success: true, lifeline: type, ...walletResponse(user) });
     } catch (err) {

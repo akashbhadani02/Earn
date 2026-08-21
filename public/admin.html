@@ -2253,7 +2253,8 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
             <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
             <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
             <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
-            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">⏳ Blocked Time</button>
+            <button class="ap2-btn" onclick="ap2Tab('lifelines')">🛟 Lifelines</button>
+            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">⏳ Blocked Time</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2ResetAllLifelines()">🔄 Reset All Lifelines</button>
         </div>
 
         <div class="ap2-pane active" id="ap2-students">
@@ -2353,6 +2354,22 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
                     </thead>
                     <tbody id="ap2RecycleRows"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <div class="ap2-pane" id="ap2-lifelines">
+            <div class="ap2-flex">
+                <div><h3>🛟 KBC Lifeline Usage</h3><p class="ap2-muted">કયા student એ કઈ lifeline, કયા question પર અને ક્યારે use કરી તેની સંપૂર્ણ history.</p></div>
+                <div class="ap2-flex"><input class="ap2-input" id="ap2LifelineSearch" placeholder="Search student / mobile" oninput="ap2LoadLifelines()"><button class="ap2-btn" onclick="ap2LoadLifelines()">🔄 Refresh</button><button class="ap2-btn" onclick="ap2ExportLifelines()">📤 Export CSV</button></div>
+            </div>
+            <div class="ap2-kv">
+                <div><b>50:50 Uses</b><span id="ap2L50">0</span></div>
+                <div><b>Audience Uses</b><span id="ap2LAudience">0</span></div>
+                <div><b>Expert Uses</b><span id="ap2LExpert">0</span></div>
+                <div><b>Skip Uses</b><span id="ap2LSkip">0</span></div>
+            </div>
+            <div class="ap2-tablewrap">
+                <table class="ap2-table"><thead><tr><th>Date / Time</th><th>Student</th><th>Mobile</th><th>Lifeline</th><th>Question ID</th><th>Question</th><th>500 Cycle</th><th>Q Count</th></tr></thead><tbody id="ap2LifelineRows"><tr><td colspan="8">Loading...</td></tr></tbody></table>
             </div>
         </div>
 
@@ -4655,9 +4672,9 @@ ${w.status === "Approved" ? `
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
                 const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
-                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr class="${u.isBlocked ? 'ap2-presence-offline' : ((u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? 'ap2-presence-online' : 'ap2-presence-offline')}"><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr class="${u.isBlocked ? 'ap2-presence-offline' : ((u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? 'ap2-presence-online' : 'ap2-presence-offline')}"><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2LifelineUser('${esc(uid(u))}')" title="Lifeline usage">🛟</button><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2AnsweredQuestions('${esc(uid(u))}')" title="Answered questions">📚 Q</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')" title="Reset all lifelines">🔄🛟</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
-            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
+            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2LifelineUser('${esc(uid(u))}')">🛟 Lifeline History</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
             window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
             window.ap2Block = async (id, blocked) => { try { await api("/pro/block/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ blocked, reason: "Admin action" }) }); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };
@@ -4737,7 +4754,102 @@ ${w.status === "Approved" ? `
                     b.classList.toggle("active", !!match && match[1] === t);
                 });
                 if (t === "reports" && typeof ap2LoadReports === "function") ap2LoadReports();
+                if (t === "lifelines" && typeof ap2LoadLifelines === "function") ap2LoadLifelines();
             };
+            window.ap2ResetLifelines = async id => {
+                if (!confirm("આ student ની બધી 4 lifelines reset કરવી છે?")) return;
+                try { const d = await api("/pro/reset-lifelines/" + encodeURIComponent(id), { method:"PUT" }); alert("✅ " + d.message); await ap2Refresh(); } catch(e) { alert(e.message); }
+            };
+            window.ap2ResetAllLifelines = async () => {
+                if (!confirm("બધા active students ની બધી lifelines reset કરવી છે?")) return;
+                if (!confirm("આ action બધા students માટે લાગુ પડશે. Continue?")) return;
+                try { const d = await api("/pro/reset-lifelines-all", { method:"PUT" }); alert("✅ " + d.message); await ap2Refresh(); } catch(e) { alert(e.message); }
+            };
+            function ap2RenderAnsweredQuestions(d, titlePrefix) {
+                const u=d.user||{};
+                const rows=d.history||[];
+                const body=rows.map((x,i)=>{
+                    const selected=x.selectedAnswer ? esc(x.selectedAnswer) : '<span class="ap2-muted">Not recorded</span>';
+                    const correct=esc(x.correctAnswer||'-');
+                    const result=x.isCorrect===null || x.isCorrect===undefined ? '<span class="ap2-badge ap2-yellow">Legacy</span>' : (x.isCorrect ? '<span class="ap2-badge ap2-green">Correct</span>' : '<span class="ap2-badge ap2-red">Wrong</span>');
+                    return `<tr><td>${i+1}</td><td>${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'<span class="ap2-muted">Earlier record</span>'}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:360px;white-space:normal;font-weight:700">${esc(x.questionText||'-')}</td><td style="min-width:220px;white-space:normal">${selected}</td><td style="min-width:220px;white-space:normal"><b>${correct}</b></td><td>${result}</td><td>${Number(x.totalQuestionsAnswered||0)||'-'}</td></tr>`;
+                }).join('') || '<tr><td colspan="8">No answered question history found.</td></tr>';
+                document.getElementById("ap2Title").textContent=titlePrefix+" — "+name(u);
+                document.getElementById("ap2Body").innerHTML=`
+                    <div class="ap2-kv">
+                        <div><b>Student</b><span>${esc(u.name||'-')}</span></div>
+                        <div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div>
+                        <div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div>
+                        <div><b>Records Shown</b><span>${Number(d.total||rows.length)}</span></div>
+                    </div>
+                    <div class="ap2-flex" style="margin:12px 0">
+                        <button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button>
+                        <span class="ap2-muted">Green = correct, red = wrong. Older records may show the correct answer but not the student's selected answer.</span>
+                    </div>
+                    <div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>#</th><th>Date / Time</th><th>Question ID</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th><th>Total Q</th></tr></thead><tbody>${body}</tbody></table></div>`;
+                document.getElementById("ap2Modal").classList.add("show");
+            }
+
+            window.ap2AnsweredQuestions = async id => {
+                try {
+                    const d=await api("/pro/questions/user/"+encodeURIComponent(id));
+                    ap2RenderAnsweredQuestions(d,"📚 Answered Questions");
+                } catch(e){ alert(e.message); }
+            };
+
+            window.ap2ExportAnsweredQuestions = async id => {
+                try {
+                    const d=await api("/pro/questions/user/"+encodeURIComponent(id));
+                    const rows=d.history||[];
+                    const headers=["Date/Time","Question ID","Question","Student Answer","Correct Answer","Result","Total Questions"];
+                    const csv=[headers,...rows.map(x=>[x.answeredAt?new Date(x.answeredAt).toISOString():"",x.questionId||"",x.questionText||"",x.selectedAnswer||"",x.correctAnswer||"",x.isCorrect===null||x.isCorrect===undefined?"Legacy":(x.isCorrect?"Correct":"Wrong"),x.totalQuestionsAnswered||""])].map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(',')).join('\n');
+                    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='answered-questions-'+(d.user?.name||'student').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.csv';a.click();URL.revokeObjectURL(a.href);
+                } catch(e){alert(e.message);}
+            };
+
+            window.ap2LifelineUser = async id => {
+                try {
+                    const [d,q] = await Promise.all([
+                        api("/pro/lifelines/user/" + encodeURIComponent(id)),
+                        api("/pro/questions/user/" + encodeURIComponent(id))
+                    ]);
+                    const u=d.user, c=d.counts||{};
+                    const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
+                    const usageRows=(d.usage||[]).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(label[x.type]||x.type)}</b>${x.resetByAdmin?'<br><span class="ap2-badge ap2-blue">ADMIN RESET</span>':''}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:300px;white-space:normal">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="6">No lifeline usage found.</td></tr>';
+                    const qRows=(q.history||[]).slice(0,500).map((x,i)=>{
+                        const selected=x.selectedAnswer?esc(x.selectedAnswer):'<span class="ap2-muted">Not recorded</span>';
+                        const correct=esc(x.correctAnswer||'-');
+                        const result=x.isCorrect===null||x.isCorrect===undefined?'<span class="ap2-badge ap2-yellow">Legacy</span>':(x.isCorrect?'<span class="ap2-badge ap2-green">Correct</span>':'<span class="ap2-badge ap2-red">Wrong</span>');
+                        return `<tr><td>${i+1}</td><td>${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'<span class="ap2-muted">Earlier</span>'}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:360px;white-space:normal">${esc(x.questionText||'-')}</td><td>${selected}</td><td><b>${correct}</b></td><td>${result}</td></tr>`;
+                    }).join('')||'<tr><td colspan="7">No answered question history found.</td></tr>';
+                    document.getElementById("ap2Title").textContent="🛟 + 📚 Student History — "+name(u);
+                    document.getElementById("ap2Body").innerHTML=`<div class="ap2-kv"><div><b>50:50 Used</b><span>${c.fiftyFifty||0}</span></div><div><b>Audience Used</b><span>${c.audiencePoll||0}</span></div><div><b>Expert Used</b><span>${c.askExpert||0}</span></div><div><b>Skip Used</b><span>${c.skipQuestion||0}</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div><div><b>Available Lifelines</b><span>${Object.values(u.lifelines||{}).filter(Boolean).length}/4</span></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button></div><h3 style="margin:16px 0 8px">🛟 Lifeline Usage</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Lifeline</th><th>Question ID</th><th>Question</th><th>Cycle</th><th>Total Q</th></tr></thead><tbody>${usageRows}</tbody></table></div><h3 style="margin:22px 0 8px">📚 Questions Used by This Student</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>#</th><th>Date / Time</th><th>Question ID</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>${qRows}</tbody></table></div>`;
+                    document.getElementById("ap2Modal").classList.add("show");
+                } catch(e) { alert(e.message); }
+            };
+
+            window.ap2LoadLifelines = async () => {
+                try {
+                    const search=(document.getElementById("ap2LifelineSearch")?.value||"").trim();
+                    const d=await api("/pro/lifelines?limit=200"+(search?"&q="+encodeURIComponent(search):""));
+                    const rows=d.items||[];
+                    const counts={fiftyFifty:0,audiencePoll:0,askExpert:0,skipQuestion:0};
+                    rows.forEach(x=>{if(counts[x.type]!==undefined)counts[x.type]++;});
+                    ["fiftyFifty","audiencePoll","askExpert","skipQuestion"].forEach(k=>{const el=document.getElementById({fiftyFifty:"ap2L50",audiencePoll:"ap2LAudience",askExpert:"ap2LExpert",skipQuestion:"ap2LSkip"}[k]);if(el)el.textContent=counts[k]||0;});
+                    const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
+                    const body=document.getElementById("ap2LifelineRows");
+                    if(body)body.innerHTML=rows.filter(x=>!x.resetByAdmin).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(x.userName||'-')}</b><br>${esc(x.userId||'-')}</td><td>${esc(x.userMobile||'-')}</td><td>${esc(label[x.type]||x.type)}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:300px;white-space:normal">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="8">No lifeline usage found.</td></tr>';
+                } catch(e) { const el=document.getElementById("ap2LifelineRows"); if(el)el.innerHTML=`<tr><td colspan="8" style="color:#fca5a5">⚠️ ${esc(e.message)}</td></tr>`; }
+            };
+            window.ap2ExportLifelines = async () => {
+                try {
+                    const d=await api("/pro/lifelines?limit=200"); const rows=d.items||[]; const headers=["Date/Time","Student","Mobile","Lifeline","Question ID","Question","Cycle","Total Questions"];
+                    const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
+                    const csv=[headers,...rows.filter(x=>!x.resetByAdmin).map(x=>[new Date(x.usedAt).toISOString(),x.userName,x.userMobile,label[x.type]||x.type,x.questionId||"",x.questionText||"",x.cycle||0,x.totalQuestionsAnsweredAtUse||0])].map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(',')).join('\n');
+                    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='lifeline-usage-report.csv';a.click();URL.revokeObjectURL(a.href);
+                } catch(e){alert(e.message);}
+            };
+
             function ap2RenderWithdrawals() { document.getElementById("ap2WithdrawRows").innerHTML = D.withdrawals.map(w => `<tr><td>${esc(w.student)}</td><td>${esc(w.mobile)}</td><td>${money(w.amount)}</td><td>${esc(w.status)}</td><td>${esc(w.transactionId || "-")}</td><td>${esc(w.date || "-")}</td></tr>`).join("") || '<tr><td colspan="6">No withdrawals.</td></tr>' }
             function ap2RenderWallet() { let a = []; D.users.forEach(u => (u.walletTransactions || []).forEach(t => a.push({ student: name(u), ...t }))); a.sort((x, y) => new Date(y.time) - new Date(x.time)); document.getElementById("ap2WalletRows").innerHTML = a.map(t => `<tr><td>${esc(t.time)}</td><td>${esc(t.student)}</td><td>${esc(t.type)}</td><td>${money(t.amount)}</td><td>${esc(t.reason)}</td></tr>`).join("") || '<tr><td colspan="5">No transactions.</td></tr>' }
             function ap2SecurityRisk(u) {

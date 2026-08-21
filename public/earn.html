@@ -2267,6 +2267,10 @@ body.notification-locked #notificationRequiredOverlay button{
             if (note) note.textContent = `4 Lifelines • 500 questions પછી ફરી reset • Used: ${Object.values(lifelines).filter(v => !v).length}/4`;
         }
 
+        function qIdForLifeline() {
+            return currentQuizQuestion?._id || currentQuizQuestion?.id || null;
+        }
+
         async function useLifeline(type) {
             if (lifelineBusy || !currentQuizQuestion || lifelines[type] === false) return;
             lifelineBusy = true;
@@ -2278,7 +2282,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         'Content-Type': 'application/json',
                         Authorization: 'Bearer ' + (localStorage.getItem('token') || '')
                     },
-                    body: JSON.stringify({ type })
+                    body: JSON.stringify({ type, questionId: qIdForLifeline() })
                 });
                 const data = await res.json();
                 if (!res.ok || !data.success) {
@@ -2523,7 +2527,7 @@ body.notification-locked #notificationRequiredOverlay button{
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + token
                     },
-                    body: JSON.stringify({ correct: Boolean(correct), questionId })
+                    body: JSON.stringify({ correct: Boolean(correct), questionId, selectedIndex: window.__quizSelectedIndex ?? null, selectedAnswer: window.__quizSelectedAnswer ?? "" })
                 });
 
                 const data = await res.json();
@@ -2583,7 +2587,7 @@ body.notification-locked #notificationRequiredOverlay button{
         }
 
         function checkWithdrawStatus() {
-            document.getElementById("withdrawBtn").disabled = (wallet < 1000);
+            document.getElementById("withdrawBtn").disabled = (wallet < 500);
             updateQuestionProgress();
         }
 
@@ -2920,7 +2924,11 @@ body.notification-locked #notificationRequiredOverlay button{
                         }
 
                         const isCorrect = i === Number(q.correct);
+                        window.__quizSelectedIndex = i;
+                        window.__quizSelectedAnswer = String(q.options[i] ?? "");
                         const saved = await updateWallet(isCorrect, q._id);
+                        window.__quizSelectedIndex = null;
+                        window.__quizSelectedAnswer = "";
 
                         if (!saved) {
                             // A duplicate answer is never shown as an error to the student.
