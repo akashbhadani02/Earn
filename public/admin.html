@@ -2242,7 +2242,73 @@ a:not(.btn):not(.button):hover{
   scrollbar-color:#355579 var(--theme-bg);
 }
 </style>
-</head>
+<style id="admin-final-uniform-theme">
+/* FINAL UNIFORM ADMIN THEME */
+:root{
+ --u-bg:#081525;--u-card:#10243b;--u-card2:#14304d;--u-border:#2b4a68;
+ --u-button:#2563eb;--u-button-hover:#1d4ed8;--u-text:#fff;
+}
+html,body{background:var(--u-bg)!important;color:var(--u-text)!important}
+
+/* Every card/data surface */
+:where(.card,.panel,.section,.box,.admin-card,.dashboard-card,.stat-card,
+.student-card,.command-card,.analytics,.history,.table-wrap,.table-container,
+.data-card,.data-panel,.modal-content,.dropdown-menu,.list-item,.toolbar,.filters){
+ background:var(--u-card)!important;color:var(--u-text)!important;
+ border-color:var(--u-border)!important;
+}
+:where(.card .card,.panel .panel,.nested-card,.sub-card,table thead,.table thead){
+ background:var(--u-card2)!important;color:#fff!important;
+}
+
+/* All text in dark surfaces */
+:where(.card,.panel,.section,.box,.admin-card,.dashboard-card,.stat-card,
+.student-card,.command-card,.analytics,.history,.table-wrap,.table-container,
+.data-card,.data-panel,.modal-content,.dropdown-menu,.list-item,.toolbar,.filters)
+ :where(h1,h2,h3,h4,h5,h6,p,span,label,small,strong,b,em,i,th,td,caption,div,li,
+ .title,.label,.value,.count,.name,.description,.text,.status,.badge,.muted){
+ color:#fff!important;
+}
+
+/* Every button: same background + same text */
+:where(button,.btn,.button,a.btn,a.button,input[type=button],input[type=submit],
+input[type=reset],.action-btn,.tab-btn,.nav-btn,.menu-btn,.reset-btn,.export-btn,
+.delete-btn,.edit-btn,.view-btn,.save-btn,.close-btn,.refresh-btn){
+ background:var(--u-button)!important;background-image:none!important;
+ color:#fff!important;-webkit-text-fill-color:#fff!important;
+ border:1px solid var(--u-button)!important;text-shadow:none!important;
+}
+:where(button:hover,.btn:hover,.button:hover,a.btn:hover,a.button:hover,
+input[type=button]:hover,input[type=submit]:hover,input[type=reset]:hover,
+.action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover){
+ background:var(--u-button-hover)!important;color:#fff!important;
+ -webkit-text-fill-color:#fff!important;
+}
+:where(button:disabled,.btn:disabled,input:disabled){
+ background:#49627d!important;color:#e5edf5!important;
+ -webkit-text-fill-color:#e5edf5!important;border-color:#49627d!important;
+}
+
+/* Tables/data */
+:where(table,.table){background:var(--u-card)!important;color:#fff!important}
+:where(table th,.table th,table td,.table td){
+ color:#fff!important;border-color:var(--u-border)!important;
+}
+:where(table tbody tr:hover,.table tbody tr:hover){background:var(--u-card2)!important}
+
+/* Light form fields stay readable */
+:where(input:not([type=button]):not([type=submit]):not([type=reset]),textarea,select){
+ background:#fff!important;color:#111827!important;
+ -webkit-text-fill-color:#111827!important;border:1px solid #94a3b8!important;
+}
+:where(input,textarea)::placeholder{color:#64748b!important;opacity:1!important}
+
+/* Links and button icons */
+a:not(.btn):not(.button){color:#93c5fd!important}
+:where(button svg,.btn svg,.button svg,.action-btn svg,.tab-btn svg){
+ color:#fff!important;fill:currentColor!important;stroke:currentColor!important;
+}
+</style></head>
 
 <body>
 
