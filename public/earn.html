@@ -1017,12 +1017,20 @@
 }
 .kbc-question-no{
     text-align:center;
-    font-size:12px;
+    font-size:14px;
     font-weight:900;
-    letter-spacing:1.5px;
-    color:#80c8ff;
-    margin-bottom:8px;
+    letter-spacing:1.2px;
+    color:#f5c542;
+    margin-bottom:3px;
     text-transform:uppercase;
+}
+.kbc-question-title{
+    text-align:center;
+    font-size:10px;
+    line-height:1.45;
+    color:#9db8ee;
+    font-weight:700;
+    margin:0 auto 10px;
 }
 #quiz.kbc-quiz-screen #question{
     position:relative;
@@ -1189,6 +1197,8 @@ body.kbc-fullscreen-active #quiz.kbc-quiz-screen{border-radius:0!important}
     .kbc-lifelines{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
     .kbc-lifeline{min-height:52px;font-size:11px;border-radius:14px}
     .kbc-cycle-note{font-size:9px}
+    .kbc-question-no{font-size:12px;letter-spacing:.8px}
+    .kbc-question-title{font-size:9px;margin-bottom:8px}
 }
 @media(max-width:700px){
     #quiz.kbc-quiz-screen{padding:12px 10px 14px}
@@ -1694,7 +1704,8 @@ body.notification-locked #notificationRequiredOverlay button{
             <div id="lifelineCycleNote" class="kbc-cycle-note">4 Lifelines • 500 questions પછી ફરી reset</div>
 
             <div class="kbc-question-wrap">
-                <div class="kbc-question-no">YOUR NEXT QUESTION</div>
+                <div class="kbc-question-no" id="questionCycleLabel">Q COUNT • 1 / 500</div>
+                <div class="kbc-question-title">Q COUNT એટલે આ 500-question cycle માં હાલના પ્રશ્નનો નંબર.</div>
                 <h3 id="question">Loading...</h3>
                 <div id="options"></div>
             </div>
@@ -2554,6 +2565,16 @@ body.notification-locked #notificationRequiredOverlay button{
             // Today's total answer count never resets after Spin.
             const todayCount = Number(dailyQuestionsAnswered || 0);
             const count = Math.min(100, Number(spinCycleQuestionsAnswered || 0));
+
+            // Lifelines use a separate 500-question lifetime cycle.
+            // The number shown above the question is the NEXT question's
+            // position inside the current 500-question lifeline cycle.
+            const totalAnswered = Math.max(0, Number(totalQuestionsAnswered || 0));
+            const cycleQuestionNumber = (totalAnswered % 500) + 1;
+            const cycleLabel = document.getElementById("questionCycleLabel");
+            if (cycleLabel) {
+                cycleLabel.textContent = `Q COUNT • ${cycleQuestionNumber} / 500`;
+            }
             const remaining = 100 - count;
 
             const remainBox = document.getElementById("remainingQuestions");
@@ -2894,6 +2915,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
 
                 currentQuizQuestion = q;
+                updateQuestionProgress();
                 const oldPoll = document.querySelector('.kbc-poll');
                 if (oldPoll) oldPoll.remove();
                 updateLifelineUI();

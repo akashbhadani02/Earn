@@ -163,6 +163,52 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 }
 
 </style>
+
+<style id="mobile-lifeline-security-fix">
+/* Mobile: keep Lifeline data readable without squeezing the whole table. */
+@media (max-width:700px){
+  .adminProV2 #ap2-lifelines .ap2-tablewrap,
+  .adminProV2 #ap2-security .ap2-tablewrap,
+  .adminProV2 .ap2-security-detail .ap2-tablewrap {
+    width:100%!important; overflow-x:auto!important; -webkit-overflow-scrolling:touch!important;
+  }
+  .adminProV2 #ap2-lifelines .ap2-table,
+  .adminProV2 #ap2-security > .ap2-tablewrap > .ap2-table {
+    min-width:760px!important;
+  }
+  .adminProV2 .ap2-question-cell {
+    width:210px!important; max-width:210px!important; min-width:210px!important;
+    max-height:96px!important; overflow-y:auto!important; white-space:normal!important;
+    overflow-wrap:anywhere!important; word-break:break-word!important;
+  }
+  .adminProV2 .ap2-security-detail-row > td {
+    display:block!important; width:100%!important; box-sizing:border-box!important;
+    padding:12px!important; overflow:hidden!important;
+  }
+  .adminProV2 .ap2-security-detail {
+    display:grid!important; grid-template-columns:1fr!important; gap:10px!important; width:100%!important;
+  }
+  .adminProV2 .ap2-security-detail .ap2-detail-card {
+    width:100%!important; box-sizing:border-box!important; min-width:0!important;
+    padding:10px!important; overflow:hidden!important;
+  }
+  .adminProV2 .ap2-security-detail .ap2-kv {
+    grid-template-columns:1fr!important; gap:7px!important;
+  }
+  .adminProV2 .ap2-security-detail .ap2-kv > div {
+    min-width:0!important; overflow-wrap:anywhere!important; word-break:break-word!important;
+  }
+  .adminProV2 .ap2-security-detail .ap2-table {
+    min-width:560px!important;
+  }
+  .adminProV2 .ap2-security-detail-row h3 {
+    font-size:16px!important; line-height:1.3!important;
+  }
+  .adminProV2 .ap2-security-detail-row .ap2-btn {
+    min-height:38px!important; padding:8px 11px!important;
+  }
+}
+</style>
 </head>
 
 <body>
