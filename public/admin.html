@@ -2910,6 +2910,159 @@ button *,.btn *,.button *,.ap2-btn *{color:inherit!important;-webkit-text-fill-c
 :where(.modal-content,.ap2-box){background:#fff!important;color:var(--p-text)!important;border:1px solid var(--p-border)!important;box-shadow:0 20px 55px rgba(15,23,42,.16)!important;}
 </style>
 
+
+<style id="adminProfessionalDayNightTheme">
+/* ===== FINAL PROFESSIONAL ADMIN DAY/NIGHT THEME ===== */
+:root{
+  --adm-bg:#f5f7fb;
+  --adm-surface:#ffffff;
+  --adm-surface-2:#f8fafc;
+  --adm-border:#e2e8f0;
+  --adm-border-2:#cbd5e1;
+  --adm-text:#111827;
+  --adm-muted:#64748b;
+  --adm-primary:#2563eb;
+  --adm-primary-hover:#1d4ed8;
+  --adm-button-bg:#ffffff;
+  --adm-button-text:#111827;
+  --adm-header:#ffffff;
+  --adm-shadow:0 8px 24px rgba(15,23,42,.07);
+}
+html.admin-night{
+  --adm-bg:#0f172a;
+  --adm-surface:#172033;
+  --adm-surface-2:#1e293b;
+  --adm-border:#334155;
+  --adm-border-2:#475569;
+  --adm-text:#f1f5f9;
+  --adm-muted:#94a3b8;
+  --adm-primary:#60a5fa;
+  --adm-primary-hover:#93c5fd;
+  --adm-button-bg:#1e293b;
+  --adm-button-text:#f1f5f9;
+  --adm-header:#172033;
+  --adm-shadow:0 10px 30px rgba(0,0,0,.28);
+}
+
+/* Workspace */
+html:not(.admin-night) body{background:var(--adm-bg) !important;color:var(--adm-text) !important;}
+html.admin-night body{background:linear-gradient(180deg,#0b1220,#0f172a) !important;color:var(--adm-text) !important;}
+body,body *{text-shadow:none !important;}
+
+/* Header + logout/theme controls */
+body>div:first-child{background:var(--adm-header) !important;color:var(--adm-text) !important;border:1px solid var(--adm-border) !important;box-shadow:var(--adm-shadow) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+body>div:first-child::before{display:none !important;}
+body>div:first-child h2{color:var(--adm-text) !important;}
+body>div:first-child h2::before{color:var(--adm-primary) !important;text-shadow:none !important;}
+body>div:first-child>div{display:flex !important;align-items:center !important;gap:8px !important;flex-wrap:wrap !important;}
+body>div:first-child>div button,
+body>div:first-child>div #themeToggleBtn,
+body>div:first-child>div button[onclick="logout()"],
+body>div:first-child>div #logoutAllUsersBtn{
+  min-height:40px !important;padding:9px 14px !important;border-radius:10px !important;
+  border:1px solid var(--adm-border-2) !important;
+  background:var(--adm-button-bg) !important;color:var(--adm-button-text) !important;
+  box-shadow:none !important;font-weight:800 !important;
+}
+body>div:first-child>div #themeToggleBtn{border-color:var(--adm-primary) !important;color:var(--adm-text) !important;}
+body>div:first-child>div #themeToggleBtn:hover{background:var(--adm-surface-2) !important;}
+body>div:first-child>div button[onclick="logout()"]{border-color:#cbd5e1 !important;}
+body>div:first-child>div #logoutAllUsersBtn{color:#111827 !important;}
+
+/* Headings */
+h1,h2,h3,h4,h5,h6,label,strong,th{color:var(--adm-text) !important;}
+h2::after{background:var(--adm-primary) !important;box-shadow:none !important;}
+
+/* Cards / panels / command center */
+.card,.table-wrap,section,.ap2-pane,.question-toolbar,.page-info,#adminProV2,#adminProV2 .ap2-card,.admin-user-card,.admin-question-card,.activity-stats-modal,.modal,.popup,.modal-content,[role="dialog"]{
+  background:var(--adm-surface) !important;color:var(--adm-text) !important;border-color:var(--adm-border) !important;box-shadow:var(--adm-shadow) !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+}
+.card::before,.card::after{display:none !important;}
+.card h3,.admin-stat span,.ap2-lbl,.ap2-muted{color:var(--adm-muted) !important;}
+.card h1,.card .value,.admin-stat strong,.ap2-val{color:var(--adm-text) !important;}
+
+/* Tables and ALL data inside them */
+table,thead,tbody,tr,td,th{border-color:var(--adm-border) !important;}
+table,td,td *,tbody,tbody *{color:var(--adm-text) !important;}
+thead th,.ap2-table th{background:var(--adm-primary) !important;color:#fff !important;}
+tbody tr td{background:var(--adm-surface) !important;}
+tbody tr:hover td{background:var(--adm-surface-2) !important;}
+
+/* Inputs / selects / textareas */
+input,select,textarea,.ap2-input,#search,.question-toolbar input{
+  background:var(--adm-surface) !important;color:var(--adm-text) !important;border:1px solid var(--adm-border-2) !important;
+}
+input::placeholder,textarea::placeholder{color:var(--adm-muted) !important;}
+
+/* Navigation */
+.admin-main-menu{background:var(--adm-surface) !important;border-color:var(--adm-border) !important;box-shadow:var(--adm-shadow) !important;}
+.admin-main-menu button{background:var(--adm-surface-2) !important;color:var(--adm-text) !important;border:1px solid var(--adm-border) !important;box-shadow:none !important;}
+.admin-main-menu button:hover{background:var(--adm-bg) !important;color:var(--adm-primary) !important;}
+.admin-main-menu button.active{background:var(--adm-primary) !important;color:#fff !important;border-color:var(--adm-primary) !important;}
+
+/* ===== EVERY ACTION BUTTON + EVERYTHING INSIDE IT ===== */
+button,button *,
+a.button,a.button *,
+.admin-user-actions button,.admin-user-actions button *,
+.admin-question-actions button,.admin-question-actions button *,
+.question-actions button,.question-actions button *,
+.modal-actions button,.modal-actions button *,
+.ap2-btn,.ap2-btn *,
+#adminProV2 button,#adminProV2 button *,
+.table-wrap button,.table-wrap button *,
+.action-btn,.action-btn *{
+  font-family:inherit !important;font-weight:800 !important;text-shadow:none !important;
+}
+
+/* Day mode: all action labels/data black, clean white buttons */
+html:not(.admin-night) button,
+html:not(.admin-night) button *,
+html:not(.admin-night) .ap2-btn,
+html:not(.admin-night) .ap2-btn *{color:#111827 !important;}
+
+/* Override old multi-colour action classes */
+.admin-user-actions .gold,.admin-user-actions .blue,.admin-user-actions .purple,.admin-user-actions .red,.admin-user-actions .green,
+.admin-question-actions button,.question-actions button,.modal-actions button,.ap2-btn,
+#adminProV2 .ap2-tabs .ap2-btn, #adminProV2 .ap2-head .ap2-btn,
+.table-wrap td button,.table-wrap td button *{
+  background:var(--adm-button-bg) !important;color:var(--adm-button-text) !important;border:1px solid var(--adm-border-2) !important;
+  box-shadow:none !important;background-image:none !important;
+}
+button:hover,.ap2-btn:hover,.admin-user-actions button:hover,.admin-question-actions button:hover,.question-actions button:hover,.modal-actions button:hover,.table-wrap td button:hover{
+  background:var(--adm-surface-2) !important;color:var(--adm-text) !important;border-color:var(--adm-primary) !important;
+}
+
+/* Primary action: blue outline, but black label in Day mode */
+html:not(.admin-night) button.primary,
+html:not(.admin-night) .btn-primary,
+html:not(.admin-night) #adminProV2 .ap2-btn.primary{background:#eff6ff !important;color:#111827 !important;border-color:#93c5fd !important;}
+
+/* Semantic actions stay distinguishable only with subtle borders */
+html:not(.admin-night) button.danger,html:not(.admin-night) button.delete,html:not(.admin-night) button.reject{border-color:#fca5a5 !important;background:#fff7f7 !important;color:#111827 !important;}
+html:not(.admin-night) button.success,html:not(.admin-night) button.approve,html:not(.admin-night) button.paid{border-color:#86efac !important;background:#f0fdf4 !important;color:#111827 !important;}
+
+/* Night mode: readable light labels, same unified action styling */
+html.admin-night button,html.admin-night button *,html.admin-night .ap2-btn,html.admin-night .ap2-btn *{color:#f1f5f9 !important;}
+html.admin-night .admin-user-actions .gold,html.admin-night .admin-user-actions .blue,html.admin-night .admin-user-actions .purple,html.admin-night .admin-user-actions .red,html.admin-night .admin-user-actions .green,
+html.admin-night .admin-question-actions button,html.admin-night .question-actions button,html.admin-night .modal-actions button,html.admin-night .ap2-btn,html.admin-night .table-wrap td button{
+  background:#1e293b !important;color:#f1f5f9 !important;border-color:#475569 !important;background-image:none !important;
+}
+
+/* Status chips are the only place where green/red meaning is retained */
+html:not(.admin-night) .online,html:not(.admin-night) .status-online{color:#166534 !important;}
+html:not(.admin-night) .offline{color:#475569 !important;}
+html.admin-night .online,html.admin-night .status-online{color:#86efac !important;}
+html.admin-night .offline{color:#94a3b8 !important;}
+
+/* Ensure dynamically injected content follows theme */
+body [style*="background"],body [style*="color"]{transition:background-color .18s ease,color .18s ease,border-color .18s ease;}
+html.admin-night .admin-user-card *,html.admin-night .admin-question-card *,html.admin-night #adminProV2 *,html.admin-night .table-wrap *{text-shadow:none !important;}
+
+@media(max-width:700px){
+ body>div:first-child>div{gap:6px !important;}
+ body>div:first-child>div button{min-height:38px !important;padding:8px 10px !important;font-size:12px !important;}
+}
+</style>
 </head>
 
 <body>
@@ -2928,6 +3081,7 @@ button *,.btn *,.button *,.ap2-btn *{color:inherit!important;-webkit-text-fill-c
             <button onclick="sendNotificationToAll()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 🔔 Notify All Users
             </button>
+            <button id="themeToggleBtn" type="button" onclick="toggleAdminTheme()" title="Switch Day / Night Mode" aria-label="Switch Day / Night Mode">☀️ Day</button>
             <button onclick="logout()" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 Logout
             </button>
@@ -6184,115 +6338,24 @@ button:not(.danger):not(.delete):not(.reject):not(.approve):not(.paid):not(.succ
 </style>
 
 
-<style id="admin-day-night-final-theme">
-/* ===== FINAL DAY / NIGHT PROFESSIONAL THEME ===== */
-:root{
-  --adm-bg:#f4f6f9;--adm-surface:#fff;--adm-surface2:#f8fafc;--adm-border:#e2e8f0;
-  --adm-text:#111827;--adm-muted:#4b5563;--adm-primary:#2563eb;--adm-primary2:#1d4ed8;
-  --adm-success:#16a34a;--adm-danger:#dc2626;--adm-warning:#d97706;--adm-shadow:0 6px 22px rgba(15,23,42,.07)
-}
-html,body{background:var(--adm-bg)!important;color:var(--adm-text)!important}
-body,body *{box-sizing:border-box}
-body{color:var(--adm-text)!important}
-body>div:first-child,.card,.table-wrap,.ap2-tablewrap,.admin-main-menu,.modal-content,.analytics,.history,.student-card,.command-card,
-.dropdown-menu,.sidebar,.header,.admin-section,.panel,.section-card,.stats-card,.question-card,.admin-user-card,.online-users-panel{
- background:var(--adm-surface)!important;color:var(--adm-text)!important;border-color:var(--adm-border)!important;box-shadow:var(--adm-shadow)!important
-}
-body h1,body h2,body h3,body h4,body h5,body h6,body p,body label,body span,body strong,body b,body td,body th,body li,body small{color:var(--adm-text)}
-body .muted,body .subtext,body .subtitle,body .card h3{color:var(--adm-muted)!important}
-input,select,textarea{background:#fff!important;color:#111827!important;border:1px solid #d7dee8!important}
-input::placeholder,textarea::placeholder{color:#6b7280!important}
-button{font-family:inherit}
-/* All ordinary/action buttons: one clean blue family */
-button,.action-btn,.tab-btn,.nav-btn,.menu-btn,.reset-btn,.export-btn,.admin-action-btn,.btn,
-.admin-user-actions button,.admin-question-actions button,.question-actions button,.modal-actions button{
- background:#2563eb!important;color:#fff!important;border:1px solid #2563eb!important;box-shadow:0 3px 9px rgba(37,99,235,.14)!important;text-shadow:none!important
-}
-button:hover,.action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover,.reset-btn:hover,.export-btn:hover,.admin-action-btn:hover,.btn:hover,
-.admin-user-actions button:hover,.admin-question-actions button:hover,.question-actions button:hover,.modal-actions button:hover{
- background:#1d4ed8!important;color:#fff!important;border-color:#1d4ed8!important;transform:translateY(-1px)
-}
-/* destructive / status actions */
-button[onclick*="delete"],button[onclick*="Delete"],button[onclick*="reject"],button[onclick*="Reject"],button[onclick*="remove"],button[onclick*="Remove"],
-button[onclick*="block"],button[onclick*="Block"],.red{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important}
-button[onclick*="approve"],button[onclick*="Approve"],button[onclick*="paid"],button[onclick*="Paid"],.green{background:#16a34a!important;border-color:#16a34a!important;color:#fff!important}
-button[onclick*="logout"],#logoutAllUsersBtn{background:#dc2626!important;border-color:#dc2626!important;color:#fff!important}
-.gold,.yellow,.orange{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
-.purple,.cyan,.teal{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
-/* Menus / tabs */
-.admin-main-menu{padding:8px!important}
-.admin-main-menu button{background:#f1f5f9!important;color:#111827!important;border-color:#e2e8f0!important;box-shadow:none!important}
-.admin-main-menu button:hover{background:#e8eef7!important;color:#1d4ed8!important}
-.admin-main-menu button.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
-/* tables */
-table,thead,tbody,tr,td{color:#111827!important}
-thead,th{background:#2563eb!important;color:#fff!important}
-td{background:#fff!important;border-bottom-color:#edf1f5!important}
-tbody tr:hover td{background:#f8fafc!important}
-/* badges: keep status meaning but remove random gradients */
-.ap2-badge.ap2-blue{background:#2563eb!important;color:#fff!important}
-.ap2-badge.ap2-green{background:#16a34a!important;color:#fff!important}
-.ap2-badge.ap2-red{background:#dc2626!important;color:#fff!important}
-/* status rows: subtle, not full multicolor cards */
-#ap2StudentRows tr.ap2-presence-online,#ap2StudentRows tr.ap2-presence-offline{background:#fff!important;border-left:4px solid transparent!important}
-#ap2StudentRows tr.ap2-presence-online{border-left-color:#16a34a!important}
-#ap2StudentRows tr.ap2-presence-offline{border-left-color:#dc2626!important}
-#ap2StudentRows tr.ap2-presence-online td,#ap2StudentRows tr.ap2-presence-offline td{background:#fff!important;color:#111827!important}
-/* Theme toggle */
-#adminThemeToggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-width:112px!important;height:42px!important;padding:0 14px!important;border-radius:11px!important;background:#f1f5f9!important;color:#111827!important;border:1px solid #d7dee8!important;box-shadow:none!important;font-weight:800!important;cursor:pointer!important}
-#adminThemeToggle:hover{background:#e8eef7!important;color:#111827!important;border-color:#cbd5e1!important}
-#adminThemeToggle .theme-icon{font-size:17px;line-height:1}
-#adminThemeToggle .theme-label{font-size:12px;letter-spacing:.2px}
-/* Night */
-html[data-admin-theme="night"],html[data-admin-theme="night"] body{background:#0f172a!important;color:#e5e7eb!important}
-html[data-admin-theme="night"] body>div:first-child,html[data-admin-theme="night"] .card,html[data-admin-theme="night"] .table-wrap,html[data-admin-theme="night"] .ap2-tablewrap,
-html[data-admin-theme="night"] .admin-main-menu,html[data-admin-theme="night"] .modal-content,html[data-admin-theme="night"] .analytics,html[data-admin-theme="night"] .history,
-html[data-admin-theme="night"] .student-card,html[data-admin-theme="night"] .command-card,html[data-admin-theme="night"] .dropdown-menu,html[data-admin-theme="night"] .panel,
-html[data-admin-theme="night"] .section-card,html[data-admin-theme="night"] .stats-card,html[data-admin-theme="night"] .question-card,html[data-admin-theme="night"] .admin-user-card,
-html[data-admin-theme="night"] .online-users-panel{background:#111c2e!important;color:#e5e7eb!important;border-color:#26364d!important}
-html[data-admin-theme="night"] body h1,html[data-admin-theme="night"] body h2,html[data-admin-theme="night"] body h3,html[data-admin-theme="night"] body h4,
-html[data-admin-theme="night"] body h5,html[data-admin-theme="night"] body h6,html[data-admin-theme="night"] body p,html[data-admin-theme="night"] body label,
-html[data-admin-theme="night"] body span,html[data-admin-theme="night"] body strong,html[data-admin-theme="night"] body b,html[data-admin-theme="night"] body td,
-html[data-admin-theme="night"] body li,html[data-admin-theme="night"] body small{color:#e5e7eb!important}
-html[data-admin-theme="night"] body .muted,html[data-admin-theme="night"] body .subtext,html[data-admin-theme="night"] body .subtitle,
-html[data-admin-theme="night"] body .card h3{color:#aab7c8!important}
-html[data-admin-theme="night"] input,html[data-admin-theme="night"] select,html[data-admin-theme="night"] textarea{background:#0b1422!important;color:#e5e7eb!important;border-color:#334155!important}
-html[data-admin-theme="night"] input::placeholder,html[data-admin-theme="night"] textarea::placeholder{color:#94a3b8!important}
-html[data-admin-theme="night"] .admin-main-menu button{background:#172338!important;color:#e5e7eb!important;border-color:#2d3c53!important}
-html[data-admin-theme="night"] .admin-main-menu button:hover{background:#22314a!important;color:#bfdbfe!important}
-html[data-admin-theme="night"] .admin-main-menu button.active{background:#2563eb!important;color:#fff!important;border-color:#2563eb!important}
-html[data-admin-theme="night"] table,html[data-admin-theme="night"] tbody,html[data-admin-theme="night"] tr,html[data-admin-theme="night"] td{color:#e5e7eb!important;background:#111c2e!important}
-html[data-admin-theme="night"] td{border-bottom-color:#26364d!important}
-html[data-admin-theme="night"] tbody tr:hover td{background:#172338!important}
-html[data-admin-theme="night"] #adminThemeToggle{background:#172338!important;color:#f8fafc!important;border-color:#334155!important}
-html[data-admin-theme="night"] #adminThemeToggle:hover{background:#22314a!important}
-html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-online,html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-offline,
-html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-online td,html[data-admin-theme="night"] #ap2StudentRows tr.ap2-presence-offline td{background:#111c2e!important;color:#e5e7eb!important}
-</style>
-<script id="admin-day-night-toggle">
+<script id="adminDayNightThemeJS">
 (function(){
   const KEY='adminThemeMode';
-  function applyTheme(mode){
-    mode=mode==='night'?'night':'day';
-    document.documentElement.setAttribute('data-admin-theme',mode);
-    localStorage.setItem(KEY,mode);
-    const b=document.getElementById('adminThemeToggle');
-    if(b)b.innerHTML=mode==='night'?'<span class="theme-icon">☀️</span><span class="theme-label">Day Mode</span>':'<span class="theme-icon">🌙</span><span class="theme-label">Night Mode</span>';
+  function apply(mode){
+    const night=mode==='night';
+    document.documentElement.classList.toggle('admin-night',night);
+    const btn=document.getElementById('themeToggleBtn');
+    if(btn){btn.textContent=night?'☀️ Day':'🌙 Night';btn.title=night?'Switch to Day Mode':'Switch to Night Mode';}
+    try{localStorage.setItem(KEY,night?'night':'day');}catch(e){}
   }
-  function addToggle(){
-    const logout=document.querySelector('button[onclick="logout()"]');
-    if(!logout || document.getElementById('adminThemeToggle')) return;
-    const b=document.createElement('button');
-    b.id='adminThemeToggle'; b.type='button'; b.title='Switch Day / Night Mode';
-    b.onclick=()=>applyTheme(document.documentElement.getAttribute('data-admin-theme')==='night'?'day':'night');
-    logout.parentNode.insertBefore(b,logout);
-    applyTheme(localStorage.getItem(KEY)||'day');
-  }
-  function boot(){addToggle();setTimeout(addToggle,300);setTimeout(addToggle,1000)}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+  window.toggleAdminTheme=function(){
+    apply(document.documentElement.classList.contains('admin-night')?'day':'night');
+  };
+  let saved='day';
+  try{saved=localStorage.getItem(KEY)||'day';}catch(e){}
+  apply(saved);
 })();
 </script>
-
 </body>
 
 </html>
