@@ -2695,7 +2695,222 @@ html,body{
 ){
  text-shadow:none!important;
 }
-</style></head>
+</style>
+<style id="admin-professional-final-pass">
+/* =========================================================
+   FINAL PROFESSIONAL LIGHT ADMIN THEME
+   One clean visual system across every section, popup,
+   table, action button and dynamically generated control.
+   ========================================================= */
+:root{
+  --p-bg:#f6f8fb;
+  --p-surface:#ffffff;
+  --p-surface-soft:#f8fafc;
+  --p-border:#e2e8f0;
+  --p-border-strong:#cbd5e1;
+  --p-primary:#2563eb;
+  --p-primary-hover:#1d4ed8;
+  --p-primary-soft:#eff6ff;
+  --p-text:#172033;
+  --p-muted:#64748b;
+  --p-success:#16a34a;
+  --p-success-soft:#f0fdf4;
+  --p-danger:#dc2626;
+  --p-danger-soft:#fef2f2;
+  --p-warning:#d97706;
+  --p-warning-soft:#fffbeb;
+  --p-shadow:0 6px 22px rgba(15,23,42,.07);
+}
+
+html,body{
+  background:var(--p-bg)!important;
+  color:var(--p-text)!important;
+}
+body *{
+  text-shadow:none!important;
+  -webkit-text-stroke:0!important;
+}
+
+/* Main containers/cards */
+:where(.admin-container,.dashboard,.main-content,.content,.section,.panel,
+.card,.stat-card,.analytics,.history,.toolbar,.filters,.table-wrap,
+.table-container,.data-card,.data-panel,.student-card,.student-details,
+.student-detail,.student-panel,.details,.detail,.detail-panel,.detail-card,
+.profile-card,.modal-content,.drawer,.offcanvas,.popup,.dialog,
+.command-card,.command-panel,.command-section,.adminProV2,.ap2-pane,
+.ap2-tablewrap,.ap2-kv,.ap2-box){
+  background:var(--p-surface)!important;
+  color:var(--p-text)!important;
+  border-color:var(--p-border)!important;
+}
+
+:where(.card .card,.panel .panel,.nested-card,.sub-card,.list-item,
+.info-card,.ap2-card,.ap2-kv>div){
+  background:var(--p-surface-soft)!important;
+  color:var(--p-text)!important;
+  border-color:var(--p-border)!important;
+}
+
+/* Text/data everywhere */
+:where(h1,h2,h3,h4,h5,h6,p,label,span,small,strong,b,em,i,li,dt,dd,
+th,td,caption,.title,.label,.value,.count,.name,.description,.text,
+.status,.muted,.subtext,.detail-label,.detail-value,.student-name,
+.student-email,.student-id,.question-text,.answer,.correct-answer,
+.selected-answer,.lifeline-name,.lifeline-count,.history-item,.data-value,
+.ap2-lbl,.ap2-val,.ap2-muted,.ap2-title,.ap2-desc,.ap2-table td,
+.ap2-table th){
+  color:var(--p-text)!important;
+  -webkit-text-fill-color:var(--p-text)!important;
+}
+:where(.muted,.subtext,.ap2-muted,.hint,.help-text){color:var(--p-muted)!important;-webkit-text-fill-color:var(--p-muted)!important;}
+
+/* Inputs */
+:where(input:not([type=button]):not([type=submit]):not([type=reset]),textarea,select,
+.ap2-input){
+  background:#fff!important;
+  color:#172033!important;
+  -webkit-text-fill-color:#172033!important;
+  border:1px solid var(--p-border-strong)!important;
+  box-shadow:0 1px 2px rgba(15,23,42,.03)!important;
+}
+:where(input,textarea)::placeholder{color:#94a3b8!important;opacity:1!important;}
+
+/* Generic buttons: no random inline colors can leak through */
+:where(button,.btn,.button,a.btn,a.button,input[type=button],input[type=submit],input[type=reset],
+.action-btn,.tab-btn,.nav-btn,.menu-btn,.reset-btn,.export-btn,.delete-btn,.edit-btn,
+.view-btn,.save-btn,.close-btn,.refresh-btn,.details-btn,.history-btn,.student-btn,
+.modal-btn,.ap2-btn){
+  background:var(--p-primary)!important;
+  background-image:none!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border:1px solid var(--p-primary)!important;
+  box-shadow:0 2px 7px rgba(37,99,235,.14)!important;
+  text-shadow:none!important;
+  transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
+}
+:where(button:hover,.btn:hover,.button:hover,a.btn:hover,a.button:hover,
+input[type=button]:hover,input[type=submit]:hover,input[type=reset]:hover,
+.action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover,
+.reset-btn:hover,.export-btn:hover,.edit-btn:hover,.view-btn:hover,
+.save-btn:hover,.refresh-btn:hover,.details-btn:hover,.history-btn:hover,
+.student-btn:hover,.modal-btn:hover,.ap2-btn:hover){
+  background:var(--p-primary-hover)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border-color:var(--p-primary-hover)!important;
+  box-shadow:0 4px 12px rgba(37,99,235,.18)!important;
+}
+:where(button:disabled,.btn:disabled,input:disabled){
+  background:#e2e8f0!important;color:#64748b!important;-webkit-text-fill-color:#64748b!important;
+  border-color:#cbd5e1!important;box-shadow:none!important;
+}
+
+/* Command Center: clean tabs instead of rainbow buttons */
+#adminProV2 .ap2-head .ap2-btn,
+#adminProV2 .ap2-pane .ap2-flex .ap2-btn,
+#adminProV2 .ap2-tabs .ap2-btn{
+  background:#fff!important;
+  color:#334155!important;
+  -webkit-text-fill-color:#334155!important;
+  border:1px solid #dbe3ee!important;
+  box-shadow:0 1px 3px rgba(15,23,42,.05)!important;
+}
+#adminProV2 .ap2-head .ap2-btn:hover,
+#adminProV2 .ap2-pane .ap2-flex .ap2-btn:hover,
+#adminProV2 .ap2-tabs .ap2-btn:hover{
+  background:var(--p-primary-soft)!important;
+  color:#1d4ed8!important;
+  -webkit-text-fill-color:#1d4ed8!important;
+  border-color:#bfdbfe!important;
+}
+#adminProV2 .ap2-tabs .ap2-btn.active,
+#adminProV2 .ap2-tabs .ap2-btn:first-child{
+  background:var(--p-primary)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border-color:var(--p-primary)!important;
+}
+
+/* Every dynamically generated Command Center action button.
+   This specifically fixes Lifeline / Reset / Q / Warning icons. */
+#adminProV2 .ap2-table td:last-child .ap2-btn,
+#adminProV2 .ap2-table td .ap2-btn,
+#adminProV2 .ap2-body .ap2-btn,
+#adminProV2 .ap2-box .ap2-btn,
+#adminProV2 .ap2-modal .ap2-btn{
+  background:var(--p-primary)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  border-color:var(--p-primary)!important;
+  min-height:34px;
+}
+#adminProV2 .ap2-table td:last-child .ap2-btn:hover,
+#adminProV2 .ap2-body .ap2-btn:hover,
+#adminProV2 .ap2-box .ap2-btn:hover,
+#adminProV2 .ap2-modal .ap2-btn:hover{
+  background:var(--p-primary-hover)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+/* Explicit inline purple/orange/green/cyan styles are intentionally neutralized. */
+#adminProV2 .ap2-btn[style],
+#adminProV2 button.ap2-btn[style]{
+  background:var(--p-primary)!important;
+  border-color:var(--p-primary)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* Semantic status buttons only */
+:where(button.danger,.danger,.delete,.reject){
+  background:var(--p-danger)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--p-danger)!important;
+}
+:where(button.success,.success,.approve,.paid){
+  background:var(--p-success)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:var(--p-success)!important;
+}
+:where(button.warning,.warning,.pending){
+  background:#f59e0b!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#f59e0b!important;
+}
+
+/* Badges/status data: soft, readable, not giant colored blocks */
+:where(.badge,.status-badge,.ap2-badge){
+  border-radius:999px!important;
+  font-weight:700!important;
+  border:1px solid transparent!important;
+}
+#adminProV2 .ap2-badge.ap2-green{background:#dcfce7!important;color:#166534!important;-webkit-text-fill-color:#166534!important;border-color:#bbf7d0!important;}
+#adminProV2 .ap2-badge.ap2-red{background:#fee2e2!important;color:#991b1b!important;-webkit-text-fill-color:#991b1b!important;border-color:#fecaca!important;}
+#adminProV2 .ap2-badge.ap2-blue{background:#dbeafe!important;color:#1e40af!important;-webkit-text-fill-color:#1e40af!important;border-color:#bfdbfe!important;}
+
+/* Tables */
+:where(table,.table,.ap2-table){background:#fff!important;color:var(--p-text)!important;border-color:var(--p-border)!important;}
+:where(table thead,.table thead,.ap2-table thead,thead){background:#f8fafc!important;color:var(--p-text)!important;}
+:where(table th,.table th,.ap2-table th,table td,.table td,.ap2-table td){
+  color:var(--p-text)!important;-webkit-text-fill-color:var(--p-text)!important;
+  border-color:var(--p-border)!important;background:transparent!important;
+}
+:where(table tbody tr:hover,.table tbody tr:hover,.ap2-table tbody tr:hover){background:#f8fbff!important;}
+
+/* Buttons with icons: never inherit black icon color */
+:where(button svg,.btn svg,.button svg,.action-btn svg,.tab-btn svg,.view-btn svg,.details-btn svg,.history-btn svg){
+  color:currentColor!important;fill:currentColor!important;stroke:currentColor!important;
+}
+
+/* Header/main menu */
+.admin-main-menu button{background:#fff!important;color:#334155!important;-webkit-text-fill-color:#334155!important;border-color:#e2e8f0!important;box-shadow:none!important;}
+.admin-main-menu button:hover{background:#eff6ff!important;color:#1d4ed8!important;-webkit-text-fill-color:#1d4ed8!important;border-color:#bfdbfe!important;}
+.admin-main-menu button.active{background:#2563eb!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#2563eb!important;}
+
+/* Prevent black text inside button from any old inline/class rule */
+button *,.btn *,.button *,.ap2-btn *{color:inherit!important;-webkit-text-fill-color:inherit!important;}
+
+/* Modals / popups */
+:where(.modal,.ap2-modal){background:rgba(15,23,42,.38)!important;}
+:where(.modal-content,.ap2-box){background:#fff!important;color:var(--p-text)!important;border:1px solid var(--p-border)!important;box-shadow:0 20px 55px rgba(15,23,42,.16)!important;}
+</style>
+
+</head>
 
 <body>
 
