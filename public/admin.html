@@ -2928,6 +2928,9 @@ button *,.btn *,.button *,.ap2-btn *{color:inherit!important;-webkit-text-fill-c
             <button onclick="sendNotificationToAll()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 🔔 Notify All Users
             </button>
+            <button id="themeToggleBtn" type="button" onclick="toggleAdminTheme()" aria-label="Switch to night mode" title="Switch to night mode">
+                🌙 Night
+            </button>
             <button onclick="logout()" style="background:red;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 Logout
             </button>
@@ -6182,6 +6185,98 @@ button:not(.danger):not(.delete):not(.reject):not(.approve):not(.paid):not(.succ
   .admin-main-menu{border-radius:12px !important;padding:8px !important;box-shadow:0 4px 14px rgba(15,23,42,.05) !important;}
 }
 </style>
+
+
+<style id="adminDayNightTheme">
+/* Professional Day / Night theme toggle */
+#themeToggleBtn{
+  background:#ffffff !important;color:#334155 !important;-webkit-text-fill-color:#334155 !important;
+  border:1px solid #d8e0ea !important;border-radius:10px !important;padding:10px 14px !important;
+  min-height:44px !important;font-weight:800 !important;font-size:13px !important;cursor:pointer !important;
+  box-shadow:0 4px 12px rgba(15,23,42,.06) !important;transition:all .2s ease !important;
+}
+#themeToggleBtn:hover{background:#eff6ff !important;color:#1d4ed8 !important;border-color:#bfdbfe !important;transform:translateY(-1px);}
+
+/* Day mode */
+body:not(.admin-night-mode){background:#f5f7fb !important;color:#172033 !important;}
+body:not(.admin-night-mode)>div:first-child{background:#ffffff !important;color:#172033 !important;border:1px solid #e3e8ef !important;box-shadow:0 10px 35px rgba(15,23,42,.07) !important;}
+body:not(.admin-night-mode)>div:first-child h2{color:#172033 !important;text-shadow:none !important;}
+body:not(.admin-night-mode) .admin-main-menu{background:#ffffff !important;color:#334155 !important;border-color:#e3e8ef !important;}
+body:not(.admin-night-mode) .admin-main-menu button{background:#f8fafc !important;color:#334155 !important;border-color:#e2e8f0 !important;}
+body:not(.admin-night-mode) .admin-main-menu button.active{background:#2563eb !important;color:#fff !important;border-color:#2563eb !important;}
+
+/* Night mode */
+body.admin-night-mode{background:#0b1220 !important;color:#e5e7eb !important;}
+body.admin-night-mode>div:first-child{background:#111827 !important;color:#e5e7eb !important;border-color:#263244 !important;box-shadow:0 12px 40px rgba(0,0,0,.28) !important;}
+body.admin-night-mode>div:first-child h2{color:#f8fafc !important;text-shadow:none !important;}
+body.admin-night-mode .admin-main-menu{background:#111827 !important;color:#e5e7eb !important;border-color:#263244 !important;}
+body.admin-night-mode .admin-main-menu button{background:#182235 !important;color:#cbd5e1 !important;-webkit-text-fill-color:#cbd5e1 !important;border-color:#2b3a50 !important;}
+body.admin-night-mode .admin-main-menu button:hover{background:#20304a !important;color:#93c5fd !important;}
+body.admin-night-mode .admin-main-menu button.active{background:#2563eb !important;color:#fff !important;-webkit-text-fill-color:#fff !important;border-color:#2563eb !important;}
+
+body.admin-night-mode .card,
+body.admin-night-mode .stat-card,
+body.admin-night-mode .dashboard-card,
+body.admin-night-mode .panel,
+body.admin-night-mode .section-card,
+body.admin-night-mode .table-container,
+body.admin-night-mode .modal-content,
+body.admin-night-mode .admin-modal,
+body.admin-night-mode .activity-stats-modal,
+body.admin-night-mode .popup,
+body.admin-night-mode #adminProV2,
+body.admin-night-mode #adminProV2 .ap2-card,
+body.admin-night-mode #adminProV2 .ap2-pane{
+  background:#111827 !important;color:#e5e7eb !important;border-color:#263244 !important;
+  box-shadow:0 8px 28px rgba(0,0,0,.22) !important;
+}
+body.admin-night-mode h1,body.admin-night-mode h2,body.admin-night-mode h3,body.admin-night-mode h4,body.admin-night-mode h5,body.admin-night-mode strong,body.admin-night-mode label{color:#f8fafc !important;}
+body.admin-night-mode p,body.admin-night-mode small,body.admin-night-mode .muted,body.admin-night-mode .ap2-muted{color:#94a3b8 !important;}
+body.admin-night-mode input,body.admin-night-mode select,body.admin-night-mode textarea,body.admin-night-mode .ap2-input{
+  background:#0f172a !important;color:#e5e7eb !important;border-color:#334155 !important;
+}
+body.admin-night-mode input::placeholder,body.admin-night-mode textarea::placeholder{color:#64748b !important;}
+body.admin-night-mode table,body.admin-night-mode .table,body.admin-night-mode .ap2-table{background:#111827 !important;color:#e5e7eb !important;}
+body.admin-night-mode table thead,body.admin-night-mode .table thead{background:#182235 !important;color:#f8fafc !important;}
+body.admin-night-mode table th,body.admin-night-mode table td,body.admin-night-mode .table th,body.admin-night-mode .table td{color:#dbe4f0 !important;border-color:#263244 !important;}
+body.admin-night-mode table tbody tr:hover,body.admin-night-mode .table tbody tr:hover{background:#182235 !important;}
+body.admin-night-mode #adminProV2 .ap2-table th{background:#1d4ed8 !important;color:#fff !important;}
+body.admin-night-mode #adminProV2 .ap2-table td{background:#111827 !important;color:#dbe4f0 !important;}
+body.admin-night-mode #adminProV2 .ap2-kv{background:#182235 !important;color:#cbd5e1 !important;border-color:#2b3a50 !important;}
+body.admin-night-mode #adminProV2 .ap2-tabs .ap2-btn{background:#182235 !important;color:#cbd5e1 !important;border-color:#2b3a50 !important;}
+body.admin-night-mode #adminProV2 .ap2-tabs .ap2-btn.active{background:#2563eb !important;color:#fff !important;border-color:#2563eb !important;}
+body.admin-night-mode .users-online-name-item{background:#182235 !important;color:#e2e8f0 !important;border-color:#2b3a50 !important;}
+body.admin-night-mode .users-online-name-item:hover{background:#20304a !important;}
+
+/* Keep status colors semantic in both themes */
+body.admin-night-mode .online,body.admin-night-mode .status-online{color:#4ade80 !important;}
+body.admin-night-mode .offline{color:#94a3b8 !important;}
+
+@media(max-width:600px){
+  #themeToggleBtn{font-size:10px !important;padding:7px 5px !important;min-height:42px !important;white-space:normal !important;}
+}
+</style>
+<script>
+(function(){
+  const KEY='adminThemeMode';
+  function applyAdminTheme(mode){
+    const isNight=mode==='night';
+    document.body.classList.toggle('admin-night-mode',isNight);
+    const btn=document.getElementById('themeToggleBtn');
+    if(btn){
+      btn.textContent=isNight?'☀️ Day':'🌙 Night';
+      btn.title=isNight?'Switch to day mode':'Switch to night mode';
+      btn.setAttribute('aria-label',btn.title);
+    }
+    try{localStorage.setItem(KEY,isNight?'night':'day');}catch(e){}
+  }
+  window.toggleAdminTheme=function(){
+    applyAdminTheme(document.body.classList.contains('admin-night-mode')?'day':'night');
+  };
+  const saved=(()=>{try{return localStorage.getItem(KEY)}catch(e){return null}})();
+  applyAdminTheme(saved==='night'?'night':'day');
+})();
+</script>
 
 </body>
 
