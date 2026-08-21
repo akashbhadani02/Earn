@@ -2542,6 +2542,159 @@ body *{
   color:#000!important;
   -webkit-text-fill-color:#000!important;
 }
+</style><style id="admin-full-detail-visibility">
+/* ===== FINAL ADMIN DATA + DETAIL VISIBILITY ===== */
+/* Main page and every opened student/detail area use a light surface. */
+:root{
+  --ad-bg:#f3f6fa;
+  --ad-surface:#ffffff;
+  --ad-surface2:#eef4fa;
+  --ad-border:#cbd5e1;
+  --ad-text:#000000;
+  --ad-button:#dbeafe;
+  --ad-button-hover:#bfdbfe;
+}
+
+html,body{
+  background:var(--ad-bg)!important;
+  color:#000!important;
+}
+
+/* Cards, panels, drawers, modals and detail containers */
+:where(
+ .card,.panel,.section,.box,.admin-card,.dashboard-card,.stat-card,
+ .student-card,.student-details,.student-detail,.student-panel,
+ .details,.detail,.detail-panel,.detail-card,.profile-card,
+ .modal,.modal-content,.drawer,.offcanvas,.popup,.dialog,
+ .history,.history-panel,.analytics,.data-card,.data-panel,
+ .table-wrap,.table-container,.list,.list-item,.info-card,
+ .command-card,.command-panel,.command-section
+){
+ background:var(--ad-surface)!important;
+ color:#000!important;
+ border-color:var(--ad-border)!important;
+}
+
+/* Nested elements: remove inherited dark surfaces that hide text */
+:where(
+ .student-details,.student-detail,.student-panel,.details,.detail,
+ .detail-panel,.detail-card,.profile-card,.modal-content,.drawer,
+ .offcanvas,.popup,.dialog,.history-panel,.data-panel
+) :where(
+ .card,.panel,.section,.box,.list-item,.info-card,.data-card
+){
+ background:var(--ad-surface2)!important;
+ color:#000!important;
+}
+
+/* ALL visible detail/data text */
+:where(
+ h1,h2,h3,h4,h5,h6,p,span,label,small,strong,b,em,i,
+ th,td,caption,li,dt,dd,div,
+ .title,.label,.value,.count,.name,.description,.text,
+ .status,.badge,.muted,.subtext,.detail-label,.detail-value,
+ .student-name,.student-email,.student-id,.question-text,
+ .answer,.correct-answer,.selected-answer,.lifeline-name,
+ .lifeline-count,.history-item,.data-value
+){
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ text-shadow:none!important;
+}
+
+/* Every button, including buttons that open student details/history */
+:where(
+ button,.btn,.button,a.btn,a.button,
+ input[type=button],input[type=submit],input[type=reset],
+ .action-btn,.tab-btn,.nav-btn,.menu-btn,
+ .reset-btn,.export-btn,.delete-btn,.edit-btn,.view-btn,
+ .save-btn,.close-btn,.refresh-btn,.details-btn,
+ .history-btn,.student-btn,.modal-btn
+){
+ background:var(--ad-button)!important;
+ background-image:none!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ border:1px solid #93c5fd!important;
+ text-shadow:none!important;
+ box-shadow:none!important;
+}
+:where(
+ button:hover,.btn:hover,.button:hover,a.btn:hover,a.button:hover,
+ input[type=button]:hover,input[type=submit]:hover,input[type=reset]:hover,
+ .action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover,
+ .view-btn:hover,.details-btn:hover,.history-btn:hover,.student-btn:hover
+){
+ background:var(--ad-button-hover)!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+}
+
+/* Tables and question/answer data */
+:where(table,.table){
+ background:#fff!important;
+ color:#000!important;
+ border-color:var(--ad-border)!important;
+}
+:where(table thead,.table thead,thead){
+ background:var(--ad-surface2)!important;
+ color:#000!important;
+}
+:where(table th,.table th,table td,.table td){
+ background:transparent!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ border-color:var(--ad-border)!important;
+}
+:where(table tbody tr:hover,.table tbody tr:hover){
+ background:#e8f1fb!important;
+ color:#000!important;
+}
+
+/* Form controls inside main page and student details */
+:where(
+ input:not([type=button]):not([type=submit]):not([type=reset]),
+ textarea,select
+){
+ background:#fff!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ border:1px solid #94a3b8!important;
+}
+:where(input,textarea)::placeholder{
+ color:#374151!important;
+ opacity:1!important;
+}
+
+/* Badges/statuses remain readable */
+:where(.success,.approved,.completed,.paid){
+ background:#dcfce7!important;color:#000!important;
+}
+:where(.warning,.pending){
+ background:#fef3c7!important;color:#000!important;
+}
+:where(.danger,.rejected,.deleted,.failed){
+ background:#fee2e2!important;color:#000!important;
+}
+
+/* Icons inside all buttons */
+:where(
+ button svg,.btn svg,.button svg,.action-btn svg,
+ .tab-btn svg,.view-btn svg,.details-btn svg,.history-btn svg
+){
+ color:#000!important;
+ fill:currentColor!important;
+ stroke:currentColor!important;
+}
+
+/* Dark inline elements from old rules cannot hide detail text */
+:where(
+ .student-details *,.student-detail *,.student-panel *,
+ .details *,.detail *,.detail-panel *,.modal-content *,
+ .drawer *,.offcanvas *,.history-panel *
+){
+ text-shadow:none!important;
+}
 </style></head>
 
 <body>
