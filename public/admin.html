@@ -2656,54 +2656,75 @@ ${w.status === "Approved" ? `
 
 </body>
 
-</html><style id="command-center-card-ui">
-/* Command Center — card-based data UI */
-#adminSectionCommand .ap2-tabs{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:8px;box-shadow:var(--shadow)}
-#adminSectionCommand .ap2-tabs .ap2-btn,
-#adminSectionCommand .ap2-flex > .ap2-btn,
-#adminSectionCommand button.ap2-btn{appearance:none;border:1px solid var(--primary)!important;border-radius:10px!important;padding:10px 14px!important;min-height:40px!important;background:var(--primary)!important;color:#fff!important;font-weight:800!important;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,.15)!important}
-#adminSectionCommand .ap2-tabs .ap2-btn:hover,
-#adminSectionCommand .ap2-flex > .ap2-btn:hover,
-#adminSectionCommand button.ap2-btn:hover{background:var(--primary2)!important;transform:translateY(-1px)}
-#adminSectionCommand .ap2-tabs .ap2-btn.active{background:var(--primary2)!important;color:#fff!important}
-#adminSectionCommand .ap2-input{background:#fff!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:10px!important;padding:10px 12px!important;min-height:40px}
-#adminSectionCommand .ap2-input::placeholder{color:#64748b!important}
-#adminSectionCommand .ap2-pane{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
-#adminSectionCommand .ap2-tablewrap{overflow:visible!important}
-#adminSectionCommand .ap2-table{display:block;width:100%;background:transparent!important;border-collapse:separate!important}
-#adminSectionCommand .ap2-table thead{display:none}
-#adminSectionCommand .ap2-table tbody{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%}
-#adminSectionCommand .ap2-table tbody tr{display:flex;flex-direction:column;gap:8px;background:var(--surface)!important;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);min-width:0}
-#adminSectionCommand .ap2-table tbody tr:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(15,23,42,.10)}
-#adminSectionCommand .ap2-table tbody td{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:0!important;background:transparent!important;color:var(--text)!important;padding:5px 0!important;min-width:0;white-space:normal;overflow-wrap:anywhere}
-#adminSectionCommand .ap2-table tbody td::before{font-weight:800;color:var(--muted);flex:0 0 40%;content:""}
-#adminSectionCommand .ap2-table tbody td:nth-child(1)::before{content:"Student"}
-#adminSectionCommand .ap2-table tbody td:nth-child(2)::before{content:"Status"}
-#adminSectionCommand .ap2-table tbody td:nth-child(3)::before{content:"Questions"}
-#adminSectionCommand .ap2-table tbody td:nth-child(4)::before{content:"Wallet"}
-#adminSectionCommand .ap2-table tbody td:nth-child(5)::before{content:"Earn"}
-#adminSectionCommand .ap2-table tbody td:nth-child(6)::before{content:"Warnings"}
-#adminSectionCommand .ap2-table tbody td:nth-child(7)::before{content:"Spin"}
-#adminSectionCommand .ap2-table tbody td:nth-child(8)::before{content:"Actions"}
-#adminSectionCommand #ap2-withdrawals td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-withdrawals td:nth-child(2)::before{content:"Mobile"}#adminSectionCommand #ap2-withdrawals td:nth-child(3)::before{content:"Amount"}#adminSectionCommand #ap2-withdrawals td:nth-child(4)::before{content:"Status"}#adminSectionCommand #ap2-withdrawals td:nth-child(5)::before{content:"Transaction ID"}#adminSectionCommand #ap2-withdrawals td:nth-child(6)::before{content:"Date"}
-#adminSectionCommand #ap2-wallet td:nth-child(1)::before{content:"Time"}#adminSectionCommand #ap2-wallet td:nth-child(2)::before{content:"Student"}#adminSectionCommand #ap2-wallet td:nth-child(3)::before{content:"Type"}#adminSectionCommand #ap2-wallet td:nth-child(4)::before{content:"Amount"}#adminSectionCommand #ap2-wallet td:nth-child(5)::before{content:"Reason"}
-#adminSectionCommand #ap2-security td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-security td:nth-child(2)::before{content:"Fast Answers"}#adminSectionCommand #ap2-security td:nth-child(3)::before{content:"Tab Changes"}#adminSectionCommand #ap2-security td:nth-child(4)::before{content:"Devices"}#adminSectionCommand #ap2-security td:nth-child(5)::before{content:"Logins"}#adminSectionCommand #ap2-security td:nth-child(6)::before{content:"Warnings"}#adminSectionCommand #ap2-security td:nth-child(7)::before{content:"Last Seen"}#adminSectionCommand #ap2-security td:nth-child(8)::before{content:"Risk"}#adminSectionCommand #ap2-security td:nth-child(9)::before{content:"Details"}
-#adminSectionCommand #ap2-recycle td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-recycle td:nth-child(2)::before{content:"Deleted At"}#adminSectionCommand #ap2-recycle td:nth-child(3)::before{content:"Reason"}#adminSectionCommand #ap2-recycle td:nth-child(4)::before{content:"Action"}#adminSectionCommand #ap2-recycle td:nth-child(5)::before{content:"Permanent Delete"}
-#adminSectionCommand #ap2-lifelines td:nth-child(1)::before{content:"Date / Time"}#adminSectionCommand #ap2-lifelines td:nth-child(2)::before{content:"Student"}#adminSectionCommand #ap2-lifelines td:nth-child(3)::before{content:"Mobile"}#adminSectionCommand #ap2-lifelines td:nth-child(4)::before{content:"Lifeline"}#adminSectionCommand #ap2-lifelines td:nth-child(5)::before{content:"Question ID"}#adminSectionCommand #ap2-lifelines td:nth-child(6)::before{content:"Question"}#adminSectionCommand #ap2-lifelines td:nth-child(7)::before{content:"500 Cycle"}#adminSectionCommand #ap2-lifelines td:nth-child(8)::before{content:"Q Count"}
-#adminSectionCommand #ap2-reports td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-reports td:nth-child(2)::before{content:"Mobile"}#adminSectionCommand #ap2-reports td:nth-child(3)::before{content:"Wallet"}#adminSectionCommand #ap2-reports td:nth-child(4)::before{content:"Today Q"}#adminSectionCommand #ap2-reports td:nth-child(5)::before{content:"Total Q"}#adminSectionCommand #ap2-reports td:nth-child(6)::before{content:"Warnings"}#adminSectionCommand #ap2-reports td:nth-child(7)::before{content:"Status"}#adminSectionCommand #ap2-reports td:nth-child(8)::before{content:"Last Seen"}
-#adminSectionCommand .ap2-table tbody tr:has(td[colspan]){display:block;text-align:center}
-#adminSectionCommand .ap2-table tbody tr:has(td[colspan]) td{display:block;text-align:center}
-#adminSectionCommand .ap2-table tbody tr:has(td[colspan]) td::before{display:none}
-#adminSectionCommand .ap2-kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}
-#adminSectionCommand .ap2-kv>div{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:10px;color:var(--text)}
-#adminSectionCommand .ap2-kv span{font-weight:900;color:var(--primary)}
-#adminSectionCommand .ap2-muted{color:var(--muted)!important}
-@media(max-width:1200px){#adminSectionCommand .ap2-table tbody{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){#adminSectionCommand .ap2-table tbody{grid-template-columns:1fr}#adminSectionCommand .ap2-kv{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:480px){#adminSectionCommand .ap2-kv{grid-template-columns:1fr}#adminSectionCommand .ap2-table tbody td{font-size:13px}}
-/* Night mode contrast */
-.admin-night #adminSectionCommand .ap2-input{background:#0d1728!important;color:#f8fafc!important;border-color:#34445f!important}
-.admin-night #adminSectionCommand .ap2-table tbody tr,.admin-night #adminSectionCommand .ap2-kv>div{background:var(--surface)!important;border-color:var(--border)!important}
-.admin-night #adminSectionCommand .ap2-table tbody td,.admin-night #adminSectionCommand .ap2-table tbody td::before,.admin-night #adminSectionCommand .ap2-kv>div{color:var(--text)!important}
-.admin-night #adminSectionCommand .ap2-table tbody td::before{color:var(--muted)!important}
+</html><style id="command-center-mobile-card-fix">
+/* Command Center compact card layout */
+.ap2-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.ap2-tabs button{min-width:0;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;padding:10px 8px}
+.ap2-flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ap2-tablewrap{overflow:visible}
+.ap2-table{width:100%;table-layout:fixed}
+.ap2-table th,.ap2-table td{word-break:break-word;overflow-wrap:anywhere}
+.ap2-table td:last-child{white-space:normal}
+.ap2-table td button{max-width:100%;white-space:nowrap;font-size:12px;padding:7px 8px}
+@media(max-width:800px){
+  .adminProV2 .ap2-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .adminProV2 .ap2-card{padding:8px 5px;border-radius:10px;min-height:58px}
+  .adminProV2 .ap2-lbl{font-size:9px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-val{font-size:15px;line-height:1.1;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .adminProV2 .ap2-tabs button{font-size:9px;line-height:1.1;padding:7px 3px;border-radius:8px;min-height:34px}
+  .adminProV2 .ap2-pane{padding:9px;margin-top:8px;border-radius:10px}
+  .adminProV2 .ap2-pane h3{font-size:13px;margin:4px 0 8px}
+  .adminProV2 .ap2-flex{gap:5px}
+  .adminProV2 .ap2-input{min-width:0;flex:1 1 100%;font-size:11px;padding:8px}
+  .adminProV2 .ap2-flex .ap2-btn{font-size:9px;padding:7px 8px}
+  /* Every Command Center table row becomes a compact 4-column card. */
+  .adminProV2 .ap2-table{border-collapse:separate;border-spacing:0 6px;table-layout:auto}
+  .adminProV2 .ap2-table thead{display:none}
+  .adminProV2 .ap2-table tbody{display:block}
+  .adminProV2 .ap2-table tbody tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px;box-shadow:0 3px 10px rgba(15,23,42,.07);margin-bottom:6px}
+  .adminProV2 .ap2-table tbody td{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:6px 5px;border:1px solid var(--border);border-radius:7px;background:var(--surface)!important;color:var(--text)!important;font-size:9px;line-height:1.15;overflow:hidden}
+  .adminProV2 .ap2-table tbody td::before{content:attr(data-label);display:block;font-size:7px;font-weight:800;color:var(--muted);text-transform:uppercase;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-table tbody td:empty{display:none}
+  .adminProV2 .ap2-table tbody td:last-child{grid-column:1/-1;display:flex;flex-direction:row;align-items:center;gap:4px;flex-wrap:wrap}
+  .adminProV2 .ap2-table tbody td:last-child::before{display:none}
+  .adminProV2 .ap2-table tbody td button{font-size:8px;padding:5px 6px;max-width:100%;flex:0 1 auto}
+  .adminProV2 .ap2-table tbody td a{font-size:8px;word-break:break-all}
+  .adminProV2 .ap2-table tbody td strong{font-size:9px}
+  .adminProV2 .ap2-table tbody td small{font-size:7px}
+  .adminProV2 .ap2-head{gap:6px;flex-wrap:wrap}
+  .adminProV2 .ap2-head h2{font-size:17px}
+  .adminProV2 .ap2-head .ap2-flex{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .adminProV2 .ap2-head .ap2-flex button{font-size:9px;padding:7px 3px}
+}
+@media(max-width:520px){
+  body{padding:8px}
+  .adminProV2 .ap2-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .adminProV2 .ap2-card{padding:6px 3px;min-height:50px}
+  .adminProV2 .ap2-lbl{font-size:7px}
+  .adminProV2 .ap2-val{font-size:12px}
+  .adminProV2 .ap2-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+  .adminProV2 .ap2-tabs button{font-size:7px;padding:6px 2px;min-height:30px}
+  .adminProV2 .ap2-table tbody tr{gap:3px;padding:4px}
+  .adminProV2 .ap2-table tbody td{padding:5px 3px;font-size:7px;border-radius:6px}
+  .adminProV2 .ap2-table tbody td::before{font-size:6px}
+  .adminProV2 .ap2-table tbody td button{font-size:7px;padding:4px 5px}
+  .adminProV2 .ap2-table tbody td:last-child{gap:3px;padding:4px}
+}
 </style>
+<script id="command-center-card-labels-fix">
+(function(){
+  function addLabels(){
+    document.querySelectorAll('.adminProV2 .ap2-table').forEach(function(table){
+      var heads=[].slice.call(table.querySelectorAll('thead th')).map(function(th){return th.textContent.trim()});
+      table.querySelectorAll('tbody tr').forEach(function(row){
+        [].slice.call(row.children).forEach(function(td,i){
+          if(td.tagName==='TD' && heads[i]) td.setAttribute('data-label',heads[i]);
+        });
+      });
+    });
+  }
+  addLabels();
+  new MutationObserver(addLabels).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
