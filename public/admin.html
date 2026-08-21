@@ -265,6 +265,29 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:700px){.adminProV2 .student-profile-section .ap2-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
 @media(max-width:430px){.adminProV2 .student-profile-section .ap2-kv{grid-template-columns:1fr!important;}}
 </style>
+
+<style id="final-command-questionbank-layout">
+.adminProV2 .ap2-student-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;width:270px!important;min-width:270px!important}
+.adminProV2 .ap2-student-actions .ap2-action{font-size:10px!important;padding:7px 5px!important;min-height:34px!important;white-space:normal!important}
+.adminProV2 #ap2Modal .ap2-box{width:min(1100px,96vw)!important;max-height:92vh!important}
+.adminProV2 #ap2Modal .student-profile-section{padding:16px!important;border-radius:16px!important}
+.adminProV2 #ap2Modal .student-profile-section .ap2-kv{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.adminProV2 #ap2Modal .student-profile-section .ap2-kv>div{min-height:58px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+.adminProV2 #ap2Modal .lifeline-theme .ap2-kv>div:nth-child(n+3){border-top:3px solid #7c3aed!important}
+.adminProV2 #ap2Modal .questions-theme .ap2-kv>div:nth-child(n+3){border-top:3px solid #16a34a!important}
+.adminProV2 #ap2Modal .profile-theme .ap2-kv>div{border-top:3px solid #2563eb!important}
+.adminProV2 #ap2Modal .student-data-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important}
+.adminProV2 #ap2Modal .student-data-card{padding:12px!important;border:1px solid var(--border)!important;border-radius:12px!important;background:var(--surface)!important}
+.adminProV2 #ap2Modal .student-data-card b{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}
+.adminProV2 #ap2Modal .student-data-card span{font-weight:800;word-break:break-word}
+#adminSectionQuestions .question-toolbar{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;align-items:stretch!important;padding:12px!important;border:1px solid var(--border)!important;border-radius:16px!important;background:var(--surface2)!important}
+#adminSectionQuestions .question-toolbar input{grid-column:1/-1!important;width:100%!important;min-height:42px!important}
+#adminSectionQuestions .question-toolbar button{width:100%!important;min-height:40px!important;margin:0!important;border-radius:10px!important;font-weight:800!important}
+#adminSectionQuestions .question-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}
+#adminSectionQuestions .admin-question-cards{margin-top:14px!important}
+@media(max-width:850px){.adminProV2 #ap2Modal .student-profile-section .ap2-kv,.adminProV2 #ap2Modal .student-data-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}#adminSectionQuestions .question-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){.adminProV2 .ap2-student-actions{width:220px!important;min-width:220px!important}.adminProV2 #ap2Modal .student-profile-section .ap2-kv,.adminProV2 #ap2Modal .student-data-cards{grid-template-columns:1fr!important}#adminSectionQuestions .question-toolbar{grid-template-columns:1fr!important}#adminSectionQuestions .question-toolbar input{grid-column:auto!important}}
+</style>
 </head>
 
 <body>
@@ -2646,27 +2669,17 @@ ${w.status === "Approved" ? `
                 try { const d = await api("/pro/reset-lifelines-all", { method:"PUT" }); alert("✅ " + d.message); await ap2Refresh(); } catch(e) { alert(e.message); }
             };
             function ap2RenderAnsweredQuestions(d, titlePrefix) {
-                const u=d.user||{};
-                const rows=d.history||[];
-                const body=rows.map((x,i)=>{
-                    const selected=x.selectedAnswer ? esc(x.selectedAnswer) : '<span class="ap2-muted">Not recorded</span>';
+                const u=d.user||{}, rows=d.history||[];
+                const cards=rows.map((x,i)=>{
+                    const selected=x.selectedAnswer ? esc(x.selectedAnswer) : 'Not recorded';
                     const correct=esc(x.correctAnswer||'-');
-                    const result=x.isCorrect===null || x.isCorrect===undefined ? '<span class="ap2-badge ap2-yellow">Legacy</span>' : (x.isCorrect ? '<span class="ap2-badge ap2-green">Correct</span>' : '<span class="ap2-badge ap2-red">Wrong</span>');
-                    return `<tr><td>${i+1}</td><td>${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'<span class="ap2-muted">Earlier record</span>'}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:360px;white-space:normal;font-weight:700">${esc(x.questionText||'-')}</td><td style="min-width:220px;white-space:normal">${selected}</td><td style="min-width:220px;white-space:normal"><b>${correct}</b></td><td>${result}</td><td>${Number(x.totalQuestionsAnswered||0)||'-'}</td></tr>`;
-                }).join('') || '<tr><td colspan="8">No answered question history found.</td></tr>';
+                    const ok=x.isCorrect===null||x.isCorrect===undefined;
+                    const result=ok?'Legacy':(x.isCorrect?'Correct':'Wrong');
+                    const cls=ok?'legacy':(x.isCorrect?'correct':'wrong');
+                    return `<div class="student-data-card answered-q-card ${cls}"><b>#${i+1} • ${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'Earlier record'}</b><span style="font-size:12px;color:var(--muted)">Question ID: ${esc(x.questionId||'-')}</span><strong style="display:block;margin:8px 0;line-height:1.45">${esc(x.questionText||'-')}</strong><span>Student Answer: ${selected}</span><span>Correct Answer: ${correct}</span><span style="margin-top:7px;font-weight:900">Result: ${result}</span></div>`;
+                }).join('') || '<div class="student-data-card">No answered question history found.</div>';
                 document.getElementById("ap2Title").textContent=titlePrefix+" — "+name(u);
-                document.getElementById("ap2Body").innerHTML=`
-                    <div class="student-profile-section questions-theme"><div class="ap2-kv">
-                        <div><b>Student</b><span>${esc(u.name||'-')}</span></div>
-                        <div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div>
-                        <div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div>
-                        <div><b>Records Shown</b><span>${Number(d.total||rows.length)}</span></div>
-                    </div></div>
-                    <div class="ap2-flex" style="margin:12px 0">
-                        <button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button>
-                        <span class="ap2-muted">Green = correct, red = wrong. Older records may show the correct answer but not the student's selected answer.</span>
-                    </div>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>#</th><th>Date / Time</th><th>Question ID</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th><th>Total Q</th></tr></thead><tbody>${body}</tbody></table></div>`;
+                document.getElementById("ap2Body").innerHTML=`<div class="student-profile-section questions-theme"><div class="ap2-kv"><div><b>Student</b><span>${esc(u.name||'-')}</span></div><div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div><div><b>Records Shown</b><span>${Number(d.total||rows.length)}</span></div></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button></div><div class="student-data-cards">${cards}</div>`;
                 document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
             }
 
@@ -2689,14 +2702,13 @@ ${w.status === "Approved" ? `
 
             window.ap2LifelineUser = async id => {
                 try {
-                    const d = await api("/pro/lifelines/user/" + encodeURIComponent(id));
-                    const u=d.user||{}, c=d.counts||{};
+                    const d=await api("/pro/lifelines/user/"+encodeURIComponent(id)); const u=d.user||{}, c=d.counts||{};
                     const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
-                    const usageRows=(d.usage||[]).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(label[x.type]||x.type)}</b>${x.resetByAdmin?'<br><span class="ap2-badge ap2-blue">ADMIN RESET</span>':''}</td><td>${esc(x.questionId||'-')}</td><td class="ap2-question-cell">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="6">No lifeline usage found.</td></tr>';
+                    const cards=(d.usage||[]).map(x=>`<div class="student-data-card lifeline-card"><b>${esc(new Date(x.usedAt).toLocaleString())}</b><span>🛟 ${esc(label[x.type]||x.type)}</span><span>Question ID: ${esc(x.questionId||'-')}</span><strong style="display:block;margin:8px 0;line-height:1.45">${esc(x.questionText||'-')}</strong><span>Cycle: ${Number(x.cycle||0)}</span><span>Total Q: ${Number(x.totalQuestionsAnsweredAtUse||0)}</span>${x.resetByAdmin?'<span class="ap2-badge ap2-blue">ADMIN RESET</span>':''}</div>`).join('') || '<div class="student-data-card">No lifeline usage found.</div>';
                     document.getElementById("ap2Title").textContent="🛟 Lifeline History — "+name(u);
-                    document.getElementById("ap2Body").innerHTML=`<div class="student-profile-section lifeline-theme"><div class="ap2-kv"><div><b>Student</b><span>${esc(u.name||'-')}</span></div><div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div><div><b>50:50 Used</b><span>${c.fiftyFifty||0}</span></div><div><b>Audience Used</b><span>${c.audiencePoll||0}</span></div><div><b>Expert Used</b><span>${c.askExpert||0}</span></div><div><b>Skip Used</b><span>${c.skipQuestion||0}</span></div><div><b>Available Lifelines</b><span>${Object.values(u.lifelines||{}).filter(Boolean).length}/4</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#0891b2;border-color:#0891b2" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button></div><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Lifeline</th><th>Question ID</th><th>Question</th><th>Cycle</th><th>Total Q</th></tr></thead><tbody>${usageRows}</tbody></table></div>`;
+                    document.getElementById("ap2Body").innerHTML=`<div class="student-profile-section lifeline-theme"><div class="ap2-kv"><div><b>Student</b><span>${esc(u.name||'-')}</span></div><div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div><div><b>50:50 Used</b><span>${c.fiftyFifty||0}</span></div><div><b>Audience Used</b><span>${c.audiencePoll||0}</span></div><div><b>Expert Used</b><span>${c.askExpert||0}</span></div><div><b>Skip Used</b><span>${c.skipQuestion||0}</span></div><div><b>Available Lifelines</b><span>${Object.values(u.lifelines||{}).filter(Boolean).length}/4</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#0891b2;border-color:#0891b2" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button></div><div class="student-data-cards">${cards}</div>`;
                     document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
-                } catch(e) { alert(e.message); }
+                } catch(e){alert(e.message);}
             };
 
             window.ap2LoadLifelines = async () => {
