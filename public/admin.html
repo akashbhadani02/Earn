@@ -356,6 +356,42 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 }
 </style>
 
+
+<style id="student-three-view-final-theme">
+/* Final clean themes for Profile / Lifeline / Answered views */
+#ap2Modal .student-view-shell{display:block;width:100%;}
+#ap2Modal .student-view-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:12px 14px;border-radius:14px;font-weight:900;}
+#ap2Modal .student-view-header small{display:block;font-weight:700;opacity:.78;margin-top:3px;}
+#ap2Modal .student-view-header.profile{background:linear-gradient(135deg,#eff6ff,#dbeafe);color:#1d4ed8;border:1px solid #bfdbfe;}
+#ap2Modal .student-view-header.lifeline{background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:#6d28d9;border:1px solid #ddd6fe;}
+#ap2Modal .student-view-header.answered{background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#15803d;border:1px solid #bbf7d0;}
+#ap2Modal .student-summary-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:0 0 14px;}
+#ap2Modal .student-summary-item{padding:11px 12px;border-radius:12px;background:#fff;border:1px solid #e2e8f0;box-shadow:0 4px 12px rgba(15,23,42,.05);min-width:0;}
+#ap2Modal .student-summary-item .label{font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:900;color:#64748b;margin-bottom:4px;}
+#ap2Modal .student-summary-item .value{font-size:13px;font-weight:900;color:#0f172a;overflow-wrap:anywhere;}
+#ap2Modal .profile-summary .student-summary-item{border-top:3px solid #2563eb;}
+#ap2Modal .lifeline-summary .student-summary-item{border-top:3px solid #7c3aed;}
+#ap2Modal .answered-summary .student-summary-item{border-top:3px solid #16a34a;}
+#ap2Modal .student-section-title{font-size:12px;text-transform:uppercase;letter-spacing:.05em;font-weight:1000;margin:14px 0 8px;color:#475569;}
+#ap2Modal .student-data-cards{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important;}
+#ap2Modal .student-data-card{margin:0!important;padding:12px!important;border-radius:13px!important;background:#fff!important;border:1px solid #e2e8f0!important;box-shadow:0 5px 14px rgba(15,23,42,.06)!important;min-width:0;}
+#ap2Modal .student-data-card .card-label{font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:900;color:#64748b;display:block;margin-bottom:5px;}
+#ap2Modal .student-data-card .card-value{font-size:13px;font-weight:850;color:#0f172a;line-height:1.45;overflow-wrap:anywhere;}
+#ap2Modal .profile-card{border-left:4px solid #2563eb!important;}
+#ap2Modal .lifeline-card{border-left:4px solid #7c3aed!important;background:linear-gradient(135deg,#fff,#faf5ff)!important;}
+#ap2Modal .answered-q-card{border-left:4px solid #16a34a!important;background:linear-gradient(135deg,#fff,#f0fdf4)!important;}
+#ap2Modal .answered-q-card.wrong{border-left-color:#dc2626!important;background:linear-gradient(135deg,#fff,#fef2f2)!important;}
+#ap2Modal .answered-q-card.legacy{border-left-color:#64748b!important;background:linear-gradient(135deg,#fff,#f8fafc)!important;}
+#ap2Modal .card-question{font-size:13px;font-weight:900;line-height:1.5;color:#0f172a;margin:8px 0;}
+#ap2Modal .card-row{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-top:1px dashed #e2e8f0;font-size:12px;}
+#ap2Modal .card-row b{color:#64748b;font-weight:800;}
+#ap2Modal .result-badge{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:950;}
+#ap2Modal .result-correct{background:#dcfce7;color:#166534}.result-wrong{background:#fee2e2;color:#991b1b}.result-legacy{background:#e2e8f0;color:#475569}
+#ap2Modal .lifeline-type-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:#ede9fe;color:#6d28d9;font-size:11px;font-weight:950;}
+#ap2Modal .student-empty{padding:22px;text-align:center;border:1px dashed #cbd5e1;border-radius:12px;color:#64748b;font-weight:800;background:#f8fafc;}
+@media(max-width:700px){#ap2Modal .student-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#ap2Modal .student-data-cards{grid-template-columns:1fr!important}}
+@media(max-width:430px){#ap2Modal .student-summary-grid{grid-template-columns:1fr!important}.student-view-header{align-items:flex-start!important}}
+</style>
 </head>
 
 <body>
@@ -2645,9 +2681,34 @@ ${w.status === "Approved" ? `
                 const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
                 document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr class="${u.isBlocked ? 'ap2-presence-offline' : ((u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? 'ap2-presence-online' : 'ap2-presence-offline')}"><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><div class="ap2-student-actions"><button class="ap2-btn ap2-action ap2-profile" onclick="ap2Details('${esc(uid(u))}')" title="Student Profile">👤 Profile</button><button class="ap2-btn ap2-action ap2-edit" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" title="Edit Total Earn">✏️ Edit Earn</button><button class="ap2-btn ap2-action ap2-block" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})" title="Block / Unblock">${u.isBlocked ? '🟢 Unblock' : '🚫 Block'}</button><button class="ap2-btn ap2-action ap2-warning" onclick="ap2Warn('${esc(uid(u))}')" title="Warnings">⚠️ Warning</button><button class="ap2-btn ap2-action ap2-lifeline" onclick="ap2LifelineUser('${esc(uid(u))}')" title="Lifeline History">🛟 Lifeline</button><button class="ap2-btn ap2-action ap2-answered" onclick="ap2AnsweredQuestions('${esc(uid(u))}')" title="Answered Questions">📚 Answered</button><button class="ap2-btn ap2-action ap2-reset" onclick="ap2ResetLifelines('${esc(uid(u))}')" title="Reset all lifelines">🔄 Reset Life</button></div></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
-            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="student-profile-section profile-theme"><div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2LifelineUser('${esc(uid(u))}')">🛟 Lifeline History</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false") } catch (e) { alert(e.message) } };
-            window.ap2Close = () => { const m=document.getElementById("ap2Modal"); m.classList.remove("show"); m.setAttribute("aria-hidden","true"); };
-            window.ap2Block = async (id, blocked) => { try { await api("/pro/block/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ blocked, reason: "Admin action" }) }); await ap2Refresh() } catch (e) { alert(e.message) } };
+            window.ap2Details = async id => {
+                try {
+                    let d=await api("/pro/user/"+encodeURIComponent(id)), u=d.user;
+                    const warnings=(u.warningHistory||[]).slice().reverse();
+                    const warningCards=warnings.map((x,i)=>`<article class="student-data-card profile-card"><span class="card-label">Warning ${i+1} • ${esc(x.time||'-')}</span><div class="card-question">${esc(x.reason||'No reason recorded')}</div></article>`).join('') || '<div class="student-empty">⚠️ No warning history found.</div>';
+                    document.getElementById("ap2Title").textContent="👤 Profile — "+name(u);
+                    document.getElementById("ap2Body").innerHTML=`<div class="student-view-shell">
+                        <div class="student-view-header profile"><div>👤 Student Profile<small>Basic account, earning and activity information.</small></div><span>${u.isBlocked?'Blocked':'Active'}</span></div>
+                        <div class="student-summary-grid profile-summary">
+                            <div class="student-summary-item"><div class="label">Student ID</div><div class="value">${esc(uid(u))}</div></div>
+                            <div class="student-summary-item"><div class="label">Mobile</div><div class="value">${esc(u.mobile||'-')}</div></div>
+                            <div class="student-summary-item"><div class="label">Wallet</div><div class="value">${money(u.wallet)}</div></div>
+                            <div class="student-summary-item"><div class="label">Total Earn</div><div class="value">${money(u.totalEarn)}</div></div>
+                            <div class="student-summary-item"><div class="label">Today Questions</div><div class="value">${q(u)}</div></div>
+                            <div class="student-summary-item"><div class="label">Spin Progress</div><div class="value">${spinQ(u)}/100</div></div>
+                            <div class="student-summary-item"><div class="label">Total Questions</div><div class="value">${u.totalQuestionsAnswered||0}</div></div>
+                            <div class="student-summary-item"><div class="label">Warnings</div><div class="value">${u.warningCount||0}</div></div>
+                            <div class="student-summary-item"><div class="label">Last Seen</div><div class="value">${esc(u.lastSeen||'-')}</div></div>
+                        </div>
+                        <div class="student-section-title">Admin Actions</div>
+                        <div class="ap2-flex" style="margin:0 0 12px"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🛟 Reset Lifelines</button></div>
+                        <div class="student-section-title">Warning History</div>
+                        <div class="student-data-cards">${warningCards}</div>
+                    </div>`;
+                    document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
+                } catch (e) { alert(e.message) }
+            };
+
             window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Wallet = async id => { let amount = prompt("Wallet adjustment (+ add / - remove):", "1"); if (amount === null) return; let reason = prompt("Reason:", "Admin adjustment"); if (reason === null) return; try { await api("/pro/wallet/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ amount: Number(amount), reason }) }); await ap2Refresh(); alert("Wallet updated") } catch (e) { alert(e.message) } };
             window.ap2ResetQ = async id => { try { await api("/pro/reset-questions/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
@@ -2741,21 +2802,38 @@ ${w.status === "Approved" ? `
                 const cards=rows.map((x,i)=>{
                     const selected=x.selectedAnswer ? esc(x.selectedAnswer) : 'Not recorded';
                     const correct=esc(x.correctAnswer||'-');
-                    const ok=x.isCorrect===null||x.isCorrect===undefined;
-                    const result=ok?'Legacy':(x.isCorrect?'Correct':'Wrong');
-                    const cls=ok?'legacy':(x.isCorrect?'correct':'wrong');
-                    return `<div class="student-data-card answered-q-card ${cls}"><b>#${i+1} • ${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'Earlier record'}</b><span style="font-size:12px;color:var(--muted)">Question ID: ${esc(x.questionId||'-')}</span><strong style="display:block;margin:8px 0;line-height:1.45">${esc(x.questionText||'-')}</strong><span>Student Answer: ${selected}</span><span>Correct Answer: ${correct}</span><span style="margin-top:7px;font-weight:900">Result: ${result}</span></div>`;
-                }).join('') || '<div class="student-data-card">No answered question history found.</div>';
+                    const legacy=x.isCorrect===null||x.isCorrect===undefined;
+                    const result=legacy?'Legacy':(x.isCorrect?'Correct':'Wrong');
+                    const cls=legacy?'legacy':(x.isCorrect?'correct':'wrong');
+                    const badge=legacy?'result-legacy':(x.isCorrect?'result-correct':'result-wrong');
+                    return `<article class="student-data-card answered-q-card ${cls}">
+                        <span class="card-label">Question ${i+1} • ${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'Earlier record'}</span>
+                        <div class="card-row"><b>Question ID</b><span>${esc(x.questionId||'-')}</span></div>
+                        <div class="card-question">${esc(x.questionText||'-')}</div>
+                        <div class="card-row"><b>Student Answer</b><span>${selected}</span></div>
+                        <div class="card-row"><b>Correct Answer</b><span>${correct}</span></div>
+                        <div style="margin-top:8px"><span class="result-badge ${badge}">${result==='Correct'?'✓ ':result==='Wrong'?'✕ ':''}${result}</span></div>
+                    </article>`;
+                }).join('') || '<div class="student-empty">📚 No answered question history found.</div>';
                 document.getElementById("ap2Title").textContent=titlePrefix+" — "+name(u);
-                document.getElementById("ap2Body").innerHTML=`<div class="student-profile-section questions-theme"><div class="ap2-kv"><div><b>Student</b><span>${esc(u.name||'-')}</span></div><div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div><div><b>Records Shown</b><span>${Number(d.total||rows.length)}</span></div></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button></div><div class="student-data-cards">${cards}</div>`;
+                document.getElementById("ap2Body").innerHTML=`<div class="student-view-shell">
+                    <div class="student-view-header answered"><div>📚 Answered Questions<small>Only this student's submitted question history is shown here.</small></div><span>${Number(d.total||rows.length)} Records</span></div>
+                    <div class="student-summary-grid answered-summary">
+                        <div class="student-summary-item"><div class="label">Student</div><div class="value">${esc(u.name||'-')}</div></div>
+                        <div class="student-summary-item"><div class="label">Mobile</div><div class="value">${esc(u.mobile||'-')}</div></div>
+                        <div class="student-summary-item"><div class="label">Total Questions</div><div class="value">${Number(u.totalQuestionsAnswered||0)}</div></div>
+                        <div class="student-summary-item"><div class="label">Records Shown</div><div class="value">${Number(d.total||rows.length)}</div></div>
+                    </div>
+                    <div class="student-section-title">Question-wise Answer Details</div>
+                    <div class="ap2-flex" style="margin:0 0 10px"><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button></div>
+                    <div class="student-data-cards">${cards}</div>
+                </div>`;
                 document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
             }
 
             window.ap2AnsweredQuestions = async id => {
-                try {
-                    const d=await api("/pro/questions/user/"+encodeURIComponent(id));
-                    ap2RenderAnsweredQuestions(d,"📚 Answered Questions");
-                } catch(e){ alert(e.message); }
+                try { const d=await api("/pro/questions/user/"+encodeURIComponent(id)); ap2RenderAnsweredQuestions(d,"📚 Answered Questions"); }
+                catch(e){ alert(e.message); }
             };
 
             window.ap2ExportAnsweredQuestions = async id => {
@@ -2771,10 +2849,33 @@ ${w.status === "Approved" ? `
             window.ap2LifelineUser = async id => {
                 try {
                     const d=await api("/pro/lifelines/user/"+encodeURIComponent(id)); const u=d.user||{}, c=d.counts||{};
-                    const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
-                    const cards=(d.usage||[]).map(x=>`<div class="student-data-card lifeline-card"><b>${esc(new Date(x.usedAt).toLocaleString())}</b><span>🛟 ${esc(label[x.type]||x.type)}</span><span>Question ID: ${esc(x.questionId||'-')}</span><strong style="display:block;margin:8px 0;line-height:1.45">${esc(x.questionText||'-')}</strong><span>Cycle: ${Number(x.cycle||0)}</span><span>Total Q: ${Number(x.totalQuestionsAnsweredAtUse||0)}</span>${x.resetByAdmin?'<span class="ap2-badge ap2-blue">ADMIN RESET</span>':''}</div>`).join('') || '<div class="student-data-card">No lifeline usage found.</div>';
+                    const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip Question"};
+                    const cards=(d.usage||[]).map((x,i)=>`<article class="student-data-card lifeline-card">
+                        <span class="card-label">Usage ${i+1} • ${esc(new Date(x.usedAt).toLocaleString())}</span>
+                        <div style="margin-bottom:7px"><span class="lifeline-type-badge">🛟 ${esc(label[x.type]||x.type)}</span></div>
+                        <div class="card-row"><b>Question ID</b><span>${esc(x.questionId||'-')}</span></div>
+                        <div class="card-question">${esc(x.questionText||'-')}</div>
+                        <div class="card-row"><b>500 Cycle</b><span>${Number(x.cycle||0)}</span></div>
+                        <div class="card-row"><b>Questions at Use</b><span>${Number(x.totalQuestionsAnsweredAtUse||0)}</span></div>
+                        ${x.resetByAdmin?'<div style="margin-top:8px"><span class="ap2-badge ap2-blue">ADMIN RESET</span></div>':''}
+                    </article>`).join('') || '<div class="student-empty">🛟 No lifeline usage found for this student.</div>';
                     document.getElementById("ap2Title").textContent="🛟 Lifeline History — "+name(u);
-                    document.getElementById("ap2Body").innerHTML=`<div class="student-profile-section lifeline-theme"><div class="ap2-kv"><div><b>Student</b><span>${esc(u.name||'-')}</span></div><div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div><div><b>50:50 Used</b><span>${c.fiftyFifty||0}</span></div><div><b>Audience Used</b><span>${c.audiencePoll||0}</span></div><div><b>Expert Used</b><span>${c.askExpert||0}</span></div><div><b>Skip Used</b><span>${c.skipQuestion||0}</span></div><div><b>Available Lifelines</b><span>${Object.values(u.lifelines||{}).filter(Boolean).length}/4</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#0891b2;border-color:#0891b2" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button></div><div class="student-data-cards">${cards}</div>`;
+                    document.getElementById("ap2Body").innerHTML=`<div class="student-view-shell">
+                        <div class="student-view-header lifeline"><div>🛟 Lifeline History<small>Every lifeline use is shown separately with its question and time.</small></div><span>${(d.usage||[]).length} Uses</span></div>
+                        <div class="student-summary-grid lifeline-summary">
+                            <div class="student-summary-item"><div class="label">Student</div><div class="value">${esc(u.name||'-')}</div></div>
+                            <div class="student-summary-item"><div class="label">Mobile</div><div class="value">${esc(u.mobile||'-')}</div></div>
+                            <div class="student-summary-item"><div class="label">50:50 Used</div><div class="value">${c.fiftyFifty||0}</div></div>
+                            <div class="student-summary-item"><div class="label">Audience Used</div><div class="value">${c.audiencePoll||0}</div></div>
+                            <div class="student-summary-item"><div class="label">Expert Used</div><div class="value">${c.askExpert||0}</div></div>
+                            <div class="student-summary-item"><div class="label">Skip Used</div><div class="value">${c.skipQuestion||0}</div></div>
+                            <div class="student-summary-item"><div class="label">Available Lifelines</div><div class="value">${Object.values(u.lifelines||{}).filter(Boolean).length}/4</div></div>
+                            <div class="student-summary-item"><div class="label">Total Questions</div><div class="value">${Number(u.totalQuestionsAnswered||0)}</div></div>
+                        </div>
+                        <div class="student-section-title">Lifeline-wise Usage Details</div>
+                        <div class="ap2-flex" style="margin:0 0 10px"><button class="ap2-btn" style="background:#0891b2;border-color:#0891b2" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button></div>
+                        <div class="student-data-cards">${cards}</div>
+                    </div>`;
                     document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
                 } catch(e){alert(e.message);}
             };
