@@ -2308,6 +2308,129 @@ a:not(.btn):not(.button){color:#93c5fd!important}
 :where(button svg,.btn svg,.button svg,.action-btn svg,.tab-btn svg){
  color:#fff!important;fill:currentColor!important;stroke:currentColor!important;
 }
+</style><style id="admin-black-font-theme">
+/* FINAL BLACK FONT THEME */
+:root{
+ --bf-bg:#f3f6fa;
+ --bf-card:#ffffff;
+ --bf-card2:#eef3f8;
+ --bf-border:#cbd5e1;
+ --bf-button:#dbeafe;
+ --bf-button-hover:#bfdbfe;
+ --bf-text:#000000;
+ --bf-muted:#1f2937;
+}
+
+/* Main page */
+html,body{
+ background:var(--bf-bg)!important;
+ color:#000!important;
+}
+
+/* All cards / panels / data areas */
+:where(.card,.panel,.section,.box,.admin-card,.dashboard-card,.stat-card,
+.student-card,.command-card,.analytics,.history,.table-wrap,.table-container,
+.data-card,.data-panel,.modal-content,.dropdown-menu,.list-item,.toolbar,.filters){
+ background:var(--bf-card)!important;
+ color:#000!important;
+ border:1px solid var(--bf-border)!important;
+}
+
+/* Nested areas */
+:where(.card .card,.panel .panel,.nested-card,.sub-card,table thead,.table thead){
+ background:var(--bf-card2)!important;
+ color:#000!important;
+}
+
+/* ALL ADMIN TEXT = BLACK */
+:where(
+h1,h2,h3,h4,h5,h6,p,span,label,small,strong,b,em,i,
+th,td,caption,div,li,.title,.label,.value,.count,.name,
+.description,.text,.status,.badge,.muted,.subtext,
+.ap2-lbl,.ap2-title,.ap2-value,.ap2-desc
+){
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+}
+
+/* ALL BUTTONS = same light-blue color + black text */
+:where(
+button,.btn,.button,a.btn,a.button,
+input[type=button],input[type=submit],input[type=reset],
+.action-btn,.tab-btn,.nav-btn,.menu-btn,
+.reset-btn,.export-btn,.delete-btn,.edit-btn,.view-btn,
+.save-btn,.close-btn,.refresh-btn
+){
+ background:var(--bf-button)!important;
+ background-image:none!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ border:1px solid #93c5fd!important;
+ text-shadow:none!important;
+ box-shadow:none!important;
+}
+:where(
+button:hover,.btn:hover,.button:hover,a.btn:hover,a.button:hover,
+input[type=button]:hover,input[type=submit]:hover,input[type=reset]:hover,
+.action-btn:hover,.tab-btn:hover,.nav-btn:hover,.menu-btn:hover
+){
+ background:var(--bf-button-hover)!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+}
+:where(button:disabled,.btn:disabled,input:disabled){
+ background:#e5e7eb!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ opacity:.65;
+}
+
+/* Tables/data */
+:where(table,.table){
+ background:#fff!important;
+ color:#000!important;
+}
+:where(table th,.table th,table td,.table td){
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ border-color:var(--bf-border)!important;
+}
+:where(table tbody tr:hover,.table tbody tr:hover){
+ background:#e5eef8!important;
+}
+
+/* Form fields */
+:where(
+input:not([type=button]):not([type=submit]):not([type=reset]),
+textarea,select
+){
+ background:#fff!important;
+ color:#000!important;
+ -webkit-text-fill-color:#000!important;
+ border:1px solid #94a3b8!important;
+}
+:where(input,textarea)::placeholder{
+ color:#374151!important;
+ opacity:1!important;
+}
+
+/* Links also black */
+a:not(.btn):not(.button){
+ color:#000!important;
+ text-decoration-color:#64748b;
+}
+
+/* Icons */
+:where(button svg,.btn svg,.button svg,.action-btn svg,.tab-btn svg){
+ color:#000!important;
+ fill:currentColor!important;
+ stroke:currentColor!important;
+}
+
+/* Prevent inherited white text from old theme */
+body *{
+ text-shadow:none!important;
+}
 </style></head>
 
 <body>
