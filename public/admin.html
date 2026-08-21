@@ -2709,6 +2709,29 @@ ${w.status === "Approved" ? `
                 } catch (e) { alert(e.message) }
             };
 
+            // Student detail modal close handler
+            window.ap2Close = () => {
+                const modal = document.getElementById("ap2Modal");
+                if (!modal) return;
+                modal.classList.remove("show");
+                modal.setAttribute("aria-hidden", "true");
+                // Clear old content so the next student always opens fresh.
+                const body = document.getElementById("ap2Body");
+                if (body) body.innerHTML = "";
+            };
+
+            // Close on backdrop click / Escape as a convenience.
+            document.addEventListener("click", (event) => {
+                const modal = document.getElementById("ap2Modal");
+                if (modal && event.target === modal) window.ap2Close();
+            });
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    const modal = document.getElementById("ap2Modal");
+                    if (modal && modal.classList.contains("show")) window.ap2Close();
+                }
+            });
+
             window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Wallet = async id => { let amount = prompt("Wallet adjustment (+ add / - remove):", "1"); if (amount === null) return; let reason = prompt("Reason:", "Admin adjustment"); if (reason === null) return; try { await api("/pro/wallet/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ amount: Number(amount), reason }) }); await ap2Refresh(); alert("Wallet updated") } catch (e) { alert(e.message) } };
             window.ap2ResetQ = async id => { try { await api("/pro/reset-questions/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh() } catch (e) { alert(e.message) } };
