@@ -226,7 +226,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 <style id="command-center-student-actions-theme">
 /* Student action buttons: fixed semantic order + separate theme for each action. */
 .adminProV2 .ap2-student-actions {
-  display:grid!important; grid-template-columns:repeat(4,minmax(72px,1fr)); gap:7px; min-width:330px;
+  display:grid!important; grid-template-columns:repeat(3,minmax(78px,1fr)); gap:7px; min-width:250px;
 }
 .adminProV2 .ap2-student-actions .ap2-action {
   min-width:0!important; width:100%; min-height:36px; padding:7px 8px!important; border-radius:9px!important;
@@ -241,13 +241,29 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 .adminProV2 .ap2-student-actions .ap2-answered { background:#16a34a!important; border-color:#16a34a!important; color:#fff!important; }
 .adminProV2 .ap2-student-actions .ap2-reset { background:#0891b2!important; border-color:#0891b2!important; color:#fff!important; }
 .adminProV2 .ap2-student-actions .ap2-action:hover { filter:brightness(.94); transform:translateY(-1px); }
-@media(max-width:900px){ .adminProV2 .ap2-student-actions{grid-template-columns:repeat(2,minmax(105px,1fr));min-width:220px;} }
-@media(max-width:560px){ .adminProV2 .ap2-student-actions{grid-template-columns:1fr 1fr;} }
+@media(max-width:900px){ .adminProV2 .ap2-student-actions{grid-template-columns:repeat(3,minmax(72px,1fr));min-width:220px;} }
+@media(max-width:560px){ .adminProV2 .ap2-student-actions{grid-template-columns:repeat(2,minmax(88px,1fr));} }
 /* Keep each student modal focused on one type of information. */
 .adminProV2 .student-profile-section{border:1px solid var(--border);border-radius:14px;padding:14px;background:var(--surface);margin-bottom:14px;}
 .adminProV2 .student-profile-section.profile-theme{border-left:4px solid #2563eb;}
 .adminProV2 .student-profile-section.lifeline-theme{border-left:4px solid #7c3aed;}
 .adminProV2 .student-profile-section.questions-theme{border-left:4px solid #16a34a;}
+
+/* Compact 3-column student detail themes */
+.adminProV2 .student-profile-section{box-shadow:0 8px 22px rgba(15,23,42,.06);}
+.adminProV2 .student-profile-section.profile-theme{background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(255,255,255,.96));}
+.adminProV2 .student-profile-section.lifeline-theme{background:linear-gradient(135deg,rgba(124,58,237,.09),rgba(255,255,255,.96));}
+.adminProV2 .student-profile-section.questions-theme{background:linear-gradient(135deg,rgba(22,163,74,.08),rgba(255,255,255,.96));}
+.adminProV2 .student-profile-section .ap2-kv{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important;}
+.adminProV2 .student-profile-section .ap2-kv>div{background:rgba(255,255,255,.82);border:1px solid rgba(148,163,184,.22);border-radius:10px;padding:10px;min-width:0;}
+.adminProV2 .student-profile-section .ap2-kv b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px;}
+.adminProV2 .student-profile-section .ap2-kv span{display:block;font-size:13px;font-weight:800;word-break:break-word;}
+.adminProV2 .student-profile-section.lifeline-theme .ap2-kv>div{border-top:3px solid #7c3aed;}
+.adminProV2 .student-profile-section.questions-theme .ap2-kv>div{border-top:3px solid #16a34a;}
+.adminProV2 .student-profile-section.profile-theme .ap2-kv>div{border-top:3px solid #2563eb;}
+.adminProV2 .ap2-student-detail-heading{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-weight:900;}
+@media(max-width:700px){.adminProV2 .student-profile-section .ap2-kv{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+@media(max-width:430px){.adminProV2 .student-profile-section .ap2-kv{grid-template-columns:1fr!important;}}
 </style>
 </head>
 
