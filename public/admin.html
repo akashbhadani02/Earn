@@ -56,46 +56,25 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 }
 </style>
 
-<style id="command-center-single-pane-theme-fix">
-.adminProV2 .ap2-pane{display:none!important}
-.adminProV2 .ap2-pane.active{display:block!important}
-.adminProV2 .ap2-tabs .ap2-btn{color:#fff!important;border:1px solid transparent!important;box-shadow:none!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="students"]{background:#2563eb!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="withdrawals"]{background:#ea580c!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="wallet"]{background:#16a34a!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="security"]{background:#dc2626!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="recycle"]{background:#475569!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="reports"]{background:#0891b2!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="lifelines"]{background:#7c3aed!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="blocked"]{background:#d97706!important}
-.adminProV2 .ap2-tabs .ap2-btn[data-tab="reset"]{background:#9333ea!important}
-.adminProV2 .ap2-tabs .ap2-btn.active{filter:brightness(.86);box-shadow:inset 0 -3px 0 rgba(255,255,255,.75),0 4px 12px rgba(15,23,42,.14)!important}
-.adminProV2 .ap2-pane h3{font-weight:800}
-.adminProV2 .ap2-pane[data-theme="students"] h3{color:#2563eb}
-.adminProV2 .ap2-pane[data-theme="withdrawals"] h3{color:#ea580c}
-.adminProV2 .ap2-pane[data-theme="wallet"] h3{color:#16a34a}
-.adminProV2 .ap2-pane[data-theme="security"] h3{color:#dc2626}
-.adminProV2 .ap2-pane[data-theme="recycle"] h3{color:#475569}
-.adminProV2 .ap2-pane[data-theme="reports"] h3{color:#0891b2}
-.adminProV2 .ap2-pane[data-theme="lifelines"] h3{color:#7c3aed}
-.admin-night .adminProV2 .ap2-pane[data-theme="students"] h3{color:#60a5fa}
-.admin-night .adminProV2 .ap2-pane[data-theme="withdrawals"] h3{color:#fb923c}
-.admin-night .adminProV2 .ap2-pane[data-theme="wallet"] h3{color:#4ade80}
-.admin-night .adminProV2 .ap2-pane[data-theme="security"] h3{color:#f87171}
-.admin-night .adminProV2 .ap2-pane[data-theme="recycle"] h3{color:#cbd5e1}
-.admin-night .adminProV2 .ap2-pane[data-theme="reports"] h3{color:#22d3ee}
-.admin-night .adminProV2 .ap2-pane[data-theme="lifelines"] h3{color:#c084fc}
+<style id="command-center-section-isolation-fix">
+/* Only the Command Center section selected by its button is visible. */
+.adminProV2 .ap2-pane { display:none !important; }
+.adminProV2 .ap2-pane.active { display:block !important; }
+/* Command Center action buttons stay inside their own card and remain compact. */
+.adminProV2 .ap2-table tbody td:last-child { overflow:hidden; }
+.adminProV2 .ap2-table tbody td:last-child .ap2-btn { min-width:0; }
+/* Security has its own visual language while still following day/night theme. */
+.adminProV2 #ap2-security .security-risk-high { background:#dc2626!important;border-color:#dc2626!important;color:#fff!important; }
+.adminProV2 #ap2-security .security-risk-medium { background:#f59e0b!important;border-color:#f59e0b!important;color:#111827!important; }
+.adminProV2 #ap2-security .security-risk-low { background:#16a34a!important;border-color:#16a34a!important;color:#fff!important; }
+.adminProV2 #ap2-security .security-details-btn { background:#7c3aed!important;border-color:#7c3aed!important;color:#fff!important; }
+.adminProV2 #ap2-security .security-details-btn:hover { background:#6d28d9!important;border-color:#6d28d9!important; }
+/* Security details popup follows the active admin theme. */
+.adminProV2 .ap2-modal .ap2-box { background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important; }
+.adminProV2 .ap2-modal .ap2-box h2,.adminProV2 .ap2-modal .ap2-box h3 { color:var(--text)!important; }
+.adminProV2 .ap2-modal .ap2-table,.adminProV2 .ap2-modal .ap2-table td { background:var(--surface)!important;color:var(--text)!important;border-color:var(--border)!important; }
+.adminProV2 .ap2-modal .ap2-table th { background:var(--primary)!important;color:#fff!important; }
 </style>
-
-
-<style id="command-center-security-action-theme">
-.adminProV2 .security-action,.adminProV2 .security-action button{background:#dc2626!important;color:#fff!important;border-color:#b91c1c!important}
-.adminProV2 .security-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.adminProV2 .security-detail-grid>div{padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface2)}
-.adminProV2 .security-history-title{color:#dc2626!important}
-@media(max-width:800px){.adminProV2 .security-detail-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.adminProV2 .security-detail-grid>div{padding:6px;font-size:8px}.adminProV2 .security-detail-grid b{font-size:7px}.adminProV2 .security-detail-grid span{font-size:8px}}
-</style>
-
 </head>
 
 <body>
@@ -288,17 +267,17 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
         <div class="ap2-tabs">
-            <button class="ap2-btn" onclick="ap2Tab('students')" data-tab="students">👥 Students</button>
-            <button class="ap2-btn" onclick="ap2Tab('withdrawals')" data-tab="withdrawals">💸 Withdrawals</button>
-            <button class="ap2-btn" onclick="ap2Tab('wallet')" data-tab="wallet">💰 Wallet</button>
-            <button class="ap2-btn" onclick="ap2Tab('security')" data-tab="security">🛡️ Security</button>
-            <button class="ap2-btn" onclick="ap2Tab('recycle')" data-tab="recycle">🗑️ Recycle Bin</button>
-            <button class="ap2-btn" onclick="ap2Tab('reports')" data-tab="reports">📊 Reports</button>
-            <button class="ap2-btn" onclick="ap2Tab('lifelines')" data-tab="lifelines">🛟 Lifelines</button>
-            <button class="ap2-btn" onclick="ap2ShowBlockedTime()" data-tab="blocked">⏳ Blocked Time</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2ResetAllLifelines()" data-tab="reset">🔄 Reset All Lifelines</button>
+            <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
+            <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
+            <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
+            <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
+            <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
+            <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
+            <button class="ap2-btn" onclick="ap2Tab('lifelines')">🛟 Lifelines</button>
+            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">⏳ Blocked Time</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2ResetAllLifelines()">🔄 Reset All Lifelines</button>
         </div>
 
-        <div class="ap2-pane active" id="ap2-students" data-theme="students">
+        <div class="ap2-pane active" id="ap2-students">
             <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile"
                     oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button>
             </div>
@@ -321,7 +300,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-withdrawals" data-theme="withdrawals">
+        <div class="ap2-pane" id="ap2-withdrawals">
             <h3>💸 Withdrawal Requests</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -340,7 +319,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-wallet" data-theme="wallet">
+        <div class="ap2-pane" id="ap2-wallet">
             <h3>💰 Wallet Ledger</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -358,7 +337,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-security" data-theme="security">
+        <div class="ap2-pane" id="ap2-security">
             <h3>🛡️ Suspicious Activity</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -380,7 +359,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-recycle" data-theme="recycle">
+        <div class="ap2-pane" id="ap2-recycle">
             <h3>🗑️ Deleted Students</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -398,7 +377,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-lifelines" data-theme="lifelines">
+        <div class="ap2-pane" id="ap2-lifelines">
             <div class="ap2-flex">
                 <div><h3>🛟 KBC Lifeline Usage</h3><p class="ap2-muted">કયા student એ કઈ lifeline, કયા question પર અને ક્યારે use કરી તેની સંપૂર્ણ history.</p></div>
                 <div class="ap2-flex"><input class="ap2-input" id="ap2LifelineSearch" placeholder="Search student / mobile" oninput="ap2LoadLifelines()"><button class="ap2-btn" onclick="ap2LoadLifelines()">🔄 Refresh</button><button class="ap2-btn" onclick="ap2ExportLifelines()">📤 Export CSV</button></div>
@@ -414,7 +393,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-reports" data-theme="reports">
+        <div class="ap2-pane" id="ap2-reports">
             <div class="ap2-flex">
                 <div>
                     <h3>📊 Reports</h3>
@@ -2378,13 +2357,7 @@ ${w.status === "Approved" ? `
             function ap2Render() {
                 const s = D.stats || {}, map = { ap2Students: s.students, ap2Online: s.online, ap2Blocked: s.blocked, ap2Q: s.questionsToday, ap2Wallet: money(s.wallet), ap2Earn: money(s.totalEarn), ap2Warnings: s.warnings, ap2Spin: s.spinEligible };
                 Object.keys(map).forEach(k => { let e = document.getElementById(k); if (e) e.textContent = map[k] ?? 0 });
-                const activePane = document.querySelector(".adminProV2 .ap2-pane.active");
-                const activeId = activePane ? activePane.id : "ap2-students";
-                if (activeId === "ap2-students") ap2RenderStudents();
-                else if (activeId === "ap2-withdrawals") ap2RenderWithdrawals();
-                else if (activeId === "ap2-wallet") ap2RenderWallet();
-                else if (activeId === "ap2-security") ap2RenderSecurity();
-                else if (activeId === "ap2-recycle") ap2RenderRecycle();
+                ap2RenderStudents(); ap2RenderWithdrawals(); ap2RenderWallet(); ap2RenderSecurity(); ap2RenderRecycle();
             }
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
@@ -2463,23 +2436,13 @@ ${w.status === "Approved" ? `
             window.ap2Tab = t => {
                 const root = document.querySelector(".adminProV2");
                 if (!root) return;
-                // Only one Command Center data section is visible at a time.
-                root.querySelectorAll(".ap2-pane").forEach(x => {
-                    x.classList.remove("active");
-                    x.style.display = "none";
-                });
+                root.querySelectorAll(".ap2-pane").forEach(x => x.classList.remove("active"));
                 const pane = document.getElementById("ap2-" + t);
-                if (pane) { pane.classList.add("active"); pane.style.display = "block"; }
+                if (pane) pane.classList.add("active");
                 root.querySelectorAll(".ap2-tabs .ap2-btn").forEach(b => {
-                    const tab = b.getAttribute("data-tab");
-                    b.classList.toggle("active", tab === t);
+                    const match = (b.getAttribute("onclick") || "").match(/ap2Tab\(['"]([^'"]+)['"]\)/);
+                    b.classList.toggle("active", !!match && match[1] === t);
                 });
-                // Render/load only the selected section. Other sections stay empty/hidden.
-                if (t === "students") ap2RenderStudents();
-                if (t === "withdrawals") ap2RenderWithdrawals();
-                if (t === "wallet") ap2RenderWallet();
-                if (t === "security") ap2RenderSecurity();
-                if (t === "recycle") ap2RenderRecycle();
                 if (t === "reports" && typeof ap2LoadReports === "function") ap2LoadReports();
                 if (t === "lifelines" && typeof ap2LoadLifelines === "function") ap2LoadLifelines();
             };
@@ -2612,7 +2575,7 @@ ${w.status === "Approved" ? `
                     <div class="ap2-kv">
                         <div><b>Student ID</b><span>${esc(uid(u))}</span></div>
                         <div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
-                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"ap2-red":risk==="MEDIUM"?"ap2-yellow":"ap2-green"}">${risk}</span></span></div>
+                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"security-risk-high":risk==="MEDIUM"?"security-risk-medium":"security-risk-low"}">${risk}</span></span></div>
                         <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
                         <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
                         <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
@@ -2621,13 +2584,13 @@ ${w.status === "Approved" ? `
                         <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
                         <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
                     </div>
-                    <h3 class="security-history-title">🔑 Login History</h3>
+                    <h3>🔑 Login History</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
                     ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
-                    <h3 class="security-history-title">⚠️ Warning History</h3>
+                    <h3>⚠️ Warning History</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
                     ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
-                    <h3 class="security-history-title">🛡️ Admin Security Activity</h3>
+                    <h3>🛡️ Admin Security Activity</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
                     ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
                 document.getElementById("ap2Modal").classList.add("show");
@@ -2640,8 +2603,8 @@ ${w.status === "Approved" ? `
                         <td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span></td>
                         <td>${f}</td><td>${t}</td><td>${d}</td><td>${l}</td><td>${w}</td>
                         <td>${esc(u.lastSeen ? ap2SecurityTime(u.lastSeen) : "Offline")}</td>
-                        <td><span class="ap2-badge ${r==="HIGH"?"ap2-red":r==="MEDIUM"?"ap2-yellow":"ap2-green"}">${r}</span></td>
-                        <td><button class="ap2-btn" onclick="ap2SecurityDetails('${esc(uid(u))}')">🔍 Details</button></td>
+                        <td><span class="ap2-badge ${r==="HIGH"?"security-risk-high":r==="MEDIUM"?"security-risk-medium":"security-risk-low"}">${r}</span></td>
+                        <td><button class="ap2-btn security-details-btn" onclick="ap2SecurityDetails('${esc(uid(u))}')">🔍 Details</button></td>
                     </tr>`;
                 }).join("");
                 document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
