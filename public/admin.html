@@ -2738,6 +2738,16 @@ ${w.status === "Approved" ? `
                 row.insertAdjacentElement('afterend',detail);
             };
             function ap2RenderSecurity() {
+                // Keep any opened Security Details rows visible across the 5-second live refresh.
+                // Previously ap2RenderSecurity() replaced the table HTML, which automatically
+                // removed the open details row even though the admin had not pressed Close.
+                const tbody = document.getElementById("ap2SecurityRows");
+                const openDetails = tbody
+                    ? Array.from(tbody.querySelectorAll("tr.ap2-security-detail-row[data-security-detail]"))
+                        .map(row => row.getAttribute("data-security-detail"))
+                        .filter(Boolean)
+                    : [];
+
                 const rows = D.users.map(u => {
                     const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0);
                     const l=Array.isArray(u.loginHistory)?u.loginHistory.length:0, w=Number(u.warningCount||0), r=ap2SecurityRisk(u);
@@ -2750,6 +2760,13 @@ ${w.status === "Approved" ? `
                     </tr>`;
                 }).join("");
                 document.getElementById("ap2SecurityRows").innerHTML = rows || '<tr><td colspan="9">No security data.</td></tr>';
+
+                // Restore all details that were open before the live refresh.
+                openDetails.forEach(id => {
+                    if (D.users.some(u => uid(u) === String(id))) {
+                        ap2SecurityDetails(id);
+                    }
+                });
             }
             async function ap2RenderRecycle() { try { let d = await api("/pro/recycle-bin"); document.getElementById("ap2RecycleRows").innerHTML = d.users.map(u => `<tr><td>${esc(name(u))}<br>${esc(uid(u))}</td><td>${esc(u.deletedAt || "-")}</td><td>${esc(u.deletedReason || "-")}</td><td><button class="ap2-btn" onclick="ap2Restore('${esc(uid(u))}')">♻️ Restore</button></td><td><button class="ap2-btn" style="background:#dc2626;color:#fff" onclick="ap2PermanentDelete('${esc(uid(u))}')">🗑️ Permanent Delete</button></td></tr>`).join("") || '<tr><td colspan="5">Recycle Bin empty.</td></tr>' } catch (e) { console.error(e) } }
             window.ap2Restore = async id => { try { await api("/pro/restore/" + encodeURIComponent(id), { method: "PUT" }); await ap2Refresh(); alert("Student restored") } catch (e) { alert(e.message) } };
