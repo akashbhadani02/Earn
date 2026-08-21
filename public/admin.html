@@ -2053,24 +2053,99 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
 </style>
 
 
-<style id="admin-visibility-fix">
-/* Admin visibility fix: never allow dark text on dark controls/containers */
-:where(button, .btn, a, input[type="button"], input[type="submit"], select, .action-btn, .tab-btn) {
+<style id="global-admin-contrast-fix">
+/* GLOBAL ADMIN CONTRAST FIX
+   Prevent dark/black text from disappearing on dark UI backgrounds.
+   Preserve dark text only inside explicitly light form controls. */
+html body {
+  --admin-text-on-dark: #f8fafc;
+  --admin-muted-on-dark: #d1d5db;
+}
+
+/* Common dark UI surfaces */
+:where(
+  .admin, .admin-container, .dashboard, .main-content, .content,
+  .card, .panel, .section, .box, .modal, .modal-content,
+  .dropdown, .dropdown-menu, .menu, .sidebar, .navbar, .header,
+  .table-container, .table-wrap, .stats, .stat-card,
+  .analytics, .history, .list, .list-item, .toolbar, .filters,
+  .tabs, .tab-content, .action-bar
+) {
+  color: var(--admin-text-on-dark);
+}
+
+/* Text-like descendants: force readable light text where inherited UI is dark */
+:where(
+  .admin, .admin-container, .dashboard, .main-content, .content,
+  .card, .panel, .section, .box, .modal, .modal-content,
+  .dropdown, .dropdown-menu, .menu, .sidebar, .navbar, .header,
+  .table-container, .table-wrap, .stats, .stat-card,
+  .analytics, .history, .list, .list-item, .toolbar, .filters,
+  .tabs, .tab-content, .action-bar
+) :where(
+  p, span, label, small, strong, b, em, i,
+  h1, h2, h3, h4, h5, h6, th, td, caption,
+  .label, .title, .value, .count, .name, .description,
+  .text, .muted, .status, .badge
+) {
+  color: var(--admin-text-on-dark) !important;
+}
+
+/* All buttons/actions must remain readable */
+:where(
+  button, .btn, .button, a.btn, a.button,
+  input[type="button"], input[type="submit"], input[type="reset"],
+  .action-btn, .tab-btn, .nav-btn, .menu-btn,
+  .reset-btn, .export-btn, .delete-btn, .edit-btn,
+  .view-btn, .save-btn, .close-btn
+) {
   color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
-:where(button, .btn, a, input[type="button"], input[type="submit"], select, .action-btn, .tab-btn):disabled {
-  color: #bfc7d5 !important;
+
+/* Disabled controls */
+:where(button:disabled, .btn:disabled, input:disabled) {
+  color: #cbd5e1 !important;
+  -webkit-text-fill-color: #cbd5e1 !important;
 }
-:where(.card, .panel, .modal, .dropdown-menu, .table-wrap, .section, .stat-card, .admin-card) {
-  color: #f8fafc;
-}
-:where(.card, .panel, .modal, .dropdown-menu, .table-wrap, .section, .stat-card, .admin-card) :where(th, td, label, span, p, strong, b, h1, h2, h3, h4, h5, h6) {
-  color: inherit;
-}
-/* Inputs remain readable on light fields */
-:where(input[type="text"], input[type="search"], input[type="number"], input[type="email"], input[type="password"], textarea) {
+
+/* Keep form fields readable when they have light backgrounds */
+:where(
+  input:not([type="button"]):not([type="submit"]):not([type="reset"]),
+  textarea, select
+) {
   color: #111827 !important;
-  background: #ffffff !important;
+  -webkit-text-fill-color: #111827 !important;
+  background-color: #ffffff !important;
+}
+
+/* Placeholder text */
+:where(input, textarea)::placeholder {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+/* Links on dark surfaces */
+:where(
+  .admin, .admin-container, .dashboard, .main-content, .content,
+  .card, .panel, .section, .modal, .sidebar, .navbar
+) a:not(.btn):not(.button) {
+  color: #93c5fd !important;
+}
+
+/* Table rows/cells */
+:where(table, .table) :where(th, td) {
+  color: #f8fafc !important;
+}
+
+/* Icons should not inherit an invisible black foreground */
+:where(
+  button svg, .btn svg, .button svg, .action-btn svg,
+  .tab-btn svg, .menu-btn svg
+) {
+  color: #ffffff !important;
+  fill: currentColor;
+  stroke: currentColor;
 }
 </style>
 </head>
