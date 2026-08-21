@@ -6520,6 +6520,156 @@ button:not(.danger):not(.delete):not(.reject):not(.approve):not(.paid):not(.succ
   apply(saved);
 })();
 </script>
+
+<style id="adminSingleColorFinal">
+/* FINAL SINGLE-COLOR ADMIN THEME */
+:root{
+  --adm-primary:#2563eb;
+  --adm-primary-dark:#1d4ed8;
+  --adm-primary-soft:#eff6ff;
+  --adm-bg:#f5f8fc;
+  --adm-surface:#ffffff;
+  --adm-border:#dbe4f0;
+  --adm-text:#172033;
+  --adm-muted:#64748b;
+  --adm-shadow:0 8px 24px rgba(37,99,235,.08);
+}
+html,body{background:var(--adm-bg)!important;color:var(--adm-text)!important;}
+body{
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif!important;
+  line-height:1.45!important;
+  letter-spacing:0!important;
+}
+body>div:first-child{
+  background:var(--adm-surface)!important;
+  border:1px solid var(--adm-border)!important;
+  box-shadow:var(--adm-shadow)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body>div:first-child h2{color:var(--adm-text)!important;}
+body>div:first-child h2::before{color:var(--adm-primary)!important;text-shadow:none!important;}
+
+/* All major panels use one clean surface */
+.card,.panel,.section,.table-wrap,.admin-user-card,.admin-question-card,
+#adminProV2,.ap2-card,.ap2-pane,.modal,.popup,.admin-modal,.modal-content,
+.activity-stats-modal,[role="dialog"]{
+  background:#fff!important;
+  color:var(--adm-text)!important;
+  border-color:var(--adm-border)!important;
+  box-shadow:var(--adm-shadow)!important;
+}
+
+/* Typography */
+h1,h2,h3,h4,h5,h6,strong,th,.title,.section-title,.card-title{color:var(--adm-text)!important;}
+p,small,.muted,.ap2-muted,.ap2-lbl,label,.help-text{color:var(--adm-muted)!important;}
+a{color:var(--adm-primary)!important;}
+input,select,textarea{
+  background:#fff!important;color:var(--adm-text)!important;
+  border:1px solid #cbd7e6!important;
+  border-radius:10px!important;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none!important;border-color:var(--adm-primary)!important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.12)!important;
+}
+
+/* Navigation */
+.admin-main-menu{
+  background:#fff!important;border:1px solid var(--adm-border)!important;
+  box-shadow:var(--adm-shadow)!important;
+}
+.admin-main-menu button,
+.admin-main-menu button:not(.active){
+  background:#f3f6fb!important;color:#334155!important;
+  border:1px solid #e2e8f0!important;
+}
+.admin-main-menu button:hover,.admin-main-menu button.active{
+  background:var(--adm-primary)!important;color:#fff!important;
+  border-color:var(--adm-primary)!important;
+}
+
+/* One primary color for normal actions */
+button,.btn,.ap2-btn{
+  font-family:inherit!important;
+  font-weight:700!important;
+  border-radius:9px!important;
+  border:1px solid var(--adm-primary)!important;
+  background:var(--adm-primary)!important;
+  color:#fff!important;
+  box-shadow:0 3px 9px rgba(37,99,235,.16)!important;
+  transition:transform .16s ease,background .16s ease,box-shadow .16s ease!important;
+}
+button:hover,.btn:hover,.ap2-btn:hover{
+  background:var(--adm-primary-dark)!important;color:#fff!important;
+  transform:translateY(-1px)!important;
+  box-shadow:0 6px 14px rgba(37,99,235,.20)!important;
+}
+button:active,.btn:active,.ap2-btn:active{transform:translateY(0)!important;}
+
+/* Keep only meaningful semantic colors */
+button.danger,button.delete,button.reject,[class*="delete"] button,[class*="reject"] button{
+  background:#dc2626!important;border-color:#dc2626!important;color:#fff!important;
+}
+button.success,button.approve,button.paid,[class*="approve"] button,[class*="paid"] button{
+  background:#16a34a!important;border-color:#16a34a!important;color:#fff!important;
+}
+button.warning,[class*="warning"] button{background:#d97706!important;border-color:#d97706!important;color:#fff!important;}
+
+/* Action groups */
+.admin-user-actions button,.admin-question-actions button,.question-actions button,
+.modal-actions button,.table-wrap td button{
+  min-height:36px!important;
+  padding:8px 12px!important;
+  font-size:13px!important;
+}
+
+/* Tables */
+table{border-color:var(--adm-border)!important;}
+thead th,.ap2-table th{
+  background:var(--adm-primary)!important;color:#fff!important;
+  border-color:var(--adm-primary)!important;
+}
+tbody td,.ap2-table td{
+  background:#fff!important;color:#334155!important;
+  border-bottom:1px solid #edf1f6!important;
+}
+tbody tr:hover td,.ap2-table tbody tr:hover td{background:var(--adm-primary-soft)!important;}
+
+/* KPI numbers and selected highlights */
+.stat-value,.kpi-value,.ap2-val,.count,.number{color:var(--adm-primary)!important;}
+.badge,.pill,.chip{border-color:#bfdbfe!important;background:var(--adm-primary-soft)!important;color:#1d4ed8!important;}
+
+/* Online/offline remain readable */
+.online,.status-online{color:#15803d!important;}
+.offline{color:#64748b!important;}
+
+/* Command center */
+#adminProV2 .ap2-head,.adminProV2 .ap2-head{border-color:var(--adm-border)!important;}
+#adminProV2 .ap2-tabs .ap2-btn,
+#adminProV2 .ap2-tabs button{background:#f3f6fb!important;color:#334155!important;border-color:#e2e8f0!important;}
+#adminProV2 .ap2-tabs .active,
+#adminProV2 .ap2-tabs button.active{background:var(--adm-primary)!important;color:#fff!important;border-color:var(--adm-primary)!important;}
+#adminProV2 .ap2-table th{background:var(--adm-primary)!important;}
+
+/* Remove decorative multi-color gradients from the final surface */
+body,
+body>div:first-child,
+.card,.panel,.section,.admin-user-card,.admin-question-card,#adminProV2,
+.ap2-card,.ap2-pane{background-image:none!important;}
+
+/* Make text readable everywhere */
+.admin-user-card *,.admin-question-card *,.table-wrap *,#adminProV2 *,.admin-main-menu *{
+  text-shadow:none!important;
+}
+
+@media(max-width:700px){
+  body{padding:10px!important;}
+  body>div:first-child{border-radius:14px!important;}
+  button,.btn,.ap2-btn{min-height:40px!important;}
+}
+</style>
+
 </body>
 
 </html>
