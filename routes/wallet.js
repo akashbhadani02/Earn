@@ -35,6 +35,13 @@ function walletResponse(user) {
         dailyQuestionsAnswered: Number(user.dailyQuestionsAnswered || 0),
         dailyQuestionsDate: user.dailyQuestionsDate || "",
         totalQuestionsAnswered: Number(user.totalQuestionsAnswered || 0),
+        lifelines: {
+            fiftyFifty: user.lifelines?.fiftyFifty !== false,
+            audiencePoll: user.lifelines?.audiencePoll !== false,
+            askExpert: user.lifelines?.askExpert !== false,
+            skipQuestion: user.lifelines?.skipQuestion !== false
+        },
+        lifelineCycle: Number(user.lifelineCycle || 0),
         spinCycleQuestionsAnswered: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0),
         spinQuestionsRemaining: Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0)),
         canSpinAfterQuestions: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0) >= 100,
@@ -135,6 +142,17 @@ router.post("/quiz", auth, async (req, res) => {
         user.totalQuestionsAnswered =
             Number(user.totalQuestionsAnswered || 0) + 1;
 
+        // Reset every KBC lifeline immediately after each 500th answered question.
+        if (user.totalQuestionsAnswered % 500 === 0) {
+            user.lifelines = {
+                fiftyFifty: true,
+                audiencePoll: true,
+                askExpert: true,
+                skipQuestion: true
+            };
+            user.lifelineCycle = Math.floor(user.totalQuestionsAnswered / 500);
+        }
+
         user.wallet = Number(user.wallet || 0) + amount;
 
         // Wallet should never become negative.
@@ -161,6 +179,41 @@ router.post("/quiz", auth, async (req, res) => {
             success: false,
             message: err.message
         });
+    }
+});
+
+// =============================
+// KBC Lifeline - One use per 500-question cycle
+// =============================
+router.post("/lifeline", auth, async (req, res) => {
+    try {
+        const { type } = req.body || {};
+        const allowed = ["fiftyFifty", "audiencePoll", "askExpert", "skipQuestion"];
+        if (!allowed.includes(type)) {
+            return res.status(400).json({ success: false, message: "Invalid lifeline" });
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        const total = Number(user.totalQuestionsAnswered || 0);
+        const cycle = Math.floor(total / 500);
+        if (Number(user.lifelineCycle || 0) !== cycle) {
+            user.lifelines = { fiftyFifty: true, audiencePoll: true, askExpert: true, skipQuestion: true };
+            user.lifelineCycle = cycle;
+        }
+
+        if (!user.lifelines || user.lifelines[type] === false) {
+            return res.status(400).json({ success: false, message: "આ Lifeline આ 500-question cycle માં પહેલેથી વપરાઈ ગઈ છે.", ...walletResponse(user) });
+        }
+
+        user.lifelines[type] = false;
+        await user.save();
+
+        return res.json({ success: true, lifeline: type, ...walletResponse(user) });
+    } catch (err) {
+        console.error("Lifeline Error:", err);
+        return res.status(500).json({ success: false, message: "Lifeline use કરવામાં error આવ્યો." });
     }
 });
 

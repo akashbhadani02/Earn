@@ -66,6 +66,19 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        // KBC-style lifelines available in the current 500-question cycle.
+        // Each lifeline can be used once; all reset automatically after every 500 answered questions.
+        lifelines: {
+            fiftyFifty: { type: Boolean, default: true },
+            audiencePoll: { type: Boolean, default: true },
+            askExpert: { type: Boolean, default: true },
+            skipQuestion: { type: Boolean, default: true }
+        },
+        lifelineCycle: {
+            type: Number,
+            default: 0
+        },
+
         // Question IDs already answered by this student. These are cleared only when
         // an admin resets the student's question progress.
         answeredQuestionIds: {
