@@ -2111,6 +2111,165 @@ body>div:first-child>div button[onclick="logout()"]{background:linear-gradient(1
 }
 </style>
 
+
+<style id="desktop-parity-mobile-final">
+/* =========================================================
+   MOBILE = DESKTOP LAYOUT
+   On phones, keep the exact desktop composition and simply
+   allow horizontal scrolling. No mobile card/grid redesign.
+   ========================================================= */
+@media (max-width: 700px) {
+  html {
+    min-width: 1200px !important;
+    width: 1200px !important;
+    overflow-x: auto !important;
+  }
+  body {
+    width: 1200px !important;
+    min-width: 1200px !important;
+    max-width: none !important;
+    padding: 30px !important;
+    overflow-x: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Keep the desktop header exactly as desktop */
+  body > div:first-child {
+    width: 100% !important;
+    min-height: 82px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 18px !important;
+    padding: 18px 22px !important;
+    border-radius: 24px !important;
+  }
+  body > div:first-child h2 {
+    width: auto !important;
+    font-size: 31px !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+  }
+  body > div:first-child > div {
+    width: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+  }
+  body > div:first-child > div button {
+    width: auto !important;
+    min-width: 105px !important;
+    min-height: 0 !important;
+    padding: 11px 19px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Desktop navigation */
+  .admin-main-menu {
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 8px !important;
+    padding: 12px !important;
+    overflow-x: auto !important;
+    position: sticky !important;
+    top: 0 !important;
+  }
+  .admin-main-menu button {
+    width: auto !important;
+    min-width: max-content !important;
+    min-height: 0 !important;
+    padding: 10px 14px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+
+  /* Desktop dashboard */
+  .cards {
+    width: 100% !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 18px !important;
+  }
+  .card {
+    min-width: 0 !important;
+    min-height: 158px !important;
+    padding: 24px !important;
+  }
+  .card h3 { font-size: 13px !important; }
+  .card h1 { font-size: 38px !important; }
+
+  /* Desktop user cards */
+  .admin-user-cards {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(260px, 1fr)) !important;
+    gap: 16px !important;
+  }
+  .admin-user-card {
+    min-width: 0 !important;
+    padding: 17px !important;
+    border-radius: 18px !important;
+  }
+  .admin-user-name { font-size: 17px !important; max-width: 180px !important; }
+  .admin-user-mobile { font-size: 12px !important; }
+  .admin-user-card button,
+  .admin-user-actions button { min-height: 38px !important; font-size: 12px !important; }
+
+  /* Never convert desktop tables into mobile cards */
+  .table-wrap {
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    border: 1px solid var(--border) !important;
+  }
+  .table-wrap table,
+  .ap2-tablewrap table {
+    display: table !important;
+    width: max-content !important;
+    min-width: 760px !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+  }
+  .table-wrap thead,
+  .ap2-tablewrap thead { display: table-header-group !important; }
+  .table-wrap tbody,
+  .ap2-tablewrap tbody { display: table-row-group !important; }
+  .table-wrap tr,
+  .ap2-tablewrap tr { display: table-row !important; }
+  .table-wrap th,
+  .table-wrap td,
+  .ap2-tablewrap th,
+  .ap2-tablewrap td {
+    display: table-cell !important;
+    font-size: inherit !important;
+    padding: inherit !important;
+  }
+  .table-wrap td::before,
+  .ap2-tablewrap td::before { display: none !important; content: none !important; }
+
+  /* Desktop toolbars/forms */
+  #search, .ap2-input, .question-toolbar input {
+    width: auto !important;
+    min-width: 180px !important;
+    min-height: 0 !important;
+    font-size: inherit !important;
+  }
+  button, .btn {
+    max-width: none !important;
+    touch-action: manipulation !important;
+  }
+
+  /* Keep question cards in the desktop 4-column composition */
+  .admin-question-cards {
+    grid-template-columns: repeat(4, minmax(230px, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
+</style>
 </head>
 
 <body>
