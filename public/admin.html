@@ -116,11 +116,41 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 .adminProV2 #ap2-security .security-risk-low { background:#16a34a!important;border-color:#16a34a!important;color:#fff!important; }
 .adminProV2 #ap2-security .security-details-btn { background:#7c3aed!important;border-color:#7c3aed!important;color:#fff!important; }
 .adminProV2 #ap2-security .security-details-btn:hover { background:#6d28d9!important;border-color:#6d28d9!important; }
-/* Security details popup follows the active admin theme. */
-.adminProV2 .ap2-modal .ap2-box { background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important; }
-.adminProV2 .ap2-modal .ap2-box h2,.adminProV2 .ap2-modal .ap2-box h3 { color:var(--text)!important; }
-.adminProV2 .ap2-modal .ap2-table,.adminProV2 .ap2-modal .ap2-table td { background:var(--surface)!important;color:var(--text)!important;border-color:var(--border)!important; }
-.adminProV2 .ap2-modal .ap2-table th { background:var(--primary)!important;color:#fff!important; }
+/* Details/Lifeline popups: always render as real viewport overlays, never as inline data bars. */
+.adminProV2 .ap2-modal {
+  position:fixed!important; inset:0!important; display:none!important; align-items:center!important; justify-content:center!important;
+  width:100vw!important; height:100vh!important; min-height:100vh!important; padding:20px!important;
+  overflow:hidden!important; z-index:100000!important; background:rgba(15,23,42,.66)!important;
+}
+.adminProV2 .ap2-modal.show,.adminProV2 .ap2-modal.open { display:flex!important; }
+.adminProV2 .ap2-modal .ap2-box {
+  position:relative!important; width:min(1100px,96vw)!important; max-width:1100px!important; max-height:90vh!important;
+  overflow:hidden!important; padding:0!important; background:var(--surface)!important; color:var(--text)!important;
+  border:1px solid var(--border)!important; border-radius:18px!important; box-shadow:0 24px 80px rgba(0,0,0,.32)!important;
+}
+.adminProV2 .ap2-modal .ap2-head {
+  position:sticky!important; top:0!important; z-index:5!important; display:flex!important; align-items:center!important;
+  justify-content:space-between!important; gap:12px!important; margin:0!important; padding:16px 20px!important;
+  background:var(--surface)!important; color:var(--text)!important; border-bottom:1px solid var(--border)!important;
+}
+.adminProV2 .ap2-modal .ap2-head h2 { margin:0!important; color:var(--text)!important; font-size:20px!important; }
+.adminProV2 .ap2-modal #ap2Body,.adminProV2 .ap2-modal #ap2BlockedTimeBody {
+  max-height:calc(90vh - 72px)!important; overflow:auto!important; padding:20px!important;
+}
+.adminProV2 .ap2-modal .ap2-box h3 { color:var(--text)!important; }
+.adminProV2 .ap2-modal .ap2-tablewrap { width:100%!important; overflow:auto!important; border:1px solid var(--border)!important; border-radius:12px!important; }
+.adminProV2 .ap2-modal .ap2-table { min-width:680px!important; margin:0!important; background:var(--surface)!important; color:var(--text)!important; }
+.adminProV2 .ap2-modal .ap2-table td { background:var(--surface)!important;color:var(--text)!important;border-color:var(--border)!important; }
+.adminProV2 .ap2-modal .ap2-table th { background:var(--primary)!important;color:#fff!important; position:sticky!important; top:0!important; z-index:2!important; }
+.adminProV2 .ap2-modal .ap2-kv { margin-bottom:16px!important; }
+@media(max-width:700px){
+  .adminProV2 .ap2-modal{padding:10px!important;}
+  .adminProV2 .ap2-modal .ap2-box{width:100%!important;max-width:none!important;max-height:94vh!important;border-radius:14px!important;}
+  .adminProV2 .ap2-modal #ap2Body,.adminProV2 .ap2-modal #ap2BlockedTimeBody{max-height:calc(94vh - 66px)!important;padding:14px!important;}
+  .adminProV2 .ap2-modal .ap2-head{padding:13px 14px!important;}
+  .adminProV2 .ap2-modal .ap2-head h2{font-size:17px!important;}
+}
+
 </style>
 </head>
 
@@ -461,7 +491,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         </div>
     </section>
 
-    <div class="ap2-modal" id="ap2Modal">
+    <div class="ap2-modal" id="ap2Modal" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="ap2-box">
             <div class="ap2-head">
                 <h2 id="ap2Title">Student</h2><button class="ap2-btn" onclick="ap2Close()">✕</button>
@@ -470,7 +500,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         </div>
     </div>
 
-    <div class="ap2-modal" id="ap2BlockedTimeModal">
+    <div class="ap2-modal" id="ap2BlockedTimeModal" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="ap2-box">
             <div class="ap2-head">
                 <h2>⏳ Blocked Students — Remaining Time</h2>
@@ -2411,8 +2441,8 @@ ${w.status === "Approved" ? `
                 const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
                 document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr class="${u.isBlocked ? 'ap2-presence-offline' : ((u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? 'ap2-presence-online' : 'ap2-presence-offline')}"><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><button class="ap2-btn" onclick="ap2Details('${esc(uid(u))}')">👤</button><button class="ap2-btn" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" style="background:#f59e0b;border-color:#f59e0b;color:#111827;" title="Edit Total Earn">✏️</button><button class="ap2-btn" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})">${u.isBlocked ? '🟢' : '🚫'}</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2LifelineUser('${esc(uid(u))}')" title="Lifeline usage">🛟</button><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2AnsweredQuestions('${esc(uid(u))}')" title="Answered questions">📚 Q</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')" title="Reset all lifelines">🔄🛟</button></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
-            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2LifelineUser('${esc(uid(u))}')">🛟 Lifeline History</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show") } catch (e) { alert(e.message) } };
-            window.ap2Close = () => document.getElementById("ap2Modal").classList.remove("show");
+            window.ap2Details = async id => { try { let d = await api("/pro/user/" + encodeURIComponent(id)), u = d.user; document.getElementById("ap2Title").textContent = "👤 " + name(u); document.getElementById("ap2Body").innerHTML = `<div class="ap2-kv"><div><b>ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div><div><b>Wallet</b><span>${money(u.wallet)}</span></div><div><b>Total Earn</b><span>${money(u.totalEarn)}</span></div><div><b>Today Questions</b><span>${q(u)}</span></div><div><b>Spin Progress</b><span>${spinQ(u)}/100</span></div><div><b>Total Questions</b><span>${u.totalQuestionsAnswered || 0}</span></div><div><b>Warnings</b><span>${u.warningCount || 0}</span></div><div><b>Last Seen</b><span>${esc(u.lastSeen || "-")}</span></div></div><div class="ap2-flex"><button class="ap2-btn" onclick="ap2Wallet('${esc(uid(u))}')">💰 Wallet</button><button class="ap2-btn" onclick="ap2Warn('${esc(uid(u))}')">⚠️ Warning</button><button class="ap2-btn" onclick="ap2ResetQ('${esc(uid(u))}')">🔄 Reset Q</button><button class="ap2-btn" onclick="ap2ResetSpin('${esc(uid(u))}')">🎡 Reset Spin</button><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2LifelineUser('${esc(uid(u))}')">🛟 Lifeline History</button></div><h3>Warning History</h3><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${(u.warningHistory || []).slice().reverse().map(x => `<tr><td>${esc(x.time)}</td><td>${esc(x.reason)}</td></tr>`).join("") || '<tr><td colspan="2">None</td></tr>'}</table></div>`; document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false") } catch (e) { alert(e.message) } };
+            window.ap2Close = () => { const m=document.getElementById("ap2Modal"); m.classList.remove("show"); m.setAttribute("aria-hidden","true"); };
             window.ap2Block = async (id, blocked) => { try { await api("/pro/block/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ blocked, reason: "Admin action" }) }); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Warn = async id => { let reason = prompt("Warning reason:", "Please follow the rules."); if (reason === null) return; try { let r = await api("/pro/warning/" + encodeURIComponent(id), { method: "POST", body: JSON.stringify({ reason }) }); alert(r.message); await ap2Refresh() } catch (e) { alert(e.message) } };
             window.ap2Wallet = async id => { let amount = prompt("Wallet adjustment (+ add / - remove):", "1"); if (amount === null) return; let reason = prompt("Reason:", "Admin adjustment"); if (reason === null) return; try { await api("/pro/wallet/" + encodeURIComponent(id), { method: "PUT", body: JSON.stringify({ amount: Number(amount), reason }) }); await ap2Refresh(); alert("Wallet updated") } catch (e) { alert(e.message) } };
@@ -2475,7 +2505,7 @@ ${w.status === "Approved" ? `
 
             window.ap2CloseBlockedTime = () => {
                 const modal = document.getElementById("ap2BlockedTimeModal");
-                if (modal) modal.classList.remove("show");
+                if (modal) { modal.classList.remove("show"); modal.setAttribute("aria-hidden","true"); }
                 clearInterval(ap2BlockedTimer);
                 ap2BlockedTimer = null;
             };
@@ -2524,7 +2554,7 @@ ${w.status === "Approved" ? `
                         <span class="ap2-muted">Green = correct, red = wrong. Older records may show the correct answer but not the student's selected answer.</span>
                     </div>
                     <div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>#</th><th>Date / Time</th><th>Question ID</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th><th>Total Q</th></tr></thead><tbody>${body}</tbody></table></div>`;
-                document.getElementById("ap2Modal").classList.add("show");
+                document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
             }
 
             window.ap2AnsweredQuestions = async id => {
@@ -2561,7 +2591,7 @@ ${w.status === "Approved" ? `
                     }).join('')||'<tr><td colspan="7">No answered question history found.</td></tr>';
                     document.getElementById("ap2Title").textContent="🛟 + 📚 Student History — "+name(u);
                     document.getElementById("ap2Body").innerHTML=`<div class="ap2-kv"><div><b>50:50 Used</b><span>${c.fiftyFifty||0}</span></div><div><b>Audience Used</b><span>${c.audiencePoll||0}</span></div><div><b>Expert Used</b><span>${c.askExpert||0}</span></div><div><b>Skip Used</b><span>${c.skipQuestion||0}</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div><div><b>Available Lifelines</b><span>${Object.values(u.lifelines||{}).filter(Boolean).length}/4</span></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button></div><h3 style="margin:16px 0 8px">🛟 Lifeline Usage</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Lifeline</th><th>Question ID</th><th>Question</th><th>Cycle</th><th>Total Q</th></tr></thead><tbody>${usageRows}</tbody></table></div><h3 style="margin:22px 0 8px">📚 Questions Used by This Student</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>#</th><th>Date / Time</th><th>Question ID</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>${qRows}</tbody></table></div>`;
-                    document.getElementById("ap2Modal").classList.add("show");
+                    document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
                 } catch(e) { alert(e.message); }
             };
 
@@ -2640,7 +2670,7 @@ ${w.status === "Approved" ? `
                     <h3>🛡️ Admin Security Activity</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
                     ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
-                document.getElementById("ap2Modal").classList.add("show");
+                document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
             };
             function ap2RenderSecurity() {
                 const rows = D.users.map(u => {
