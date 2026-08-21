@@ -36,6 +36,12 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:520px){.cards,.ap2-grid{grid-template-columns:1fr}.admin-user-actions button{flex:1 1 calc(50% - 8px)}body>div:first-child>div{width:100%;flex-wrap:wrap}body>div:first-child>div button{flex:1 1 auto}}
 </style>
 
+
+<style id="admin-modal-initial-state-fix">
+/* Admin modals are hidden until their corresponding action opens them. */
+.modal, .modal-overlay, .popup, .dialog, [role="dialog"] { display: none; }
+.modal.open, .modal.show, .modal.active, .modal-overlay.open, .modal-overlay.show, .popup.open, .popup.show, .dialog.open, [role="dialog"][aria-hidden="false"] { display: flex; }
+</style>
 </head>
 
 <body>
