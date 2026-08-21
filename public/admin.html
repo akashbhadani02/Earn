@@ -485,7 +485,10 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         </div>
 
         <div class="ap2-pane" id="ap2-security">
-            <h3>🛡️ Suspicious Activity</h3>
+            <div class="ap2-flex" style="justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+                <h3 style="margin:0">🛡️ Suspicious Activity</h3>
+                <input class="ap2-input" id="ap2SecuritySearch" placeholder="🔎 Search student / ID / mobile" oninput="ap2RenderSecurity()" style="min-width:280px;max-width:420px">
+            </div>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
                     <thead>
@@ -2748,7 +2751,13 @@ ${w.status === "Approved" ? `
                         .filter(Boolean)
                     : [];
 
-                const rows = D.users.map(u => {
+                const searchEl = document.getElementById("ap2SecuritySearch");
+                const q = String(searchEl?.value || "").trim().toLowerCase();
+                const securityUsers = q
+                    ? D.users.filter(u => [name(u), uid(u), u.mobile, u.email].some(v => String(v || "").toLowerCase().includes(q)))
+                    : D.users;
+
+                const rows = securityUsers.map(u => {
                     const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0);
                     const l=Array.isArray(u.loginHistory)?u.loginHistory.length:0, w=Number(u.warningCount||0), r=ap2SecurityRisk(u);
                     return `<tr data-security-user="${esc(uid(u))}">
@@ -2763,7 +2772,7 @@ ${w.status === "Approved" ? `
 
                 // Restore all details that were open before the live refresh.
                 openDetails.forEach(id => {
-                    if (D.users.some(u => uid(u) === String(id))) {
+                    if (securityUsers.some(u => uid(u) === String(id))) {
                         ap2SecurityDetails(id);
                     }
                 });
