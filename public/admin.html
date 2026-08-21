@@ -6670,6 +6670,91 @@ body>div:first-child,
 }
 </style>
 
+
+<style id="final-contrast-theme">
+/* FINAL ADMIN CONTRAST SYSTEM — one palette, guaranteed readable text */
+:root{
+ --adm-primary:#2563eb;
+ --adm-primary-dark:#1d4ed8;
+ --adm-primary-soft:#eff6ff;
+ --adm-bg:#f3f6fb;
+ --adm-surface:#ffffff;
+ --adm-surface-2:#f8fafc;
+ --adm-border:#d9e2ef;
+ --adm-border-dark:#b8c7da;
+ --adm-text:#172033;
+ --adm-muted:#52627a;
+ --adm-white:#ffffff;
+ --adm-danger:#dc2626;
+ --adm-danger-dark:#b91c1c;
+ --adm-success:#15803d;
+ --adm-success-dark:#166534;
+ --adm-warning:#b45309;
+ --adm-warning-dark:#92400e;
+ --adm-shadow:0 8px 24px rgba(15,23,42,.08);
+}
+html,body{background:var(--adm-bg)!important;color:var(--adm-text)!important;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif!important;}
+body *{text-shadow:none!important;}
+body>div:first-child{background:var(--adm-surface)!important;color:var(--adm-text)!important;border:1px solid var(--adm-border)!important;box-shadow:var(--adm-shadow)!important;}
+h1,h2,h3,h4,h5,h6,strong,b,th,.title,.section-title,.card-title{color:var(--adm-text)!important;}
+p,small,label,.muted,.help-text,.ap2-muted,.ap2-lbl{color:var(--adm-muted)!important;}
+.card,.panel,.section,.admin-stat,.admin-user-card,.admin-question-card,#adminProV2,.ap2-card,.ap2-pane,.table-wrap,.modal-content{background:var(--adm-surface)!important;color:var(--adm-text)!important;border:1px solid var(--adm-border)!important;box-shadow:var(--adm-shadow)!important;}
+input,select,textarea{background:#fff!important;color:var(--adm-text)!important;border:1px solid var(--adm-border-dark)!important;}
+input:focus,select:focus,textarea:focus{border-color:var(--adm-primary)!important;box-shadow:0 0 0 3px rgba(37,99,235,.12)!important;outline:none!important;}
+input::placeholder,textarea::placeholder{color:#7b8799!important;opacity:1!important;}
+
+/* Main navigation */
+.admin-main-menu{background:#fff!important;border:1px solid var(--adm-border)!important;box-shadow:var(--adm-shadow)!important;}
+.admin-main-menu button{background:#eef3f9!important;color:#24324a!important;border:1px solid #d5dfeb!important;}
+.admin-main-menu button:hover{background:#e2ebf7!important;color:#1d4ed8!important;}
+.admin-main-menu button.active{background:var(--adm-primary)!important;color:#fff!important;border-color:var(--adm-primary)!important;}
+
+/* Every generic action button gets guaranteed contrast */
+button,.btn,.action-btn,.action-button,.ap2-btn{font-family:inherit!important;font-weight:700!important;text-shadow:none!important;}
+button{background:var(--adm-primary)!important;color:#fff!important;border:1px solid var(--adm-primary)!important;}
+button:hover{background:var(--adm-primary-dark)!important;color:#fff!important;}
+button:disabled{background:#cbd5e1!important;color:#64748b!important;border-color:#cbd5e1!important;cursor:not-allowed!important;}
+
+/* Semantic actions */
+button[onclick^="delete"],button[onclick^="permanentDelete"],button[onclick^="deleteAll"],button[onclick^="removeRepeated"]{background:var(--adm-danger)!important;color:#fff!important;border-color:var(--adm-danger)!important;}
+button[onclick^="delete"]:hover,button[onclick^="permanentDelete"]:hover,button[onclick^="deleteAll"]:hover{background:var(--adm-danger-dark)!important;color:#fff!important;}
+button[onclick^="reject"],button[onclick^="ap2Warn"]{background:var(--adm-warning)!important;color:#fff!important;border-color:var(--adm-warning)!important;}
+button[onclick^="reject"]:hover,button[onclick^="ap2Warn"]:hover{background:var(--adm-warning-dark)!important;color:#fff!important;}
+button[onclick^="approve"],button[onclick^="markWithdrawPaid"],button[onclick^="unblock"],button[onclick^="restore"],button[onclick^="ap2Restore"]{background:var(--adm-success)!important;color:#fff!important;border-color:var(--adm-success)!important;}
+button[onclick^="approve"]:hover,button[onclick^="markWithdrawPaid"]:hover,button[onclick^="unblock"]:hover,button[onclick^="restore"]:hover{background:var(--adm-success-dark)!important;color:#fff!important;}
+button[onclick^="editWallet"],button[onclick^="editTotalEarn"],button[onclick^="ap2Wallet"],button[onclick^="ap2ResetQ"],button[onclick^="ap2ResetSpin"]{background:var(--adm-primary)!important;color:#fff!important;border-color:var(--adm-primary)!important;}
+
+/* Inline color styles must not make text disappear */
+button[style*="background"],button[style*="background-color"]{color:#fff!important;text-shadow:none!important;}
+
+/* Tables */
+table{background:#fff!important;color:var(--adm-text)!important;border-color:var(--adm-border)!important;}
+thead th,.ap2-table th{background:var(--adm-primary)!important;color:#fff!important;border-color:var(--adm-primary)!important;}
+tbody tr td,tbody tr td *{color:var(--adm-text)!important;}
+tbody tr td{background:#fff!important;border-color:var(--adm-border)!important;}
+tbody tr:hover td{background:var(--adm-primary-soft)!important;}
+
+/* Badges */
+.badge,.pill,.chip{background:var(--adm-primary-soft)!important;color:#1d4ed8!important;border:1px solid #bfdbfe!important;}
+.online,.status-online{background:#dcfce7!important;color:#166534!important;border-color:#bbf7d0!important;}
+.offline{background:#f1f5f9!important;color:#475569!important;border-color:#e2e8f0!important;}
+
+/* Links/icons */
+a{color:#1d4ed8!important;}
+button i,button svg,button span{color:inherit!important;}
+
+/* Modal */
+.modal,.modal-overlay{background:rgba(15,23,42,.55)!important;}
+.modal-content{color:var(--adm-text)!important;}
+
+/* KPI values */
+.stat-value,.kpi-value,.ap2-val,.count,.number,.card .value,.admin-stat strong{color:var(--adm-primary)!important;}
+
+@media(max-width:700px){
+ body{padding:10px!important;}
+ button,.btn,.action-btn,.action-button,.ap2-btn{min-height:40px!important;}
+}
+</style>
 </body>
 
 </html>
