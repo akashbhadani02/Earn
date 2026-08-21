@@ -2656,4 +2656,54 @@ ${w.status === "Approved" ? `
 
 </body>
 
-</html>
+</html><style id="command-center-card-ui">
+/* Command Center — card-based data UI */
+#adminSectionCommand .ap2-tabs{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:8px;box-shadow:var(--shadow)}
+#adminSectionCommand .ap2-tabs .ap2-btn,
+#adminSectionCommand .ap2-flex > .ap2-btn,
+#adminSectionCommand button.ap2-btn{appearance:none;border:1px solid var(--primary)!important;border-radius:10px!important;padding:10px 14px!important;min-height:40px!important;background:var(--primary)!important;color:#fff!important;font-weight:800!important;cursor:pointer;box-shadow:0 3px 10px rgba(37,99,235,.15)!important}
+#adminSectionCommand .ap2-tabs .ap2-btn:hover,
+#adminSectionCommand .ap2-flex > .ap2-btn:hover,
+#adminSectionCommand button.ap2-btn:hover{background:var(--primary2)!important;transform:translateY(-1px)}
+#adminSectionCommand .ap2-tabs .ap2-btn.active{background:var(--primary2)!important;color:#fff!important}
+#adminSectionCommand .ap2-input{background:#fff!important;color:var(--text)!important;border:1px solid var(--border)!important;border-radius:10px!important;padding:10px 12px!important;min-height:40px}
+#adminSectionCommand .ap2-input::placeholder{color:#64748b!important}
+#adminSectionCommand .ap2-pane{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+#adminSectionCommand .ap2-tablewrap{overflow:visible!important}
+#adminSectionCommand .ap2-table{display:block;width:100%;background:transparent!important;border-collapse:separate!important}
+#adminSectionCommand .ap2-table thead{display:none}
+#adminSectionCommand .ap2-table tbody{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%}
+#adminSectionCommand .ap2-table tbody tr{display:flex;flex-direction:column;gap:8px;background:var(--surface)!important;border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--shadow);min-width:0}
+#adminSectionCommand .ap2-table tbody tr:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(15,23,42,.10)}
+#adminSectionCommand .ap2-table tbody td{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:0!important;background:transparent!important;color:var(--text)!important;padding:5px 0!important;min-width:0;white-space:normal;overflow-wrap:anywhere}
+#adminSectionCommand .ap2-table tbody td::before{font-weight:800;color:var(--muted);flex:0 0 40%;content:""}
+#adminSectionCommand .ap2-table tbody td:nth-child(1)::before{content:"Student"}
+#adminSectionCommand .ap2-table tbody td:nth-child(2)::before{content:"Status"}
+#adminSectionCommand .ap2-table tbody td:nth-child(3)::before{content:"Questions"}
+#adminSectionCommand .ap2-table tbody td:nth-child(4)::before{content:"Wallet"}
+#adminSectionCommand .ap2-table tbody td:nth-child(5)::before{content:"Earn"}
+#adminSectionCommand .ap2-table tbody td:nth-child(6)::before{content:"Warnings"}
+#adminSectionCommand .ap2-table tbody td:nth-child(7)::before{content:"Spin"}
+#adminSectionCommand .ap2-table tbody td:nth-child(8)::before{content:"Actions"}
+#adminSectionCommand #ap2-withdrawals td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-withdrawals td:nth-child(2)::before{content:"Mobile"}#adminSectionCommand #ap2-withdrawals td:nth-child(3)::before{content:"Amount"}#adminSectionCommand #ap2-withdrawals td:nth-child(4)::before{content:"Status"}#adminSectionCommand #ap2-withdrawals td:nth-child(5)::before{content:"Transaction ID"}#adminSectionCommand #ap2-withdrawals td:nth-child(6)::before{content:"Date"}
+#adminSectionCommand #ap2-wallet td:nth-child(1)::before{content:"Time"}#adminSectionCommand #ap2-wallet td:nth-child(2)::before{content:"Student"}#adminSectionCommand #ap2-wallet td:nth-child(3)::before{content:"Type"}#adminSectionCommand #ap2-wallet td:nth-child(4)::before{content:"Amount"}#adminSectionCommand #ap2-wallet td:nth-child(5)::before{content:"Reason"}
+#adminSectionCommand #ap2-security td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-security td:nth-child(2)::before{content:"Fast Answers"}#adminSectionCommand #ap2-security td:nth-child(3)::before{content:"Tab Changes"}#adminSectionCommand #ap2-security td:nth-child(4)::before{content:"Devices"}#adminSectionCommand #ap2-security td:nth-child(5)::before{content:"Logins"}#adminSectionCommand #ap2-security td:nth-child(6)::before{content:"Warnings"}#adminSectionCommand #ap2-security td:nth-child(7)::before{content:"Last Seen"}#adminSectionCommand #ap2-security td:nth-child(8)::before{content:"Risk"}#adminSectionCommand #ap2-security td:nth-child(9)::before{content:"Details"}
+#adminSectionCommand #ap2-recycle td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-recycle td:nth-child(2)::before{content:"Deleted At"}#adminSectionCommand #ap2-recycle td:nth-child(3)::before{content:"Reason"}#adminSectionCommand #ap2-recycle td:nth-child(4)::before{content:"Action"}#adminSectionCommand #ap2-recycle td:nth-child(5)::before{content:"Permanent Delete"}
+#adminSectionCommand #ap2-lifelines td:nth-child(1)::before{content:"Date / Time"}#adminSectionCommand #ap2-lifelines td:nth-child(2)::before{content:"Student"}#adminSectionCommand #ap2-lifelines td:nth-child(3)::before{content:"Mobile"}#adminSectionCommand #ap2-lifelines td:nth-child(4)::before{content:"Lifeline"}#adminSectionCommand #ap2-lifelines td:nth-child(5)::before{content:"Question ID"}#adminSectionCommand #ap2-lifelines td:nth-child(6)::before{content:"Question"}#adminSectionCommand #ap2-lifelines td:nth-child(7)::before{content:"500 Cycle"}#adminSectionCommand #ap2-lifelines td:nth-child(8)::before{content:"Q Count"}
+#adminSectionCommand #ap2-reports td:nth-child(1)::before{content:"Student"}#adminSectionCommand #ap2-reports td:nth-child(2)::before{content:"Mobile"}#adminSectionCommand #ap2-reports td:nth-child(3)::before{content:"Wallet"}#adminSectionCommand #ap2-reports td:nth-child(4)::before{content:"Today Q"}#adminSectionCommand #ap2-reports td:nth-child(5)::before{content:"Total Q"}#adminSectionCommand #ap2-reports td:nth-child(6)::before{content:"Warnings"}#adminSectionCommand #ap2-reports td:nth-child(7)::before{content:"Status"}#adminSectionCommand #ap2-reports td:nth-child(8)::before{content:"Last Seen"}
+#adminSectionCommand .ap2-table tbody tr:has(td[colspan]){display:block;text-align:center}
+#adminSectionCommand .ap2-table tbody tr:has(td[colspan]) td{display:block;text-align:center}
+#adminSectionCommand .ap2-table tbody tr:has(td[colspan]) td::before{display:none}
+#adminSectionCommand .ap2-kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0}
+#adminSectionCommand .ap2-kv>div{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow);display:flex;justify-content:space-between;gap:10px;color:var(--text)}
+#adminSectionCommand .ap2-kv span{font-weight:900;color:var(--primary)}
+#adminSectionCommand .ap2-muted{color:var(--muted)!important}
+@media(max-width:1200px){#adminSectionCommand .ap2-table tbody{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){#adminSectionCommand .ap2-table tbody{grid-template-columns:1fr}#adminSectionCommand .ap2-kv{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){#adminSectionCommand .ap2-kv{grid-template-columns:1fr}#adminSectionCommand .ap2-table tbody td{font-size:13px}}
+/* Night mode contrast */
+.admin-night #adminSectionCommand .ap2-input{background:#0d1728!important;color:#f8fafc!important;border-color:#34445f!important}
+.admin-night #adminSectionCommand .ap2-table tbody tr,.admin-night #adminSectionCommand .ap2-kv>div{background:var(--surface)!important;border-color:var(--border)!important}
+.admin-night #adminSectionCommand .ap2-table tbody td,.admin-night #adminSectionCommand .ap2-table tbody td::before,.admin-night #adminSectionCommand .ap2-kv>div{color:var(--text)!important}
+.admin-night #adminSectionCommand .ap2-table tbody td::before{color:var(--muted)!important}
+</style>
