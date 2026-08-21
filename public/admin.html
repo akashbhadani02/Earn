@@ -110,6 +110,17 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 /* Command Center action buttons stay inside their own card and remain compact. */
 .adminProV2 .ap2-table tbody td:last-child { overflow:hidden; }
 .adminProV2 .ap2-table tbody td:last-child .ap2-btn { min-width:0; }
+/* Long Lifeline questions stay compact and readable inside the table. */
+.adminProV2 .ap2-question-cell {
+  width:420px!important; max-width:420px!important; white-space:normal!important; word-break:break-word!important;
+  line-height:1.45!important; max-height:84px!important; overflow:auto!important; padding-right:8px!important;
+}
+.adminProV2 .ap2-security-detail-row td { padding:16px!important; background:rgba(124,58,237,.06)!important; border-top:1px solid var(--border)!important; }
+.adminProV2 .ap2-security-detail { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.adminProV2 .ap2-security-detail .ap2-detail-card { background:var(--surface)!important; border:1px solid var(--border)!important; border-radius:12px; padding:12px; }
+.adminProV2 .ap2-security-detail .ap2-detail-card h4 { margin:0 0 8px; }
+@media(max-width:900px){ .adminProV2 .ap2-security-detail{grid-template-columns:1fr;} .adminProV2 .ap2-question-cell{width:280px!important;max-width:280px!important;} }
+
 /* Security has its own visual language while still following day/night theme. */
 .adminProV2 #ap2-security .security-risk-high { background:#dc2626!important;border-color:#dc2626!important;color:#fff!important; }
 .adminProV2 #ap2-security .security-risk-medium { background:#f59e0b!important;border-color:#f59e0b!important;color:#111827!important; }
@@ -2582,12 +2593,12 @@ ${w.status === "Approved" ? `
                     ]);
                     const u=d.user, c=d.counts||{};
                     const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
-                    const usageRows=(d.usage||[]).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(label[x.type]||x.type)}</b>${x.resetByAdmin?'<br><span class="ap2-badge ap2-blue">ADMIN RESET</span>':''}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:300px;white-space:normal">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="6">No lifeline usage found.</td></tr>';
+                    const usageRows=(d.usage||[]).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(label[x.type]||x.type)}</b>${x.resetByAdmin?'<br><span class="ap2-badge ap2-blue">ADMIN RESET</span>':''}</td><td>${esc(x.questionId||'-')}</td><td class="ap2-question-cell">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="6">No lifeline usage found.</td></tr>';
                     const qRows=(q.history||[]).slice(0,500).map((x,i)=>{
                         const selected=x.selectedAnswer?esc(x.selectedAnswer):'<span class="ap2-muted">Not recorded</span>';
                         const correct=esc(x.correctAnswer||'-');
                         const result=x.isCorrect===null||x.isCorrect===undefined?'<span class="ap2-badge ap2-yellow">Legacy</span>':(x.isCorrect?'<span class="ap2-badge ap2-green">Correct</span>':'<span class="ap2-badge ap2-red">Wrong</span>');
-                        return `<tr><td>${i+1}</td><td>${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'<span class="ap2-muted">Earlier</span>'}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:360px;white-space:normal">${esc(x.questionText||'-')}</td><td>${selected}</td><td><b>${correct}</b></td><td>${result}</td></tr>`;
+                        return `<tr><td>${i+1}</td><td>${x.answeredAt?esc(new Date(x.answeredAt).toLocaleString()):'<span class="ap2-muted">Earlier</span>'}</td><td>${esc(x.questionId||'-')}</td><td class="ap2-question-cell">${esc(x.questionText||'-')}</td><td>${selected}</td><td><b>${correct}</b></td><td>${result}</td></tr>`;
                     }).join('')||'<tr><td colspan="7">No answered question history found.</td></tr>';
                     document.getElementById("ap2Title").textContent="🛟 + 📚 Student History — "+name(u);
                     document.getElementById("ap2Body").innerHTML=`<div class="ap2-kv"><div><b>50:50 Used</b><span>${c.fiftyFifty||0}</span></div><div><b>Audience Used</b><span>${c.audiencePoll||0}</span></div><div><b>Expert Used</b><span>${c.askExpert||0}</span></div><div><b>Skip Used</b><span>${c.skipQuestion||0}</span></div><div><b>Total Questions</b><span>${Number(u.totalQuestionsAnswered||0)}</span></div><div><b>Available Lifelines</b><span>${Object.values(u.lifelines||{}).filter(Boolean).length}/4</span></div></div><div class="ap2-flex" style="margin:12px 0"><button class="ap2-btn" style="background:#0ea5e9;border-color:#0ea5e9" onclick="ap2ResetLifelines('${esc(uid(u))}')">🔄 Reset Lifelines</button><button class="ap2-btn" style="background:#16a34a;border-color:#16a34a" onclick="ap2ExportAnsweredQuestions('${esc(uid(u))}')">📤 Export Questions CSV</button></div><h3 style="margin:16px 0 8px">🛟 Lifeline Usage</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>Time</th><th>Lifeline</th><th>Question ID</th><th>Question</th><th>Cycle</th><th>Total Q</th></tr></thead><tbody>${usageRows}</tbody></table></div><h3 style="margin:22px 0 8px">📚 Questions Used by This Student</h3><div class="ap2-tablewrap"><table class="ap2-table"><thead><tr><th>#</th><th>Date / Time</th><th>Question ID</th><th>Question</th><th>Student Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>${qRows}</tbody></table></div>`;
@@ -2605,7 +2616,7 @@ ${w.status === "Approved" ? `
                     ["fiftyFifty","audiencePoll","askExpert","skipQuestion"].forEach(k=>{const el=document.getElementById({fiftyFifty:"ap2L50",audiencePoll:"ap2LAudience",askExpert:"ap2LExpert",skipQuestion:"ap2LSkip"}[k]);if(el)el.textContent=counts[k]||0;});
                     const label={fiftyFifty:"50:50",audiencePoll:"Audience Poll",askExpert:"Ask Expert",skipQuestion:"Skip"};
                     const body=document.getElementById("ap2LifelineRows");
-                    if(body)body.innerHTML=rows.filter(x=>!x.resetByAdmin).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(x.userName||'-')}</b><br>${esc(x.userId||'-')}</td><td>${esc(x.userMobile||'-')}</td><td>${esc(label[x.type]||x.type)}</td><td>${esc(x.questionId||'-')}</td><td style="min-width:300px;white-space:normal">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="8">No lifeline usage found.</td></tr>';
+                    if(body)body.innerHTML=rows.filter(x=>!x.resetByAdmin).map(x=>`<tr><td>${esc(new Date(x.usedAt).toLocaleString())}</td><td><b>${esc(x.userName||'-')}</b><br>${esc(x.userId||'-')}</td><td>${esc(x.userMobile||'-')}</td><td>${esc(label[x.type]||x.type)}</td><td>${esc(x.questionId||'-')}</td><td class="ap2-question-cell">${esc(x.questionText||'-')}</td><td>${Number(x.cycle||0)}</td><td>${Number(x.totalQuestionsAnsweredAtUse||0)}</td></tr>`).join('')||'<tr><td colspan="8">No lifeline usage found.</td></tr>';
                 } catch(e) { const el=document.getElementById("ap2LifelineRows"); if(el)el.innerHTML=`<tr><td colspan="8" style="color:#fca5a5">⚠️ ${esc(e.message)}</td></tr>`; }
             };
             window.ap2ExportLifelines = async () => {
@@ -2641,42 +2652,37 @@ ${w.status === "Approved" ? `
                 return "🌐 Browser";
             }
             window.ap2SecurityDetails = id => {
-                const u = D.users.find(x => uid(x) === String(id));
-                if (!u) return;
-                const history = Array.isArray(u.loginHistory) ? u.loginHistory.slice().reverse() : [];
-                const warnings = Array.isArray(u.warningHistory) ? u.warningHistory.slice().reverse() : [];
-                const activity = Array.isArray(u.adminActivity) ? u.adminActivity.slice().reverse() : [];
-                const risk = ap2SecurityRisk(u);
-                document.getElementById("ap2Title").textContent = "🔐 Security — " + name(u);
-                document.getElementById("ap2Body").innerHTML = `
-                    <div class="ap2-kv">
-                        <div><b>Student ID</b><span>${esc(uid(u))}</span></div>
-                        <div><b>Mobile</b><span>${esc(u.mobile || "-")}</span></div>
-                        <div><b>Risk</b><span><span class="ap2-badge ${risk==="HIGH"?"security-risk-high":risk==="MEDIUM"?"security-risk-medium":"security-risk-low"}">${risk}</span></span></div>
-                        <div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div>
-                        <div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div>
-                        <div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div>
-                        <div><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div>
-                        <div><b>Login Records</b><span>${history.length}</span></div>
-                        <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
-                        <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
+                const tbody=document.getElementById("ap2SecurityRows");
+                if(!tbody) return;
+                const old=tbody.querySelector(`tr.ap2-security-detail-row[data-security-detail="${CSS.escape(String(id))}"]`);
+                if(old){ old.remove(); return; }
+                const u=D.users.find(x=>uid(x)===String(id));
+                if(!u) return;
+                const history=Array.isArray(u.loginHistory)?u.loginHistory.slice().reverse():[];
+                const warnings=Array.isArray(u.warningHistory)?u.warningHistory.slice().reverse():[];
+                const activity=Array.isArray(u.adminActivity)?u.adminActivity.slice().reverse():[];
+                const risk=ap2SecurityRisk(u);
+                const row=tbody.querySelector(`tr[data-security-user="${CSS.escape(String(id))}"]`);
+                if(!row) return;
+                const detail=document.createElement('tr');
+                detail.className='ap2-security-detail-row';
+                detail.dataset.securityDetail=String(id);
+                detail.innerHTML=`<td colspan="9">
+                    <div class="ap2-flex" style="justify-content:space-between;align-items:center;margin-bottom:12px"><h3 style="margin:0">🔐 Security Details — ${esc(name(u))}</h3><button class="ap2-btn" onclick="ap2SecurityDetails('${esc(uid(u))}')">✖ Close</button></div>
+                    <div class="ap2-security-detail">
+                      <div class="ap2-detail-card"><h4>Overview</h4><div class="ap2-kv"><div><b>Student ID</b><span>${esc(uid(u))}</span></div><div><b>Mobile</b><span>${esc(u.mobile||'-')}</span></div><div><b>Risk</b><span><span class="ap2-badge ${risk==='HIGH'?'security-risk-high':risk==='MEDIUM'?'security-risk-medium':'security-risk-low'}">${risk}</span></span></div><div><b>Warnings</b><span>${Number(u.warningCount||0)}</span></div><div><b>Fast Answers</b><span>${Number(u.fastAnswers||0)}</span></div><div><b>Tab Changes</b><span>${Number(u.tabChanges||0)}</span></div><div><b>Devices</b><span>${Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0)}</span></div><div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div><div><b>Blocked</b><span>${u.isBlocked?'Yes — '+esc(u.blockReason||''):'No'}</span></div></div></div>
+                      <div class="ap2-detail-card"><h4>🔑 Login History (${history.length})</h4><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th></tr>${history.slice(0,20).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||'-')}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td></tr>`).join('')||'<tr><td colspan="3">No login history recorded.</td></tr>'}</table></div></div>
+                      <div class="ap2-detail-card"><h4>⚠️ Warnings (${warnings.length})</h4><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>${warnings.slice(0,20).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||'-')}</td></tr>`).join('')||'<tr><td colspan="2">No warnings.</td></tr>'}</table></div></div>
                     </div>
-                    <h3>🔑 Login History</h3>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
-                    ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
-                    <h3>⚠️ Warning History</h3>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
-                    ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
-                    <h3>🛡️ Admin Security Activity</h3>
-                    <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
-                    ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
-                document.getElementById("ap2Modal").classList.add("show"); document.getElementById("ap2Modal").setAttribute("aria-hidden","false");
+                    <div class="ap2-detail-card" style="margin-top:14px"><h4>🛡️ Admin Security Activity (${activity.length})</h4><div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>${activity.slice(0,20).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||'-')}</td><td>${esc(x.details||'-')}</td></tr>`).join('')||'<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div></div>
+                </td>`;
+                row.insertAdjacentElement('afterend',detail);
             };
             function ap2RenderSecurity() {
                 const rows = D.users.map(u => {
                     const f=Number(u.fastAnswers||0), t=Number(u.tabChanges||0), d=Array.isArray(u.deviceIds)?u.deviceIds.length:Number(u.deviceCount||0);
                     const l=Array.isArray(u.loginHistory)?u.loginHistory.length:0, w=Number(u.warningCount||0), r=ap2SecurityRisk(u);
-                    return `<tr>
+                    return `<tr data-security-user="${esc(uid(u))}">
                         <td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span></td>
                         <td>${f}</td><td>${t}</td><td>${d}</td><td>${l}</td><td>${w}</td>
                         <td>${esc(u.lastSeen ? ap2SecurityTime(u.lastSeen) : "Offline")}</td>
