@@ -5816,6 +5816,332 @@ ${w.status === "Approved" ? `
 }
 </style>
 
+
+<style id="professional-admin-theme">
+/* =========================================================
+   PROFESSIONAL ADMIN THEME
+   One consistent navy/slate palette; semantic colors only
+   for success / warning / danger states.
+   ========================================================= */
+:root{
+  --bg-1:#0b1220;
+  --bg-2:#111827;
+  --panel:#151f2f;
+  --panel-2:#1b2738;
+  --panel-soft:#202d40;
+  --border:rgba(148,163,184,.16);
+  --border-strong:rgba(148,163,184,.28);
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --primary:#2563eb;
+  --primary-hover:#1d4ed8;
+  --success:#16a34a;
+  --warning:#d97706;
+  --danger:#dc2626;
+  --shadow:0 16px 45px rgba(2,8,23,.28);
+  --radius:16px;
+}
+
+body{
+  color:var(--text)!important;
+  background:
+    radial-gradient(circle at 50% -20%,rgba(37,99,235,.10),transparent 35%),
+    linear-gradient(145deg,#0b1220 0%,#101827 55%,#0b1220 100%)!important;
+}
+
+/* Header */
+body>div:first-child{
+  background:#151f2f!important;
+  border:1px solid var(--border)!important;
+  border-radius:16px!important;
+  box-shadow:var(--shadow)!important;
+  backdrop-filter:none!important;
+}
+body>div:first-child::before{
+  background:rgba(37,99,235,.10)!important;
+}
+body>div:first-child h2::before{
+  color:#3b82f6!important;
+  text-shadow:0 0 10px rgba(59,130,246,.45)!important;
+}
+body>div:first-child button{
+  background:var(--danger)!important;
+  box-shadow:0 7px 18px rgba(220,38,38,.16)!important;
+}
+
+/* Headings */
+h2{color:#f8fafc!important}
+h2::after{
+  background:var(--primary)!important;
+  box-shadow:none!important;
+}
+
+/* Dashboard cards: same visual language */
+.cards .card{
+  background:#151f2f!important;
+  border:1px solid var(--border)!important;
+  border-radius:16px!important;
+  box-shadow:var(--shadow)!important;
+  backdrop-filter:none!important;
+}
+.cards .card::before{
+  background:rgba(37,99,235,.06)!important;
+}
+.cards .card::after{
+  background:var(--primary)!important;
+}
+.cards .card:nth-child(n) h1{
+  color:#f8fafc!important;
+}
+.cards .card:hover{
+  transform:translateY(-3px)!important;
+  border-color:rgba(59,130,246,.35)!important;
+  box-shadow:0 20px 50px rgba(2,8,23,.34)!important;
+}
+/* Tiny accent icons/labels stay neutral */
+.cards .card h3{color:#94a3b8!important}
+
+/* Search + form controls */
+#search,
+.question-toolbar input,
+.question-editor-box textarea,
+.question-editor-box input[type="text"],
+input,select,textarea{
+  background:#111a29!important;
+  color:#e5e7eb!important;
+  border:1px solid var(--border-strong)!important;
+  box-shadow:none!important;
+}
+#search:focus,
+.question-toolbar input:focus,
+.question-editor-box textarea:focus,
+.question-editor-box input[type="text"]:focus,
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(59,130,246,.65)!important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.12)!important;
+}
+
+/* Navigation */
+.admin-main-menu{
+  background:#151f2f!important;
+  border:1px solid var(--border)!important;
+  box-shadow:0 10px 28px rgba(2,8,23,.22)!important;
+  backdrop-filter:none!important;
+}
+.admin-main-menu button{
+  background:#263449!important;
+  color:#cbd5e1!important;
+  border:1px solid transparent!important;
+  box-shadow:none!important;
+}
+.admin-main-menu button:hover{
+  background:#304158!important;
+  color:#fff!important;
+}
+.admin-main-menu button.active{
+  background:var(--primary)!important;
+  color:#fff!important;
+}
+
+/* Buttons: neutral by default, semantic colors only where needed */
+button{
+  background:#334155!important;
+  color:#fff!important;
+  border:1px solid rgba(255,255,255,.06)!important;
+  box-shadow:none!important;
+}
+button:hover{
+  filter:none!important;
+  background:#475569!important;
+  box-shadow:0 7px 16px rgba(2,8,23,.20)!important;
+}
+button[onclick^="editWallet"],
+button[onclick^="approveWithdraw"]{
+  background:var(--primary)!important;
+}
+button[onclick^="editWallet"]:hover,
+button[onclick^="approveWithdraw"]:hover{
+  background:var(--primary-hover)!important;
+}
+button[onclick^="editTotalEarn"]{
+  background:#475569!important;
+}
+button[onclick^="deleteUser"],
+button[onclick^="rejectWithdraw"],
+#closeActivityStats{
+  background:var(--danger)!important;
+}
+button[onclick^="unblockUser"],
+button[onclick^="markWithdrawPaid"]{
+  background:var(--success)!important;
+}
+button[onclick^="deleteWithdraw"]{
+  background:#475569!important;
+}
+#downloadBtn{
+  background:var(--primary)!important;
+  box-shadow:none!important;
+}
+#downloadBtn:hover{background:var(--primary-hover)!important}
+
+/* Tables / data cards */
+.table-wrap{
+  background:#151f2f!important;
+  border:1px solid var(--border)!important;
+  box-shadow:var(--shadow)!important;
+}
+table{
+  background:#fff!important;
+}
+thead,
+table thead{
+  background:#1e293b!important;
+}
+th{
+  background:#1e293b!important;
+  color:#fff!important;
+  border-bottom:1px solid #334155!important;
+}
+tbody tr,
+tbody tr:nth-child(even){
+  background:#fff!important;
+}
+tbody tr:hover{
+  background:#f8fafc!important;
+}
+td{
+  color:#1e293b!important;
+  border-bottom:1px solid #e5e7eb!important;
+}
+#questionTable td *,
+#userTable td *,
+#withdrawTable td *,
+#deletedUserTable td *,
+#questionRecycleTable td *{
+  color:#1e293b!important;
+}
+#questionTable td[colspan],
+#userTable td[colspan],
+#withdrawTable td[colspan]{
+  background:#f8fafc!important;
+  color:#64748b!important;
+}
+
+/* Online/offline badges retain only their meaning */
+.online,.status-online,.badge-online,.live-online,
+[class*="online"]{
+  color:#166534!important;
+  background:#dcfce7!important;
+  border:1px solid #86efac!important;
+}
+.offline,.status-offline,.badge-offline,.live-offline,
+[class*="offline"]{
+  color:#991b1b!important;
+  background:#fee2e2!important;
+  border:1px solid #fca5a5!important;
+}
+.blocked,.status-blocked,.badge-blocked,.live-blocked,
+[class*="blocked"]{
+  color:#1e40af!important;
+  background:#dbeafe!important;
+  border:1px solid #93c5fd!important;
+}
+
+/* Status pills */
+.status-badge,.status,.live-status span,[class*="status"]{
+  box-shadow:none!important;
+}
+
+/* Online students strip */
+.users-online-top{
+  background:#151f2f!important;
+  border:1px solid var(--border)!important;
+  border-radius:14px!important;
+  padding:14px!important;
+  box-shadow:0 8px 24px rgba(2,8,23,.18)!important;
+}
+.users-online-top-head h3{color:#e5e7eb!important}
+.users-online-top-head h3 span{
+  background:var(--success)!important;
+}
+.users-online-name-item,
+.users-online-name-item:hover,
+.users-online-name-item:focus,
+.users-online-name-item:active{
+  background:#202d40!important;
+  color:#e2e8f0!important;
+}
+.users-online-name-item:hover{background:#2a3950!important}
+.users-online-name-item .dot{color:#22c55e!important}
+
+/* Activity modal */
+.activity-stats-modal-title{color:#e5e7eb!important}
+.activity-stats-student{color:#3b82f6!important}
+.activity-stats-today{background:#1d4ed8!important;border-color:#2563eb!important;box-shadow:none!important}
+.activity-stats-earn{background:#15803d!important;border-color:#16a34a!important;box-shadow:none!important}
+.activity-stats-deduct{background:#b91c1c!important;border-color:#dc2626!important;box-shadow:none!important}
+.activity-stats-table thead th{background:#1e293b!important}
+
+/* Question editor modal */
+.question-editor-modal{background:rgba(2,8,23,.78)!important}
+.question-editor-box,
+.ap2-box{
+  background:#151f2f!important;
+  border:1px solid var(--border)!important;
+  box-shadow:0 25px 70px rgba(2,8,23,.45)!important;
+}
+.question-editor-box label{color:#94a3b8!important}
+
+/* Admin data cards used in the later mobile/card layout */
+#adminSectionWithdrawals table tr,
+#adminSectionDeleted table tr,
+#adminSectionQuestions table tr,
+#questionRecycleBin table tr,
+.ap2-tablewrap .ap2-table tbody tr{
+  background:#fff!important;
+  border:1px solid #e2e8f0!important;
+  box-shadow:0 6px 18px rgba(15,23,42,.07)!important;
+}
+#adminSectionWithdrawals table tr:hover,
+#adminSectionDeleted table tr:hover,
+#adminSectionQuestions table tr:hover,
+#questionRecycleBin table tr:hover,
+.ap2-tablewrap .ap2-table tbody tr:hover{
+  box-shadow:0 10px 24px rgba(15,23,42,.10)!important;
+}
+#adminSectionWithdrawals table td,
+#adminSectionDeleted table td,
+#adminSectionQuestions table td,
+#questionRecycleBin table td,
+.ap2-tablewrap .ap2-table tbody td{
+  color:#1e293b!important;
+  background:transparent!important;
+  border-bottom-color:#e5e7eb!important;
+}
+
+/* Presence rows use very subtle semantic indication */
+.ap2-tablewrap .ap2-table tbody tr.ap2-presence-online{
+  background:#f0fdf4!important;
+  border-left:4px solid #16a34a!important;
+}
+.ap2-tablewrap .ap2-table tbody tr.ap2-presence-offline{
+  background:#fff!important;
+  border-left:4px solid #cbd5e1!important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-track{background:#0f172a!important}
+::-webkit-scrollbar-thumb{background:#475569!important}
+::-webkit-scrollbar-thumb:hover{background:#64748b!important}
+::selection{background:#2563eb!important;color:#fff!important}
+
+/* Keep mobile clean and consistent */
+@media(max-width:600px){
+  .cards .card{box-shadow:0 8px 22px rgba(2,8,23,.20)!important}
+  .admin-main-menu{box-shadow:0 7px 18px rgba(2,8,23,.18)!important}
+}
+</style>
+
 </body>
 
 </html>
