@@ -113,9 +113,15 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 /* Lifeline questions: always show the complete question, never crop it. */
 .adminProV2 .ap2-question-cell {
   width:520px!important; max-width:520px!important; min-width:360px!important;
-  white-space:normal!important; word-break:break-word!important; overflow-wrap:anywhere!important;
-  line-height:1.5!important; height:auto!important; max-height:none!important; overflow:visible!important;
-  vertical-align:top!important; padding:12px!important;
+  white-space:normal!important; word-break:normal!important; overflow-wrap:break-word!important;
+  line-height:1.55!important; height:auto!important; max-height:none!important; overflow:visible!important;
+  vertical-align:top!important; padding:12px!important; text-overflow:clip!important;
+}
+.adminProV2 .ap2-question-cell .ap2-full-question {
+  display:block!important; width:100%!important; max-width:none!important; height:auto!important; max-height:none!important;
+  overflow:visible!important; white-space:normal!important; word-break:normal!important; overflow-wrap:anywhere!important;
+  text-overflow:clip!important; line-clamp:unset!important; -webkit-line-clamp:unset!important;
+  color:inherit!important; line-height:1.55!important;
 }
 .adminProV2 .ap2-security-detail-row td { padding:16px!important; background:rgba(124,58,237,.06)!important; border-top:1px solid var(--border)!important; }
 .adminProV2 .ap2-security-detail { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
@@ -179,10 +185,14 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     min-width:760px!important;
   }
   .adminProV2 .ap2-question-cell {
-    width:320px!important; max-width:320px!important; min-width:320px!important;
+    width:340px!important; max-width:340px!important; min-width:300px!important;
     height:auto!important; max-height:none!important; overflow:visible!important;
-    white-space:normal!important; overflow-wrap:anywhere!important; word-break:break-word!important;
-    line-height:1.5!important; vertical-align:top!important;
+    white-space:normal!important; overflow-wrap:anywhere!important; word-break:normal!important;
+    line-height:1.55!important; vertical-align:top!important; text-overflow:clip!important;
+  }
+  .adminProV2 .ap2-question-cell .ap2-full-question {
+    width:100%!important; height:auto!important; max-height:none!important; overflow:visible!important;
+    white-space:normal!important; overflow-wrap:anywhere!important; word-break:normal!important;
   }
   .adminProV2 .ap2-security-detail-row > td {
     display:block!important; width:100%!important; box-sizing:border-box!important;
