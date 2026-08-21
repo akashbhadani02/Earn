@@ -2686,9 +2686,9 @@ ${w.status === "Approved" ? `
   .adminProV2 .ap2-table tbody td{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:6px 5px;border:1px solid var(--border);border-radius:7px;background:var(--surface)!important;color:var(--text)!important;font-size:9px;line-height:1.15;overflow:hidden}
   .adminProV2 .ap2-table tbody td::before{content:attr(data-label);display:block;font-size:7px;font-weight:800;color:var(--muted);text-transform:uppercase;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .adminProV2 .ap2-table tbody td:empty{display:none}
-  .adminProV2 .ap2-table tbody td:last-child{grid-column:1/-1;display:flex;flex-direction:row;align-items:center;gap:4px;flex-wrap:wrap}
+  .adminProV2 .ap2-table tbody td:last-child{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:4px}
   .adminProV2 .ap2-table tbody td:last-child::before{display:none}
-  .adminProV2 .ap2-table tbody td button{font-size:8px;padding:5px 6px;max-width:100%;flex:0 1 auto}
+  .adminProV2 .ap2-table tbody td button{font-size:8px;padding:5px 3px;max-width:100%;width:100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .adminProV2 .ap2-table tbody td a{font-size:8px;word-break:break-all}
   .adminProV2 .ap2-table tbody td strong{font-size:9px}
   .adminProV2 .ap2-table tbody td small{font-size:7px}
@@ -2708,8 +2708,8 @@ ${w.status === "Approved" ? `
   .adminProV2 .ap2-table tbody tr{gap:3px;padding:4px}
   .adminProV2 .ap2-table tbody td{padding:5px 3px;font-size:7px;border-radius:6px}
   .adminProV2 .ap2-table tbody td::before{font-size:6px}
-  .adminProV2 .ap2-table tbody td button{font-size:7px;padding:4px 5px}
-  .adminProV2 .ap2-table tbody td:last-child{gap:3px;padding:4px}
+  .adminProV2 .ap2-table tbody td button{font-size:7px;padding:4px 2px;width:100%;min-width:0}
+  .adminProV2 .ap2-table tbody td:last-child{gap:3px;padding:4px;grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 </style>
 <script id="command-center-card-labels-fix">
