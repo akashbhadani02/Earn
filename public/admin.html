@@ -55,21 +55,48 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
   display: flex !important;
 }
 </style>
-<style>
-/* COMMAND CENTER: show ONLY the selected tab's data */
-.adminProV2 .ap2-pane{display:none !important;visibility:hidden !important;}
-.adminProV2 .ap2-pane.active{display:block !important;visibility:visible !important;}
-.adminProV2 .ap2-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
-.adminProV2 .ap2-tabs .ap2-btn{min-width:0;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-@media(max-width:700px){
-  .adminProV2 .ap2-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;}
-  .adminProV2 .ap2-tabs .ap2-btn{font-size:10px!important;padding:7px 3px!important;line-height:1.15;}
-  .adminProV2 .ap2-pane{padding:9px!important;}
-}
-</style><style>
-#ap2BlockedTimeModal{display:none !important;visibility:hidden !important;}
-#ap2BlockedTimeModal.ap2-force-open{display:flex !important;visibility:visible !important;}
-</style></head>
+
+<style id="command-center-single-pane-theme-fix">
+.adminProV2 .ap2-pane{display:none!important}
+.adminProV2 .ap2-pane.active{display:block!important}
+.adminProV2 .ap2-tabs .ap2-btn{color:#fff!important;border:1px solid transparent!important;box-shadow:none!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="students"]{background:#2563eb!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="withdrawals"]{background:#ea580c!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="wallet"]{background:#16a34a!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="security"]{background:#dc2626!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="recycle"]{background:#475569!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="reports"]{background:#0891b2!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="lifelines"]{background:#7c3aed!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="blocked"]{background:#d97706!important}
+.adminProV2 .ap2-tabs .ap2-btn[data-tab="reset"]{background:#9333ea!important}
+.adminProV2 .ap2-tabs .ap2-btn.active{filter:brightness(.86);box-shadow:inset 0 -3px 0 rgba(255,255,255,.75),0 4px 12px rgba(15,23,42,.14)!important}
+.adminProV2 .ap2-pane h3{font-weight:800}
+.adminProV2 .ap2-pane[data-theme="students"] h3{color:#2563eb}
+.adminProV2 .ap2-pane[data-theme="withdrawals"] h3{color:#ea580c}
+.adminProV2 .ap2-pane[data-theme="wallet"] h3{color:#16a34a}
+.adminProV2 .ap2-pane[data-theme="security"] h3{color:#dc2626}
+.adminProV2 .ap2-pane[data-theme="recycle"] h3{color:#475569}
+.adminProV2 .ap2-pane[data-theme="reports"] h3{color:#0891b2}
+.adminProV2 .ap2-pane[data-theme="lifelines"] h3{color:#7c3aed}
+.admin-night .adminProV2 .ap2-pane[data-theme="students"] h3{color:#60a5fa}
+.admin-night .adminProV2 .ap2-pane[data-theme="withdrawals"] h3{color:#fb923c}
+.admin-night .adminProV2 .ap2-pane[data-theme="wallet"] h3{color:#4ade80}
+.admin-night .adminProV2 .ap2-pane[data-theme="security"] h3{color:#f87171}
+.admin-night .adminProV2 .ap2-pane[data-theme="recycle"] h3{color:#cbd5e1}
+.admin-night .adminProV2 .ap2-pane[data-theme="reports"] h3{color:#22d3ee}
+.admin-night .adminProV2 .ap2-pane[data-theme="lifelines"] h3{color:#c084fc}
+</style>
+
+
+<style id="command-center-security-action-theme">
+.adminProV2 .security-action,.adminProV2 .security-action button{background:#dc2626!important;color:#fff!important;border-color:#b91c1c!important}
+.adminProV2 .security-detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.adminProV2 .security-detail-grid>div{padding:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface2)}
+.adminProV2 .security-history-title{color:#dc2626!important}
+@media(max-width:800px){.adminProV2 .security-detail-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.adminProV2 .security-detail-grid>div{padding:6px;font-size:8px}.adminProV2 .security-detail-grid b{font-size:7px}.adminProV2 .security-detail-grid span{font-size:8px}}
+</style>
+
+</head>
 
 <body>
 
@@ -261,17 +288,17 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
         <div class="ap2-tabs">
-            <button class="ap2-btn" onclick="ap2Tab('students')">👥 Students</button>
-            <button class="ap2-btn" onclick="ap2Tab('withdrawals')">💸 Withdrawals</button>
-            <button class="ap2-btn" onclick="ap2Tab('wallet')">💰 Wallet</button>
-            <button class="ap2-btn" onclick="ap2Tab('security')">🛡️ Security</button>
-            <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
-            <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
-            <button class="ap2-btn" onclick="ap2Tab('lifelines')">🛟 Lifelines</button>
-            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">⏳ Blocked Time</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2ResetAllLifelines()">🔄 Reset All Lifelines</button>
+            <button class="ap2-btn" onclick="ap2Tab('students')" data-tab="students">👥 Students</button>
+            <button class="ap2-btn" onclick="ap2Tab('withdrawals')" data-tab="withdrawals">💸 Withdrawals</button>
+            <button class="ap2-btn" onclick="ap2Tab('wallet')" data-tab="wallet">💰 Wallet</button>
+            <button class="ap2-btn" onclick="ap2Tab('security')" data-tab="security">🛡️ Security</button>
+            <button class="ap2-btn" onclick="ap2Tab('recycle')" data-tab="recycle">🗑️ Recycle Bin</button>
+            <button class="ap2-btn" onclick="ap2Tab('reports')" data-tab="reports">📊 Reports</button>
+            <button class="ap2-btn" onclick="ap2Tab('lifelines')" data-tab="lifelines">🛟 Lifelines</button>
+            <button class="ap2-btn" onclick="ap2ShowBlockedTime()" data-tab="blocked">⏳ Blocked Time</button><button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2ResetAllLifelines()" data-tab="reset">🔄 Reset All Lifelines</button>
         </div>
 
-        <div class="ap2-pane active" id="ap2-students">
+        <div class="ap2-pane active" id="ap2-students" data-theme="students">
             <div class="ap2-flex"><input class="ap2-input" id="ap2Search" placeholder="Search student / ID / mobile"
                     oninput="ap2RenderStudents()"><button class="ap2-btn" onclick="ap2Refresh()">Live Refresh</button>
             </div>
@@ -294,7 +321,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-withdrawals">
+        <div class="ap2-pane" id="ap2-withdrawals" data-theme="withdrawals">
             <h3>💸 Withdrawal Requests</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -313,7 +340,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-wallet">
+        <div class="ap2-pane" id="ap2-wallet" data-theme="wallet">
             <h3>💰 Wallet Ledger</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -331,7 +358,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-security">
+        <div class="ap2-pane" id="ap2-security" data-theme="security">
             <h3>🛡️ Suspicious Activity</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -353,7 +380,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-recycle">
+        <div class="ap2-pane" id="ap2-recycle" data-theme="recycle">
             <h3>🗑️ Deleted Students</h3>
             <div class="ap2-tablewrap">
                 <table class="ap2-table">
@@ -371,7 +398,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-lifelines">
+        <div class="ap2-pane" id="ap2-lifelines" data-theme="lifelines">
             <div class="ap2-flex">
                 <div><h3>🛟 KBC Lifeline Usage</h3><p class="ap2-muted">કયા student એ કઈ lifeline, કયા question પર અને ક્યારે use કરી તેની સંપૂર્ણ history.</p></div>
                 <div class="ap2-flex"><input class="ap2-input" id="ap2LifelineSearch" placeholder="Search student / mobile" oninput="ap2LoadLifelines()"><button class="ap2-btn" onclick="ap2LoadLifelines()">🔄 Refresh</button><button class="ap2-btn" onclick="ap2ExportLifelines()">📤 Export CSV</button></div>
@@ -387,7 +414,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             </div>
         </div>
 
-        <div class="ap2-pane" id="ap2-reports">
+        <div class="ap2-pane" id="ap2-reports" data-theme="reports">
             <div class="ap2-flex">
                 <div>
                     <h3>📊 Reports</h3>
@@ -2351,7 +2378,13 @@ ${w.status === "Approved" ? `
             function ap2Render() {
                 const s = D.stats || {}, map = { ap2Students: s.students, ap2Online: s.online, ap2Blocked: s.blocked, ap2Q: s.questionsToday, ap2Wallet: money(s.wallet), ap2Earn: money(s.totalEarn), ap2Warnings: s.warnings, ap2Spin: s.spinEligible };
                 Object.keys(map).forEach(k => { let e = document.getElementById(k); if (e) e.textContent = map[k] ?? 0 });
-                ap2RenderStudents(); ap2RenderWithdrawals(); ap2RenderWallet(); ap2RenderSecurity(); ap2RenderRecycle();
+                const activePane = document.querySelector(".adminProV2 .ap2-pane.active");
+                const activeId = activePane ? activePane.id : "ap2-students";
+                if (activeId === "ap2-students") ap2RenderStudents();
+                else if (activeId === "ap2-withdrawals") ap2RenderWithdrawals();
+                else if (activeId === "ap2-wallet") ap2RenderWallet();
+                else if (activeId === "ap2-security") ap2RenderSecurity();
+                else if (activeId === "ap2-recycle") ap2RenderRecycle();
             }
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
@@ -2430,13 +2463,23 @@ ${w.status === "Approved" ? `
             window.ap2Tab = t => {
                 const root = document.querySelector(".adminProV2");
                 if (!root) return;
-                root.querySelectorAll(".ap2-pane").forEach(x => x.classList.remove("active"));
-                const pane = document.getElementById("ap2-" + t);
-                if (pane) pane.classList.add("active");
-                root.querySelectorAll(".ap2-tabs .ap2-btn").forEach(b => {
-                    const match = (b.getAttribute("onclick") || "").match(/ap2Tab\(['"]([^'"]+)['"]\)/);
-                    b.classList.toggle("active", !!match && match[1] === t);
+                // Only one Command Center data section is visible at a time.
+                root.querySelectorAll(".ap2-pane").forEach(x => {
+                    x.classList.remove("active");
+                    x.style.display = "none";
                 });
+                const pane = document.getElementById("ap2-" + t);
+                if (pane) { pane.classList.add("active"); pane.style.display = "block"; }
+                root.querySelectorAll(".ap2-tabs .ap2-btn").forEach(b => {
+                    const tab = b.getAttribute("data-tab");
+                    b.classList.toggle("active", tab === t);
+                });
+                // Render/load only the selected section. Other sections stay empty/hidden.
+                if (t === "students") ap2RenderStudents();
+                if (t === "withdrawals") ap2RenderWithdrawals();
+                if (t === "wallet") ap2RenderWallet();
+                if (t === "security") ap2RenderSecurity();
+                if (t === "recycle") ap2RenderRecycle();
                 if (t === "reports" && typeof ap2LoadReports === "function") ap2LoadReports();
                 if (t === "lifelines" && typeof ap2LoadLifelines === "function") ap2LoadLifelines();
             };
@@ -2578,13 +2621,13 @@ ${w.status === "Approved" ? `
                         <div><b>Last Seen</b><span>${esc(ap2SecurityTime(u.lastSeen))}</span></div>
                         <div><b>Blocked</b><span>${u.isBlocked ? "Yes — "+esc(u.blockReason||"") : "No"}</span></div>
                     </div>
-                    <h3>🔑 Login History</h3>
+                    <h3 class="security-history-title">🔑 Login History</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>IP</th><th>Device</th><th>User Agent</th></tr>
                     ${history.slice(0,50).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.ip||"-")}</td><td>${esc(ap2SecurityAgent(x.userAgent))}</td><td style="max-width:300px;word-break:break-word">${esc(x.userAgent||"-")}</td></tr>`).join("") || '<tr><td colspan="4">No login history recorded.</td></tr>'}</table></div>
-                    <h3>⚠️ Warning History</h3>
+                    <h3 class="security-history-title">⚠️ Warning History</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Reason</th></tr>
                     ${warnings.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.reason||"-")}</td></tr>`).join("") || '<tr><td colspan="2">No warnings.</td></tr>'}</table></div>
-                    <h3>🛡️ Admin Security Activity</h3>
+                    <h3 class="security-history-title">🛡️ Admin Security Activity</h3>
                     <div class="ap2-tablewrap"><table class="ap2-table"><tr><th>Time</th><th>Action</th><th>Details</th></tr>
                     ${activity.slice(0,30).map(x=>`<tr><td>${esc(ap2SecurityTime(x.time))}</td><td>${esc(x.action||"-")}</td><td>${esc(x.details||"-")}</td></tr>`).join("") || '<tr><td colspan="3">No admin security activity.</td></tr>'}</table></div>`;
                 document.getElementById("ap2Modal").classList.add("show");
@@ -2637,8 +2680,6 @@ ${w.status === "Approved" ? `
             };
             window.ap2Export = async () => { try { let d = await api("/pro/reports"), rows = [["Name", "ID", "Mobile", "Wallet", "Total Earn", "Today Questions", "Total Questions", "Warnings", "Blocked", "Last Seen"], ...d.report.map(x => [x.name, x.id, x.mobile, x.wallet, x.totalEarn, x.todayQuestions, x.totalQuestions, x.warnings, x.blocked ? "Yes" : "No", x.lastSeen])]; let csv = rows.map(r => r.map(v => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n"), a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = "admin-report.csv"; a.click() } catch (e) { alert(e.message) } };
             window.addEventListener("load", () => {
-            const _bt = document.getElementById("ap2BlockedTimeModal");
-            if (_bt) { _bt.classList.remove("ap2-force-open"); _bt.style.display = "none"; _bt.style.visibility = "hidden"; }
                 ap2Tab("students");
                 // The main admin refresh queue owns the live Command Center refresh.
                 // Do one initial load here; no second polling loop.
@@ -2672,4 +2713,75 @@ ${w.status === "Approved" ? `
 
 </body>
 
-</html>
+</html><style id="command-center-mobile-card-fix">
+/* Command Center compact card layout */
+.ap2-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.ap2-tabs button{min-width:0;width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;padding:10px 8px}
+.ap2-flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ap2-tablewrap{overflow:visible}
+.ap2-table{width:100%;table-layout:fixed}
+.ap2-table th,.ap2-table td{word-break:break-word;overflow-wrap:anywhere}
+.ap2-table td:last-child{white-space:normal}
+.ap2-table td button{max-width:100%;white-space:nowrap;font-size:12px;padding:7px 8px}
+@media(max-width:800px){
+  .adminProV2 .ap2-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .adminProV2 .ap2-card{padding:8px 5px;border-radius:10px;min-height:58px}
+  .adminProV2 .ap2-lbl{font-size:9px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-val{font-size:15px;line-height:1.1;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .adminProV2 .ap2-tabs button{font-size:9px;line-height:1.1;padding:7px 3px;border-radius:8px;min-height:34px}
+  .adminProV2 .ap2-pane{padding:9px;margin-top:8px;border-radius:10px}
+  .adminProV2 .ap2-pane h3{font-size:13px;margin:4px 0 8px}
+  .adminProV2 .ap2-flex{gap:5px}
+  .adminProV2 .ap2-input{min-width:0;flex:1 1 100%;font-size:11px;padding:8px}
+  .adminProV2 .ap2-flex .ap2-btn{font-size:9px;padding:7px 8px}
+  /* Every Command Center table row becomes a compact 4-column card. */
+  .adminProV2 .ap2-table{border-collapse:separate;border-spacing:0 6px;table-layout:auto}
+  .adminProV2 .ap2-table thead{display:none}
+  .adminProV2 .ap2-table tbody{display:block}
+  .adminProV2 .ap2-table tbody tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px;box-shadow:0 3px 10px rgba(15,23,42,.07);margin-bottom:6px}
+  .adminProV2 .ap2-table tbody td{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:6px 5px;border:1px solid var(--border);border-radius:7px;background:var(--surface)!important;color:var(--text)!important;font-size:9px;line-height:1.15;overflow:hidden}
+  .adminProV2 .ap2-table tbody td::before{content:attr(data-label);display:block;font-size:7px;font-weight:800;color:var(--muted);text-transform:uppercase;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-table tbody td:empty{display:none}
+  .adminProV2 .ap2-table tbody td:last-child{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:4px}
+  .adminProV2 .ap2-table tbody td:last-child::before{display:none}
+  .adminProV2 .ap2-table tbody td button{font-size:8px;padding:5px 3px;max-width:100%;width:100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .adminProV2 .ap2-table tbody td a{font-size:8px;word-break:break-all}
+  .adminProV2 .ap2-table tbody td strong{font-size:9px}
+  .adminProV2 .ap2-table tbody td small{font-size:7px}
+  .adminProV2 .ap2-head{gap:6px;flex-wrap:wrap}
+  .adminProV2 .ap2-head h2{font-size:17px}
+  .adminProV2 .ap2-head .ap2-flex{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .adminProV2 .ap2-head .ap2-flex button{font-size:9px;padding:7px 3px}
+}
+@media(max-width:520px){
+  body{padding:8px}
+  .adminProV2 .ap2-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .adminProV2 .ap2-card{padding:6px 3px;min-height:50px}
+  .adminProV2 .ap2-lbl{font-size:7px}
+  .adminProV2 .ap2-val{font-size:12px}
+  .adminProV2 .ap2-tabs{grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
+  .adminProV2 .ap2-tabs button{font-size:7px;padding:6px 2px;min-height:30px}
+  .adminProV2 .ap2-table tbody tr{gap:3px;padding:4px}
+  .adminProV2 .ap2-table tbody td{padding:5px 3px;font-size:7px;border-radius:6px}
+  .adminProV2 .ap2-table tbody td::before{font-size:6px}
+  .adminProV2 .ap2-table tbody td button{font-size:7px;padding:4px 2px;width:100%;min-width:0}
+  .adminProV2 .ap2-table tbody td:last-child{gap:3px;padding:4px;grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+</style>
+<script id="command-center-card-labels-fix">
+(function(){
+  function addLabels(){
+    document.querySelectorAll('.adminProV2 .ap2-table').forEach(function(table){
+      var heads=[].slice.call(table.querySelectorAll('thead th')).map(function(th){return th.textContent.trim()});
+      table.querySelectorAll('tbody tr').forEach(function(row){
+        [].slice.call(row.children).forEach(function(td,i){
+          if(td.tagName==='TD' && heads[i]) td.setAttribute('data-label',heads[i]);
+        });
+      });
+    });
+  }
+  addLabels();
+  new MutationObserver(addLabels).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
