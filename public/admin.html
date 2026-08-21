@@ -38,9 +38,22 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 
 <style id="admin-modal-initial-state-fix">
-/* Admin modals are hidden until their corresponding action opens them. */
-.modal, .modal-overlay, .popup, .dialog, [role="dialog"] { display: none; }
-.modal.open, .modal.show, .modal.active, .modal-overlay.open, .modal-overlay.show, .popup.open, .popup.show, .dialog.open, [role="dialog"][aria-hidden="false"] { display: flex; }
+/* ALL admin overlays start CLOSED. JavaScript adds .show/.open only when needed. */
+.modal, .popup, .admin-modal, .question-editor-modal, .modal-overlay, .dialog,
+.ap2-modal, [role="dialog"] {
+  display: none !important;
+}
+
+.modal.show, .modal.open, .modal.active,
+.popup.show, .popup.open,
+.admin-modal.show, .admin-modal.open,
+.question-editor-modal.show, .question-editor-modal.open,
+.modal-overlay.show, .modal-overlay.open,
+.dialog.show, .dialog.open,
+.ap2-modal.show, .ap2-modal.open,
+[role="dialog"][aria-hidden="false"] {
+  display: flex !important;
+}
 </style>
 </head>
 
