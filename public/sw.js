@@ -1,3 +1,4 @@
+// ADUCATE-ICON-VERSION-20260822
 self.addEventListener("push", event => {
     let data = {};
 
