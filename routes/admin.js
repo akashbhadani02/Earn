@@ -316,6 +316,9 @@ router.get("/users", adminAuth, async (req, res) => {
 
         });
 
+        // Highest wallet balance first, lowest wallet balance last.
+        updatedUsers.sort((a, b) => Number(b.wallet || 0) - Number(a.wallet || 0));
+
         res.json({
 
             success: true,

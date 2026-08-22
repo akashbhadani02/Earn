@@ -994,6 +994,14 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         //==========================
 
         function showUsers(users) {
+            // Show students with the highest wallet balance first.
+            // Use a copy so filtering/searching does not mutate allUsers.
+            users = [...(users || [])].sort((a, b) => {
+                const walletA = Number(a?.wallet || 0);
+                const walletB = Number(b?.wallet || 0);
+                return walletB - walletA;
+            });
+
             const container = document.getElementById("userCards");
             if (!container) return;
             if (!users.length) {
