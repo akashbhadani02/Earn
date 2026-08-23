@@ -425,6 +425,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
   <button class="admin-users-btn active" data-admin-section="users" onclick="showAdminSection('users')">👥 Users</button>
   <button data-admin-section="dashboard" onclick="showAdminSection('dashboard')">🏠 Dashboard</button>
   <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
+  <button data-admin-section="bookPurchases" onclick="showAdminSection('bookPurchases')">📖 Book Payments</button>
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
 <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
@@ -519,6 +520,19 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 
     <!-- Deleted Users / Restore -->
+    <section id="adminSectionBookPurchases" style="margin-top:34px;">
+      <div class="panel" style="padding:18px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div><h2 style="margin:0;">📖 Book Payment Verification</h2><p style="margin:5px 0;color:#64748b;">Student “Payment Done” confirmations. Check your GPay/bank statement before marking Verified.</p></div>
+          <button onclick="loadBookPurchases()" style="background:#2563eb;color:#fff;border:0;border-radius:8px;padding:9px 14px;cursor:pointer;">↻ Refresh</button>
+        </div>
+        <div class="table-wrap" style="margin-top:14px;">
+          <table><thead><tr><th>Student</th><th>Mobile</th><th>Amount</th><th>UPI</th><th>Receipt ID</th><th>Date</th><th>Status / Action</th></tr></thead>
+          <tbody id="bookPurchasesTable"><tr><td colspan="7">Open Book Payments to load records.</td></tr></tbody></table>
+        </div>
+      </div>
+    </section>
+
     <section id="adminSectionDeleted" style="margin-top:34px;">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
             <h2 style="margin-bottom:0;">🗑️ Deleted Users</h2>
@@ -840,7 +854,8 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 withdrawals:'adminSectionWithdrawals',
                 deleted:'adminSectionDeleted',
                 command:'adminSectionCommand',
-                questions:'adminSectionQuestions'
+                questions:'adminSectionQuestions',
+                bookPurchases:'adminSectionBookPurchases'
             };
             Object.keys(map).forEach(k=>{
                 const el=document.getElementById(map[k]);
@@ -852,8 +867,40 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             if(name==='deleted' && typeof loadDeletedUsers==='function') loadDeletedUsers();
             if(name==='command' && typeof ap2Refresh==='function') ap2Refresh();
             if(name==='questions' && typeof loadQuestions==='function') loadQuestions();
+            if(name==='bookPurchases' && typeof loadBookPurchases==='function') loadBookPurchases();
         }
         window.addEventListener('DOMContentLoaded',()=>showAdminSection('users'));
+
+        async function loadBookPurchases(){
+            const tbody=document.getElementById('bookPurchasesTable');
+            if(!tbody) return;
+            tbody.innerHTML='<tr><td colspan="7">Loading...</td></tr>';
+            try{
+                const res=await fetch('/api/admin/book-purchases?_='+Date.now(),{headers:{Authorization:'Bearer '+token}});
+                const data=await res.json();
+                if(!res.ok || !data.success) throw new Error(data.message||'Failed');
+                const rows=data.purchases||[];
+                if(!rows.length){tbody.innerHTML='<tr><td colspan="7">No book payment records.</td></tr>';return;}
+                tbody.innerHTML=rows.map(p=>{
+                    const status=p.status==='admin_verified'?'✅ Admin Verified':(p.status==='rejected'?'❌ Rejected':'🟡 Student Confirmed');
+                    const action=p.status==='student_confirmed'?`<button onclick="verifyBookPurchase('${p._id}')" style="background:#16a34a;color:#fff;border:0;border-radius:6px;padding:6px 9px;cursor:pointer;">Verify</button> <button onclick="rejectBookPurchase('${p._id}')" style="background:#dc2626;color:#fff;border:0;border-radius:6px;padding:6px 9px;cursor:pointer;">Reject</button>`:status;
+                    return `<tr><td>${escBook(p.studentName)}</td><td>${escBook(p.mobile||'-')}</td><td>₹${Number(p.amount||499).toFixed(2)}</td><td>${escBook(p.upiId)}</td><td>${escBook(p.receiptId)}</td><td>${new Date(p.createdAt).toLocaleString('en-IN')}</td><td>${action}</td></tr>`;
+                }).join('');
+            }catch(e){ tbody.innerHTML='<tr><td colspan="7">❌ '+escBook(e.message)+'</td></tr>'; }
+        }
+        function escBook(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+        async function verifyBookPurchase(id){
+            if(!confirm('GPay/bank statement માં ₹499 transaction check કર્યું છે? Verify કરો?')) return;
+            const res=await fetch('/api/admin/book-purchases/'+encodeURIComponent(id)+'/verify',{method:'POST',headers:{Authorization:'Bearer '+token}});
+            const d=await res.json(); if(!res.ok||!d.success) return alert('❌ '+(d.message||'Verify failed'));
+            loadBookPurchases();
+        }
+        async function rejectBookPurchase(id){
+            if(!confirm('આ payment confirmation reject કરવી છે?')) return;
+            const res=await fetch('/api/admin/book-purchases/'+encodeURIComponent(id)+'/reject',{method:'POST',headers:{Authorization:'Bearer '+token}});
+            const d=await res.json(); if(!res.ok||!d.success) return alert('❌ '+(d.message||'Reject failed'));
+            loadBookPurchases();
+        }
 
         const token = localStorage.getItem("adminToken");
 

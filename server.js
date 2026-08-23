@@ -13,6 +13,7 @@ const adminRoutes=require("./routes/admin");
 const questionRoutes = require("./routes/questions");
 const notificationRoutes = require("./routes/notifications");
 const activityRoutes = require("./routes/activities");
+const bookPurchaseRoutes = require("./routes/bookPurchases");
 
 const app = express();
 app.disable("x-powered-by");
@@ -43,6 +44,7 @@ app.use("/api/admin",adminRoutes);
 app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
+app.use("/api/book-purchases", bookPurchaseRoutes);
 
 
 app.use(express.static(path.join(__dirname, "public")));

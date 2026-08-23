@@ -12,6 +12,7 @@ const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
+const BookPurchase = require("../models/BookPurchase");
 
 // ===========================
 // Admin Login
@@ -126,6 +127,43 @@ router.post("/enable-all-users", adminAuth, async (req, res) => {
         });
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+
+// ===========================
+// Book Purchase Verification
+// ===========================
+router.get("/book-purchases", adminAuth, async (req, res) => {
+    try {
+        const purchases = await BookPurchase.find().sort({ createdAt: -1 }).limit(500).lean();
+        res.json({ success: true, purchases });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post("/book-purchases/:id/verify", adminAuth, async (req, res) => {
+    try {
+        const purchase = await BookPurchase.findByIdAndUpdate(
+            req.params.id,
+            { status: "admin_verified", verifiedAt: new Date(), verifiedBy: req.admin.id },
+            { new: true }
+        );
+        if (!purchase) return res.status(404).json({ success: false, message: "Purchase not found" });
+        res.json({ success: true, purchase });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post("/book-purchases/:id/reject", adminAuth, async (req, res) => {
+    try {
+        const purchase = await BookPurchase.findByIdAndUpdate(req.params.id, { status: "rejected", verifiedAt: new Date(), verifiedBy: req.admin.id }, { new: true });
+        if (!purchase) return res.status(404).json({ success: false, message: "Purchase not found" });
+        res.json({ success: true, purchase });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 

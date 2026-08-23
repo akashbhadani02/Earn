@@ -3482,49 +3482,164 @@ document.addEventListener('click', function(e){
 </script>
 <div id="bookPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="bookPurchaseTitle">
   <div class="book-purchase-box">
+    <img src="/aducate.png" alt="Aducate" class="book-logo">
     <h3 id="bookPurchaseTitle">📖 Book Purchase</h3>
     <div class="book-price">₹499</div>
-    <p>Google Pay / UPI માં payment કર્યા પછી પાછા આ page પર આવો.</p>
-    <button type="button" class="book-modal-btn book-download-btn" onclick="confirmBookPayment()">✅ Payment Done — Download Book</button>
+    <div class="book-student-box">
+      <div><small>Student</small><strong id="bookStudentName">Loading...</strong></div>
+      <div><small>UPI</small><strong>baa836610@okaxis</strong></div>
+    </div>
+    <p id="bookPaymentInstruction">Google Pay / UPI માં ₹499 payment કરો. Payment કર્યા પછી પાછા આ page પર આવો.</p>
+    <button type="button" class="book-modal-btn book-pay-btn" onclick="startBookPayment()">💳 Pay ₹499 with Google Pay / UPI</button>
+    <button type="button" class="book-modal-btn book-download-btn" onclick="confirmBookPayment()">✅ Payment Done — Get Book + Receipt</button>
     <button type="button" class="book-modal-btn book-close-btn" onclick="closeBookModal()">Close</button>
-    <p class="book-note">Note: UPI payment browserમાંથી verify થતું નથી. આ button payment confirmation માટે છે.</p>
+    <p class="book-note">Payment verification: આ temporary UPI setup છે. Bank-side automatic verification વગર “Payment Done” student confirmation તરીકે record થશે; Admin GPay statement ચેક કરીને receipt verify કરી શકે છે.</p>
+    <div id="bookPaymentStatus" class="book-payment-status"></div>
   </div>
 </div>
 
 <script id="book-purchase-upi">
+let bookStudent = { name: '', mobile: '' };
+
+async function loadBookStudent(){
+  const token = localStorage.getItem('token');
+  if(!token){
+    bookStudent.name = 'Student';
+    renderBookStudent();
+    return;
+  }
+  try{
+    const res = await fetch('/api/profile', { headers: { Authorization: 'Bearer ' + token } });
+    const data = await res.json();
+    if(res.ok && data.success && data.user){
+      bookStudent.name = data.user.name || 'Student';
+      bookStudent.mobile = data.user.mobile || '';
+    } else bookStudent.name = 'Student';
+  }catch(e){ bookStudent.name = 'Student'; }
+  renderBookStudent();
+}
+
+function renderBookStudent(){
+  const el=document.getElementById('bookStudentName');
+  if(el) el.textContent=bookStudent.name || 'Student';
+}
+
 function buyBook(){
-    const upiId = "baa836610@okaxis";
-    const upiUrl = "upi://pay?pa=" + encodeURIComponent(upiId)
-        + "&pn=" + encodeURIComponent("Book Purchase")
-        + "&tn=" + encodeURIComponent("Book Purchase - Rs 499")
-        + "&am=499&cu=INR";
-
-    // Show confirmation modal before leaving so the student can return here after payment.
-    const modal = document.getElementById("bookPurchaseModal");
-    if (modal) modal.classList.add("show");
-
-    // Open the installed UPI app after a short delay.
-    setTimeout(function(){ window.location.href = upiUrl; }, 250);
+  const modal = document.getElementById('bookPurchaseModal');
+  if (modal) modal.classList.add('show');
+  loadBookStudent();
+  if(localStorage.getItem('bookPurchasePending')==='1'){
+    setBookStatus('🔄 Payment શરૂ થઈ હતી. Payment કર્યા પછી “Payment Done” દબાવો.', false);
+  }
 }
+
+function startBookPayment(){
+  localStorage.setItem('bookPurchasePending','1');
+  const upiId = 'baa836610@okaxis';
+  const upiUrl = 'upi://pay?pa=' + encodeURIComponent(upiId)
+    + '&pn=' + encodeURIComponent('Aducate Book')
+    + '&tn=' + encodeURIComponent('Aducate Book - Rs 499')
+    + '&am=499&cu=INR';
+  setBookStatus('📱 Google Pay/UPI ખૂલી રહ્યું છે... Payment પછી આ page પર પાછા આવો.', false);
+  setTimeout(function(){ window.location.href = upiUrl; }, 200);
+}
+
+function setBookStatus(msg, success){
+  const el=document.getElementById('bookPaymentStatus');
+  if(el){ el.textContent=msg; el.className='book-payment-status ' + (success?'success':''); }
+}
+
 function closeBookModal(){
-    const modal = document.getElementById("bookPurchaseModal");
-    if (modal) modal.classList.remove("show");
+  const modal = document.getElementById('bookPurchaseModal');
+  if (modal) modal.classList.remove('show');
 }
-function confirmBookPayment(){
-    // UPI apps do not provide browser-side payment verification.
-    // This button confirms the student's payment manually and downloads book.pdf.
-    const a = document.createElement('a');
-    a.href = 'books/book.pdf';
-    a.download = 'book.pdf';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    closeBookModal();
+
+async function confirmBookPayment(){
+  const token = localStorage.getItem('token');
+  if(!token){ setBookStatus('❌ Student login required.', false); return; }
+  setBookStatus('⏳ Payment receipt બનાવી રહ્યા છીએ...', false);
+  try{
+    const res=await fetch('/api/book-purchases/confirm',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+token}
+    });
+    const data=await res.json();
+    if(!res.ok || !data.success) throw new Error(data.message || 'Receipt create failed');
+    localStorage.removeItem('bookPurchasePending');
+    const purchase=data.purchase;
+    setBookStatus('✅ Payment Success — Receipt ID: '+purchase.receiptId, true);
+    await downloadPaymentReceipt(purchase);
+    setTimeout(function(){
+      const a=document.createElement('a');
+      a.href='books/book.pdf';
+      a.download='book.pdf';
+      a.rel='noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+    }, 500);
+  }catch(err){
+    console.error(err);
+    setBookStatus('❌ '+(err.message||'Receipt બનાવી શકાઈ નથી.'), false);
+  }
 }
-window.buyBook = buyBook;
-window.closeBookModal = closeBookModal;
-window.confirmBookPayment = confirmBookPayment;
+
+async function downloadPaymentReceipt(p){
+  await ensureJsPdf();
+  const jsPDF = window.jspdf && window.jspdf.jsPDF;
+  if(!jsPDF) throw new Error('PDF generator load failed');
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  const W=doc.internal.pageSize.getWidth();
+  doc.setFillColor(245,247,255); doc.rect(0,0,W,842,'F');
+  doc.setDrawColor(102,126,234); doc.setLineWidth(2); doc.roundedRect(35,35,W-70,772,18,18,'S');
+  try{
+    const logo=await imageToDataUrl('/aducate.png');
+    doc.addImage(logo,'PNG',W/2-45,55,90,90);
+  }catch(e){}
+  doc.setTextColor(20,30,55); doc.setFont('helvetica','bold'); doc.setFontSize(25);
+  doc.text('ADUCATE',W/2,175,{align:'center'});
+  doc.setFontSize(18); doc.setTextColor(22,163,74);
+  doc.text('PAYMENT SUCCESS CERTIFICATE',W/2,207,{align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(80,90,110);
+  doc.text('Book Purchase Receipt • Student Copy',W/2,229,{align:'center'});
+  doc.setFillColor(255,255,255); doc.roundedRect(65,260,W-130,270,14,14,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(80,90,110);
+  doc.text('STUDENT NAME',90,300); doc.text('AMOUNT',90,360); doc.text('PAYMENT UPI',90,420); doc.text('RECEIPT ID',90,480);
+  doc.setFontSize(17); doc.setTextColor(20,30,55); doc.text(String(p.studentName||bookStudent.name||'Student'),90,326);
+  doc.setTextColor(22,163,74); doc.text('₹'+Number(p.amount||499).toFixed(2),90,386);
+  doc.setFontSize(13); doc.setTextColor(20,30,55); doc.text(String(p.upiId||'baa836610@okaxis'),90,446);
+  doc.setFontSize(12); doc.text(String(p.receiptId),90,506);
+  doc.setFontSize(11); doc.setTextColor(80,90,110);
+  doc.text('Date & Time: '+new Date(p.createdAt||Date.now()).toLocaleString('en-IN'),90,555);
+  doc.setTextColor(22,163,74); doc.setFont('helvetica','bold'); doc.setFontSize(14);
+  doc.text('✓ STUDENT PAYMENT CONFIRMED',W/2,610,{align:'center'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(100,110,125);
+  doc.text('Temporary UPI flow: Admin must verify the ₹499 transaction in the UPI/bank statement.',W/2,642,{align:'center'});
+  doc.text('This receipt is a purchase confirmation record, not a bank-issued payment proof.',W/2,658,{align:'center'});
+  doc.setFontSize(9); doc.text('Aducate • Educational Platform',W/2,770,{align:'center'});
+  doc.save('Aducate_Book_Payment_'+String(p.receiptId)+'.pdf');
+}
+
+function ensureJsPdf(){
+  if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
+  return new Promise(function(resolve,reject){
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=resolve; s.onerror=reject; document.head.appendChild(s);
+  });
+}
+
+function imageToDataUrl(url){
+  return new Promise(function(resolve,reject){
+    const img=new Image(); img.crossOrigin='anonymous';
+    img.onload=function(){ const c=document.createElement('canvas'); c.width=img.naturalWidth; c.height=img.naturalHeight; c.getContext('2d').drawImage(img,0,0); resolve(c.toDataURL('image/png')); };
+    img.onerror=reject; img.src=url;
+  });
+}
+
+window.buyBook=buyBook; window.startBookPayment=startBookPayment; window.closeBookModal=closeBookModal; window.confirmBookPayment=confirmBookPayment;
+window.addEventListener('DOMContentLoaded',function(){
+  loadBookStudent();
+  if(localStorage.getItem('bookPurchasePending')==='1') setTimeout(function(){ buyBook(); }, 500);
+});
 </script>
 
 </body>
