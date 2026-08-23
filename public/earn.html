@@ -349,6 +349,18 @@
 
 
         /* =====================================
+   BOOK PURCHASE BUTTON
+   .btn-book-purchase{
+        background:linear-gradient(135deg,#7c3aed,#4f46e5);
+        color:#fff;
+        border:0;
+        box-shadow:0 8px 18px rgba(79,70,229,.22);
+   }
+   .btn-book-purchase:hover{
+        transform:translateY(-1px);
+        filter:brightness(1.05);
+   }
+
    QUIZ BUTTON
 ===================================== */
 
@@ -1613,6 +1625,7 @@ body.notification-locked #notificationRequiredOverlay button{
         <div class="dashboard-actions">
             <button class="btn btn-quiz" onclick="showScreen('quiz')">📚 Quiz</button>
             <button class="btn btn-learning" type="button" onclick="showScreen('activities')">🎮 Learning</button>
+            <button class="btn btn-book-purchase" type="button" onclick="openBookPurchase()">📖 Buy Book</button>
 
             <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions</button>
 
@@ -2702,6 +2715,19 @@ body.notification-locked #notificationRequiredOverlay button{
             document.querySelectorAll('#activityWalletBalance').forEach(el => {
                 el.textContent = '₹' + amount.toFixed(2);
             });
+        }
+
+
+        // Book purchase button
+        function openBookPurchase() {
+            // Set your real book-payment/store URL here.
+            const BOOK_PURCHASE_URL = "";
+            if (BOOK_PURCHASE_URL) {
+                window.open(BOOK_PURCHASE_URL, "_blank", "noopener,noreferrer");
+                return;
+            }
+
+            alert("📖 Purchase book from admin");
         }
 
         // Browser/mobile system Back button
