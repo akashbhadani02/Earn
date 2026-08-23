@@ -1045,6 +1045,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
+                        <button onclick="toggleBookAccess('${user._id}', ${user.bookAccess ? 'false' : 'true'})" class="${user.bookAccess ? 'red' : 'green'}" title="${user.bookAccess ? 'Close Book' : 'Show Book'}">${user.bookAccess ? '📕 Close Book' : '📖 Show Book'}</button>
                         ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
                     </div>
                 </article>`;
@@ -1759,6 +1760,33 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 if (!res.ok || !data.success) { alert(data.message || "Question reset failed"); return; }
                 alert("✅ " + data.message);
             } catch (err) { alert("Question reset failed: " + err.message); }
+        }
+
+        //==========================
+        // Admin Book Access
+        //==========================
+        async function toggleBookAccess(id, enabled) {
+            const user = allUsers.find(u => String(u._id) === String(id));
+            const action = enabled ? 'Show Book' : 'Close Book';
+            if (!confirm((enabled ? '📖 Show book to ' : '📕 Close book for ') + (user?.name || 'this student') + '?')) return;
+            try {
+                const res = await fetch('/api/book/access/' + encodeURIComponent(id), {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ enabled: !!enabled })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) { alert(data.message || action + ' failed'); return; }
+                const target = allUsers.find(u => String(u._id) === String(id));
+                if (target) target.bookAccess = !!enabled;
+                showUsers(allUsers);
+                alert('✅ ' + data.message);
+            } catch (err) {
+                alert(action + ' failed: ' + err.message);
+            }
         }
 
         //==========================

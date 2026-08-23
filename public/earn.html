@@ -1641,7 +1641,8 @@ body.notification-locked #notificationRequiredOverlay button{
             <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Reward</button>
             <button class="btn btn-bonus" onclick="claimBonus()">⚡ ₹500 Bonus</button>
 
-            <button type="button" class="btn btn-book" onclick="buyBook()">📖 Buy Book</button>
+            <button type="button" class="btn btn-book" onclick="buyBook()">📖 Buy Book ₹499</button>
+            <button id="downloadBookBtn" type="button" class="btn btn-book" onclick="downloadBook()" style="display:none;background:linear-gradient(135deg,#16a34a,#059669);">📥 Download Book</button>
 
             <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw<span>(Min ₹500)</span></button>
 
@@ -3484,47 +3485,92 @@ document.addEventListener('click', function(e){
   <div class="book-purchase-box">
     <h3 id="bookPurchaseTitle">📖 Book Purchase</h3>
     <div class="book-price">₹499</div>
-    <p>Google Pay / UPI માં payment કર્યા પછી પાછા આ page પર આવો.</p>
-    <button type="button" class="book-modal-btn book-download-btn" onclick="confirmBookPayment()">Click Here to Pay</button>
+    <p>Google Pay / UPI થી ₹499 payment કરો. Payment માટે જ આ button છે — અહીંથી book PDF download નહીં થાય.</p>
+    <button type="button" class="book-modal-btn book-download-btn" onclick="payForBook()">💳 Pay ₹499 with Google Pay / UPI</button>
     <button type="button" class="book-modal-btn book-close-btn" onclick="closeBookModal()">Close</button>
-    <!-- <p class="book-note">Note: UPI payment browserમાંથી verify થતું નથી. આ button payment confirmation માટે છે.</p> -->
   </div>
 </div>
 
 <script id="book-purchase-upi">
-function buyBook(){
-    const upiId = "baa836610@okaxis";
-    const upiUrl = "upi://pay?pa=" + encodeURIComponent(upiId)
-        + "&pn=" + encodeURIComponent("Book Purchase")
-        + "&tn=" + encodeURIComponent("Book Purchase - Rs 499")
-        + "&am=499&cu=INR";
+(function(){
+  const UPI_ID = 'baa836610@okaxis';
+  const BOOK_PRICE = '499';
 
-    // Show confirmation modal before leaving so the student can return here after payment.
-    const modal = document.getElementById("bookPurchaseModal");
-    if (modal) modal.classList.add("show");
+  function buyBook(){
+    const modal = document.getElementById('bookPurchaseModal');
+    if (modal) modal.classList.add('show');
+  }
 
-    // Open the installed UPI app after a short delay.
-    setTimeout(function(){ window.location.href = upiUrl; }, 250);
-}
-function closeBookModal(){
-    const modal = document.getElementById("bookPurchaseModal");
-    if (modal) modal.classList.remove("show");
-}
-function confirmBookPayment(){
-    // UPI apps do not provide browser-side payment verification.
-    // This button confirms the student's payment manually and downloads book.pdf.
-    const a = document.createElement('a');
-    a.href = 'books/book.pdf';
-    a.download = 'book.pdf';
-    a.rel = 'noopener';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    closeBookModal();
-}
-window.buyBook = buyBook;
-window.closeBookModal = closeBookModal;
-window.confirmBookPayment = confirmBookPayment;
+  function closeBookModal(){
+    const modal = document.getElementById('bookPurchaseModal');
+    if (modal) modal.classList.remove('show');
+  }
+
+  function payForBook(){
+    const upiUrl = 'upi://pay?pa=' + encodeURIComponent(UPI_ID)
+      + '&pn=' + encodeURIComponent('Aducate Book')
+      + '&tn=' + encodeURIComponent('Book Purchase - Rs 499')
+      + '&am=' + BOOK_PRICE + '&cu=INR';
+    // Only launches the payment app. No PDF is downloaded from the Buy button.
+    window.location.href = upiUrl;
+  }
+
+  async function refreshBookAccess(){
+    const btn = document.getElementById('downloadBookBtn');
+    if (!btn) return;
+    const token = localStorage.getItem('token');
+    if (!token) { btn.style.display = 'none'; return; }
+    try {
+      const res = await fetch('/api/book/access?_=' + Date.now(), {
+        cache: 'no-store',
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!res.ok) { btn.style.display = 'none'; return; }
+      const data = await res.json();
+      btn.style.display = data.success && data.bookAccess ? 'inline-flex' : 'none';
+    } catch (e) {
+      btn.style.display = 'none';
+    }
+  }
+
+  async function downloadBook(){
+    const token = localStorage.getItem('token');
+    if (!token) { alert('Please login again.'); return; }
+    try {
+      const res = await fetch('/api/book/download', {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!res.ok) {
+        let msg = 'Book is not available yet.';
+        try { const data = await res.json(); msg = data.message || msg; } catch (_) {}
+        alert(msg);
+        await refreshBookAccess();
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'book.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (e) {
+      alert('Book download failed. Please try again.');
+    }
+  }
+
+  window.buyBook = buyBook;
+  window.closeBookModal = closeBookModal;
+  window.payForBook = payForBook;
+  window.downloadBook = downloadBook;
+  window.refreshBookAccess = refreshBookAccess;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(refreshBookAccess, 700);
+  });
+})();
 </script>
 
 </body>
