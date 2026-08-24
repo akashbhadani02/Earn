@@ -1844,8 +1844,10 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityCorrect,type,correctCount+1);
       mapSet(user.activityEarn,type,earned+activity.reward);
     }else{
-      const deduction=Math.min(Number(user.wallet||0),activity.reward);
-      user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
+      // Wrong-answer penalties are allowed to create a negative wallet balance.
+      // Example: ₹0 wallet with ₹1 penalty becomes -₹1.
+      const deduction=Number(activity.reward);
+      user.wallet=Number(user.wallet||0)-Number(activity.reward);
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
@@ -1884,7 +1886,7 @@ router.post('/:type/submit', auth, async (req,res)=>{
       correctCount:correct?correctCount+1:correctCount,
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
-      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
+      activityDeduct:correct?deducted:deducted+Number(activity.reward),
       correctAnswer:expected,
       bonus: {
         target: Number(user.bonusTarget || 0),

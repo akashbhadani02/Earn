@@ -226,12 +226,10 @@ router.post("/quiz", auth, async (req, res) => {
             }
         }
 
+        // Penalties are allowed to take the wallet below zero.
+        // Example: ₹0 wallet + ₹0.30 wrong-answer penalty => -₹0.30.
+        // Future rewards/bonuses can bring the balance back above zero.
         user.wallet = Number(user.wallet || 0) + amount;
-
-        // Wallet should never become negative.
-        if (user.wallet < 0) {
-            user.wallet = 0;
-        }
 
         // totalEarn = only actual positive earnings.
         if (correct) {
