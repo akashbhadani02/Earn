@@ -69,7 +69,9 @@ app.get("/api/branding/icon", async (req, res) => {
         const ext = m[1].split("/")[1].replace("svg+xml","svg");
         const buf = Buffer.from(m[2], "base64");
         res.set("Content-Type", m[1]);
-        res.set("Cache-Control", "no-store, max-age=0");
+        res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+        res.set("Pragma", "no-cache");
+        res.set("Expires", "0");
         return res.send(buf);
     } catch (err) {
         return res.sendFile(path.join(__dirname, "public", "icon-192.png"), { headers:{"Cache-Control":"no-store"} });
@@ -83,7 +85,7 @@ app.get("/manifest.webmanifest", async (req,res)=>{
         res.set("Content-Type","application/manifest+json");
         res.set("Cache-Control","no-store, max-age=0");
         return res.json({
-            name:"Aducate English", short_name:"Aducate English", id:"/earn.html", start_url:"/earn.html", scope:"/", display:"standalone",
+            name:"Aducate English", short_name:"Aducate English", id:"/earn.html", start_url:`/earn.html?branding=${v}`, scope:"/", display:"standalone",
             background_color:"#667eea", theme_color:"#667eea",
             icons:[
                 {src:`/api/branding/icon?v=${v}&size=192`,sizes:"192x192",type:"image/png",purpose:"any maskable"},
@@ -98,18 +100,7 @@ app.use((req, res, next) => {
     if (req.path === "/books/book.pdf") return res.status(403).json({ success: false, message: "Book download requires active student access." });
     next();
 });
-// Static assets can be cached, but HTML/PWA branding endpoints must always revalidate.
-// This prevents an old mobile/PWA shell from keeping the previous admin-selected logo.
-app.use(express.static(path.join(__dirname, "public"), {
-    setHeaders: (res, filePath) => {
-        const ext = path.extname(filePath).toLowerCase();
-        if (ext === ".html" || ext === ".webmanifest" || path.basename(filePath) === "sw.js") {
-            res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-            res.setHeader("Pragma", "no-cache");
-            res.setHeader("Expires", "0");
-        }
-    }
-}));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname,"public","login.html"));

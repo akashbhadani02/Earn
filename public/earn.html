@@ -2,9 +2,9 @@
 <html lang="gu">
 
 <head>
-    <link rel="icon" href="/favicon.ico?v=aducate20260822" sizes="any">
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png?v=aducate20260822">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180.png?v=aducate20260822">
+    <link rel="icon" href="/api/branding/icon?v=1&size=32" sizes="any">
+    <link rel="icon" type="image/png" sizes="192x192" href="/api/branding/icon?v=1&size=192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/api/branding/icon?v=1&size=180">
     <link rel="manifest" href="/manifest.webmanifest?v=aducate20260822">
     <meta name="theme-color" content="#667eea">
     <meta name="mobile-web-app-capable" content="yes">
@@ -3590,82 +3590,42 @@ setInterval(loadBookStatus, 8000);
 
 <script id="globalBrandingClient">
 (function(){
+  const FALLBACK='/aducate.png';
   let currentVersion=null;
-  let brandingChannel=null;
-
+  function setLink(rel, href, sizes){
+    let el=document.querySelector(`link[rel="${rel}"]${sizes?`[sizes="${sizes}"]`:''}`);
+    if(!el){ el=document.createElement('link'); el.rel=rel; if(sizes) el.sizes=sizes; document.head.appendChild(el); }
+    el.href=href;
+  }
   function applyBranding(data){
     const version=Number(data?.version||0);
-    if(!version || currentVersion===version) return;
+    if(currentVersion===version && document.documentElement.dataset.brandingReady==='1') return;
     currentVersion=version;
     document.documentElement.dataset.brandingReady='1';
-
-    // Version + timestamp makes every changed logo a fresh URL on mobile/browser/PWA.
-    const src=`/api/branding/icon?v=${version}&t=${Date.now()}`;
-
-    // Update every favicon / touch-icon, including the original favicon.ico link.
-    document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach(link=>{
-      link.href=src;
-    });
-
-    // Keep an explicit 192px icon available for browsers that require sizes.
-    ['icon','apple-touch-icon'].forEach(rel=>{
-      const sizes = rel==='icon' ? '192x192' : '180x180';
-      let el=document.querySelector(`link[rel="${rel}"][sizes="${sizes}"]`);
-      if(!el){
-        el=document.createElement('link');
-        el.rel=rel;
-        el.sizes=sizes;
-        document.head.appendChild(el);
-      }
-      el.href=src;
-    });
-
-    document.querySelectorAll('[data-brand-logo]').forEach(img=>{
-      img.src=src;
-      img.removeAttribute('srcset');
-      img.alt='Aducate Logo';
-    });
-
-    const manifest=document.querySelector('link[rel="manifest"]');
-    if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
-
-    // Ask an open service worker/PWA client to refresh its branding state.
-    if(navigator.serviceWorker?.controller){
-      navigator.serviceWorker.controller.postMessage({type:'BRANDING_UPDATED',version});
-    }
+    const src=`/api/branding/icon?v=${version}&size=512&t=${Date.now()}`;
+    document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
+    setLink('icon', src, '192x192');
+    setLink('apple-touch-icon', src, '180x180');
+    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
+    // Broadcast the new branding to every open tab/window immediately.
+    try { localStorage.setItem('aducate-branding-version', String(version)); } catch(e) {}
+    try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = window.__aducateBrandChannel || new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.postMessage({type:'BRANDING_UPDATED',version}); } } catch(e) {}
+    if (navigator.serviceWorker) navigator.serviceWorker.getRegistration('/').then(reg=>reg?.active?.postMessage({type:'BRANDING_UPDATED',version})).catch(()=>{});
   }
-
   async function refresh(){
-    try{
-      const r=await fetch('/api/branding?_='+Date.now(),{
-        cache:'no-store',
-        headers:{'Cache-Control':'no-cache'}
-      });
-      const d=await r.json();
-      if(d.success) applyBranding(d);
-    }catch(e){}
+    try{ const r=await fetch('/api/branding?_='+Date.now(),{cache:'no-store'}); const d=await r.json(); if(d.success) applyBranding(d); }catch(e){}
   }
-
-  // Instant update between open tabs/windows on the same device.
-  try{
-    brandingChannel=new BroadcastChannel('aducate-branding');
-    brandingChannel.onmessage=e=>{
-      if(e.data?.type==='BRANDING_UPDATED') refresh();
-    };
-  }catch(e){}
-
-  window.addEventListener('storage',e=>{
-    if(e.key==='aducate_branding_version') refresh();
-  });
-
   window.refreshGlobalBranding=refresh;
-  refresh();
 
-  // Safety net for another device/mobile that is already open.
-  setInterval(refresh,1000);
+  // Also force the installed PWA service worker/manifest to revalidate after a branding change.
+  if(navigator.serviceWorker){ navigator.serviceWorker.getRegistration('/').then(reg=>{ reg?.update(); reg?.active?.postMessage({type:'CHECK_BRANDING'}); }).catch(()=>{}); }
+  try { window.addEventListener('storage', e=>{ if(e.key==='aducate-branding-version') refresh(); }); } catch(e) {}
+  try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.onmessage=e=>{ if(e.data?.type==='BRANDING_UPDATED') refresh(); }; } } catch(e) {}
+  refresh();
+  setInterval(refresh,3000);
 })();
 </script>
 
-</body>
+<script src="/mobile-branding.js" defer></script></body>
 
 </html>
