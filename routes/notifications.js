@@ -58,10 +58,17 @@ router.post("/subscribe", auth, async (req, res) => {
             }
         };
 
-        // Only the latest logged-in device receives student notifications.
-        // Login clears the previous subscription; saving here replaces any
-        // leftover/older subscription with this device's current subscription.
-        user.pushSubscriptions = [cleanSubscription];
+        // Keep one active subscription for the current logged-in device.
+        // Login already clears subscriptions from an older device/session.
+        // De-duplicate the endpoint so repeated page loads never create
+        // duplicate push targets or duplicate notifications.
+        const currentSubscriptions = Array.isArray(user.pushSubscriptions)
+            ? user.pushSubscriptions
+            : [];
+        const withoutSameEndpoint = currentSubscriptions.filter(
+            sub => String(sub?.endpoint || "") !== cleanSubscription.endpoint
+        );
+        user.pushSubscriptions = [...withoutSameEndpoint, cleanSubscription].slice(-1);
         await user.save();
 
         return res.json({

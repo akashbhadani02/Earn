@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const express = require("express");
 const router = express.Router();
 
@@ -1078,6 +1079,7 @@ router.post("/notification/send/:userId", adminAuth, async (req, res) => {
             icon: "/icon-192.png",
             badge: "/icon-192.png",
             tag: "admin-notification",
+            id: crypto.randomUUID(),
             requireInteraction: false
         });
 
@@ -1165,6 +1167,7 @@ router.post("/notification/send-all", adminAuth, async (req, res) => {
             icon: "/icon-192.png",
             badge: "/icon-192.png",
             tag: "admin-notification-all",
+            id: crypto.randomUUID(),
             requireInteraction: false
         });
 

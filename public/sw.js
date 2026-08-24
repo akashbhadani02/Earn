@@ -1,5 +1,5 @@
 // ADUCATE PWA SERVICE WORKER - BRANDING AWARE
-const SW_VERSION = 'aducate-branding-live-v3';
+const SW_VERSION = 'aducate-branding-live-v4';
 
 self.addEventListener('install', event => {
   self.skipWaiting();
@@ -43,7 +43,7 @@ self.addEventListener('push', event => {
     body: data.body || '',
     icon: data.icon || '/api/branding/icon?v=live&size=192',
     badge: data.badge || '/api/branding/icon?v=live&size=192',
-    tag: data.tag || 'admin-notification',
+    tag: data.id ? `admin-notification-${data.id}` : (data.tag || 'admin-notification'),
     requireInteraction: Boolean(data.requireInteraction),
     data: {url: data.url || '/earn.html'}
   };

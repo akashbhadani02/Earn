@@ -1510,7 +1510,7 @@ body.dark #dashboard h2{
     position:fixed;
     inset:0;
     z-index:999999;
-    display:flex;
+    display:none;
     align-items:center;
     justify-content:center;
     padding:20px;
@@ -1824,61 +1824,66 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             const token = localStorage.getItem("token");
 
             if (!token) {
-                location.replace("login.html");
+                location.href = "login.html";
                 return false;
             }
 
-            if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
-                if (status) status.innerText = "❌ આ browser App Notifications support કરતું નથી.";
-                showNotificationRequired();
+            if (
+                !("Notification" in window) ||
+                !("serviceWorker" in navigator) ||
+                !("PushManager" in window)
+            ) {
+                status.innerText = "❌ આ browser Web Push support કરતું નથી.";
                 return false;
             }
 
             if (!window.isSecureContext) {
-                if (status) status.innerText = "❌ App Notifications માટે HTTPS જરૂરી છે.";
-                showNotificationRequired();
-                return false;
-            }
-
-            // Never call Notification.requestPermission() automatically.
-            // The browser permission prompt must come from the user's explicit button click.
-            const permission = Notification.permission;
-            if (permission === "denied") {
-                if (status) status.innerText = "❌ Notifications Block છે. Browser Site Settings માં Notifications → Allow કરો.";
-                if (help) help.style.display = "block";
-                showNotificationRequired();
-                return false;
-            }
-            if (permission !== "granted" && !fromUserClick) {
-                showNotificationRequired();
+                status.innerText = "❌ App Notifications માટે HTTPS જરૂરી છે.";
                 return false;
             }
 
             try {
-                if (button) { button.disabled = true; button.innerText = "⏳ Enabling..."; }
-                if (requiredButton) { requiredButton.disabled = true; requiredButton.innerText = "⏳ Enabling..."; }
-                if (status) status.innerText = "Notification setup થઈ રહ્યું છે...";
+                if (button) {
+                    button.disabled = true;
+                    button.innerText = "⏳ Enabling...";
+                }
+                if (requiredButton) {
+                    requiredButton.disabled = true;
+                    requiredButton.innerText = "⏳ Enabling...";
+                }
+                if (status) status.innerText = "App Notification permission ચેક થઈ રહ્યું છે...";
                 if (help) help.style.display = "none";
 
-                let granted = permission;
-                if (granted !== "granted") {
-                    granted = await Notification.requestPermission();
-                }
-                if (granted !== "granted") throw new Error("NOTIFICATION_NOT_ALLOWED");
+                let permission = Notification.permission;
 
-                const registration = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+                // Browser permission prompt must be triggered by a user gesture.
+                if (permission !== "granted") {
+                    if (permission === "denied") {
+                        throw new Error("NOTIFICATION_BLOCKED");
+                    }
+                    permission = await Notification.requestPermission();
+                }
+
+                if (permission !== "granted") {
+                    throw new Error("NOTIFICATION_NOT_ALLOWED");
+                }
+
+                const registration = await navigator.serviceWorker.register("/sw.js", {
+                    scope: "/"
+                });
                 await navigator.serviceWorker.ready;
 
                 const keyResponse = await fetch("/api/notifications/vapid-public-key", {
-                    headers: { Authorization: "Bearer " + token },
-                    cache: "no-store"
+                    headers: { Authorization: "Bearer " + token }
                 });
                 const keyData = await keyResponse.json();
+
                 if (!keyResponse.ok || !keyData.success || !keyData.publicKey) {
                     throw new Error(keyData.message || "VAPID public key not available");
                 }
 
                 let subscription = await registration.pushManager.getSubscription();
+
                 if (!subscription) {
                     subscription = await registration.pushManager.subscribe({
                         userVisibleOnly: true,
@@ -1892,10 +1897,11 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                         "Content-Type": "application/json",
                         Authorization: "Bearer " + token
                     },
-                    body: JSON.stringify(subscription.toJSON()),
-                    cache: "no-store"
+                    body: JSON.stringify(subscription.toJSON())
                 });
+
                 const saveData = await saveResponse.json();
+
                 if (!saveResponse.ok || !saveData.success) {
                     throw new Error(saveData.message || "Subscription save failed");
                 }
@@ -1905,22 +1911,33 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                     button.innerText = "✅ App Notifications Enabled";
                     button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
                 }
-                if (status) status.innerText = "✅ Admin Notifications Enabled";
+
                 hideNotificationRequired();
+
+                if (status) status.innerText = "✅ App Notifications Enabled";
                 return true;
+
             } catch (error) {
                 console.error("Notification setup error:", error);
-                if (button) { button.disabled = false; button.innerText = "🔔 Enable App Notifications"; }
-                if (requiredButton) { requiredButton.disabled = false; requiredButton.innerText = "🔔 Enable App Notifications"; }
 
-                if (error.message === "NOTIFICATION_NOT_ALLOWED") {
-                    if (status) status.innerText = "⚠️ Admin notifications માટે Allow કરવું ફરજિયાત છે.";
-                } else if (error.name === "NotAllowedError") {
-                    if (status) status.innerText = "❌ Browserએ notification permission allow કરી નથી.";
-                } else {
-                    if (status) status.innerText = "❌ " + (error.message || "Notification setup failed.");
+                if (button) {
+                    button.disabled = false;
+                    button.innerText = "🔔 Enable App Notifications";
                 }
-                showNotificationRequired();
+                if (requiredButton) {
+                    requiredButton.disabled = false;
+                    requiredButton.innerText = "🔔 Enable App Notifications";
+                }
+
+                if (error.message === "NOTIFICATION_BLOCKED") {
+                    if (status) status.innerText = "❌ Notifications browserમાં Block છે.";
+                    if (help) help.style.display = "block";
+                } else if (error.message === "NOTIFICATION_NOT_ALLOWED") {
+                    if (status) status.innerText = "⚠️ Allow દબાવવું જરૂરી છે.";
+                } else {
+                    if (status) status.innerText = "❌ " + error.message;
+                }
+
                 return false;
             }
         }
@@ -1929,8 +1946,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             const overlay = document.getElementById("notificationRequiredOverlay");
             const dashboard = document.getElementById("dashboard");
             const quiz = document.getElementById("quiz");
-            if (!overlay) return;
-            overlay.style.display = "flex";
+            if (overlay) overlay.style.display = "flex";
             if (dashboard) { dashboard.style.visibility = "hidden"; dashboard.setAttribute("aria-hidden", "true"); }
             if (quiz) { quiz.style.visibility = "hidden"; quiz.setAttribute("aria-hidden", "true"); }
             document.body.classList.add("notification-locked");
@@ -1947,28 +1963,29 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
         }
 
         async function enableRequiredNotifications() {
-            // This is the only automatic path that is allowed to request permission:
-            // it is called directly by the user's "Allow Notifications" button.
-            await setupNotifications(true);
+            const ok = await setupNotifications(true);
+            if (ok) hideNotificationRequired();
         }
 
         async function checkNotificationStatus() {
             const button = document.getElementById("notificationBtn");
-            if (!("Notification" in window) || !("serviceWorker" in navigator) || !("PushManager" in window)) {
-                showNotificationRequired();
-                return false;
-            }
 
-            if (Notification.permission !== "granted") {
+            if (
+                !("Notification" in window) ||
+                !("serviceWorker" in navigator) ||
+                !("PushManager" in window)
+            ) {
                 showNotificationRequired();
                 return false;
             }
 
             try {
                 const registration = await navigator.serviceWorker.getRegistration("/");
-                const subscription = registration ? await registration.pushManager.getSubscription() : null;
+                const subscription = registration
+                    ? await registration.pushManager.getSubscription()
+                    : null;
 
-                if (subscription) {
+                if (subscription && Notification.permission === "granted") {
                     if (button) {
                         button.innerText = "✅ App Notifications Enabled";
                         button.style.background = "linear-gradient(135deg,#16a34a,#059669)";
@@ -1977,18 +1994,25 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                     return true;
                 }
 
-                // Permission is already granted, so repair a missing subscription silently.
-                // No browser popup is requested here.
-                return await setupNotifications(false);
+                // If permission was granted but subscription is missing, repair it.
+                if (Notification.permission === "granted") {
+                    return await setupNotifications(false);
+                }
+
+                showNotificationRequired();
+                return false;
+
             } catch (error) {
-                console.error("Notification status check:", error);
+                console.log("Notification status check:", error);
                 showNotificationRequired();
                 return false;
             }
         }
 
-        // Check once after the page is ready. Do NOT show the modal first and then
-        // immediately run another check; that caused the repeated/flickering popup.
+        // Check first. The mandatory gate is hidden by default so it never
+        // flashes on refresh when the student has already granted permission.
+        // If permission/subscription is missing, checkNotificationStatus()
+        // will show the gate and lock the dashboard.
         window.addEventListener("load", function () {
             checkNotificationStatus();
         });
