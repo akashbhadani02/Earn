@@ -189,6 +189,11 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        bonusTarget: { type: Number, default: 0 },
+        bonusTargetDate: { type: String, default: "" },
+        bonusClaimedDate: { type: String, default: "" },
+        bonusReward: { type: Number, default: 0 },
+
         lastSpin: {
             type: String,
             default: ""

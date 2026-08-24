@@ -47,6 +47,8 @@ function walletResponse(user) {
         spinCycleQuestionsAnswered: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0),
         spinQuestionsRemaining: Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0)),
         canSpinAfterQuestions: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0) >= 100,
+        bonusAvailable: Boolean(user.bonusTargetDate === todayKey() && user.bonusClaimedDate !== todayKey() && Number(user.dailyQuestionsAnswered || 0) >= Number(user.bonusTarget || 999999)),
+        bonusClaimedToday: user.bonusClaimedDate === todayKey(),
         withdrawRequests: user.withdrawRequests || []
     };
 }
@@ -63,6 +65,15 @@ router.get("/", auth, async (req, res) => {
                 success: false,
                 message: "User not found"
             });
+        }
+
+        const today = todayKey();
+        if (user.bonusTargetDate !== today) {
+            user.bonusTargetDate = today;
+            user.bonusTarget = Math.floor(Math.random() * 31) + 70;
+            user.bonusClaimedDate = "";
+            user.bonusReward = 0;
+            await user.save();
         }
 
         return res.json(walletResponse(user));
@@ -303,6 +314,39 @@ router.post("/daily-reward", auth, async (req, res) => {
             success: false,
             message: err.message
         });
+    }
+});
+
+// =============================
+// Mystery Bonus - hidden daily target
+// =============================
+router.post("/bonus/claim", auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+        const today = todayKey();
+        if (user.bonusTargetDate !== today) {
+            user.bonusTargetDate = today;
+            user.bonusTarget = Math.floor(Math.random() * 31) + 70;
+            user.bonusClaimedDate = "";
+            user.bonusReward = 0;
+            await user.save();
+        }
+        if (user.bonusClaimedDate === today) return res.status(400).json({ success:false, code:"ALREADY_CLAIMED", message:"આજનો Mystery Bonus તમે પહેલેથી claim કરી લીધો છે.", ...walletResponse(user) });
+        const answered = Number(user.dailyQuestionsAnswered || 0);
+        const target = Number(user.bonusTarget || 90);
+        if (answered < target) return res.status(400).json({ success:false, code:"NOT_READY", message:"🎁 Mystery Bonus હજુ unlock થયો નથી. થોડા વધુ questions solve કરો.", ...walletResponse(user) });
+        const roll = Math.random();
+        const reward = roll < 0.70 ? 1 : roll < 0.94 ? 2 : roll < 0.99 ? 5 : 10;
+        user.wallet = Number(user.wallet || 0) + reward;
+        user.totalEarn = Number(user.totalEarn || 0) + reward;
+        user.bonusReward = reward;
+        user.bonusClaimedDate = today;
+        await user.save();
+        return res.json({ ...walletResponse(user), success:true, reward, message:`🎉 Mystery Bonus માં ₹${reward} મળ્યા!` });
+    } catch (err) {
+        console.error("Mystery Bonus Error:", err);
+        return res.status(500).json({ success:false, message:"Bonus claim failed. Please try again." });
     }
 });
 

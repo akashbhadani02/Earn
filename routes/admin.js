@@ -1514,7 +1514,10 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
             totalQuestions:users.reduce((n,u)=>n+Number(u.totalQuestionsAnswered||0),0),
             wallet:users.reduce((n,u)=>n+Number(u.wallet||0),0),
             totalEarn:users.reduce((n,u)=>n+Number(u.totalEarn||0),0),
-            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0)>=100).length
+            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0)>=100).length,
+            bonusUnlocked:users.filter(u=>u.bonusTargetDate===today && u.bonusClaimedDate!==today && Number(u.dailyQuestionsAnswered||0)>=Number(u.bonusTarget||999999)).length,
+            bonusClaimedToday:users.filter(u=>u.bonusClaimedDate===today).length,
+            bonusPaidToday:users.filter(u=>u.bonusClaimedDate===today).reduce((n,u)=>n+Number(u.bonusReward||0),0)
         };
         const withdrawals=[];
         users.forEach(u=>(u.withdrawRequests||[]).forEach(w=>withdrawals.push({
