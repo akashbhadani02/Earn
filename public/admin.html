@@ -2636,25 +2636,42 @@ ${w.status === "Approved" ? `
         //==========================
         // LIVE ADMIN REFRESH
         //==========================
-        // Presence is lightweight and runs every 1 second. Full admin data is
-        // refreshed every 5 seconds so MongoDB/API load cannot delay student
-        // heartbeats. The Online/Offline status itself never waits for this loop.
+        // Keep the complete admin command center close to real-time.
+        // Presence already refreshes every 1 second; all other admin data is
+        // refreshed in parallel every 1 second as well, so bonus/wallet/earnings,
+        // students, withdrawals and dashboard counters appear without manually
+        // refreshing the admin page.
         let adminDataRefreshBusy = false;
+        let adminLiveTick = 0;
         async function refreshAdminDataLive() {
             if (adminDataRefreshBusy || document.hidden) return;
             adminDataRefreshBusy = true;
+            const tick = ++adminLiveTick;
             try {
-                await loadDashboard();
-                await loadUsers();
-                await loadWithdraws();
-                if (typeof ap2Refresh === "function") await ap2Refresh();
+                await Promise.allSettled([
+                    loadDashboard(),
+                    loadUsers(),
+                    loadWithdraws(),
+                    (typeof ap2Refresh === "function" ? ap2Refresh() : Promise.resolve())
+                ]);
+
+                // Less-frequent/heavier sections are still kept live, but only
+                // once every 3 ticks to avoid unnecessary MongoDB/API pressure.
+                if (tick % 3 === 0) {
+                    await Promise.allSettled([
+                        loadDeletedUsers(),
+                        loadQuestions()
+                    ]);
+                }
             } catch (err) {
                 console.warn("Admin live data refresh error:", err.message);
             } finally {
                 adminDataRefreshBusy = false;
             }
         }
-        setInterval(refreshAdminDataLive, 5000);
+        // 1 second live sync: any student-side change should reach the admin
+        // command center almost immediately.
+        setInterval(refreshAdminDataLive, 1000);
 
         async function permanentlyDeleteAllQuestions() {
             const firstConfirm = confirm(
