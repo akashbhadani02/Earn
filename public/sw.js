@@ -1,4 +1,4 @@
-// ADUCATE-ICON-VERSION-20260822
+// ADUCATE-BRANDING-INSTANT-SYNC-20260824
 self.addEventListener("push", event => {
     let data = {};
 
@@ -24,6 +24,20 @@ self.addEventListener("push", event => {
     };
 
     event.waitUntil(self.registration.showNotification(title, options));
+});
+
+
+self.addEventListener("message", event => {
+    if (event.data?.type === "BRANDING_UPDATED") {
+        event.waitUntil(
+            self.clients.matchAll({type:"window", includeUncontrolled:true}).then(clients =>
+                clients.forEach(client => client.postMessage({
+                    type:"BRANDING_UPDATED",
+                    version:event.data.version
+                }))
+            )
+        );
+    }
 });
 
 self.addEventListener("notificationclick", event => {

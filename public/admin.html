@@ -2781,7 +2781,18 @@ ${w.status === "Approved" ? `
         const token=localStorage.getItem('adminToken')||'';
         const r=await fetch('/api/admin/branding/logo',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({logoData:reader.result})});
         const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Upload failed');
-        document.querySelectorAll('[data-brand-logo]').forEach(x=>x.src=d.logoData);
+        document.querySelectorAll('[data-brand-logo]').forEach(x=>{
+          x.src=`/api/branding/icon?v=${d.version}&t=${Date.now()}`;
+          x.removeAttribute('srcset');
+        });
+        // Notify every open student/admin tab immediately.
+        try{
+          localStorage.setItem('aducate_branding_version', String(d.version));
+          localStorage.removeItem('aducate_branding_version');
+          const bc=new BroadcastChannel('aducate-branding');
+          bc.postMessage({type:'BRANDING_UPDATED',version:d.version});
+          bc.close();
+        }catch(e){}
         status.textContent='✅ Logo updated. Syncing all devices...';
         if(window.refreshGlobalBranding) window.refreshGlobalBranding();
         setTimeout(()=>status.textContent='✅ Logo is live globally.',1200);
@@ -2792,7 +2803,14 @@ ${w.status === "Approved" ? `
   window.removeGlobalLogo=async function(){
     if(!confirm('Reset the app logo to the default Aducate logo?')) return;
     const token=localStorage.getItem('adminToken')||''; const status=document.getElementById('brandingUploadStatus'); status.textContent='⏳ Resetting...';
-    try{ const r=await fetch('/api/admin/branding/logo',{method:'DELETE',headers:{Authorization:'Bearer '+token}}); const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Reset failed'); if(window.refreshGlobalBranding) window.refreshGlobalBranding(); status.textContent='✅ Default logo restored.'; }catch(e){status.textContent='❌ '+e.message;}
+    try{ const r=await fetch('/api/admin/branding/logo',{method:'DELETE',headers:{Authorization:'Bearer '+token}}); const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Reset failed'); try{
+      localStorage.setItem('aducate_branding_version', String(d.version||Date.now()));
+      localStorage.removeItem('aducate_branding_version');
+      const bc=new BroadcastChannel('aducate-branding');
+      bc.postMessage({type:'BRANDING_UPDATED',version:d.version});
+      bc.close();
+    }catch(e){}
+    if(window.refreshGlobalBranding) window.refreshGlobalBranding(); status.textContent='✅ Default logo restored.'; }catch(e){status.textContent='❌ '+e.message;}
   };
 })();
 </script>
@@ -3223,30 +3241,79 @@ ${w.status === "Approved" ? `
 
 <script id="globalBrandingClient">
 (function(){
-  const FALLBACK='/aducate.png';
   let currentVersion=null;
-  function setLink(rel, href, sizes){
-    let el=document.querySelector(`link[rel="${rel}"]${sizes?`[sizes="${sizes}"]`:''}`);
-    if(!el){ el=document.createElement('link'); el.rel=rel; if(sizes) el.sizes=sizes; document.head.appendChild(el); }
-    el.href=href;
-  }
+  let brandingChannel=null;
+
   function applyBranding(data){
     const version=Number(data?.version||0);
-    if(currentVersion===version && document.documentElement.dataset.brandingReady==='1') return;
+    if(!version || currentVersion===version) return;
     currentVersion=version;
     document.documentElement.dataset.brandingReady='1';
+
+    // Version + timestamp makes every changed logo a fresh URL on mobile/browser/PWA.
     const src=`/api/branding/icon?v=${version}&t=${Date.now()}`;
-    document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
-    setLink('icon', src, '192x192');
-    setLink('apple-touch-icon', src, '180x180');
-    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}`;
+
+    // Update every favicon / touch-icon, including the original favicon.ico link.
+    document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach(link=>{
+      link.href=src;
+    });
+
+    // Keep an explicit 192px icon available for browsers that require sizes.
+    ['icon','apple-touch-icon'].forEach(rel=>{
+      const sizes = rel==='icon' ? '192x192' : '180x180';
+      let el=document.querySelector(`link[rel="${rel}"][sizes="${sizes}"]`);
+      if(!el){
+        el=document.createElement('link');
+        el.rel=rel;
+        el.sizes=sizes;
+        document.head.appendChild(el);
+      }
+      el.href=src;
+    });
+
+    document.querySelectorAll('[data-brand-logo]').forEach(img=>{
+      img.src=src;
+      img.removeAttribute('srcset');
+      img.alt='Aducate Logo';
+    });
+
+    const manifest=document.querySelector('link[rel="manifest"]');
+    if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
+
+    // Ask an open service worker/PWA client to refresh its branding state.
+    if(navigator.serviceWorker?.controller){
+      navigator.serviceWorker.controller.postMessage({type:'BRANDING_UPDATED',version});
+    }
   }
+
   async function refresh(){
-    try{ const r=await fetch('/api/branding?_='+Date.now(),{cache:'no-store'}); const d=await r.json(); if(d.success) applyBranding(d); }catch(e){}
+    try{
+      const r=await fetch('/api/branding?_='+Date.now(),{
+        cache:'no-store',
+        headers:{'Cache-Control':'no-cache'}
+      });
+      const d=await r.json();
+      if(d.success) applyBranding(d);
+    }catch(e){}
   }
+
+  // Instant update between open tabs/windows on the same device.
+  try{
+    brandingChannel=new BroadcastChannel('aducate-branding');
+    brandingChannel.onmessage=e=>{
+      if(e.data?.type==='BRANDING_UPDATED') refresh();
+    };
+  }catch(e){}
+
+  window.addEventListener('storage',e=>{
+    if(e.key==='aducate_branding_version') refresh();
+  });
+
   window.refreshGlobalBranding=refresh;
   refresh();
-  setInterval(refresh,3000);
+
+  // Safety net for another device/mobile that is already open.
+  setInterval(refresh,1000);
 })();
 </script>
 

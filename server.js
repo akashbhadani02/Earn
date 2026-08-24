@@ -98,7 +98,18 @@ app.use((req, res, next) => {
     if (req.path === "/books/book.pdf") return res.status(403).json({ success: false, message: "Book download requires active student access." });
     next();
 });
-app.use(express.static(path.join(__dirname, "public")));
+// Static assets can be cached, but HTML/PWA branding endpoints must always revalidate.
+// This prevents an old mobile/PWA shell from keeping the previous admin-selected logo.
+app.use(express.static(path.join(__dirname, "public"), {
+    setHeaders: (res, filePath) => {
+        const ext = path.extname(filePath).toLowerCase();
+        if (ext === ".html" || ext === ".webmanifest" || path.basename(filePath) === "sw.js") {
+            res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+            res.setHeader("Pragma", "no-cache");
+            res.setHeader("Expires", "0");
+        }
+    }
+}));
 
 app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname,"public","login.html"));
