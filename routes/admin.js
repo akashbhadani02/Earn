@@ -13,6 +13,49 @@ const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
 const BookPurchase = require("../models/BookPurchase");
+const Branding = require("../models/Branding");
+
+// ===========================
+// Global Branding / Logo
+// ===========================
+router.get("/branding", adminAuth, async (req, res) => {
+    try {
+        const branding = await Branding.findOne({ key: "global" }).lean();
+        res.json({ success: true, logoData: branding?.logoData || "", version: branding?.version || 1, updatedAt: branding?.updatedAt || null });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post("/branding/logo", adminAuth, async (req, res) => {
+    try {
+        const { logoData } = req.body || {};
+        if (!logoData || typeof logoData !== "string") return res.status(400).json({ success:false, message:"Logo image is required" });
+        if (!/^data:image\/(png|jpeg|jpg|webp);base64,/i.test(logoData)) return res.status(400).json({ success:false, message:"Use PNG, JPG or WEBP image" });
+        if (logoData.length > 2_500_000) return res.status(413).json({ success:false, message:"Logo is too large. Please use an image under about 1.8 MB." });
+        const branding = await Branding.findOneAndUpdate(
+            { key:"global" },
+            { $set:{ logoData, updatedAt:new Date() }, $inc:{ version:1 } },
+            { new:true, upsert:true, setDefaultsOnInsert:true }
+        );
+        res.json({ success:true, logoData:branding.logoData, version:branding.version, updatedAt:branding.updatedAt });
+    } catch (err) {
+        res.status(500).json({ success:false, message:err.message });
+    }
+});
+
+router.delete("/branding/logo", adminAuth, async (req, res) => {
+    try {
+        const branding = await Branding.findOneAndUpdate(
+            { key:"global" },
+            { $set:{ logoData:"", updatedAt:new Date() }, $inc:{ version:1 } },
+            { new:true, upsert:true, setDefaultsOnInsert:true }
+        );
+        res.json({ success:true, logoData:"", version:branding.version });
+    } catch (err) {
+        res.status(500).json({ success:false, message:err.message });
+    }
+});
 
 // ===========================
 // Admin Login

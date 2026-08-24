@@ -422,12 +422,16 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:600px){.admin-book-actions{grid-template-columns:1fr 1fr}.admin-book-actions .admin-book-decline{grid-column:1/-1}.admin-user-actions>button{flex:1 1 calc(50% - 8px)}}
 </style>
 
+<style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
 </head>
 
 <body>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h2>Admin Dashboard</h2>
+    <div class="admin-brand-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+            <img data-brand-logo src="/aducate.png" alt="Aducate Logo" class="admin-live-logo" style="width:52px;height:52px;border-radius:15px;object-fit:contain;background:#fff;border:1px solid #e2e8f0;padding:5px;box-shadow:0 8px 20px rgba(15,23,42,.10);">
+            <div><h2 style="margin:0">Admin Dashboard</h2><div style="font-size:11px;color:#64748b;font-weight:800">Global branding control</div></div>
+        </div>
 
         <div style="display:flex;gap:8px;align-items:center;">
             <button id="logoutAllUsersBtn" onclick="forceLogoutAllUsers()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
@@ -449,6 +453,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
   <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
+  <button data-admin-section="branding" onclick="showAdminSection('branding')">🎨 Logo & Branding</button>
 <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
 </div>
 
@@ -577,7 +582,30 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 
     <!-- ========================= ADMIN COMMAND CENTER ========================= -->
-    <section id="adminSectionCommand" class="adminProV2">
+    <section id="adminSectionBranding" style="display:none;margin-top:24px;">
+  <div class="branding-panel" style="background:var(--surface,#fff);border:1px solid #e2e8f0;border-radius:22px;padding:20px;box-shadow:0 12px 30px rgba(15,23,42,.08);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+      <div><h2 style="margin:0 0 6px">🎨 App Logo & Branding</h2><p style="margin:0;color:#64748b;font-weight:600;font-size:13px">Upload once. The logo is synced across web, login, dashboard, PWA icon and mobile shortcuts.</p></div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <input id="brandingLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none">
+        <button type="button" onclick="document.getElementById('brandingLogoInput').click()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:0;border-radius:12px;padding:11px 15px;font-weight:900;cursor:pointer">📤 Choose Logo</button>
+        <button type="button" onclick="removeGlobalLogo()" style="background:#fee2e2;color:#991b1b;border:0;border-radius:12px;padding:11px 15px;font-weight:900;cursor:pointer">↩️ Reset Logo</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:140px 1fr;gap:18px;align-items:center;margin-top:18px;">
+      <div style="width:140px;height:140px;border-radius:26px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e2e8f0;display:grid;place-items:center;padding:12px;"><img id="brandingPreview" data-brand-logo src="/aducate.png" alt="Logo Preview" style="width:100%;height:100%;object-fit:contain;border-radius:18px"></div>
+      <div style="display:grid;gap:10px;">
+        <div style="font-weight:900;color:#0f172a">Where it updates</div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px;font-weight:800;color:#475569">
+          <div>🌐 Website favicon</div><div>📱 Mobile/PWA icon</div><div>🔐 Login screen</div><div>👨‍🎓 Student dashboard</div><div>👨‍💼 Admin dashboard</div><div>🍎 iPhone shortcut icon</div>
+        </div>
+        <div id="brandingUploadStatus" style="font-size:12px;font-weight:900;color:#64748b">Ready</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="adminSectionCommand" class="adminProV2">
         <div class="ap2-head">
             <div>
                 <h2>🛡️ Admin Command Center</h2>
@@ -868,6 +896,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 withdrawals:'adminSectionWithdrawals',
                 deleted:'adminSectionDeleted',
                 command:'adminSectionCommand',
+                branding:'adminSectionBranding',
                 questions:'adminSectionQuestions'
             };
             Object.keys(map).forEach(k=>{
@@ -2736,7 +2765,36 @@ ${w.status === "Approved" ? `
             }
         }
     </script>
-    <script id="adminProV2JS">
+    <script id="brandingAdminJS">
+(function(){
+  const input=document.getElementById('brandingLogoInput');
+  if(!input) return;
+  input.addEventListener('change', async function(){
+    const file=this.files?.[0]; if(!file) return;
+    if(file.size>1800000){ alert('Please choose a logo under about 1.8 MB.'); this.value=''; return; }
+    const status=document.getElementById('brandingUploadStatus'); status.textContent='⏳ Uploading logo...';
+    const reader=new FileReader();
+    reader.onload=async ()=>{
+      try{
+        const token=localStorage.getItem('adminToken')||'';
+        const r=await fetch('/api/admin/branding/logo',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({logoData:reader.result})});
+        const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Upload failed');
+        document.querySelectorAll('[data-brand-logo]').forEach(x=>x.src=d.logoData);
+        status.textContent='✅ Logo updated. Syncing all devices...';
+        if(window.refreshGlobalBranding) window.refreshGlobalBranding();
+        setTimeout(()=>status.textContent='✅ Logo is live globally.',1200);
+      }catch(e){ status.textContent='❌ '+e.message; alert(e.message); }
+    };
+    reader.readAsDataURL(file);
+  });
+  window.removeGlobalLogo=async function(){
+    if(!confirm('Reset the app logo to the default Aducate logo?')) return;
+    const token=localStorage.getItem('adminToken')||''; const status=document.getElementById('brandingUploadStatus'); status.textContent='⏳ Resetting...';
+    try{ const r=await fetch('/api/admin/branding/logo',{method:'DELETE',headers:{Authorization:'Bearer '+token}}); const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Reset failed'); if(window.refreshGlobalBranding) window.refreshGlobalBranding(); status.textContent='✅ Default logo restored.'; }catch(e){status.textContent='❌ '+e.message;}
+  };
+})();
+</script>
+<script id="adminProV2JS">
         (function () {
             let D = { users: [], withdrawals: [], stats: {} };
             const token = () => localStorage.getItem("adminToken") || "";
@@ -3158,6 +3216,35 @@ ${w.status === "Approved" ? `
   let saved='day';
   try{saved=localStorage.getItem(KEY)||'day';}catch(e){}
   apply(saved);
+})();
+</script>
+
+<script id="globalBrandingClient">
+(function(){
+  const FALLBACK='/aducate.png';
+  let currentVersion=null;
+  function setLink(rel, href, sizes){
+    let el=document.querySelector(`link[rel="${rel}"]${sizes?`[sizes="${sizes}"]`:''}`);
+    if(!el){ el=document.createElement('link'); el.rel=rel; if(sizes) el.sizes=sizes; document.head.appendChild(el); }
+    el.href=href;
+  }
+  function applyBranding(data){
+    const version=Number(data?.version||0);
+    if(currentVersion===version && document.documentElement.dataset.brandingReady==='1') return;
+    currentVersion=version;
+    document.documentElement.dataset.brandingReady='1';
+    const src=`/api/branding/icon?v=${version}&t=${Date.now()}`;
+    document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
+    setLink('icon', src, '192x192');
+    setLink('apple-touch-icon', src, '180x180');
+    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}`;
+  }
+  async function refresh(){
+    try{ const r=await fetch('/api/branding?_='+Date.now(),{cache:'no-store'}); const d=await r.json(); if(d.success) applyBranding(d); }catch(e){}
+  }
+  window.refreshGlobalBranding=refresh;
+  refresh();
+  setInterval(refresh,3000);
 })();
 </script>
 

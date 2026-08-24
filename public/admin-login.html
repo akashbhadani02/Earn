@@ -228,6 +228,35 @@ alert(data.message);
 
 </script>
 
+<script id="globalBrandingClient">
+(function(){
+  const FALLBACK='/aducate.png';
+  let currentVersion=null;
+  function setLink(rel, href, sizes){
+    let el=document.querySelector(`link[rel="${rel}"]${sizes?`[sizes="${sizes}"]`:''}`);
+    if(!el){ el=document.createElement('link'); el.rel=rel; if(sizes) el.sizes=sizes; document.head.appendChild(el); }
+    el.href=href;
+  }
+  function applyBranding(data){
+    const version=Number(data?.version||0);
+    if(currentVersion===version && document.documentElement.dataset.brandingReady==='1') return;
+    currentVersion=version;
+    document.documentElement.dataset.brandingReady='1';
+    const src=`/api/branding/icon?v=${version}&t=${Date.now()}`;
+    document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
+    setLink('icon', src, '192x192');
+    setLink('apple-touch-icon', src, '180x180');
+    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}`;
+  }
+  async function refresh(){
+    try{ const r=await fetch('/api/branding?_='+Date.now(),{cache:'no-store'}); const d=await r.json(); if(d.success) applyBranding(d); }catch(e){}
+  }
+  window.refreshGlobalBranding=refresh;
+  refresh();
+  setInterval(refresh,3000);
+})();
+</script>
+
 </body>
 
 </html>
