@@ -453,7 +453,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
   <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
-  <button data-admin-section="branding" onclick="showAdminSection('branding')">🎨 Logo & Branding</button>
+  <button data-admin-section="branding" onclick="showAdminSection('dashboard');setTimeout(()=>document.getElementById('dashboardBrandingCard')?.scrollIntoView({behavior:'smooth',block:'center'}),50)">🎨 Logo & Branding</button>
 <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
 </div>
 
@@ -496,6 +496,36 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         </div>
 
     </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 10px;">
+      <h2 style="margin:0;font-size:18px;">📚 Book Sales Overview</h2>
+      <span style="font-size:11px;font-weight:800;color:#64748b;">₹499 Book</span>
+    </div>
+        <div id="bookAdminStats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px">
+  <div style="padding:12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa"><b>📚 Book Purchases</b><div id="bookStatPurchases" style="font-size:22px;font-weight:900">0</div></div>
+  <div style="padding:12px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a"><b>⏳ Pending</b><div id="bookStatPending" style="font-size:22px;font-weight:900">0</div></div>
+  <div style="padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac"><b>✅ Verified</b><div id="bookStatVerified" style="font-size:22px;font-weight:900">0</div></div>
+  <div style="padding:12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe"><b>💰 Verified Revenue</b><div id="bookStatRevenue" style="font-size:22px;font-weight:900">₹0</div></div>
+</div>
+
+
+    <section id="dashboardBrandingCard" style="margin-top:18px;">
+      <div style="background:var(--surface,#fff);border:1px solid #e2e8f0;border-radius:22px;padding:18px;box-shadow:0 12px 30px rgba(15,23,42,.08);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <img id="dashboardBrandPreview" data-brand-logo src="/aducate.png" alt="Current Logo" style="width:54px;height:54px;border-radius:15px;object-fit:contain;background:#fff;border:1px solid #e2e8f0;padding:5px;">
+            <div><h2 style="margin:0;font-size:18px;">🎨 App Logo & Branding</h2><div style="font-size:11px;color:#64748b;font-weight:700;margin-top:3px;">Change the app logo from the Admin Dashboard.</div></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <input id="brandingLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none">
+            <button type="button" onclick="document.getElementById('brandingLogoInput').click()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;">📤 Upload New Logo</button>
+            <button type="button" onclick="removeGlobalLogo()" style="background:#fee2e2;color:#991b1b;border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;">↩️ Reset Logo</button>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:10px 12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:11px;font-weight:800;color:#475569;">🌐 Website • 🔐 Login • 👨‍🎓 Student • 👨‍💼 Admin • 📱 PWA / Mobile branding</div>
+        <div id="brandingUploadStatus" style="font-size:12px;font-weight:900;color:#64748b;margin-top:9px;">Ready to upload a new logo</div>
+      </div>
+    </section>
     </section>
 
     <section id="adminSectionWithdrawals">
@@ -530,12 +560,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     </div>
     </section>
 
-    <div id="bookAdminStats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px">
-  <div style="padding:12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa"><b>📚 Book Purchases</b><div id="bookStatPurchases" style="font-size:22px;font-weight:900">0</div></div>
-  <div style="padding:12px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a"><b>⏳ Pending</b><div id="bookStatPending" style="font-size:22px;font-weight:900">0</div></div>
-  <div style="padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac"><b>✅ Verified</b><div id="bookStatVerified" style="font-size:22px;font-weight:900">0</div></div>
-  <div style="padding:12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe"><b>💰 Verified Revenue</b><div id="bookStatRevenue" style="font-size:22px;font-weight:900">₹0</div></div>
-</div>
 <section id="adminSectionUsers">
     <div class="users-online-top">
         <div class="users-online-top-head">
@@ -582,28 +606,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 
     <!-- ========================= ADMIN COMMAND CENTER ========================= -->
-    <section id="adminSectionBranding" style="display:none;margin-top:24px;">
-  <div class="branding-panel" style="background:var(--surface,#fff);border:1px solid #e2e8f0;border-radius:22px;padding:20px;box-shadow:0 12px 30px rgba(15,23,42,.08);">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;">
-      <div><h2 style="margin:0 0 6px">🎨 App Logo & Branding</h2><p style="margin:0;color:#64748b;font-weight:600;font-size:13px">Upload once. The logo is synced across web, login, dashboard, PWA icon and mobile shortcuts.</p></div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <input id="brandingLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none">
-        <button type="button" onclick="document.getElementById('brandingLogoInput').click()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:0;border-radius:12px;padding:11px 15px;font-weight:900;cursor:pointer">📤 Upload New Logo</button>
-        <button type="button" onclick="removeGlobalLogo()" style="background:#fee2e2;color:#991b1b;border:0;border-radius:12px;padding:11px 15px;font-weight:900;cursor:pointer">↩️ Reset Logo</button><span style="font-size:11px;color:#64748b;font-weight:800;display:block;width:100%;">PNG / JPG / WEBP • Max 1.8 MB</span>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:140px 1fr;gap:18px;align-items:center;margin-top:18px;">
-      <div style="width:140px;height:140px;border-radius:26px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e2e8f0;display:grid;place-items:center;padding:12px;"><img id="brandingPreview" data-brand-logo src="/aducate.png" alt="Logo Preview" style="width:100%;height:100%;object-fit:contain;border-radius:18px"></div>
-      <div style="display:grid;gap:10px;">
-        <div style="font-weight:900;color:#0f172a">Where it updates</div>
-        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px;font-weight:800;color:#475569">
-          <div>🌐 Website favicon</div><div>📱 Mobile/PWA icon</div><div>🔐 Login screen</div><div>👨‍🎓 Student dashboard</div><div>👨‍💼 Admin dashboard</div><div>🍎 iPhone shortcut icon</div>
-        </div>
-        <div id="brandingUploadStatus" style="font-size:12px;font-weight:900;color:#64748b">Ready</div>
-      </div>
-    </div>
-  </div>
-</section>
+    
 
 <section id="adminSectionCommand" class="adminProV2">
         <div class="ap2-head">
@@ -896,7 +899,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 withdrawals:'adminSectionWithdrawals',
                 deleted:'adminSectionDeleted',
                 command:'adminSectionCommand',
-                branding:'adminSectionBranding',
                 questions:'adminSectionQuestions'
             };
             Object.keys(map).forEach(k=>{
