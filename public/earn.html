@@ -1597,6 +1597,11 @@ body.notification-locked #notificationRequiredOverlay button{
 
 <style id="premium-book-ui">
 /* Premium book purchase + access UI */
+.student-live-brand-logo{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#fff;border:1px solid rgba(226,232,240,.95);padding:4px;box-sizing:border-box;box-shadow:0 7px 18px rgba(15,23,42,.10);overflow:hidden;flex:0 0 42px}
+.student-live-brand-logo img{width:100%;height:100%;display:block;object-fit:contain;border-radius:9px;transition:opacity .18s,transform .18s}
+.student-live-brand-logo img.branding-refreshing{opacity:.45;transform:scale(.94)}
+body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,184,.3);box-shadow:0 7px 18px rgba(0,0,0,.28)}
+@media(max-width:560px){.student-live-brand-logo{width:40px;height:40px;flex-basis:40px;border-radius:11px;padding:3px}.student-live-brand-logo img{border-radius:8px}}
 .book-purchase-box{width:min(440px,100%);padding:28px 22px 20px;border:1px solid rgba(99,102,241,.14);background:linear-gradient(180deg,#ffffff 0%,#f8faff 100%);border-radius:28px;box-shadow:0 28px 80px rgba(15,23,42,.28);overflow:hidden;position:relative}
 .book-purchase-box:before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,#7c3aed,#2563eb,#06b6d4)}
 .book-modal-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#eef2ff;color:#4f46e5;font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:10px}
@@ -1651,6 +1656,9 @@ body.notification-locked #notificationRequiredOverlay button{
         <div class="dashboard-topbar">
             <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
             <div class="topbar-right">
+                <div class="student-live-brand-logo" title="Current App Logo" aria-label="Current App Logo">
+                    <img data-brand-logo src="/api/branding/icon?v=1&size=512" alt="Aducate Logo">
+                </div>
                 <button class="icon-btn" onclick="location.href='profile.html'" aria-label="Profile" title="Profile">👤</button>
                 <button class="icon-btn" onclick="location.href='admin.html'" aria-label="Admin" title="Admin">⚙️</button>
             </div>
