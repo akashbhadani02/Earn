@@ -1594,6 +1594,37 @@ body.notification-locked #notificationRequiredOverlay button{
 }
 </style>
 
+
+<style id="premium-book-ui">
+/* Premium book purchase + access UI */
+.book-purchase-box{width:min(440px,100%);padding:28px 22px 20px;border:1px solid rgba(99,102,241,.14);background:linear-gradient(180deg,#ffffff 0%,#f8faff 100%);border-radius:28px;box-shadow:0 28px 80px rgba(15,23,42,.28);overflow:hidden;position:relative}
+.book-purchase-box:before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,#7c3aed,#2563eb,#06b6d4)}
+.book-modal-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#eef2ff;color:#4f46e5;font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:10px}
+.book-price{font-size:36px;margin:4px 0 10px;background:linear-gradient(135deg,#7c3aed,#2563eb);-webkit-background-clip:text;background-clip:text;color:transparent}
+.book-purchase-box p{font-size:13px;margin:8px auto 14px;max-width:360px}
+.book-modal-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}
+.book-modal-steps span{padding:8px 4px;border-radius:10px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:800}
+.book-modal-btn{min-height:48px;border-radius:15px;margin-top:8px;transition:transform .18s,box-shadow .18s}
+.book-modal-btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(15,23,42,.12)}
+.book-pay-btn{background:linear-gradient(135deg,#16a34a,#059669);color:#fff}
+.book-paid-btn{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff}
+.book-close-btn{background:#eef2f7;color:#334155}
+.student-book-access{grid-column:1/-1;width:100%;margin-top:2px}
+.book-access-card{display:flex;align-items:center;gap:12px;width:100%;padding:13px;border-radius:18px;border:1px solid;box-sizing:border-box;text-align:left;box-shadow:0 8px 20px rgba(15,23,42,.07)}
+.book-access-card.active{background:linear-gradient(135deg,#ecfdf5,#f0fdf4);border-color:#86efac}
+.book-access-card.pending{background:linear-gradient(135deg,#fff7ed,#fffbeb);border-color:#fed7aa}
+.book-access-card.closed{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-color:#cbd5e1}
+.book-access-card.declined{background:linear-gradient(135deg,#fff1f2,#fef2f2);border-color:#fecaca}
+.book-access-icon{width:42px;height:42px;display:grid;place-items:center;flex:0 0 42px;border-radius:13px;background:#fff;box-shadow:0 4px 12px rgba(15,23,42,.08);font-size:21px}
+.book-access-main{min-width:0;flex:1}.book-access-title{font-size:14px;font-weight:900;color:#0f172a}.book-access-sub{font-size:11px;color:#64748b;margin-top:3px;line-height:1.35}
+.book-access-download{border:0;border-radius:12px;padding:11px 13px;background:linear-gradient(135deg,#16a34a,#059669);color:#fff;font-weight:900;font-size:12px;cursor:pointer;white-space:nowrap;box-shadow:0 7px 14px rgba(22,163,74,.2)}
+.book-access-pill{padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.8);color:#475569;font-size:9px;font-weight:900;white-space:nowrap}
+.book-access-empty{display:flex;align-items:center;gap:12px;width:100%;padding:13px;border-radius:18px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e2e8f0;box-sizing:border-box;text-align:left}
+.book-access-empty>span{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#fff;font-size:21px;box-shadow:0 4px 12px rgba(15,23,42,.07)}
+.book-access-empty strong{display:block;font-size:14px;color:#0f172a}.book-access-empty small{display:block;margin-top:3px;font-size:11px;color:#64748b}
+@media(max-width:560px){.book-access-card{align-items:flex-start;flex-wrap:wrap}.book-access-main{padding-top:2px}.book-access-download{width:100%;margin-left:54px;margin-top:-2px}.book-access-pill{margin-left:auto}.book-modal-steps span{font-size:9px;padding:7px 2px}.book-purchase-box{padding:26px 16px 18px;border-radius:24px}}
+</style>
+
 </head>
 
 <body>
@@ -3483,11 +3514,13 @@ document.addEventListener('click', function(e){
 <div id="bookPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="bookPurchaseTitle">
   <div class="book-purchase-box">
     <h3 id="bookPurchaseTitle">📖 Book Purchase</h3>
+    <div class="book-modal-badge">ADUCATE • DIGITAL BOOK</div>
     <div class="book-price">₹499</div>
-    <p id="bookPurchaseStatus">Google Pay / UPI થી payment કરો. Payment પછી “I Have Paid” દબાવો.</p>
-    <button type="button" class="book-modal-btn book-download-btn" onclick="startBookPayment()">💳 Pay ₹499 with Google Pay</button>
-    <button type="button" class="book-modal-btn book-download-btn" id="bookPaidBtn" onclick="confirmBookPayment()" style="display:none">✅ I Have Paid — Send for Verification</button>
-    <button type="button" class="book-modal-btn book-close-btn" onclick="closeBookModal()">Close</button>
+    <p id="bookPurchaseStatus">Google Pay / UPI થી ₹499 payment કરો. Payment પછી અહીં પાછા આવીને verification request મોકલો.</p>
+    <div class="book-modal-steps"><span>1. Pay</span><span>2. Submit</span><span>3. Admin Verify</span></div>
+    <button type="button" class="book-modal-btn book-pay-btn" onclick="startBookPayment()">💳 Pay ₹499 with Google Pay</button>
+    <button type="button" class="book-modal-btn book-paid-btn" id="bookPaidBtn" onclick="confirmBookPayment()" style="display:none">✅ I Have Paid — Send for Verification</button>
+    <button type="button" class="book-modal-btn book-close-btn" onclick="closeBookModal()">Not Now</button>
   </div>
 </div>
 
@@ -3538,7 +3571,8 @@ async function loadBookStatus(){
       if(!btn) return;
       host = document.createElement("div"); host.id="studentBookAccessBox"; btn.parentElement.appendChild(host);
     }
-    host.innerHTML = data.canDownload ? `<div style="margin-top:10px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac;text-align:center"><div style="font-weight:900;color:#166534">✅ Book Access Active</div><button type="button" class="book-modal-btn book-download-btn" style="margin-top:8px" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div style="margin-top:10px;padding:10px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;text-align:center;font-size:13px;font-weight:800;color:#9a3412">🔒 Book Access Closed</div>` : "");
+    host.className = "student-book-access";
+    host.innerHTML = data.canDownload ? `<div class="book-access-card active"><div class="book-access-icon">📖</div><div class="book-access-main"><div class="book-access-title">Book Access Active</div><div class="book-access-sub">Your book is ready to download.</div></div><button type="button" class="book-access-download" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div class="book-access-card closed"><div class="book-access-icon">🔒</div><div class="book-access-main"><div class="book-access-title">Book Access Closed</div><div class="book-access-sub">Admin has temporarily closed book access.</div></div><span class="book-access-pill">CLOSED</span></div>` : (data.purchase && data.purchase.status === 'rejected' ? `<div class="book-access-card declined"><div class="book-access-icon">🚫</div><div class="book-access-main"><div class="book-access-title">Payment Request Declined</div><div class="book-access-sub">You can submit a new payment confirmation.</div></div><span class="book-access-pill">DECLINED</span></div>` : (data.purchase && data.purchase.status === 'student_confirmed' ? `<div class="book-access-card pending"><div class="book-access-icon">⏳</div><div class="book-access-main"><div class="book-access-title">Verification Pending</div><div class="book-access-sub">Admin is checking your ₹499 payment.</div></div><span class="book-access-pill">PENDING</span></div>` : `<div class="book-access-empty"><span>📚</span><div><strong>Book Access</strong><small>Purchase the book to unlock access.</small></div></div>`)));
   }catch(e){ console.warn("Book status",e); }
 }
 async function downloadBookSecure(){
