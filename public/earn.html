@@ -3304,15 +3304,45 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             }
         });
 
-        const data = await response.json();
+        // Read the response only once. The previous code tried to read
+        // response.clone() after response.json(), which throws when the
+        // server returns a normal 400/401 error and caused the misleading
+        // "Something went wrong" message.
+        const contentType = response.headers.get("content-type") || "";
+        let data = {};
+        if (contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            data = { message: text || "Server returned an unexpected response." };
+        }
 
-        if (!response.ok) {
-            const d = await response.clone().json().catch(() => ({}));
-            alert(d.message || "🎁 Bonus is not unlocked yet.");
+        if (!response.ok || data.success === false) {
+            // Keep the real server message visible instead of falling into
+            // the generic catch block.
+            if (data.forceLogout) {
+                localStorage.removeItem("studentToken");
+                localStorage.removeItem("token");
+            }
+
+            alert(data.message || "🎁 Bonus is not unlocked yet.");
             return;
         }
 
-        applyWalletData(data);
+        if (typeof applyWalletData === "function") {
+            applyWalletData(data);
+        } else if (data.wallet != null) {
+            const walletEl = document.getElementById("wallet");
+            if (walletEl) walletEl.textContent = "₹" + Number(data.wallet).toFixed(2);
+        }
+
+        // Immediately update the bonus button so it cannot be claimed twice.
+        const bonusBtn = document.getElementById("bonusBtn");
+        if (bonusBtn) {
+            bonusBtn.disabled = true;
+            bonusBtn.textContent = "✅ Bonus Claimed";
+        }
+
         alert(
             "🎉 Mystery Bonus Claimed!\n\n" +
             "🎁 Reward: ₹" + Number(data.reward || 0).toFixed(2) + "\n" +
@@ -3322,10 +3352,9 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
     } catch (error) {
         console.error("Bonus Error:", error);
-
         alert(
-            "❌ Something went wrong.\n\n" +
-            "Please try again later."
+            "❌ Bonus claim failed.\n\n" +
+            (error && error.message ? error.message : "Please try again later.")
         );
     }
 }
