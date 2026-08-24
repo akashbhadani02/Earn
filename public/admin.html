@@ -1112,7 +1112,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <div class="admin-stat"><span>Spin Left</span><strong>${spinRemaining}</strong></div>
                         <div class="admin-stat"><span>Warnings</span><strong class="${warnings >= 4 ? 'danger' : 'warning'}">⚠️ ${warnings}/4</strong></div>
                         <div class="admin-stat"><span>Total Earn</span><strong>₹${Number(user.totalEarn || 0).toFixed(2)}</strong></div>
-                        <div class="admin-stat"><span>🎁 Bonus</span><strong>${user.bonusClaimedToday ? 'Claimed ₹'+Number(user.bonusReward||0).toFixed(2) : (user.bonusAvailable ? '🔓 Unlocked' : '🔒 '+Number(user.bonusQuestions||0)+' / '+Number(user.bonusTarget||0))}</strong></div>
+                        <div class="admin-stat"><span>🎁 Bonus</span><strong>${user.bonus?.unlocked ? '🔓 UNLOCKED' : (Number(user.bonus?.progress || 0) + '/' + Number(user.bonus?.target || 0))}</strong></div>
                     </div>
 
                     <div class="admin-user-actions" onclick="event.stopPropagation()">
@@ -1120,6 +1120,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
+                        <button onclick="showBonusDetails('${user._id}')" class="gold" title="Mystery Bonus Details">🎁 Bonus</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
                         ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
                         <div class="admin-book-actions">
@@ -1131,6 +1132,34 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                     </div>
                 </article>`;
             }).join('');
+        }
+
+        //==========================
+        // Mystery Bonus Details
+        //==========================
+        function showBonusDetails(id) {
+            const user = allUsers.find(u => String(u._id) === String(id));
+            if (!user) return;
+            const b = user.bonus || {};
+            const sourceLabel = b.source === 'quiz' ? '📚 Quiz' : b.source === 'learning' ? '🎮 Learning' : '—';
+            const typeLabel = b.lastQuestionType || '—';
+            const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+            const modal=document.createElement('div');
+            modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;';
+            modal.innerHTML=`<div style="width:min(620px,100%);max-height:90vh;overflow:auto;background:var(--surface,#fff);color:var(--text,#111);border-radius:18px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+              <div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">🎁 Mystery Bonus</h2><button type="button" onclick="this.closest('div[style*=fixed]').remove()" style="border:0;background:#ef4444;color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer">✕</button></div>
+              <p><b>Student:</b> ${safe(user.name)} &nbsp; <b>Mobile:</b> ${safe(user.mobile)}</p>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+                <div style="padding:12px;border-radius:12px;background:#eef2ff"><b>Progress</b><div style="font-size:22px;font-weight:900">${Number(b.progress||0)} / ${Number(b.target||0)}</div></div>
+                <div style="padding:12px;border-radius:12px;background:#ecfdf5"><b>Status</b><div style="font-size:18px;font-weight:900">${b.claimed ? '💰 CLAIMED' : b.unlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}</div></div>
+                <div style="padding:12px;border-radius:12px;background:#fef3c7"><b>Quiz Correct</b><div style="font-size:20px;font-weight:900">${Number(b.quizProgress||0)}</div></div>
+                <div style="padding:12px;border-radius:12px;background:#fce7f3"><b>Learning Correct</b><div style="font-size:20px;font-weight:900">${Number(b.learningProgress||0)}</div></div>
+              </div>
+              <div style="margin-top:12px;padding:13px;border-radius:12px;background:#f8fafc"><b>Bonus Trigger Source:</b> ${sourceLabel}<br><b>Learning Type:</b> ${safe(typeLabel)}<br><b>Reward:</b> ₹${Number(b.reward||0).toFixed(2)}</div>
+              <div style="margin-top:12px;padding:13px;border-radius:12px;background:#f8fafc"><b>Last Correct Answer That Advanced Bonus:</b><div style="margin-top:7px;line-height:1.5">${safe(b.lastQuestionText || 'No correct answer recorded yet.')}</div></div>
+              <p style="margin:12px 0 0;color:#64748b;font-size:12px">Admin can see whether the hidden bonus progress came from Quiz or English Learning. The hidden target is never shown to the student.</p>
+            </div>`;
+            document.body.appendChild(modal);
         }
 
         //==========================
@@ -2865,7 +2894,7 @@ ${w.status === "Approved" ? `
             window.ap2RenderStudents = () => {
                 const term = (document.getElementById("ap2Search").value || "").toLowerCase();
                 const list = D.users.filter(u => (name(u) + " " + uid(u) + " " + (u.mobile || "")).toLowerCase().includes(term));
-                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr class="${u.isBlocked ? 'ap2-presence-offline' : ((u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? 'ap2-presence-online' : 'ap2-presence-offline')}"><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${u.bonusClaimedToday ? '<span class="ap2-badge ap2-blue">🎁 Claimed ₹'+Number(u.bonusReward||0).toFixed(2)+'</span>' : u.bonusAvailable ? '<span class="ap2-badge ap2-green">🎁 Bonus Unlocked</span>' : '<span class="ap2-badge ap2-blue">🎁 '+Number(u.bonusQuestions||0)+'/'+Number(u.bonusTarget||0)+'</span>'}</td><td><div class="ap2-student-actions"><button class="ap2-btn ap2-action ap2-profile" onclick="ap2Details('${esc(uid(u))}')" title="Student Profile">👤 Profile</button><button class="ap2-btn ap2-action ap2-edit" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" title="Edit Total Earn">✏️ Edit Earn</button><button class="ap2-btn ap2-action ap2-block" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})" title="Block / Unblock">${u.isBlocked ? '🟢 Unblock' : '🚫 Block'}</button><button class="ap2-btn ap2-action ap2-warning" onclick="ap2Warn('${esc(uid(u))}')" title="Warnings">⚠️ Warning</button><button class="ap2-btn ap2-action ap2-lifeline" onclick="ap2LifelineUser('${esc(uid(u))}')" title="Lifeline History">🛟 Lifeline</button><button class="ap2-btn ap2-action ap2-answered" onclick="ap2AnsweredQuestions('${esc(uid(u))}')" title="Answered Questions">📚 Answered</button><button class="ap2-btn ap2-action ap2-reset" onclick="ap2ResetLifelines('${esc(uid(u))}')" title="Reset all lifelines">🔄 Reset Life</button></div></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
+                document.getElementById("ap2StudentRows").innerHTML = list.map(u => `<tr class="${u.isBlocked ? 'ap2-presence-offline' : ((u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? 'ap2-presence-online' : 'ap2-presence-offline')}"><td><b>${esc(name(u))}</b><br><span class="ap2-muted">${esc(uid(u))}</span><br>${esc(u.mobile || "")}</td><td>${u.isBlocked ? '<span class="ap2-badge ap2-blue">Blocked</span>' : (u.lastSeen && Date.now() - new Date(u.lastSeen).getTime() <= 7000) ? '<span class="ap2-badge ap2-green">Online</span>' : '<span class="ap2-badge ap2-red">Offline</span>'}</td><td>${q(u)} Today<br>Spin: ${spinQ(u)}/100<br>Total: ${Number(u.totalQuestionsAnswered || 0)}</td><td>${money(u.wallet)}</td><td>${money(u.totalEarn)}</td><td>${Number(u.warningCount || 0)}</td><td>${spinQ(u) >= 100 ? '<span class="ap2-badge ap2-green">Eligible</span>' : 'Locked'}</td><td><div class="ap2-student-actions"><button class="ap2-btn ap2-action ap2-profile" onclick="ap2Details('${esc(uid(u))}')" title="Student Profile">👤 Profile</button><button class="ap2-btn ap2-action ap2-edit" onclick="editTotalEarn('${esc(uid(u))}',${Number(u.totalEarn || 0)})" title="Edit Total Earn">✏️ Edit Earn</button><button class="ap2-btn ap2-action ap2-block" onclick="ap2Block('${esc(uid(u))}',${!u.isBlocked})" title="Block / Unblock">${u.isBlocked ? '🟢 Unblock' : '🚫 Block'}</button><button class="ap2-btn ap2-action ap2-warning" onclick="ap2Warn('${esc(uid(u))}')" title="Warnings">⚠️ Warning</button><button class="ap2-btn ap2-action ap2-lifeline" onclick="ap2LifelineUser('${esc(uid(u))}')" title="Lifeline History">🛟 Lifeline</button><button class="ap2-btn ap2-action ap2-answered" onclick="ap2AnsweredQuestions('${esc(uid(u))}')" title="Answered Questions">📚 Answered</button><button class="ap2-btn ap2-action ap2-reset" onclick="ap2ResetLifelines('${esc(uid(u))}')" title="Reset all lifelines">🔄 Reset Life</button></div></td></tr>`).join("") || '<tr><td colspan="8">No students found.</td></tr>';
             };
             window.ap2Details = async id => {
                 try {
@@ -2884,9 +2913,6 @@ ${w.status === "Approved" ? `
                             <div class="student-summary-item"><div class="label">Spin Progress</div><div class="value">${spinQ(u)}/100</div></div>
                             <div class="student-summary-item"><div class="label">Total Questions</div><div class="value">${u.totalQuestionsAnswered||0}</div></div>
                             <div class="student-summary-item"><div class="label">Warnings</div><div class="value">${u.warningCount||0}</div></div>
-                            <div class="student-summary-item"><div class="label">🎁 Bonus Target</div><div class="value">${Number(u.bonusTarget||0)} Questions</div></div>
-                            <div class="student-summary-item"><div class="label">🎁 Bonus Progress</div><div class="value">${Number(u.bonusQuestions||0)} / ${Number(u.bonusTarget||0)}</div></div>
-                            <div class="student-summary-item"><div class="label">🎁 Bonus Status</div><div class="value">${u.bonusClaimedToday ? 'Claimed ₹'+Number(u.bonusReward||0).toFixed(2) : u.bonusAvailable ? '🔓 UNLOCKED' : '🔒 Locked'}</div></div>
                             <div class="student-summary-item"><div class="label">Last Seen</div><div class="value">${esc(u.lastSeen||'-')}</div></div>
                         </div>
                         <div class="student-section-title">Admin Actions</div>

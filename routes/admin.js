@@ -369,6 +369,22 @@ router.get("/users", adminAuth, async (req, res) => {
                 dailyQuestionsAnswered,
 
                 dailyQuestionsDate: today,
+                bonus: {
+                    date: userData.bonusDate || "",
+                    target: Number(userData.bonusTarget || 0),
+                    progress: Number(userData.bonusProgress || 0),
+                    quizProgress: Number(userData.bonusQuizProgress || 0),
+                    learningProgress: Number(userData.bonusLearningProgress || 0),
+                    unlocked: !!userData.bonusUnlocked,
+                    claimed: !!userData.bonusClaimed,
+                    source: userData.bonusSource || "",
+                    reward: Number(userData.bonusReward || 0),
+                    unlockedAt: userData.bonusUnlockedAt || null,
+                    claimedAt: userData.bonusClaimedAt || null,
+                    lastQuestionText: userData.bonusLastQuestionText || "",
+                    lastQuestionType: userData.bonusLastQuestionType || ""
+                },
+
                 activityStats: {
                     counts: Object.fromEntries(userData.activityCounts ? (userData.activityCounts instanceof Map ? userData.activityCounts : Object.entries(userData.activityCounts)) : []),
                     correct: Object.fromEntries(userData.activityCorrect ? (userData.activityCorrect instanceof Map ? userData.activityCorrect : Object.entries(userData.activityCorrect)) : []),
@@ -1227,14 +1243,7 @@ router.get("/control-center", adminAuth, async (req, res) => {
             totalEarn: Number(u.totalEarn || 0),
             warningCount: Number(u.warningCount || 0),
             spinEligible: u.dailyQuestionsDate === today &&
-                Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) >= 100,
-            bonusTarget: Number(u.bonusTarget || 0),
-            bonusTargetDate: u.bonusTargetDate || "",
-            bonusQuestions: u.dailyQuestionsDate === today ? Number(u.dailyQuestionsAnswered || 0) : 0,
-            bonusAvailable: u.bonusTargetDate === today && u.bonusClaimedDate !== today && Number(u.dailyQuestionsAnswered || 0) >= Number(u.bonusTarget || 999999),
-            bonusClaimedToday: u.bonusClaimedDate === today,
-            bonusClaimedDate: u.bonusClaimedDate || "",
-            bonusReward: Number(u.bonusReward || 0)
+                Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) >= 100
         }));
 
         const stats = {
@@ -1247,9 +1256,7 @@ router.get("/control-center", adminAuth, async (req, res) => {
             totalQuestions: mapped.reduce((n,u) => n + u.totalQuestionsAnswered, 0),
             totalEarn: mapped.reduce((n,u) => n + u.totalEarn, 0),
             completed100: mapped.filter(u => u.spinEligible).length,
-            spins: mapped.reduce((n,u) => n + Number(u.spinCount || 0), 0),
-            bonusUnlocked: mapped.filter(u => u.bonusAvailable).length,
-            bonusClaimed: mapped.filter(u => u.bonusClaimedToday).length
+            spins: mapped.reduce((n,u) => n + Number(u.spinCount || 0), 0)
         };
 
         const withdrawals = [];

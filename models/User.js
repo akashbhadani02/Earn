@@ -189,10 +189,21 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        // Hidden daily Mystery Bonus progress. Progress is based on correct answers
+        // from either Quiz or English Learning activities.
+        bonusDate: { type: String, default: "" },
         bonusTarget: { type: Number, default: 0 },
-        bonusTargetDate: { type: String, default: "" },
-        bonusClaimedDate: { type: String, default: "" },
+        bonusProgress: { type: Number, default: 0 },
+        bonusQuizProgress: { type: Number, default: 0 },
+        bonusLearningProgress: { type: Number, default: 0 },
+        bonusUnlocked: { type: Boolean, default: false },
+        bonusClaimed: { type: Boolean, default: false },
+        bonusSource: { type: String, default: "" },
         bonusReward: { type: Number, default: 0 },
+        bonusUnlockedAt: { type: Date, default: null },
+        bonusClaimedAt: { type: Date, default: null },
+        bonusLastQuestionText: { type: String, default: "" },
+        bonusLastQuestionType: { type: String, default: "" },
 
         lastSpin: {
             type: String,

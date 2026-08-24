@@ -13,6 +13,7 @@ const adminRoutes=require("./routes/admin");
 const questionRoutes = require("./routes/questions");
 const notificationRoutes = require("./routes/notifications");
 const activityRoutes = require("./routes/activities");
+const bonusRoutes = require("./routes/bonus");
 const bookPurchaseRoutes = require("./routes/bookPurchases");
 const Branding = require("./models/Branding");
 
@@ -45,6 +46,7 @@ app.use("/api/admin",adminRoutes);
 app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
+app.use("/api/bonus", bonusRoutes);
 app.use("/api/book-purchases", bookPurchaseRoutes);
 
 // Public branding endpoints. The logo itself is intentionally read-only here; only admins can change it.

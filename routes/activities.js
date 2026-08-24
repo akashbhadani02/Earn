@@ -1674,6 +1674,29 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
+    // Mystery Bonus: correct answers in any English Learning activity also count.
+    const bonusToday = todayKey();
+    if (user.bonusDate !== bonusToday) {
+      user.bonusDate = bonusToday;
+      user.bonusTarget = 70 + Math.floor(Math.random() * 31);
+      user.bonusProgress = 0; user.bonusQuizProgress = 0; user.bonusLearningProgress = 0;
+      user.bonusUnlocked = false; user.bonusClaimed = false; user.bonusSource = "";
+      user.bonusReward = 0; user.bonusUnlockedAt = null; user.bonusClaimedAt = null;
+      user.bonusLastQuestionText = ""; user.bonusLastQuestionType = "";
+    }
+    if (correct && !user.bonusUnlocked && !user.bonusClaimed) {
+      user.bonusProgress = Number(user.bonusProgress || 0) + 1;
+      user.bonusLearningProgress = Number(user.bonusLearningProgress || 0) + 1;
+      user.bonusSource = "learning";
+      user.bonusLastQuestionText = String(q[0] || q.prompt || q.passage || "");
+      user.bonusLastQuestionType = type;
+      if (user.bonusProgress >= Number(user.bonusTarget || 70)) {
+        user.bonusProgress = Number(user.bonusTarget || 70);
+        user.bonusUnlocked = true;
+        user.bonusUnlockedAt = new Date();
+      }
+    }
+
     await user.save();
     res.json({
       success:true,
@@ -1687,7 +1710,16 @@ router.post('/:type/submit', auth, async (req,res)=>{
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
       activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
-      correctAnswer:expected
+      correctAnswer:expected,
+      bonus: {
+        target: Number(user.bonusTarget || 0),
+        progress: Number(user.bonusProgress || 0),
+        quizProgress: Number(user.bonusQuizProgress || 0),
+        learningProgress: Number(user.bonusLearningProgress || 0),
+        unlocked: !!user.bonusUnlocked,
+        claimed: !!user.bonusClaimed,
+        source: user.bonusSource || ""
+      }
     });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });
