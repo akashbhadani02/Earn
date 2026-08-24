@@ -47,11 +47,11 @@ router.post("/claim", auth, async (req,res) => {
     ensureBonus(user);
     if (!user.bonusUnlocked || user.bonusClaimed) {
       await user.save();
-      return res.status(400).json({success:false,message:"Bonus is not unlocked yet.",bonus:{progress:Number(user.bonusProgress||0),target:Number(user.bonusTarget||0),unlocked:false,claimed:!!user.bonusClaimed}});
+      return res.status(400).json({success:false,message:"Bonus is not unlocked yet. (₹11 ₹22 ₹55 ₹70) ",bonus:{progress:Number(user.bonusProgress||0),target:Number(user.bonusTarget||0),unlocked:false,claimed:!!user.bonusClaimed}});
     }
-    const rewards = [1,2,5,10];
+    const rewards = [11,22,55,70];
     const roll = Math.random();
-    const reward = roll < 0.68 ? 1 : roll < 0.93 ? 2 : roll < 0.99 ? 5 : 10;
+    const reward = roll < 0.68 ? 11 : roll < 0.93 ? 22 : roll < 0.99 ? 55 : 70;
     user.wallet = Number(user.wallet||0) + reward;
     user.totalEarn = Number(user.totalEarn||0) + reward;
     user.bonusReward = reward;
