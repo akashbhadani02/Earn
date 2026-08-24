@@ -1227,7 +1227,14 @@ router.get("/control-center", adminAuth, async (req, res) => {
             totalEarn: Number(u.totalEarn || 0),
             warningCount: Number(u.warningCount || 0),
             spinEligible: u.dailyQuestionsDate === today &&
-                Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) >= 100
+                Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0) >= 100,
+            bonusTarget: Number(u.bonusTarget || 0),
+            bonusTargetDate: u.bonusTargetDate || "",
+            bonusQuestions: u.dailyQuestionsDate === today ? Number(u.dailyQuestionsAnswered || 0) : 0,
+            bonusAvailable: u.bonusTargetDate === today && u.bonusClaimedDate !== today && Number(u.dailyQuestionsAnswered || 0) >= Number(u.bonusTarget || 999999),
+            bonusClaimedToday: u.bonusClaimedDate === today,
+            bonusClaimedDate: u.bonusClaimedDate || "",
+            bonusReward: Number(u.bonusReward || 0)
         }));
 
         const stats = {
@@ -1240,7 +1247,9 @@ router.get("/control-center", adminAuth, async (req, res) => {
             totalQuestions: mapped.reduce((n,u) => n + u.totalQuestionsAnswered, 0),
             totalEarn: mapped.reduce((n,u) => n + u.totalEarn, 0),
             completed100: mapped.filter(u => u.spinEligible).length,
-            spins: mapped.reduce((n,u) => n + Number(u.spinCount || 0), 0)
+            spins: mapped.reduce((n,u) => n + Number(u.spinCount || 0), 0),
+            bonusUnlocked: mapped.filter(u => u.bonusAvailable).length,
+            bonusClaimed: mapped.filter(u => u.bonusClaimedToday).length
         };
 
         const withdrawals = [];
@@ -1514,10 +1523,7 @@ router.get("/pro/dashboard", adminAuth, async (req,res)=>{
             totalQuestions:users.reduce((n,u)=>n+Number(u.totalQuestionsAnswered||0),0),
             wallet:users.reduce((n,u)=>n+Number(u.wallet||0),0),
             totalEarn:users.reduce((n,u)=>n+Number(u.totalEarn||0),0),
-            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0)>=100).length,
-            bonusUnlocked:users.filter(u=>u.bonusTargetDate===today && u.bonusClaimedDate!==today && Number(u.dailyQuestionsAnswered||0)>=Number(u.bonusTarget||999999)).length,
-            bonusClaimedToday:users.filter(u=>u.bonusClaimedDate===today).length,
-            bonusPaidToday:users.filter(u=>u.bonusClaimedDate===today).reduce((n,u)=>n+Number(u.bonusReward||0),0)
+            spinEligible:users.filter(u=>u.dailyQuestionsDate===today && Number(u.spinCycleQuestionsAnswered ?? u.dailyQuestionsAnswered ?? 0)>=100).length
         };
         const withdrawals=[];
         users.forEach(u=>(u.withdrawRequests||[]).forEach(w=>withdrawals.push({

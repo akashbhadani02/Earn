@@ -3318,7 +3318,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
         async function claimBonus() {
             try {
-                const token = localStorage.getItem("studentToken");
+                const token = localStorage.getItem("token") || localStorage.getItem("studentToken") || localStorage.getItem("authToken");
                 if (!token) return alert("❌ Please login first.");
                 const button = document.getElementById("bonusBtn");
                 if (button) { button.disabled = true; button.innerText = "⏳ Checking Bonus..."; }
