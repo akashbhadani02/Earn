@@ -1641,8 +1641,7 @@ body.notification-locked #notificationRequiredOverlay button{
             <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Reward</button>
             <button class="btn btn-bonus" onclick="claimBonus()">⚡ ₹500 Bonus</button>
 
-            <button type="button" class="btn btn-book" onclick="buyBook()">📖 Buy Book ₹499</button>
-            <button id="downloadBookBtn" type="button" class="btn btn-book" onclick="downloadBook()" style="display:none;background:linear-gradient(135deg,#16a34a,#059669);">📥 Download Book</button>
+            <button type="button" class="btn btn-book" onclick="buyBook()">📖 Buy Book</button>
 
             <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw<span>(Min ₹500)</span></button>
 
@@ -3485,92 +3484,74 @@ document.addEventListener('click', function(e){
   <div class="book-purchase-box">
     <h3 id="bookPurchaseTitle">📖 Book Purchase</h3>
     <div class="book-price">₹499</div>
-    <p>Google Pay / UPI થી ₹499 payment કરો.જો ચુકવણી કરવામાં આવે, તો ડાઉનલોડ બુક વિકલ્પ દેખાશે.</p>
-    <button type="button" class="book-modal-btn book-download-btn" onclick="payForBook()">💳 Pay ₹499 with Google Pay / UPI</button>
+    <p id="bookPurchaseStatus">Google Pay / UPI થી payment કરો. Payment પછી “I Have Paid” દબાવો.</p>
+    <button type="button" class="book-modal-btn book-download-btn" onclick="startBookPayment()">💳 Pay ₹499 with Google Pay</button>
+    <button type="button" class="book-modal-btn book-download-btn" id="bookPaidBtn" onclick="confirmBookPayment()" style="display:none">✅ I Have Paid — Send for Verification</button>
     <button type="button" class="book-modal-btn book-close-btn" onclick="closeBookModal()">Close</button>
   </div>
 </div>
 
 <script id="book-purchase-upi">
-(function(){
-  const UPI_ID = 'baa836610@okaxis';
-  const BOOK_PRICE = '499';
-
-  function buyBook(){
-    const modal = document.getElementById('bookPurchaseModal');
-    if (modal) modal.classList.add('show');
-  }
-
-  function closeBookModal(){
-    const modal = document.getElementById('bookPurchaseModal');
-    if (modal) modal.classList.remove('show');
-  }
-
-  function payForBook(){
-    const upiUrl = 'upi://pay?pa=' + encodeURIComponent(UPI_ID)
-      + '&pn=' + encodeURIComponent('Aducate Book')
-      + '&tn=' + encodeURIComponent('Book Purchase - Rs 499')
-      + '&am=' + BOOK_PRICE + '&cu=INR';
-    // Only launches the payment app. No PDF is downloaded from the Buy button.
-    window.location.href = upiUrl;
-  }
-
-  async function refreshBookAccess(){
-    const btn = document.getElementById('downloadBookBtn');
-    if (!btn) return;
-    const token = localStorage.getItem('token');
-    if (!token) { btn.style.display = 'none'; return; }
-    try {
-      const res = await fetch('/api/book/access?_=' + Date.now(), {
-        cache: 'no-store',
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      if (!res.ok) { btn.style.display = 'none'; return; }
-      const data = await res.json();
-      btn.style.display = data.success && data.bookAccess ? 'inline-flex' : 'none';
-    } catch (e) {
-      btn.style.display = 'none';
+const BOOK_UPI_ID = "baa836610@okaxis";
+const BOOK_STATUS_API = "/api/book-purchases/status";
+function authHeaders(){
+  const t = localStorage.getItem("token") || localStorage.getItem("authToken");
+  return t ? { Authorization: "Bearer " + t } : {};
+}
+function startBookPayment(){
+  const upiUrl = "upi://pay?pa=" + encodeURIComponent(BOOK_UPI_ID)
+    + "&pn=" + encodeURIComponent("Aducate Book")
+    + "&tn=" + encodeURIComponent("Book Purchase - Rs 499")
+    + "&am=499&cu=INR";
+  document.getElementById("bookPurchaseStatus").textContent = "Google Pay માં ₹499 payment કરો. Payment થયા પછી પાછા આવીને ‘I Have Paid’ દબાવો.";
+  document.getElementById("bookPaidBtn").style.display = "block";
+  window.location.href = upiUrl;
+}
+function buyBook(){
+  const modal = document.getElementById("bookPurchaseModal");
+  if (modal) modal.classList.add("show");
+  loadBookStatus();
+}
+function closeBookModal(){
+  const modal = document.getElementById("bookPurchaseModal");
+  if (modal) modal.classList.remove("show");
+}
+async function confirmBookPayment(){
+  try{
+    const res = await fetch("/api/book-purchases/confirm", { method:"POST", headers:{...authHeaders(), "Content-Type":"application/json"} });
+    const data = await res.json();
+    if(!res.ok || !data.success) throw new Error(data.message || "Payment confirmation failed");
+    document.getElementById("bookPurchaseStatus").textContent = "⏳ Payment submitted. Admin verification pending. Book will appear after approval.";
+    document.getElementById("bookPaidBtn").style.display = "none";
+    closeBookModal();
+    loadBookStatus();
+  }catch(e){ alert(e.message || "Please login again."); }
+}
+async function loadBookStatus(){
+  try{
+    const res = await fetch(BOOK_STATUS_API + "?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
+    if(!res.ok) return;
+    const data = await res.json();
+    let host = document.getElementById("studentBookAccessBox");
+    if(!host){
+      const btn = document.querySelector(".btn-book");
+      if(!btn) return;
+      host = document.createElement("div"); host.id="studentBookAccessBox"; btn.parentElement.appendChild(host);
     }
-  }
-
-  async function downloadBook(){
-    const token = localStorage.getItem('token');
-    if (!token) { alert('Please login again.'); return; }
-    try {
-      const res = await fetch('/api/book/download', {
-        headers: { Authorization: 'Bearer ' + token }
-      });
-      if (!res.ok) {
-        let msg = 'Book is not available yet.';
-        try { const data = await res.json(); msg = data.message || msg; } catch (_) {}
-        alert(msg);
-        await refreshBookAccess();
-        return;
-      }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'book.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    } catch (e) {
-      alert('Book download failed. Please try again.');
-    }
-  }
-
-  window.buyBook = buyBook;
-  window.closeBookModal = closeBookModal;
-  window.payForBook = payForBook;
-  window.downloadBook = downloadBook;
-  window.refreshBookAccess = refreshBookAccess;
-
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(refreshBookAccess, 700);
-  });
-})();
+    host.innerHTML = data.canDownload ? `<div style="margin-top:10px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac;text-align:center"><div style="font-weight:900;color:#166534">✅ Book Access Active</div><button type="button" class="book-modal-btn book-download-btn" style="margin-top:8px" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase ? `<div style="margin-top:10px;padding:10px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;text-align:center;font-size:13px;font-weight:800;color:#9a3412">⏳ Payment: ${data.purchase.status === 'admin_verified' ? 'Verified' : 'Pending Admin Verification'}</div>` : "");
+  }catch(e){ console.warn("Book status",e); }
+}
+async function downloadBookSecure(){
+  try{
+    const res = await fetch("/api/book-purchases/download?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
+    if(!res.ok){ const d=await res.json().catch(()=>({})); throw new Error(d.message || "Book access is not active"); }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="book.pdf"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }catch(e){ alert(e.message); }
+}
+window.buyBook=buyBook; window.closeBookModal=closeBookModal; window.startBookPayment=startBookPayment; window.confirmBookPayment=confirmBookPayment; window.downloadBookSecure=downloadBookSecure;
+document.addEventListener("DOMContentLoaded", loadBookStatus);
+setInterval(loadBookStatus, 8000);
 </script>
 
 </body>

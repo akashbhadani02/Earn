@@ -12,6 +12,7 @@ const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
+const BookPurchase = require("../models/BookPurchase");
 
 // ===========================
 // Admin Login
@@ -127,6 +128,28 @@ router.post("/enable-all-users", adminAuth, async (req, res) => {
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
+});
+
+
+// ===========================
+// Book Access / Payment Summary
+// ===========================
+router.get("/book-summary", adminAuth, async (req, res) => {
+    try {
+        const purchases = await BookPurchase.find({}).sort({ createdAt: -1 }).lean();
+        const latest = new Map();
+        for (const p of purchases) if (!latest.has(String(p.user))) latest.set(String(p.user), p);
+        const all = Array.from(latest.values());
+        res.json({
+            success: true,
+            totalPurchases: all.length,
+            pending: all.filter(p => p.status === "student_confirmed").length,
+            verified: all.filter(p => p.status === "admin_verified").length,
+            activeAccess: all.filter(p => p.status === "admin_verified" && p.accessGranted).length,
+            revenueVerified: all.filter(p => p.status === "admin_verified").reduce((n,p) => n + Number(p.amount || 0), 0),
+            purchases: all
+        });
+    } catch (err) { res.status(500).json({ success:false, message:err.message }); }
 });
 
 // ===========================

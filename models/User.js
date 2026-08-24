@@ -137,14 +137,6 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
-        // Admin-controlled access to the book download.
-        // This is intentionally separate from the UPI payment flow so the admin
-        // can manually verify payment and then Show/Close the book for a student.
-        bookAccess: {
-            type: Boolean,
-            default: false
-        },
-
         // Soft delete: deleted users are hidden from active lists but can be restored by admin.
         isDeleted: {
             type: Boolean,

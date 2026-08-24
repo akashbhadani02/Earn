@@ -8,6 +8,9 @@ const bookPurchaseSchema = new mongoose.Schema({
   upiId: { type: String, default: "baa836610@okaxis" },
   receiptId: { type: String, required: true, unique: true, index: true },
   status: { type: String, enum: ["student_confirmed", "admin_verified", "rejected"], default: "student_confirmed" },
+  accessGranted: { type: Boolean, default: false, index: true },
+  downloadCount: { type: Number, default: 0 },
+  lastDownloadAt: { type: Date, default: null },
   createdAt: { type: Date, default: Date.now },
   verifiedAt: { type: Date, default: null },
   verifiedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", default: null }

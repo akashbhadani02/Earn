@@ -44,9 +44,13 @@ app.use("/api/admin",adminRoutes);
 app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
-app.use("/api/book", bookPurchaseRoutes);
+app.use("/api/book-purchases", bookPurchaseRoutes);
 
 
+app.use((req, res, next) => {
+    if (req.path === "/books/book.pdf") return res.status(403).json({ success: false, message: "Book download requires active student access." });
+    next();
+});
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{

@@ -42,6 +42,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:1300px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.ap2-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.admin-user-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:800px){body{padding:12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.ap2-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-user-cards,.admin-question-cards{grid-template-columns:1fr}.admin-main-menu{overflow-x:auto;flex-wrap:nowrap}.admin-main-menu button{white-space:nowrap}.table-wrap{border-radius:12px}body>div:first-child{align-items:flex-start;flex-direction:column}}
 @media(max-width:520px){.cards,.ap2-grid{grid-template-columns:1fr}.admin-user-actions button{flex:1 1 calc(50% - 8px)}body>div:first-child>div{width:100%;flex-wrap:wrap}body>div:first-child>div button{flex:1 1 auto}}
+@media(max-width:700px){#bookAdminStats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 
 
@@ -400,6 +401,10 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:700px){#ap2Modal .student-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#ap2Modal .student-data-cards{grid-template-columns:1fr!important}}
 @media(max-width:430px){#ap2Modal .student-summary-grid{grid-template-columns:1fr!important}.student-view-header{align-items:flex-start!important}}
 </style>
+
+<style id="admin-book-access-style">
+.admin-book-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.admin-book-actions button{border:0;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.admin-book-show{background:#dcfce7;color:#166534}.admin-book-close{background:#fee2e2;color:#991b1b}.admin-book-status{font-size:11px;font-weight:900;margin-top:6px}.admin-book-pending{color:#9a3412}.admin-book-verified{color:#166534}.admin-book-none{color:#64748b}@media(max-width:600px){.admin-book-actions{display:grid;grid-template-columns:1fr 1fr}.admin-book-actions button{width:100%}}
+</style>
 </head>
 
 <body>
@@ -503,7 +508,13 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     </div>
     </section>
 
-    <section id="adminSectionUsers">
+    <div id="bookAdminStats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px">
+  <div style="padding:12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa"><b>📚 Book Purchases</b><div id="bookStatPurchases" style="font-size:22px;font-weight:900">0</div></div>
+  <div style="padding:12px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a"><b>⏳ Pending</b><div id="bookStatPending" style="font-size:22px;font-weight:900">0</div></div>
+  <div style="padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac"><b>✅ Verified</b><div id="bookStatVerified" style="font-size:22px;font-weight:900">0</div></div>
+  <div style="padding:12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe"><b>💰 Verified Revenue</b><div id="bookStatRevenue" style="font-size:22px;font-weight:900">₹0</div></div>
+</div>
+<section id="adminSectionUsers">
     <div class="users-online-top">
         <div class="users-online-top-head">
             <h3>🟢 Online Students <span id="onlineUsersCount">0</span></h3>
@@ -920,6 +931,15 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             }
         }
 
+        async function loadBookAdminSummary(){
+            try{
+                const res=await fetch("/api/admin/book-summary?_="+Date.now(),{cache:"no-store",headers:{Authorization:"Bearer "+token}});
+                const d=await res.json(); if(!res.ok||!d.success) return;
+                const set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
+                set("bookStatPurchases",d.totalPurchases||0); set("bookStatPending",d.pending||0); set("bookStatVerified",d.verified||0); set("bookStatRevenue","₹"+Number(d.revenueVerified||0).toFixed(0));
+            }catch(e){console.warn("Book summary",e)}
+        }
+
         //==========================
         // Load Users
         //==========================
@@ -947,9 +967,16 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             }
 
             allUsers = data.users || [];
+            try {
+                const br = await fetch("/api/book-purchases/admin/users?_=" + Date.now(), { cache:"no-store", headers:{ Authorization:"Bearer " + token } });
+                const bd = await br.json();
+                const bm = new Map((bd.users || []).map(x => [String(x.userId), x.purchase]));
+                allUsers.forEach(u => { u.bookPurchase = bm.get(String(u._id)) || null; });
+            } catch(e) { console.warn("Book access data load failed", e); }
 
             showUsers(allUsers);
             updateOnlineUsersCount();
+            loadBookAdminSummary();
 
         }
 
@@ -1045,8 +1072,12 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
-                        <button onclick="toggleBookAccess('${user._id}', ${user.bookAccess ? 'false' : 'true'})" class="${user.bookAccess ? 'red' : 'green'}" title="${user.bookAccess ? 'Close Book' : 'Show Book'}">${user.bookAccess ? '📕 Close Book' : '📖 Show Book'}</button>
                         ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
+                        <div class="admin-book-actions">
+                          <button class="admin-book-show" onclick="adminShowBook('${user._id}')">📖 Show Book</button>
+                          <button class="admin-book-close" onclick="adminCloseBook('${user._id}')">📕 Close Book</button>
+                        </div>
+                        <div class="admin-book-status ${user.bookPurchase?.status==='student_confirmed'?'admin-book-pending':user.bookPurchase?.status==='admin_verified'?'admin-book-verified':'admin-book-none'}">${user.bookPurchase ? (user.bookPurchase.status==='admin_verified' ? (user.bookPurchase.accessGranted ? '📖 BOOK ACCESS: ACTIVE' : '🔒 BOOK ACCESS: CLOSED') : '⏳ PAYMENT: PENDING VERIFY') : '📚 BOOK: NOT PURCHASED'}</div>
                     </div>
                 </article>`;
             }).join('');
@@ -1763,30 +1794,31 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         }
 
         //==========================
-        // Admin Book Access
+        // Book Access Controls
         //==========================
-        async function toggleBookAccess(id, enabled) {
-            const user = allUsers.find(u => String(u._id) === String(id));
-            const action = enabled ? 'Show Book' : 'Close Book';
-            if (!confirm((enabled ? '📖 Show book to ' : '📕 Close book for ') + (user?.name || 'this student') + '?')) return;
-            try {
-                const res = await fetch('/api/book/access/' + encodeURIComponent(id), {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: 'Bearer ' + token
-                    },
-                    body: JSON.stringify({ enabled: !!enabled })
-                });
+        async function adminShowBook(id){
+            const u = allUsers.find(x => String(x._id) === String(id));
+            if (!u) return;
+            if (!confirm(`Verify payment and SHOW BOOK for ${u.name || 'this student'}?\n\nOnly do this after checking the ₹499 UPI transaction/UTR.`)) return;
+            try{
+                const res = await fetch(`/api/book-purchases/admin/${id}/show`, { method:"PUT", headers:{ Authorization:"Bearer " + token, "Content-Type":"application/json" } });
                 const data = await res.json();
-                if (!res.ok || !data.success) { alert(data.message || action + ' failed'); return; }
-                const target = allUsers.find(u => String(u._id) === String(id));
-                if (target) target.bookAccess = !!enabled;
-                showUsers(allUsers);
-                alert('✅ ' + data.message);
-            } catch (err) {
-                alert(action + ' failed: ' + err.message);
-            }
+                if(!res.ok || !data.success){ alert(data.message || "Book access update failed"); return; }
+                alert("✅ Payment verified. Book access is now ACTIVE for this student.");
+                await loadUsers();
+            }catch(e){ alert(e.message); }
+        }
+        async function adminCloseBook(id){
+            const u = allUsers.find(x => String(x._id) === String(id));
+            if (!u) return;
+            if (!confirm(`Close book access for ${u.name || 'this student'}?`)) return;
+            try{
+                const res = await fetch(`/api/book-purchases/admin/${id}/close`, { method:"PUT", headers:{ Authorization:"Bearer " + token } });
+                const data = await res.json();
+                if(!res.ok || !data.success){ alert(data.message || "Book access close failed"); return; }
+                alert("🔒 Book access closed.");
+                await loadUsers();
+            }catch(e){ alert(e.message); }
         }
 
         //==========================
