@@ -101,6 +101,25 @@ router.put("/admin/:userId/show", adminAuth, async (req, res) => {
   }
 });
 
+// Admin: decline a pending payment confirmation. The student will no longer see a pending request.
+router.put("/admin/:userId/decline", adminAuth, async (req, res) => {
+  try {
+    const purchase = await BookPurchase.findOne({ user: req.params.userId }).sort({ createdAt: -1 });
+    if (!purchase) return res.status(404).json({ success: false, message: "No book purchase request found." });
+    if (purchase.status === "admin_verified" && purchase.accessGranted) {
+      return res.status(400).json({ success: false, message: "Book access is active. Close access before declining this request." });
+    }
+    purchase.status = "rejected";
+    purchase.accessGranted = false;
+    purchase.verifiedAt = null;
+    purchase.verifiedBy = req.admin.id;
+    await purchase.save();
+    res.json({ success: true, message: "Payment request declined. It is no longer shown as pending to the student.", purchase });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // Admin: revoke access without deleting payment history.
 router.put("/admin/:userId/close", adminAuth, async (req, res) => {
   try {

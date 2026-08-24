@@ -3538,7 +3538,7 @@ async function loadBookStatus(){
       if(!btn) return;
       host = document.createElement("div"); host.id="studentBookAccessBox"; btn.parentElement.appendChild(host);
     }
-    host.innerHTML = data.canDownload ? `<div style="margin-top:10px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac;text-align:center"><div style="font-weight:900;color:#166534">✅ Book Access Active</div><button type="button" class="book-modal-btn book-download-btn" style="margin-top:8px" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase ? `<div style="margin-top:10px;padding:10px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;text-align:center;font-size:13px;font-weight:800;color:#9a3412">⏳ Payment: ${data.purchase.status === 'admin_verified' ? 'Verified' : 'Pending Admin Verification'}</div>` : "");
+    host.innerHTML = data.canDownload ? `<div style="margin-top:10px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac;text-align:center"><div style="font-weight:900;color:#166534">✅ Book Access Active</div><button type="button" class="book-modal-btn book-download-btn" style="margin-top:8px" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div style="margin-top:10px;padding:10px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;text-align:center;font-size:13px;font-weight:800;color:#9a3412">🔒 Book Access Closed</div>` : "");
   }catch(e){ console.warn("Book status",e); }
 }
 async function downloadBookSecure(){

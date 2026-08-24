@@ -403,7 +403,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 <style id="admin-book-access-style">
-.admin-book-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.admin-book-actions button{border:0;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.admin-book-show{background:#dcfce7;color:#166534}.admin-book-close{background:#fee2e2;color:#991b1b}.admin-book-status{font-size:11px;font-weight:900;margin-top:6px}.admin-book-pending{color:#9a3412}.admin-book-verified{color:#166534}.admin-book-none{color:#64748b}@media(max-width:600px){.admin-book-actions{display:grid;grid-template-columns:1fr 1fr}.admin-book-actions button{width:100%}}
+.admin-book-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.admin-book-actions button{border:0;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.admin-book-show{background:#dcfce7;color:#166534}.admin-book-close{background:#fee2e2;color:#991b1b}.admin-book-decline{background:#f3e8ff;color:#7e22ce}.admin-book-status{font-size:11px;font-weight:900;margin-top:6px}.admin-book-pending{color:#9a3412}.admin-book-verified{color:#166534}.admin-book-none{color:#64748b}@media(max-width:600px){.admin-book-actions{display:grid;grid-template-columns:1fr 1fr}.admin-book-actions button{width:100%}}
 </style>
 </head>
 
@@ -1076,8 +1076,9 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <div class="admin-book-actions">
                           <button class="admin-book-show" onclick="adminShowBook('${user._id}')">📖 Show Book</button>
                           <button class="admin-book-close" onclick="adminCloseBook('${user._id}')">📕 Close Book</button>
+                          ${user.bookPurchase?.status==='student_confirmed' ? `<button class="admin-book-decline" onclick="adminDeclineBook('${user._id}')">🚫 Decline</button>` : ''}
                         </div>
-                        <div class="admin-book-status ${user.bookPurchase?.status==='student_confirmed'?'admin-book-pending':user.bookPurchase?.status==='admin_verified'?'admin-book-verified':'admin-book-none'}">${user.bookPurchase ? (user.bookPurchase.status==='admin_verified' ? (user.bookPurchase.accessGranted ? '📖 BOOK ACCESS: ACTIVE' : '🔒 BOOK ACCESS: CLOSED') : '⏳ PAYMENT: PENDING VERIFY') : '📚 BOOK: NOT PURCHASED'}</div>
+                        <div class="admin-book-status ${user.bookPurchase?.status==='student_confirmed'?'admin-book-pending':user.bookPurchase?.status==='admin_verified'?'admin-book-verified':'admin-book-none'}">${user.bookPurchase ? (user.bookPurchase.status==='admin_verified' ? (user.bookPurchase.accessGranted ? '📖 BOOK ACCESS: ACTIVE' : '🔒 BOOK ACCESS: CLOSED') : (user.bookPurchase.status==='rejected' ? '🚫 PAYMENT REQUEST: DECLINED' : '⏳ PAYMENT: PENDING VERIFY')) : '📚 BOOK: NOT PURCHASED'}</div>
                     </div>
                 </article>`;
             }).join('');
@@ -1805,6 +1806,18 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 const data = await res.json();
                 if(!res.ok || !data.success){ alert(data.message || "Book access update failed"); return; }
                 alert("✅ Payment verified. Book access is now ACTIVE for this student.");
+                await loadUsers();
+            }catch(e){ alert(e.message); }
+        }
+        async function adminDeclineBook(id){
+            const u = allUsers.find(x => String(x._id) === String(id));
+            if (!u) return;
+            if (!confirm(`Decline the pending book payment request for ${u.name || 'this student'}?\n\nThe pending request will disappear from the student's dashboard.`)) return;
+            try{
+                const res = await fetch(`/api/book-purchases/admin/${id}/decline`, { method:"PUT", headers:{ Authorization:"Bearer " + token, "Content-Type":"application/json" } });
+                const data = await res.json();
+                if(!res.ok || !data.success){ alert(data.message || "Decline failed"); return; }
+                alert("🚫 Payment request declined. The student will no longer see it as pending.");
                 await loadUsers();
             }catch(e){ alert(e.message); }
         }
