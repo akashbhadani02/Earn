@@ -1856,11 +1856,27 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
                 let permission = Notification.permission;
 
-                // Browser permission prompt must be triggered by a user gesture.
+                // IMPORTANT: Never open the browser permission popup automatically.
+                // It is allowed only when the user explicitly clicks the Enable button.
+                if (permission === "denied") {
+                    throw new Error("NOTIFICATION_BLOCKED");
+                }
+
                 if (permission !== "granted") {
-                    if (permission === "denied") {
-                        throw new Error("NOTIFICATION_BLOCKED");
+                    if (!fromUserClick) {
+                        // First visit / new device: show our in-app overlay only.
+                        // The real browser permission prompt will appear only after
+                        // the user clicks the Enable App Notifications button.
+                        if (status) status.innerText = "🔔 Notifications Enable કરવા માટે નીચેનું button દબાવો.";
+                        if (requiredButton) requiredButton.disabled = false;
+                        if (button) {
+                            button.disabled = false;
+                            button.innerText = "🔔 Enable App Notifications";
+                        }
+                        showNotificationRequired();
+                        return false;
                     }
+
                     permission = await Notification.requestPermission();
                 }
 
@@ -2009,9 +2025,12 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             }
         }
 
-        // Student must enable notifications before using the dashboard.
+        // Check the real browser permission on every device/browser profile.
+        // If already allowed and subscribed, do NOT show the notification popup.
+        // If this is a new device (permission is default), show only the in-app
+        // enable screen; the browser permission popup is opened after the user click.
         window.addEventListener("DOMContentLoaded", function () {
-            showNotificationRequired();
+            checkNotificationStatus();
         });
 
         window.addEventListener("load", function () {
