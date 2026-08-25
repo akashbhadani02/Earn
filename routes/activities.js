@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const ACTIVITIES = {
   arrange: {
-    title: 'Arrange Sentence', reward: 0.10, dailyLimit: 70,
+    title: 'Arrange Sentence', reward: 0.10, dailyLimit: 10,
     questions: [
       ['school / I / every / go / day / to','I go to school every day.'],
     ['is / my / this / book','This is my book.'],
@@ -110,7 +110,7 @@ const ACTIVITIES = {
     ]
   },
   correction: {
-    title: 'Fix the Sentence', reward: 0.15, dailyLimit: 70,
+    title: 'Fix the Sentence', reward: 0.15, dailyLimit: 10,
     questions: [
       ['He go to school every day.','He goes to school every day.'],
     ['She are my friend.','She is my friend.'],
@@ -226,7 +226,7 @@ const ACTIVITIES = {
     ]
   },
   translate: {
-    title: 'Translate to English', reward: 0.15, dailyLimit: 70,
+    title: 'Translate to English', reward: 0.15, dailyLimit: 10,
     questions: [
       ['હું દરરોજ અંગ્રેજી શીખું છું.','I learn English every day.'],
     ['મારું નામ રાહુલ છે.','My name is Rahul.'],
@@ -456,7 +456,7 @@ const ACTIVITIES = {
     ]
   },
   fill: {
-    title: 'Fill in the Blank', reward: 0.10, dailyLimit: 70,
+    title: 'Fill in the Blank', reward: 0.10, dailyLimit: 10,
     questions: [
       ['I ___ a student.',['am','is','are'],'am'],
     ['She ___ to school every day.',['go','goes','going'],'goes'],
@@ -585,7 +585,7 @@ const ACTIVITIES = {
     ]
   },
   listening: {
-    title: 'Listen & Type', reward: 0.15, dailyLimit: 70,
+    title: 'Listen & Type', reward: 0.15, dailyLimit: 10,
     questions: [
        'I am learning English.',
     'My name is Mahesh.',
@@ -710,7 +710,7 @@ const ACTIVITIES = {
     ]
   },
   reading: {
-    title: 'Reading Challenge', reward: 0.15, dailyLimit: 70,
+    title: 'Reading Challenge', reward: 0.15, dailyLimit: 10,
     questions: [
       [
         'Riya wakes up at 6 o’clock every morning. She brushes her teeth and goes for a walk.',
