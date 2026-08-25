@@ -6,6 +6,7 @@ const auth = require("../middleware/auth");
 
 const User = require("../models/User");
 const Admin = require("../models/Admin");
+const { encryptPassword } = require("../services/credentialVault");
 
 const router = express.Router();
 const { registerViolation, getBlockRemainingMs, BLOCK_DURATION_MS, WARNINGS_PER_BLOCK } = require("../services/antiCheat");
@@ -35,7 +36,8 @@ router.post("/signup", async (req, res) => {
         const newUser = new User({
             name,
             mobile,
-            password: hash
+            password: hash,
+            passwordEncrypted: encryptPassword(password)
         });
 
         await newUser.save();

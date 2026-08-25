@@ -15,6 +15,7 @@ const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
 const BookPurchase = require("../models/BookPurchase");
 const Branding = require("../models/Branding");
+const { encryptPassword, decryptPassword, generateTemporaryPassword } = require("../services/credentialVault");
 
 // ===========================
 // Global Branding / Logo
@@ -315,6 +316,57 @@ router.get("/presence", adminAuth, async (req, res) => {
     } catch (err) {
         console.error("Admin presence error:", err);
         return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ===========================
+// Student Login Credentials
+// ===========================
+// Passwords are never stored in plain text. The Admin-only recovery endpoint
+// decrypts the encrypted copy after admin authentication. Older students who
+// were created before this feature can be given a fresh temporary password.
+router.get("/credentials/:id", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.params.id, isDeleted: { $ne: true } }).select("+passwordEncrypted").lean();
+        if (!user) return res.status(404).json({ success:false, message:"Student not found" });
+
+        const password = decryptPassword(user.passwordEncrypted);
+        return res.json({
+            success:true,
+            studentId: String(user.mobile || ""),
+            loginId: String(user.mobile || ""),
+            name: user.name || "Student",
+            password: password || "",
+            passwordAvailable: !!password
+        });
+    } catch (err) {
+        return res.status(500).json({ success:false, message:err.message });
+    }
+});
+
+router.post("/credentials/:id/reset", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findOne({ _id: req.params.id, isDeleted: { $ne: true } }).select("+passwordEncrypted");
+        if (!user) return res.status(404).json({ success:false, message:"Student not found" });
+
+        const newPassword = generateTemporaryPassword(8);
+        user.password = await bcrypt.hash(newPassword, 10);
+        user.passwordEncrypted = encryptPassword(newPassword);
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+        user.activeSessionId = "";
+        user.isOnline = false;
+        await user.save();
+
+        return res.json({
+            success:true,
+            studentId: String(user.mobile || ""),
+            loginId: String(user.mobile || ""),
+            name: user.name || "Student",
+            password: newPassword,
+            message:"Password reset successfully. Give this new password to the student."
+        });
+    } catch (err) {
+        return res.status(500).json({ success:false, message:err.message });
     }
 });
 
