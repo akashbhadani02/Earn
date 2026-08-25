@@ -437,6 +437,116 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 
+
+<style id="admin-dashboard-button-arrangement">
+/* Professional arrangement — Admin Dashboard controls only */
+.admin-brand-head{
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:minmax(220px,1fr) auto !important;
+  align-items:center !important;
+  gap:18px !important;
+  padding:16px 18px !important;
+  margin-bottom:14px !important;
+  background:var(--surface,#fff) !important;
+  border:1px solid var(--border,#d9e2ef) !important;
+  border-radius:18px !important;
+  box-shadow:0 8px 28px rgba(15,23,42,.08) !important;
+}
+.admin-brand-head > div:first-child{
+  min-width:0 !important;
+}
+.admin-brand-head > div:last-child{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(125px,1fr)) !important;
+  gap:8px !important;
+  align-items:stretch !important;
+}
+.admin-brand-head > div:last-child > button{
+  width:100% !important;
+  min-width:125px !important;
+  min-height:42px !important;
+  margin:0 !important;
+  padding:10px 12px !important;
+  border-radius:11px !important;
+  border:1px solid transparent !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  box-shadow:0 3px 10px rgba(15,23,42,.08) !important;
+  transform:none !important;
+}
+.admin-brand-head > div:last-child > button:hover{
+  transform:translateY(-1px) !important;
+  box-shadow:0 6px 16px rgba(15,23,42,.12) !important;
+}
+/* Main admin navigation: evenly sized professional buttons */
+.admin-main-menu{
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:8px !important;
+  padding:9px !important;
+  margin-bottom:18px !important;
+}
+.admin-main-menu button{
+  width:100% !important;
+  min-height:44px !important;
+  padding:10px 12px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  white-space:nowrap !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+}
+@media (max-width:900px){
+  .admin-brand-head{
+    grid-template-columns:1fr !important;
+  }
+  .admin-brand-head > div:last-child{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .admin-brand-head > div:last-child > button{
+    min-width:0 !important;
+  }
+  .admin-main-menu{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+@media (max-width:520px){
+  .admin-brand-head{
+    padding:13px !important;
+    gap:12px !important;
+  }
+  .admin-brand-head > div:last-child{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+  }
+  .admin-brand-head > div:last-child > button{
+    min-height:40px !important;
+    padding:8px 6px !important;
+    font-size:11px !important;
+  }
+  .admin-main-menu{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:7px !important;
+    padding:7px !important;
+  }
+  .admin-main-menu button{
+    min-height:42px !important;
+    padding:8px 5px !important;
+    font-size:11px !important;
+  }
+}
+</style>
+
 </head>
 
 <body>
