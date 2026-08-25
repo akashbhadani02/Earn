@@ -6,7 +6,7 @@
 <title>Aducate Admin App</title>
 <link rel="icon" href="/api/branding/icon?v=admin&size=32">
 <link rel="apple-touch-icon" href="/api/branding/icon?v=admin&size=180">
-<link rel="manifest" href="/admin-manifest.webmanifest?v=1">
+<link rel="manifest" href="/admin-manifest.webmanifest?v=2">
 <meta name="theme-color" content="#2563eb">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -47,6 +47,7 @@ button{width:100%;padding:14px;border:0;border-radius:12px;font-size:16px;font-w
   <button class="back" onclick="location.href='/login.html'">← Back to Student Login</button>
 
   <div id="msg"></div>
+  <div id="iosHelp" style="display:none;text-align:center;margin-top:14px;color:#cbd5e1;font-size:12px;line-height:1.5">iPhone/iPad: Safari માં <b>Share</b> → <b>Add to Home Screen</b> પસંદ કરો.</div>
   <div class="secure">🔒 Admin access only</div>
 </div>
 
@@ -95,8 +96,17 @@ async function login(){
 }
 document.addEventListener('keydown',e=>{if(e.key==='Enter') login();});
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/admin-sw.js',{scope:'/admin-app.html'}).catch(()=>{}));
 }
+
+// iOS does not expose beforeinstallprompt; show the correct install instruction.
+if(/iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream){
+  document.getElementById('iosHelp').style.display='block';
+}
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('installBtn').style.display='none';
+  deferredPrompt=null;
+});
 </script>
 </body>
 </html>
