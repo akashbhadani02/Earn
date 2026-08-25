@@ -1,3 +1,12 @@
+
+<style id="post-login-role-button-hide">
+/* Post-login: role-switch buttons belong only on the login screen. */
+body:not(.login-page) .admin-student-switch,
+body:not(.login-page) .role-switch,
+body:not(.login-page) .role-buttons,
+body:not(.login-page) .app-role-buttons,
+body:not(.login-page) .login-role-buttons { display:none !important; }
+</style>
 const crypto = require("crypto");
 const express = require("express");
 const router = express.Router();

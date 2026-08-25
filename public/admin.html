@@ -430,6 +430,16 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 .pwa-install-tools a:hover,.pwa-install-tools button:hover{background:#1d4ed8}
 @media(max-width:600px){.pwa-install-tools{left:10px;right:10px;top:10px;justify-content:center}.pwa-install-tools a,.pwa-install-tools button{flex:1 1 135px}}
 </style>
+
+<style id="post-login-role-button-hide">
+/* Post-login: role-switch buttons belong only on the login screen. */
+body:not(.login-page) .admin-student-switch,
+body:not(.login-page) .role-switch,
+body:not(.login-page) .role-buttons,
+body:not(.login-page) .app-role-buttons,
+body:not(.login-page) .login-role-buttons { display:none !important; }
+</style>
+
 </head>
 
 <body>

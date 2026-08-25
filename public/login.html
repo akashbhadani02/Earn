@@ -158,6 +158,16 @@ color:green;
 @media(max-width:450px){.app-switch-row{gap:8px}.app-switch-btn{flex:1 1 140px;min-height:44px;font-size:13px;padding:10px 10px}}
 </style>
 
+
+<style id="post-login-role-button-hide">
+/* Post-login: role-switch buttons belong only on the login screen. */
+body:not(.login-page) .admin-student-switch,
+body:not(.login-page) .role-switch,
+body:not(.login-page) .role-buttons,
+body:not(.login-page) .app-role-buttons,
+body:not(.login-page) .login-role-buttons { display:none !important; }
+</style>
+
 </head>
 
 <body>
