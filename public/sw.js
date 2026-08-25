@@ -1,5 +1,5 @@
 // ADUCATE PWA SERVICE WORKER - BRANDING AWARE
-const SW_VERSION = 'aducate-branding-live-v4';
+const SW_VERSION = 'aducate-two-apps-install-v5';
 
 self.addEventListener('install', event => {
   self.skipWaiting();

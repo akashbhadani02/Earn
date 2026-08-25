@@ -163,13 +163,21 @@ font-size:55px;
 }
 
 
-.app-switch-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28);transition:.2s;flex:1 1 145px}
+.app-switch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.app-card{display:flex;flex-direction:column;gap:7px}
+.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28);transition:.2s;width:100%;box-sizing:border-box}
 .app-switch-btn:hover{background:linear-gradient(90deg,#1e40af,#1d4ed8);transform:translateY(-2px);box-shadow:0 10px 25px rgba(37,99,235,.38)}
-.app-switch-btn.install{display:none}
-.app-switch-btn.install.show{display:inline-flex}
+.app-switch-btn.install-link{background:rgba(255,255,255,.96);color:#1d4ed8!important;border:1px solid rgba(37,99,235,.35);box-shadow:none}
+.app-switch-btn.install-link:hover{background:#fff}
+@media(max-width:430px){.app-switch-grid{grid-template-columns:1fr}}
 </style>
 
+
+<style id="cross-app-and-anti-inspect-style">
+.cross-app-btn{position:fixed;right:14px;top:14px;z-index:2147483000;display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:12px;text-decoration:none;font:700 13px/1.2 Arial,sans-serif;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.35)}
+.cross-app-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+@media(max-width:600px){.cross-app-btn{right:8px;top:8px;padding:7px 10px;font-size:11px;border-radius:10px}}
+</style>
 </head>
 
 <body>
@@ -186,9 +194,15 @@ font-size:55px;
 
 <button onclick="login()">Login</button>
 
-<div class="app-switch-row">
-<button type="button" id="adminInstallBtn" class="app-switch-btn install">📲 Install Admin App</button>
-<a class="app-switch-btn" href="/login.html?app=student">🎓 Student App</a>
+<div class="app-switch-grid">
+  <div class="app-card">
+    <a class="app-switch-btn" href="/admin-login.html">🛡️ Admin App</a>
+    <button type="button" id="adminInstallBtn" class="app-switch-btn install-link">📲 Install Admin App</button>
+  </div>
+  <div class="app-card">
+    <a class="app-switch-btn" href="/login.html">🎓 Student App</a>
+    <button type="button" id="studentInstallBtn" class="app-switch-btn install-link">📲 Install Student App</button>
+  </div>
 </div>
 
 <div class="footer">
@@ -239,6 +253,23 @@ alert(data.message);
 
 </script>
 
+<script>
+let adminDeferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();adminDeferredPrompt=e;});
+function openInstallPage(url){ window.location.href=url+'?install=1'; }
+document.addEventListener('DOMContentLoaded',()=>{
+  const ab=document.getElementById('adminInstallBtn');
+  const sb=document.getElementById('studentInstallBtn');
+  if(ab) ab.addEventListener('click',async()=>{if(!adminDeferredPrompt)return; adminDeferredPrompt.prompt(); await adminDeferredPrompt.userChoice; adminDeferredPrompt=null;});
+  if(sb) sb.addEventListener('click',()=>openInstallPage('/login.html'));
+  if(ab) ab.addEventListener('click',async()=>{
+    if(adminDeferredPrompt){ adminDeferredPrompt.prompt(); await adminDeferredPrompt.userChoice; adminDeferredPrompt=null; }
+    else { alert('Chrome ma Install App option mate aa page ne HTTPS par kholo, pachhi ⋮ menu → Install app / Add to Home screen select karo.'); }
+  });
+  if(new URLSearchParams(location.search).get('install')==='1' && adminDeferredPrompt){setTimeout(()=>ab?.click(),500);}
+});
+</script>
+
 <script id="globalBrandingClient">
 (function(){
   const FALLBACK='/aducate.png';
@@ -272,6 +303,22 @@ alert(data.message);
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script></body>
+<script src="/mobile-branding.js" defer></script>
+<script id="anti-inspect-protection">
+(function(){
+  // Discourage common browser DevTools/inspect shortcuts. This cannot override browser-level controls.
+  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, {capture:true});
+  document.addEventListener('dragstart', function(e){ e.preventDefault(); }, {capture:true});
+  document.addEventListener('keydown', function(e){
+    var k=(e.key||'').toLowerCase();
+    var blocked = k==='f12' ||
+      (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) ||
+      (e.ctrlKey && k==='u') ||
+      (e.metaKey && e.altKey && ['i','j','c'].includes(k));
+    if(blocked){ e.preventDefault(); e.stopPropagation(); return false; }
+  }, {capture:true});
+})();
+</script>
+</body>
 
 </html>
