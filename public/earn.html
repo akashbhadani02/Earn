@@ -1640,7 +1640,21 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
 </head>
 
-<body>
+<body><div id="dashboardAppInstallPanel" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:10px;position:sticky;top:0;z-index:9999;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);">
+<button type="button" id="dashInstallBtn" style="border:0;border-radius:10px;padding:10px 14px;font-weight:800;color:#fff;background:#1976d2;cursor:pointer;">📲 Install Student App</button>
+<a href="/admin-login.html?app=admin" style="text-decoration:none;border-radius:10px;padding:10px 14px;font-weight:800;color:#fff;background:#1976d2;display:inline-flex;align-items:center;">🛡️ Admin App</a>
+</div>
+<script>
+(function(){
+ let deferred=null;
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
+ const b=document.getElementById('dashInstallBtn');
+ if(b)b.addEventListener('click',async()=>{
+   if(deferred){try{await deferred.prompt(); await deferred.userChoice;}catch(e){} deferred=null;}
+   else alert('Install App: Chrome માં ⋮ menu → Install app / Add to Home screen. HTTPS જરૂરી છે.');
+ });
+})();
+</script>
 
 <!-- Mandatory notification gate: no dashboard option can be used until notifications are enabled -->
 <div id="notificationRequiredOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationGateTitle">

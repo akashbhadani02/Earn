@@ -155,7 +155,7 @@ color:green;
 .app-switch-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 .app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#2196f3,#00bcd4);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 6px 16px rgba(33,150,243,.25);transition:.2s;flex:1 1 145px}
 .app-switch-btn:hover{background:linear-gradient(90deg,#1976d2,#0097a7);transform:translateY(-1px);box-shadow:0 8px 20px rgba(33,150,243,.32)}
-.app-switch-btn.install{display:none}
+.app-switch-btn.install{display:inline-flex}
 .app-switch-btn.install.show{display:inline-flex}
 </style>
 
@@ -579,7 +579,15 @@ async function performLogin(mobile, password){
 
 let studentDeferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();studentDeferredPrompt=e;const b=document.getElementById('studentInstallBtn');if(b)b.classList.add('show');});
-document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('studentInstallBtn');if(b)b.addEventListener('click',async()=>{if(!studentDeferredPrompt)return;studentDeferredPrompt.prompt();await studentDeferredPrompt.userChoice;studentDeferredPrompt=null;b.classList.remove('show');});});
+document.addEventListener('DOMContentLoaded',()=>{
+ const b=document.getElementById('studentInstallBtn');
+ if(!b)return;
+ b.classList.add('show');
+ b.addEventListener('click',async()=>{
+   if(studentDeferredPrompt){try{studentDeferredPrompt.prompt(); await studentDeferredPrompt.userChoice;}catch(e){} studentDeferredPrompt=null; return;}
+   alert('Install App: Chrome માં ⋮ menu ખોલો → Install app / Add to Home screen પસંદ કરો. HTTPS પર હોવું જરૂરી છે.');
+ });
+});});
 </script>
 
 <script id="globalBrandingClient">
