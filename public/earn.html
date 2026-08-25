@@ -1768,7 +1768,6 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             <div class="topbar-right">
                 <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
                 <button class="icon-btn" onclick="location.href='profile.html'" aria-label="Profile" title="Profile">👤</button>
-                <button class="icon-btn" onclick="location.href='admin.html'" aria-label="Admin" title="Admin">⚙️</button>
             </div>
         </div>
 
@@ -1842,12 +1841,6 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             <!-- Small T&C Note -->
             
             
-            <a href="https://englishlabsurat.vercel.app/"
-            style="display:inline-block;width:5px;height:5px;color:transparent;text-decoration:none;">
-            •
-        </a>
-    </span>
-    
     <!-- Kept in the DOM so existing notification functionality continues to work. -->
     <div id="studentNotificationCard" class="notification-card-hidden">
         <div id="studentNotificationText">Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો.</div>
@@ -1855,7 +1848,6 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
     </div>
     
     <!-- Existing admin/profile functionality is now available from the top-right icons. -->
-    <button class="btn btn-Admin legacy-admin-btn" onclick="location.href='admin.html'">👤 Admin</button>
 </div>
 <div class="tc-note">
     <strong>Note:</strong>
@@ -3977,6 +3969,127 @@ setInterval(loadBookStatus, 8000);
  document.addEventListener('DOMContentLoaded',()=>{if(btn())btn().addEventListener('click',install);if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(()=>{});});
 })();
 </script>
+
+<style id="final-fullscreen-responsive-layout">
+/* Final app layout: true full-screen desktop + true mobile viewport */
+html, body {
+  width:100%;
+  min-width:0;
+  min-height:100%;
+  margin:0 !important;
+}
+body {
+  min-height:100dvh !important;
+  height:auto;
+  padding:0 !important;
+  display:block !important;
+  overflow-x:hidden;
+}
+#dashboard, #activities, #quiz, #profile, #withdraw, #wallet {
+  box-sizing:border-box;
+  width:100% !important;
+  max-width:none !important;
+  min-height:100dvh;
+  margin:0 !important;
+  border-radius:0 !important;
+}
+#dashboard {
+  padding:clamp(18px,2.2vw,34px) clamp(18px,3vw,56px) 28px !important;
+  overflow-x:hidden;
+}
+.dashboard-topbar {
+  max-width:1500px;
+  margin-left:auto;
+  margin-right:auto;
+}
+#dashboard > h2, #dashboard > .wallet-box, #dashboard > .game-hub,
+#dashboard > .dashboard-actions, #dashboard > .tc-note {
+  width:100%;
+  max-width:1500px;
+  margin-left:auto;
+  margin-right:auto;
+}
+#dashboard > h2 { margin-top:8px; }
+.wallet-box { margin-bottom:18px; }
+.game-hub { margin-top:0; }
+.dashboard-actions {
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+.dashboard-actions .btn-spin,
+.dashboard-actions .btn-withdraw,
+.dashboard-actions .telegram-btn {
+  grid-column:span 2;
+}
+.dashboard-actions .btn, .dashboard-actions .telegram-btn {
+  min-width:0;
+}
+
+@media (min-width:1100px) {
+  #dashboard { padding-left:clamp(32px,4vw,72px) !important; padding-right:clamp(32px,4vw,72px) !important; }
+  #dashboard > h2 { font-size:clamp(30px,2.4vw,42px); }
+  .wallet-box { padding:22px 28px; }
+  .game-hub { padding:18px 20px; }
+}
+
+@media (max-width:900px) {
+  #dashboard { padding:14px 12px 20px !important; }
+  .dashboard-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .dashboard-actions .btn-spin,
+  .dashboard-actions .btn-withdraw,
+  .dashboard-actions .telegram-btn { grid-column:1 / -1; }
+}
+
+@media (max-width:600px) {
+  #dashboard { padding:10px 8px 16px !important; min-height:100dvh; }
+  .dashboard-topbar { margin-bottom:6px; }
+  .dashboard-topbar > .student-live-brand-logo { width:44px; height:44px; flex-basis:44px; }
+  .topbar-right { gap:7px; }
+  .icon-btn { width:44px; height:44px; border-radius:13px; font-size:21px; }
+  #dashboard > h2 { font-size:23px; margin:4px 0 12px; }
+  .wallet-box { padding:16px 14px 18px; margin-bottom:10px; border-radius:18px; }
+  .wallet-box small { font-size:11px; }
+  .wallet-val { font-size:30px; margin-top:5px; }
+  .game-hub { margin:0 0 10px; padding:11px; border-radius:17px; }
+  .game-hub-top { gap:7px; }
+  .game-hub-title { font-size:14px; }
+  .game-level { padding:6px 9px; font-size:11px; }
+  .game-stats { gap:5px; }
+  .game-stat { padding:7px 4px; border-radius:11px; }
+  .game-stat b { font-size:14px; }
+  .game-stat span { font-size:8px; }
+  .mission-card { padding:8px 9px; margin-top:7px; border-radius:12px; font-size:11px; }
+  .mission-card small { font-size:9px; }
+  .mission-reward { font-size:10px; }
+  .adventure-grid { gap:6px !important; }
+  .adventure-card { padding:8px 5px !important; min-height:58px !important; border-radius:12px !important; font-size:10px !important; }
+  .adventure-icon { font-size:18px !important; }
+  .adventure-card small { font-size:8px !important; }
+  .challenge-card { padding:8px !important; margin-top:7px !important; }
+  .achievement-row { padding-top:7px; gap:5px; }
+  .achievement { min-width:58px; padding:6px 3px; font-size:8px; }
+  .achievement .badge { font-size:18px; }
+  .dashboard-actions { gap:7px; }
+  .dashboard-actions .btn, .dashboard-actions .telegram-btn { min-height:48px; border-radius:13px; font-size:11px; padding:8px 7px; }
+  .tc-note { font-size:9px; margin-top:8px; }
+}
+
+@media (max-width:380px) {
+  .dashboard-actions { grid-template-columns:1fr 1fr; }
+  .dashboard-actions .btn, .dashboard-actions .telegram-btn { font-size:10px; min-height:44px; }
+  #dashboard > h2 { font-size:20px; }
+  .game-hub-title { font-size:12px; }
+}
+
+@media (max-height:700px) and (min-width:601px) {
+  #dashboard { padding-top:10px !important; padding-bottom:12px !important; }
+  #dashboard > h2 { margin-bottom:8px; }
+  .wallet-box { padding:13px 20px; margin-bottom:8px; }
+  .wallet-val { font-size:30px; }
+  .game-hub { padding:10px 14px; }
+}
+</style>
+
 </body>
 
 </html>
