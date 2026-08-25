@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-<script src="/developer-guard.js"></script>
     <link rel="icon" href="/api/branding/icon?v=1&size=32" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="/api/branding/icon?v=1&size=192">
     <link rel="apple-touch-icon" sizes="180x180" href="/api/branding/icon?v=1&size=180">
@@ -169,6 +168,7 @@ font-size:55px;
 .app-switch-btn:hover{background:linear-gradient(90deg,#1e40af,#1d4ed8);transform:translateY(-2px);box-shadow:0 10px 25px rgba(37,99,235,.38)}
 .app-switch-btn.install{display:none}
 .app-switch-btn.install.show{display:inline-flex}
+.app-switch-btn.platform{display:inline-flex}
 </style>
 
 </head>
@@ -190,6 +190,8 @@ font-size:55px;
 <div class="app-switch-row">
 <button type="button" id="adminInstallBtn" class="app-switch-btn install">📲 Install Admin App</button>
 <a class="app-switch-btn" href="/login.html?app=student">🎓 Student App</a>
+<button type="button" class="app-switch-btn platform" data-platform="android" data-app="admin">📱 Android App</button>
+<button type="button" class="app-switch-btn platform" data-platform="windows" data-app="admin">🖥️ Windows EXE</button>
 </div>
 
 <div class="footer">
@@ -238,6 +240,18 @@ alert(data.message);
 
 }
 
+let adminDeferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();adminDeferredPrompt=e;const b=document.getElementById('adminInstallBtn');if(b)b.classList.add('show');});
+async function installAdminPWA(){
+  if(adminDeferredPrompt){ adminDeferredPrompt.prompt(); await adminDeferredPrompt.userChoice; adminDeferredPrompt=null; return true; }
+  alert('Chrome ma Install app / Add to Home screen option vapro. Android par aa Admin App tarike install thashe.');
+  return false;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+ const b=document.getElementById('adminInstallBtn'); if(b)b.addEventListener('click',installAdminPWA);
+ document.querySelectorAll('[data-platform="android"][data-app="admin"]').forEach(x=>x.addEventListener('click',installAdminPWA));
+ document.querySelectorAll('[data-platform="windows"][data-app="admin"]').forEach(x=>x.addEventListener('click',()=>{ alert('Windows ma Chrome > Install app thi Aducate Admin ne desktop app tarike install kari shako. Aa PWA Windows app che; alag .exe build artifact aa ZIP ma included nathi.'); }));
+});
 </script>
 
 <script id="globalBrandingClient">
