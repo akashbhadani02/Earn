@@ -1889,6 +1889,26 @@ body{background:radial-gradient(circle at 10% 0%,rgba(109,93,252,.10),transparen
 }
 </style>
 
+
+<style id="ultimate-student-animation-style">
+/* Ultimate student dashboard motion */
+#dashboard>*{animation:dashRise .55s cubic-bezier(.2,.8,.2,1) both}
+#dashboard>*:nth-child(2){animation-delay:.06s}#dashboard>*:nth-child(3){animation-delay:.12s}#dashboard>*:nth-child(4){animation-delay:.18s}#dashboard>*:nth-child(5){animation-delay:.24s}#dashboard>*:nth-child(6){animation-delay:.30s}
+@keyframes dashRise{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:none}}
+.wallet-box,.game-hub,.adventure-card,.activity-btn,.dashboard-actions .btn{will-change:transform;transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}
+.wallet-box:hover,.game-hub:hover,.adventure-card:hover,.activity-btn:hover,.dashboard-actions .btn:hover{transform:translateY(-4px) scale(1.015);filter:brightness(1.05)}
+.wallet-box{animation:walletGlow 3.2s ease-in-out infinite}
+@keyframes walletGlow{50%{transform:translateY(-2px);box-shadow:0 18px 42px rgba(79,70,229,.22)}}
+.adventure-card{animation:cardFloat 3.6s ease-in-out infinite}.adventure-card:nth-child(2){animation-delay:.45s}.adventure-card:nth-child(3){animation-delay:.9s}.adventure-card:nth-child(4){animation-delay:1.35s}
+@keyframes cardFloat{50%{transform:translateY(-5px)}}
+.activity-btn{animation:activityBreath 2.8s ease-in-out infinite}@keyframes activityBreath{50%{transform:translateY(-2px);filter:brightness(1.07)}}
+#gameToast.show{opacity:1;animation:toastIn .45s cubic-bezier(.2,.8,.2,1) both!important}#gameToast.hide{animation:toastOut .4s ease forwards!important}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,18px) scale(.82)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes toastOut{from{opacity:1;transform:translate(-50%,0) scale(1)}to{opacity:0;transform:translate(-50%,-10px) scale(.92)}}
+#dashboard .progress-fill{animation:progressGlow 2s ease-in-out infinite}@keyframes progressGlow{50%{filter:brightness(1.2)}}
+@media(max-width:600px){.wallet-box:hover,.game-hub:hover,.adventure-card:hover,.activity-btn:hover,.dashboard-actions .btn:hover{transform:none}.adventure-card{animation-duration:4.4s}}
+@media(prefers-reduced-motion:reduce){#dashboard>*,.wallet-box,.adventure-card,.activity-btn,#dashboard .progress-fill{animation:none!important;transition:none!important}}
+</style>
 </head>
 
 <body>
@@ -2973,7 +2993,7 @@ body{background:radial-gradient(circle at 10% 0%,rgba(109,93,252,.10),transparen
             return g;
         }
         function saveGameProgress(g){localStorage.setItem(GAME_KEY,JSON.stringify(g));renderGameProgress(g)}
-        function showGameToast(text,gold=false){const el=document.getElementById('gameToast');if(!el)return;el.textContent=text;el.className='game-toast'+(gold?' gold':'');void el.offsetWidth;el.classList.add('show')}
+        let gameToastTimer=null; function showGameToast(text,gold=false){const el=document.getElementById('gameToast');if(!el)return; if(gameToastTimer) clearTimeout(gameToastTimer); el.textContent=text;el.className='game-toast'+(gold?' gold':'');void el.offsetWidth;el.classList.add('show');gameToastTimer=setTimeout(()=>{el.classList.add('hide');setTimeout(()=>{el.className='game-toast';el.textContent='';},420)},5000)}
         function renderGameProgress(g=getGameProgress()){
             const level=Math.max(1,Math.floor(g.xp/100)+1), within=g.xp%100;
             g.level=level;
