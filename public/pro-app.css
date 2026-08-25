@@ -249,3 +249,54 @@ tr:hover td{background:#fbfcff!important}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+/* FINAL ACTIVITY CENTER + FULL GAME MOTION */
+#activities{
+  position:relative;
+  width:min(980px,calc(100% - 36px))!important;
+  min-height:calc(100dvh - 56px)!important;
+  margin:28px auto!important;
+  padding:clamp(22px,4vw,42px)!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  isolation:isolate;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,250,255,.96))!important;
+  box-shadow:0 30px 90px rgba(30,41,59,.14)!important;
+}
+#activities::before,#activities::after{
+  content:"";position:absolute;border-radius:50%;pointer-events:none;z-index:-1;filter:blur(2px);
+}
+#activities::before{width:260px;height:260px;left:-90px;top:-90px;background:radial-gradient(circle,rgba(124,58,237,.20),transparent 68%);animation:activityOrb1 7s ease-in-out infinite alternate}
+#activities::after{width:300px;height:300px;right:-120px;bottom:-120px;background:radial-gradient(circle,rgba(14,165,233,.18),transparent 68%);animation:activityOrb2 8s ease-in-out infinite alternate}
+#activities .activity-wallet-bar{width:min(760px,100%);box-sizing:border-box;position:relative;z-index:1;animation:activityDrop .7s cubic-bezier(.2,.8,.2,1) both,activityFloat 4s ease-in-out 1s infinite}
+#activities .activity-title{position:relative;z-index:1;font-size:clamp(24px,3vw,34px);margin:8px 0 4px;animation:activityTitle .8s cubic-bezier(.2,.8,.2,1) both}
+#activities>p{position:relative;z-index:1;animation:activityFade .8s .15s ease both}
+#activities .activity-grid{width:min(760px,100%);margin:18px auto 0!important;position:relative;z-index:1;gap:14px;animation:none}
+#activities .activity-btn{min-height:86px;border-radius:22px;padding:17px 14px;font-size:15px;box-shadow:0 14px 28px rgba(15,23,42,.12);animation:activityCardIn .7s cubic-bezier(.2,.8,.2,1) both,activityBreath 3.4s ease-in-out 1.1s infinite;animation-delay:calc(var(--n,1)*.08s),calc(var(--n,1)*.08s + 1.1s);}
+#activities .activity-btn::before{content:"";position:absolute;inset:-40% -80%;background:linear-gradient(110deg,transparent 42%,rgba(255,255,255,.38) 50%,transparent 58%);transform:translateX(-55%) rotate(8deg);animation:activityShine 4.8s ease-in-out infinite;pointer-events:none}
+#activities .activity-btn small{font-size:11px;letter-spacing:.02em}
+#activities>.btn{position:relative;z-index:1;margin-top:22px!important;min-width:190px;animation:activityFade .7s .7s ease both}
+#activities .activity-btn:hover{transform:translateY(-7px) scale(1.025)!important;box-shadow:0 20px 38px rgba(15,23,42,.20)!important;filter:saturate(1.08) brightness(1.04)}
+#activities .activity-btn:active{transform:translateY(-1px) scale(.97)!important}
+@keyframes activityOrb1{to{transform:translate(110px,70px) scale(1.25)}}
+@keyframes activityOrb2{to{transform:translate(-100px,-80px) scale(1.2)}}
+@keyframes activityDrop{from{opacity:0;transform:translateY(-28px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes activityTitle{from{opacity:0;transform:translateY(20px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes activityFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes activityCardIn{from{opacity:0;transform:translateY(35px) scale(.88) rotateX(10deg)}to{opacity:1;transform:none}}
+@keyframes activityShine{0%,55%{transform:translateX(-70%) rotate(8deg)}75%,100%{transform:translateX(70%) rotate(8deg)}}
+@media(max-width:700px){
+ #activities{width:calc(100% - 20px)!important;min-height:calc(100dvh - 24px)!important;margin:12px auto!important;padding:18px 14px 22px!important;border-radius:24px!important;justify-content:center!important}
+ #activities .activity-grid{gap:9px;margin-top:12px!important}
+ #activities .activity-btn{min-height:70px;padding:12px 8px;font-size:12px;border-radius:17px}
+ #activities .activity-btn small{font-size:9px}
+ #activities .activity-title{font-size:23px}
+ #activities>p{font-size:12px!important;margin:2px 0 4px!important}
+ #activities>.btn{margin-top:14px!important;min-width:160px}
+}
+@media(max-width:390px){#activities{width:calc(100% - 12px)!important;padding:14px 9px 18px!important}.activity-grid{gap:7px!important}.activity-btn{min-height:64px!important;font-size:11px!important}}
+@media(prefers-reduced-motion:reduce){#activities::before,#activities::after,#activities .activity-wallet-bar,#activities .activity-title,#activities>p,#activities .activity-grid,#activities .activity-btn,#activities>.btn{animation:none!important}}
