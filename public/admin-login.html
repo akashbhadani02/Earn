@@ -163,11 +163,13 @@ font-size:55px;
 }
 
 
-.app-switch-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28);transition:.2s;flex:1 1 145px}
+.app-switch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.app-card{display:flex;flex-direction:column;gap:7px}
+.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28);transition:.2s;width:100%;box-sizing:border-box}
 .app-switch-btn:hover{background:linear-gradient(90deg,#1e40af,#1d4ed8);transform:translateY(-2px);box-shadow:0 10px 25px rgba(37,99,235,.38)}
-.app-switch-btn.install{display:none}
-.app-switch-btn.install.show{display:inline-flex}
+.app-switch-btn.install-link{background:rgba(255,255,255,.96);color:#1d4ed8!important;border:1px solid rgba(37,99,235,.35);box-shadow:none}
+.app-switch-btn.install-link:hover{background:#fff}
+@media(max-width:430px){.app-switch-grid{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -186,8 +188,15 @@ font-size:55px;
 
 <button onclick="login()">Login</button>
 
-<div class="app-switch-row">
-<button type="button" id="adminInstallBtn" class="app-switch-btn install">📲 Install Admin App</button>
+<div class="app-switch-grid">
+  <div class="app-card">
+    <a class="app-switch-btn" href="/admin-login.html">🛡️ Admin App</a>
+    <button type="button" id="adminInstallBtn" class="app-switch-btn install-link">📲 Install Admin App</button>
+  </div>
+  <div class="app-card">
+    <a class="app-switch-btn" href="/login.html">🎓 Student App</a>
+    <button type="button" id="studentInstallBtn" class="app-switch-btn install-link">📲 Install Student App</button>
+  </div>
 </div>
 
 <div class="footer">
@@ -236,6 +245,19 @@ alert(data.message);
 
 }
 
+</script>
+
+<script>
+let adminDeferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();adminDeferredPrompt=e;});
+function openInstallPage(url){ window.location.href=url+'?install=1'; }
+document.addEventListener('DOMContentLoaded',()=>{
+  const ab=document.getElementById('adminInstallBtn');
+  const sb=document.getElementById('studentInstallBtn');
+  if(ab) ab.addEventListener('click',async()=>{if(!adminDeferredPrompt)return; adminDeferredPrompt.prompt(); await adminDeferredPrompt.userChoice; adminDeferredPrompt=null;});
+  if(sb) sb.addEventListener('click',()=>openInstallPage('/login.html'));
+  if(new URLSearchParams(location.search).get('install')==='1' && adminDeferredPrompt){setTimeout(()=>ab?.click(),500);}
+});
 </script>
 
 <script id="globalBrandingClient">

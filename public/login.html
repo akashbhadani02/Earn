@@ -152,11 +152,13 @@ color:green;
     font-variant-numeric:tabular-nums;
 }
 
-.app-switch-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#2196f3,#00bcd4);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 6px 16px rgba(33,150,243,.25);transition:.2s;flex:1 1 145px}
+.app-switch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.app-card{display:flex;flex-direction:column;gap:7px}
+.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 12px;border-radius:10px;border:0;background:linear-gradient(90deg,#2196f3,#00bcd4);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 6px 16px rgba(33,150,243,.25);transition:.2s;width:100%;box-sizing:border-box}
 .app-switch-btn:hover{background:linear-gradient(90deg,#1976d2,#0097a7);transform:translateY(-1px);box-shadow:0 8px 20px rgba(33,150,243,.32)}
-.app-switch-btn.install{display:none}
-.app-switch-btn.install.show{display:inline-flex}
+.app-switch-btn.install-link{background:rgba(255,255,255,.92);color:#1976d2!important;border:1px solid rgba(33,150,243,.35);box-shadow:none}
+.app-switch-btn.install-link:hover{background:#fff}
+@media(max-width:430px){.app-switch-grid{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -178,8 +180,15 @@ color:green;
 
 <button onclick="login()">Login</button>
 
-<div class="app-switch-row">
-<button type="button" id="studentInstallBtn" class="app-switch-btn install">📲 Install Student App</button>
+<div class="app-switch-grid">
+  <div class="app-card">
+    <a class="app-switch-btn" href="/admin-login.html">🛡️ Admin App</a>
+    <button type="button" id="adminInstallBtn" class="app-switch-btn install-link">📲 Install Admin App</button>
+  </div>
+  <div class="app-card">
+    <a class="app-switch-btn" href="/login.html">🎓 Student App</a>
+    <button type="button" id="studentInstallBtn" class="app-switch-btn install-link">📲 Install Student App</button>
+  </div>
 </div>
 
 <p>
@@ -577,8 +586,15 @@ async function performLogin(mobile, password){
 
 
 let studentDeferredPrompt=null;
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();studentDeferredPrompt=e;const b=document.getElementById('studentInstallBtn');if(b)b.classList.add('show');});
-document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('studentInstallBtn');if(b)b.addEventListener('click',async()=>{if(!studentDeferredPrompt)return;studentDeferredPrompt.prompt();await studentDeferredPrompt.userChoice;studentDeferredPrompt=null;b.classList.remove('show');});});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();studentDeferredPrompt=e;});
+function openInstallPage(url){ window.location.href=url+'?install=1'; }
+document.addEventListener('DOMContentLoaded',()=>{
+  const sb=document.getElementById('studentInstallBtn');
+  const ab=document.getElementById('adminInstallBtn');
+  if(sb) sb.addEventListener('click',async()=>{if(!studentDeferredPrompt){return;} studentDeferredPrompt.prompt(); await studentDeferredPrompt.userChoice; studentDeferredPrompt=null;});
+  if(ab) ab.addEventListener('click',()=>openInstallPage('/admin-login.html'));
+  if(new URLSearchParams(location.search).get('install')==='1' && studentDeferredPrompt){setTimeout(()=>sb?.click(),500);}
+});
 </script>
 
 <script id="globalBrandingClient">
