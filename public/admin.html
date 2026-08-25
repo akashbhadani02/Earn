@@ -423,23 +423,21 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 <style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
+
+<style id="pwaInstallToolsStyle">
+.pwa-install-tools{position:fixed;right:14px;top:14px;z-index:100000;display:flex;gap:7px;flex-wrap:wrap;align-items:center;max-width:min(96vw,430px);padding:7px;border-radius:14px;background:rgba(255,255,255,.96);border:1px solid #d9e2ef;box-shadow:0 8px 28px rgba(15,23,42,.14);backdrop-filter:blur(8px)}
+.pwa-install-tools a,.pwa-install-tools button{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border:0;border-radius:9px;background:#2563eb;color:#fff!important;text-decoration:none;font:700 13px Inter,Segoe UI,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+.pwa-install-tools a:hover,.pwa-install-tools button:hover{background:#1d4ed8}
+@media(max-width:600px){.pwa-install-tools{left:10px;right:10px;top:10px;justify-content:center}.pwa-install-tools a,.pwa-install-tools button{flex:1 1 135px}}
+</style>
 </head>
 
-<body><div id="dashboardAppInstallPanel" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:10px;position:sticky;top:0;z-index:9999;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);">
-<button type="button" id="dashInstallBtn" style="border:0;border-radius:10px;padding:10px 14px;font-weight:800;color:#fff;background:#1e40af;cursor:pointer;">📲 Install Admin App</button>
-<a href="/login.html?app=student" style="text-decoration:none;border-radius:10px;padding:10px 14px;font-weight:800;color:#fff;background:#1e40af;display:inline-flex;align-items:center;">🎓 Student App</a>
+<body>
+<div id="pwaInstallTools" class="pwa-install-tools" aria-label="Aducate App shortcuts">
+  <button type="button" id="pwaInstallBtn">📲 Install Admin App</button>
+  <a href="/login.html?app=student">🎓 Student App</a>
 </div>
-<script>
-(function(){
- let deferred=null;
- window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
- const b=document.getElementById('dashInstallBtn');
- if(b)b.addEventListener('click',async()=>{
-   if(deferred){try{await deferred.prompt(); await deferred.userChoice;}catch(e){} deferred=null;}
-   else alert('Install App: Chrome માં ⋮ menu → Install app / Add to Home screen. HTTPS જરૂરી છે.');
- });
-})();
-</script>
+
 
     <div class="admin-brand-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:12px;min-width:0;">
@@ -3338,7 +3336,23 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script></body>
+<script src="/mobile-branding.js" defer></script>
+<script id="pwaInstallController">
+(function(){
+ let deferred=null;
+ const btn=()=>document.getElementById('pwaInstallBtn');
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
+ window.addEventListener('appinstalled',()=>{deferred=null;});
+ async function install(){
+   if(deferred){deferred.prompt();try{await deferred.userChoice;}catch(e){}deferred=null;return;}
+   const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+   if(standalone){alert('Aducate Admin App is already installed/open as an app.');return;}
+   alert('Chrome controls installation. Open Chrome menu (⋮) → Install app / Add to Home screen. Use HTTPS for the install option.');
+ }
+ document.addEventListener('DOMContentLoaded',()=>{if(btn())btn().addEventListener('click',install);if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(()=>{});});
+})();
+</script>
+</body>
 
 </html><style id="command-center-mobile-card-fix">
 /* Command Center compact card layout */

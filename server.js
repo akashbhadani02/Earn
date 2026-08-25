@@ -113,6 +113,18 @@ app.use((req, res, next) => {
     if (req.path === "/books/book.pdf") return res.status(403).json({ success: false, message: "Book download requires active student access." });
     next();
 });
+app.get("/student-manifest.webmanifest", (req,res)=>{
+    res.set("Content-Type","application/manifest+json; charset=utf-8");
+    res.set("Cache-Control","no-store, max-age=0");
+    return res.sendFile(path.join(__dirname,"public","student-manifest.webmanifest"));
+});
+
+app.get("/admin-manifest.webmanifest", (req,res)=>{
+    res.set("Content-Type","application/manifest+json; charset=utf-8");
+    res.set("Cache-Control","no-store, max-age=0");
+    return res.sendFile(path.join(__dirname,"public","admin-manifest.webmanifest"));
+});
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{

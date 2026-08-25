@@ -47,8 +47,11 @@
       ]
     }
   ],
+  "description": "Aducate Student App",
   "display_override": [
     "window-controls-overlay",
     "standalone"
-  ]
+  ],
+  "prefer_related_applications": false,
+  "orientation": "portrait-primary"
 }

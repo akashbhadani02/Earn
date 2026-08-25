@@ -1638,23 +1638,21 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 @media(max-width:560px){.book-access-card{align-items:flex-start;flex-wrap:wrap}.book-access-main{padding-top:2px}.book-access-download{width:100%;margin-left:54px;margin-top:-2px}.book-access-pill{margin-left:auto}.book-modal-steps span{font-size:9px;padding:7px 2px}.book-purchase-box{padding:26px 16px 18px;border-radius:24px}}
 </style>
 
+
+<style id="pwaInstallToolsStyle">
+.pwa-install-tools{position:fixed;right:14px;top:14px;z-index:100000;display:flex;gap:7px;flex-wrap:wrap;align-items:center;max-width:min(96vw,430px);padding:7px;border-radius:14px;background:rgba(255,255,255,.96);border:1px solid #d9e2ef;box-shadow:0 8px 28px rgba(15,23,42,.14);backdrop-filter:blur(8px)}
+.pwa-install-tools a,.pwa-install-tools button{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border:0;border-radius:9px;background:#2563eb;color:#fff!important;text-decoration:none;font:700 13px Inter,Segoe UI,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+.pwa-install-tools a:hover,.pwa-install-tools button:hover{background:#1d4ed8}
+@media(max-width:600px){.pwa-install-tools{left:10px;right:10px;top:10px;justify-content:center}.pwa-install-tools a,.pwa-install-tools button{flex:1 1 135px}}
+</style>
 </head>
 
-<body><div id="dashboardAppInstallPanel" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:10px;position:sticky;top:0;z-index:9999;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);">
-<button type="button" id="dashInstallBtn" style="border:0;border-radius:10px;padding:10px 14px;font-weight:800;color:#fff;background:#1976d2;cursor:pointer;">📲 Install Student App</button>
-<a href="/admin-login.html?app=admin" style="text-decoration:none;border-radius:10px;padding:10px 14px;font-weight:800;color:#fff;background:#1976d2;display:inline-flex;align-items:center;">🛡️ Admin App</a>
+<body>
+<div id="pwaInstallTools" class="pwa-install-tools" aria-label="Aducate App shortcuts">
+  <button type="button" id="pwaInstallBtn">📲 Install Student App</button>
+  <a href="/admin-login.html?app=admin">🛡️ Admin App</a>
 </div>
-<script>
-(function(){
- let deferred=null;
- window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
- const b=document.getElementById('dashInstallBtn');
- if(b)b.addEventListener('click',async()=>{
-   if(deferred){try{await deferred.prompt(); await deferred.userChoice;}catch(e){} deferred=null;}
-   else alert('Install App: Chrome માં ⋮ menu → Install app / Add to Home screen. HTTPS જરૂરી છે.');
- });
-})();
-</script>
+
 
 <!-- Mandatory notification gate: no dashboard option can be used until notifications are enabled -->
 <div id="notificationRequiredOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationGateTitle">
@@ -3735,6 +3733,22 @@ setInterval(loadBookStatus, 8000);
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script></body>
+<script src="/mobile-branding.js" defer></script>
+<script id="pwaInstallController">
+(function(){
+ let deferred=null;
+ const btn=()=>document.getElementById('pwaInstallBtn');
+ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
+ window.addEventListener('appinstalled',()=>{deferred=null;});
+ async function install(){
+   if(deferred){deferred.prompt();try{await deferred.userChoice;}catch(e){}deferred=null;return;}
+   const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+   if(standalone){alert('Aducate Student App is already installed/open as an app.');return;}
+   alert('Chrome controls installation. Open Chrome menu (⋮) → Install app / Add to Home screen. Use HTTPS for the install option.');
+ }
+ document.addEventListener('DOMContentLoaded',()=>{if(btn())btn().addEventListener('click',install);if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(()=>{});});
+})();
+</script>
+</body>
 
 </html>
