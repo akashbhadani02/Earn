@@ -1,0 +1,251 @@
+
+/* Aducate English Quiz — Professional App UI Layer
+   Visual-only enhancement: does not change existing IDs, JS behavior or API contracts. */
+:root{
+  --app-bg:#f4f7fb;
+  --app-surface:#ffffff;
+  --app-surface-2:#f8fafc;
+  --app-text:#172033;
+  --app-muted:#687386;
+  --app-primary:#4f46e5;
+  --app-primary-2:#6366f1;
+  --app-success:#16a34a;
+  --app-danger:#dc2626;
+  --app-warning:#d97706;
+  --app-border:#e5eaf2;
+  --app-shadow:0 10px 30px rgba(20,32,56,.08);
+  --app-shadow-sm:0 4px 14px rgba(20,32,56,.07);
+  --app-radius:18px;
+  --app-radius-sm:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0!important;
+  min-height:100vh;
+  background:var(--app-bg)!important;
+  color:var(--app-text)!important;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+img{max-width:100%;height:auto}
+a{color:var(--app-primary);text-decoration:none}
+a:hover{text-decoration:none}
+
+/* Shared app surfaces */
+header,.header,.topbar,.navbar,.nav-bar,.app-header,.admin-header,
+.card,.panel,.section,.modal-content,.modal-box,.dashboard-card,.stat-card,
+.table-wrap,.table-container,.form-card,.profile-card,.activity-card,
+.book-card,.withdraw-card,.user-card,.command-card{
+  border-color:var(--app-border)!important;
+}
+.card,.panel,.section,.dashboard-card,.stat-card,.profile-card,.activity-card,
+.book-card,.withdraw-card,.user-card,.command-card{
+  border-radius:var(--app-radius)!important;
+  box-shadow:var(--app-shadow-sm)!important;
+  background:var(--app-surface)!important;
+}
+input,select,textarea{
+  border:1px solid var(--app-border)!important;
+  background:#fff!important;
+  color:var(--app-text)!important;
+  border-radius:12px!important;
+  min-height:44px;
+  outline:none;
+  transition:border-color .18s,box-shadow .18s,transform .18s;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--app-primary)!important;
+  box-shadow:0 0 0 4px rgba(79,70,229,.10)!important;
+}
+button{
+  border-radius:12px!important;
+  border:1px solid transparent;
+  transition:transform .16s ease,box-shadow .16s ease,filter .16s ease,background .16s ease;
+}
+button:hover{transform:translateY(-1px);filter:saturate(1.04)}
+button:active{transform:translateY(0) scale(.985)}
+button:disabled{cursor:not-allowed;opacity:.58;transform:none!important}
+
+/* Common button polish without relying on exact existing color choices */
+.btn,.primary-btn,.submit-btn,.action-btn,.install-btn,
+#studentInstallBtn,#adminInstallBtn,#pwaInstallBtn,#spinBtn,#bonusBtn,#withdrawBtn,
+#activityPlay,#requiredNotificationBtn,#studentEnableNotificationBtn,
+#logoutAllUsersBtn,#themeToggleBtn{
+  min-height:44px;
+  padding:10px 16px!important;
+  box-shadow:0 5px 14px rgba(20,32,56,.08);
+}
+
+/* Login / authentication */
+body:has(#loginForm),body:has(#username){
+  background:
+    radial-gradient(circle at 15% 10%,rgba(99,102,241,.14),transparent 34%),
+    radial-gradient(circle at 90% 90%,rgba(14,165,233,.10),transparent 30%),
+    var(--app-bg)!important;
+}
+#loginForm,#signupForm{
+  width:min(440px,calc(100% - 28px))!important;
+  margin:28px auto!important;
+  padding:28px!important;
+  background:rgba(255,255,255,.96)!important;
+  border:1px solid rgba(229,234,242,.95)!important;
+  border-radius:24px!important;
+  box-shadow:0 24px 70px rgba(30,41,59,.13)!important;
+  backdrop-filter:blur(14px);
+}
+#loginForm h1,#loginForm h2,#signupForm h1,#signupForm h2{
+  letter-spacing:-.03em;
+}
+#loginForm label,#signupForm label{font-weight:650;color:#374151}
+#message{border-radius:12px!important}
+
+/* Student app */
+#dashboard,#activities,#quiz,#profile,#withdraw,#wallet{
+  width:min(1180px,calc(100% - 28px));
+  margin-left:auto!important;margin-right:auto!important;
+}
+#dashboard{padding-bottom:24px}
+#dashboard > *,#activities > *,#quiz > *{margin-bottom:14px}
+#wallet{
+  border-radius:20px!important;
+  box-shadow:var(--app-shadow)!important;
+}
+#spinBtn,#bonusBtn,#withdrawBtn{font-weight:750}
+#remainingQuestions,#quizWallet{
+  border-radius:14px!important;
+  box-shadow:var(--app-shadow-sm)!important;
+}
+#quiz{
+  min-height:60vh;
+}
+#quiz [class*="question"],#quiz .question-card{
+  background:var(--app-surface)!important;
+  border-radius:20px!important;
+  box-shadow:var(--app-shadow)!important;
+  border:1px solid var(--app-border)!important;
+}
+#lifeline5050,#lifelineAudience,#lifelineExpert,#lifelineSkip{
+  min-width:44px;
+  min-height:44px;
+  box-shadow:var(--app-shadow-sm)!important;
+}
+#studentNotificationCard{
+  border-radius:16px!important;
+  border:1px solid var(--app-border)!important;
+  box-shadow:var(--app-shadow-sm)!important;
+}
+
+/* Admin app */
+#adminSectionDashboard,#adminSectionWithdrawals,#adminSectionUsers,
+#adminSectionQuestions,#adminSectionBooks,#adminSectionSettings{
+  width:min(1400px,calc(100% - 28px));
+  margin-left:auto!important;margin-right:auto!important;
+}
+#adminSectionDashboard > *,#adminSectionWithdrawals > *,#adminSectionUsers > *{
+  margin-bottom:14px;
+}
+#adminSectionDashboard{
+  display:block;
+}
+#totalUsers,#wallet,#earn,#totalQuestions,#withdraw,#questionBankTotal,
+#bookStatPurchases,#bookStatPending,#bookStatVerified,#bookStatRevenue,
+#onlineUsersCount{
+  border-radius:18px!important;
+  background:var(--app-surface)!important;
+  border:1px solid var(--app-border)!important;
+  box-shadow:var(--app-shadow-sm)!important;
+}
+table{
+  width:100%;
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  overflow:hidden;
+  border:1px solid var(--app-border);
+  border-radius:16px;
+  background:#fff;
+}
+th{
+  background:#f8fafc!important;
+  color:#3c4759!important;
+  font-weight:750!important;
+  position:sticky;
+  top:0;
+  z-index:1;
+}
+th,td{padding:11px 12px!important;border-bottom:1px solid var(--app-border)!important}
+tr:last-child td{border-bottom:0!important}
+tr:hover td{background:#fbfcff!important}
+#withdrawTable{overflow:auto;border-radius:16px;box-shadow:var(--app-shadow-sm)}
+#onlineUsersList{border-radius:16px!important}
+#dashboardBrandingCard{
+  border-radius:20px!important;
+  box-shadow:var(--app-shadow)!important;
+}
+
+/* Modals / overlays */
+.modal,.overlay,[role="dialog"]{
+  backdrop-filter:blur(5px);
+}
+.modal-content,.modal-box{
+  border-radius:22px!important;
+  box-shadow:0 30px 90px rgba(15,23,42,.24)!important;
+}
+
+/* Install / notification surfaces */
+#pwaInstallTools{
+  border-radius:16px!important;
+  box-shadow:var(--app-shadow-sm)!important;
+}
+#notificationRequiredOverlay{background:rgba(15,23,42,.48)!important}
+#notificationRequiredBox{
+  border-radius:22px!important;
+  box-shadow:0 30px 90px rgba(15,23,42,.28)!important;
+}
+
+/* Status chips */
+.online,.status-online,[data-status="online"]{color:var(--app-success)!important}
+.offline,.status-offline,[data-status="offline"]{color:var(--app-danger)!important}
+
+/* Scrollbars */
+*{scrollbar-width:thin;scrollbar-color:#cbd5e1 transparent}
+*::-webkit-scrollbar{width:8px;height:8px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
+
+/* Responsive: keep desktop-style app density while remaining usable */
+@media (max-width:900px){
+  #dashboard,#activities,#quiz,#profile,#withdraw,#wallet,
+  #adminSectionDashboard,#adminSectionWithdrawals,#adminSectionUsers,
+  #adminSectionQuestions,#adminSectionBooks,#adminSectionSettings{
+    width:calc(100% - 18px);
+  }
+  .card,.panel,.section,.dashboard-card,.stat-card,.profile-card,.activity-card,
+  .book-card,.withdraw-card,.user-card,.command-card{border-radius:15px!important}
+  table{font-size:13px}
+  th,td{padding:9px 8px!important}
+}
+@media (max-width:600px){
+  body{font-size:14px!important}
+  #loginForm,#signupForm{width:calc(100% - 20px)!important;padding:20px!important;border-radius:20px!important}
+  input,select,textarea{min-height:42px!important}
+  button{min-height:42px!important}
+  #dashboard,#activities,#quiz,#profile,#withdraw,#wallet,
+  #adminSectionDashboard,#adminSectionWithdrawals,#adminSectionUsers,
+  #adminSectionQuestions,#adminSectionBooks,#adminSectionSettings{
+    width:calc(100% - 12px);
+  }
+  table{font-size:12px}
+  th,td{padding:8px 6px!important}
+  /* Prevent oversized headings from making the mobile app feel like a web page */
+  h1{font-size:clamp(22px,6vw,30px)}
+  h2{font-size:clamp(19px,5vw,25px)}
+  h3{font-size:clamp(16px,4.5vw,21px)}
+}
+/* Respect reduced motion */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
