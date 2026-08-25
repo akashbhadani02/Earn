@@ -1237,6 +1237,22 @@ body.kbc-fullscreen-active #quiz.kbc-quiz-screen{border-radius:0!important}
     .kbc-progress{font-size:10px}
 }
 
+
+/* ===== Aducate Game Feedback Animations ===== */
+.aducate-fx-layer{position:fixed;inset:0;pointer-events:none;z-index:99999;overflow:hidden}
+.aducate-toast{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.65);padding:18px 28px;border-radius:22px;background:rgba(255,255,255,.96);box-shadow:0 18px 60px rgba(0,0,0,.25);font:800 22px Poppins,sans-serif;text-align:center;opacity:0;animation:adToast .9s cubic-bezier(.2,.85,.25,1) forwards;backdrop-filter:blur(10px)}
+.aducate-toast.correct{color:#15803d;border:3px solid #86efac}.aducate-toast.wrong{color:#dc2626;border:3px solid #fecaca}.aducate-toast.reward{color:#7c3aed;border:3px solid #ddd6fe}.aducate-toast.info{color:#2563eb;border:3px solid #bfdbfe}
+.aducate-toast small{display:block;margin-top:4px;font-size:12px;color:#64748b;font-weight:700}
+@keyframes adToast{0%{opacity:0;transform:translate(-50%,-50%) scale(.65) translateY(18px)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.05) translateY(0)}72%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-58%) scale(.96)}}
+.aducate-confetti{position:absolute;width:9px;height:14px;border-radius:2px;animation:adConfetti 900ms ease-out forwards;top:50%;left:50%}
+@keyframes adConfetti{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}}
+.aducate-pop{animation:adPop .45s cubic-bezier(.2,.8,.25,1)}
+@keyframes adPop{0%{transform:scale(.96);opacity:.55}55%{transform:scale(1.025);opacity:1}100%{transform:scale(1);opacity:1}}
+.aducate-answer-correct{animation:adCorrect .55s ease}
+@keyframes adCorrect{0%{transform:scale(1)}35%{transform:scale(1.035)}70%{transform:scale(.99)}100%{transform:scale(1)}}
+.aducate-answer-wrong{animation:adShake .42s ease}
+@keyframes adShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.aducate-toast,.aducate-confetti,.aducate-pop,.aducate-answer-correct,.aducate-answer-wrong{animation:none!important}}
 </style>
 <style id="book-purchase-style">
 #bookPurchaseModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:99999;padding:18px}
@@ -2992,9 +3008,10 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 }
 
                 applyWalletData(data);
+                showAducateAnimation("reward", "🎡 Jackpot!", "₹" + Number(data.prize).toFixed(2) + " added to your wallet");
 
                 alert(
-                    "Congratulations! 🎉\n\n" +
+                    "Congratulations! 🎉\n\n"
                     "Spin પર તમને ₹" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
                     "Spin #" + Number(data.spinCount || 0) + " complete.\n" +
                     "હવે ફરી 100 પ્રશ્નો પૂરા કરો અને ફરી Spin કરો."
@@ -3080,6 +3097,35 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
         let quizLoading = false;
         let quizQuestionRequest = 0;
 
+        // ===== Student-friendly micro animations =====
+        function aducateFxLayer(){
+            let el=document.getElementById('aducateFxLayer');
+            if(!el){el=document.createElement('div');el.id='aducateFxLayer';el.className='aducate-fx-layer';document.body.appendChild(el)}
+            return el;
+        }
+        function showAducateAnimation(type,title,sub){
+            const layer=aducateFxLayer();
+            const toast=document.createElement('div');
+            toast.className='aducate-toast '+(type||'info');
+            toast.innerHTML=String(title||'✨ Nice!')+(sub?'<small>'+String(sub)+'</small>':'');
+            layer.appendChild(toast);
+            if(type==='correct'||type==='reward'){
+                for(let n=0;n<22;n++){
+                    const c=document.createElement('i'); c.className='aducate-confetti';
+                    const a=Math.random()*Math.PI*2, d=90+Math.random()*220;
+                    c.style.setProperty('--dx',Math.cos(a)*d+'px'); c.style.setProperty('--dy',(Math.sin(a)*d-80)+'px');
+                    c.style.background=`hsl(${Math.floor(Math.random()*360)} 85% 55%)`;
+                    c.style.animationDelay=(Math.random()*120)+'ms'; layer.appendChild(c);
+                }
+            }
+            setTimeout(()=>toast.remove(),950); setTimeout(()=>layer.querySelectorAll('.aducate-confetti').forEach(x=>x.remove()),1100);
+        }
+        function animateNewQuestion(){
+            const q=document.getElementById('question'), o=document.getElementById('options');
+            if(q){q.classList.remove('aducate-pop');void q.offsetWidth;q.classList.add('aducate-pop')}
+            if(o){o.classList.remove('aducate-pop');void o.offsetWidth;o.classList.add('aducate-pop')}
+        }
+
         async function loadQuiz() {
             if (quizLoading) return;
             quizLoading = true;
@@ -3117,6 +3163,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 updateLifelineUI();
 
                 if (questionEl) questionEl.innerText = String(q.q);
+                animateNewQuestion();
                 questionStartTime = Date.now();
                 optDiv.innerHTML = "";
 
@@ -3141,7 +3188,6 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                             return;
                         }
 
-                        const isCorrect = i === Number(q.correct);
                         window.__quizSelectedIndex = i;
                         window.__quizSelectedAnswer = String(q.options[i] ?? "");
                         const saved = await updateWallet(isCorrect, q._id);
@@ -3168,8 +3214,17 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                         // again before the next API request.
                         quizData = quizData.filter(item => String(item?._id) !== String(q._id));
 
+                        const isCorrect = i === Number(q.correct);
                         const buttons = optDiv.querySelectorAll(".option-btn");
                         buttons.forEach(btn => btn.disabled = true);
+
+                        if (isCorrect) {
+                            b.classList.add("aducate-answer-correct");
+                            showAducateAnimation("correct", "🎉 Correct!", "Great job — next question coming up");
+                        } else {
+                            b.classList.add("aducate-answer-wrong");
+                            showAducateAnimation("wrong", "💪 Keep Going!", "Every question makes you stronger");
+                        }
 
                         buttons.forEach((btn, index) => {
                             if (index === Number(q.correct)) {
@@ -3323,7 +3378,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
                 const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
-                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
+                if(data.correct){showAducateAnimation('correct','🎉 Activity Complete!', '+'+(data.reward*100).toFixed(0)+' points earned');setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
                 else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
                 setTimeout(()=>nextActivityQuestion(),1200);
             }catch(e){setFeedback(false,'Network error. Please try again.');}
