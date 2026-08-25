@@ -255,7 +255,7 @@ async function installAdminApp(){
   }
   const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
   if(standalone){ alert('Aducate Admin App is already installed/open as an app.'); return; }
-  alert('Install option is controlled by Chrome. Open Chrome menu (⋮) → Install app / Add to Home screen. Make sure you are using HTTPS.');
+  return;
 }
 document.addEventListener('DOMContentLoaded',()=>{
   const b=document.getElementById('adminInstallBtn');
