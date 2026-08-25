@@ -97,6 +97,15 @@ background:#0b7dda;
 
 }
 
+.admin-app-btn{
+    margin-top:10px;
+    background:linear-gradient(135deg,#0f172a,#2563eb);
+    box-shadow:0 6px 14px rgba(15,23,42,.18);
+}
+.admin-app-btn:hover{
+    background:linear-gradient(135deg,#020617,#1d4ed8);
+}
+
 p{
 
 text-align:center;
@@ -171,6 +180,10 @@ color:green;
 <input type="password" id="loginPassword" placeholder="Password">
 
 <button onclick="login()">Login</button>
+
+<button type="button" class="admin-app-btn" onclick="location.href='/admin-app.html'">
+    🛡️ Admin App
+</button>
 
 <p>
 
