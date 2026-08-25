@@ -162,6 +162,12 @@ font-size:55px;
 
 }
 
+
+.app-switch-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.app-switch-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 14px;border-radius:10px;border:0;background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff!important;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.28);transition:.2s;flex:1 1 145px}
+.app-switch-btn:hover{background:linear-gradient(90deg,#1e40af,#1d4ed8);transform:translateY(-2px);box-shadow:0 10px 25px rgba(37,99,235,.38)}
+.app-switch-btn.install{display:none}
+.app-switch-btn.install.show{display:inline-flex}
 </style>
 
 </head>
@@ -180,9 +186,9 @@ font-size:55px;
 
 <button onclick="login()">Login</button>
 
-<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
-<button type="button" id="adminInstallBtn" style="display:none;">📲 Install Admin App</button>
-<a href="/login.html?app=student" style="display:inline-block;padding:10px 14px;border-radius:8px;background:#111827;color:#fff;text-decoration:none;font-weight:700;">🎓 Student App</a>
+<div class="app-switch-row">
+<button type="button" id="adminInstallBtn" class="app-switch-btn install">📲 Install Admin App</button>
+<a class="app-switch-btn" href="/login.html?app=student">🎓 Student App</a>
 </div>
 
 <div class="footer">
