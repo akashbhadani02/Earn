@@ -1280,6 +1280,18 @@ body{
     box-shadow:0 20px 55px rgba(0,0,0,.18);
 }
 
+/* Student dashboard logout */
+.student-dashboard-logout{
+    width:100%;
+    margin:0 0 14px;
+    background:#dc2626 !important;
+    color:#fff !important;
+    border:0;
+    font-weight:800;
+}
+.student-dashboard-logout:hover{filter:brightness(1.05);}
+.student-logout-btn{color:#dc2626;}
+
 #dashboard{
     overflow:visible;
 }
@@ -1669,10 +1681,13 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
                 <button class="icon-btn" onclick="location.href='profile.html'" aria-label="Profile" title="Profile">👤</button>
                 <button class="icon-btn" onclick="location.href='admin.html'" aria-label="Admin" title="Admin">⚙️</button>
+                <button class="icon-btn student-logout-btn" onclick="studentLogout()" aria-label="Logout" title="Logout">🚪</button>
             </div>
         </div>
 
         <h2>Student Dashboard</h2>
+
+        <button type="button" class="btn student-dashboard-logout" onclick="studentLogout()">🚪 Logout</button>
 
         <div class="wallet-box">
             <small>Total Balance</small>
@@ -3587,6 +3602,20 @@ document.addEventListener('click', function(e){
 <script id="book-purchase-upi">
 const BOOK_UPI_ID = "baa836610@okaxis";
 const BOOK_STATUS_API = "/api/book-purchases/status";
+function studentLogout(){
+    try {
+        if (typeof stopPresence === "function") stopPresence();
+        localStorage.removeItem("token");
+        localStorage.removeItem("studentToken");
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("presenceTabId");
+    } catch (e) {
+        console.warn("Logout cleanup error", e);
+    }
+    window.location.replace("login.html");
+}
+
 function authHeaders(){
   const t = localStorage.getItem("token") || localStorage.getItem("authToken");
   return t ? { Authorization: "Bearer " + t } : {};
