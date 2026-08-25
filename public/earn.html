@@ -2205,6 +2205,41 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
         }
 
         // ===============================
+        // LOGOUT WHEN STUDENT TAB IS CLOSED
+        // Keep the session while moving between the Student pages, but clear the
+        // student login when this browser tab/window is actually unloaded.
+        // ===============================
+        let keepStudentSessionOnUnload = false;
+
+        function navigateStudentPage(url) {
+            keepStudentSessionOnUnload = true;
+            window.location.href = url;
+        }
+
+        // These are the only normal in-app navigations from this dashboard.
+        // Mark them so pagehide does not treat navigation as closing the tab.
+        document.addEventListener("click", function (event) {
+            const btn = event.target.closest && event.target.closest("button");
+            if (!btn) return;
+            const text = (btn.getAttribute("aria-label") || btn.title || btn.textContent || "").toLowerCase();
+            const onclick = btn.getAttribute("onclick") || "";
+            if (onclick.includes("profile.html") || onclick.includes("admin.html")) {
+                keepStudentSessionOnUnload = true;
+            }
+        }, true);
+
+        window.addEventListener("pagehide", function () {
+            if (keepStudentSessionOnUnload) return;
+            try {
+                localStorage.removeItem("token");
+                localStorage.removeItem("studentToken");
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("user");
+                sessionStorage.removeItem("presenceTabId");
+            } catch (e) {}
+        });
+
+        // ===============================
         // STUDENT ONLINE PRESENCE
         // Active tab = Online. Hidden tab = Offline.
         // Heartbeat about every 1 second; server timeout = 7 seconds.
