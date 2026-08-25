@@ -2333,6 +2333,127 @@ body{min-height:100dvh!important;overflow-y:auto!important;}
 }
 @media(prefers-reduced-motion:reduce){#neonDashboardUI *{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
 </style>
+
+<style id="ADUCATE_FINAL_REFERENCE_LAYOUT">
+/* ===== Aducate English — final reference layout ===== */
+:root{--neo-bg:#030318;--neo-panel:#090922;--neo-white:#f7f8ff;--neo-muted:#c7cbed;}
+html,body{margin:0!important;padding:0!important;width:100%!important;min-width:0!important;background:#020316!important;color:var(--neo-white)!important;overflow-x:hidden!important;}
+body{min-height:100dvh!important;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif!important;}
+/* Hide only visual legacy/install elements; JS/data remain available. */
+#pwaInstallTools{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;}
+#dashboard>.dashboard-topbar,#dashboard>.wallet-box,#dashboard>.game-hub,#dashboard>.dashboard-actions,#dashboard>.tc-note{display:none!important;height:0!important;min-height:0!important;width:0!important;margin:0!important;padding:0!important;overflow:hidden!important;}
+#dashboard{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;}
+#neonDashboardUI{display:flex!important;flex-direction:column!important;width:100%!important;min-height:100dvh!important;margin:0!important;padding:8px 16px 0!important;box-sizing:border-box!important;background:
+ radial-gradient(circle at 10% 20%,#4320ff22,transparent 28%),
+ radial-gradient(circle at 90% 30%,#ff00aa18,transparent 26%),
+ linear-gradient(135deg,#020315,#07072a 48%,#020316)!important;color:var(--neo-white)!important;}
+#neonDashboardUI *{box-sizing:border-box!important;}
+/* Header */
+#neonDashboardUI .neo-header{flex:0 0 76px!important;height:76px!important;margin:0!important;padding:0 2px 8px!important;border-bottom:1px solid #6c39ff66!important;display:flex!important;align-items:center!important;}
+#neonDashboardUI .neo-brand{gap:10px!important;min-width:300px!important;}
+#neonDashboardUI .neo-menu{font-size:29px!important;color:#fff!important;padding:2px 5px!important;}
+#neonDashboardUI .neo-logo{width:52px!important;height:52px!important;border-radius:15px!important;}
+#neonDashboardUI .neo-brand strong{font-size:22px!important;color:#fff!important;line-height:1.05!important;}
+#neonDashboardUI .neo-brand small{font-size:11px!important;color:#ffd83d!important;}
+#neonDashboardUI .neo-status-row{gap:8px!important;flex-wrap:nowrap!important;}
+#neonDashboardUI .neo-chip{min-width:96px!important;height:48px!important;min-height:48px!important;padding:6px 10px!important;border-radius:20px!important;color:#fff!important;}
+#neonDashboardUI .neo-chip.wallet{min-width:142px!important;}
+#neonDashboardUI .neo-icon,#neonDashboardUI .neo-avatar{width:46px!important;height:46px!important;flex:0 0 46px!important;}
+/* Main: no artificial bottom gap */
+#neonDashboardUI .neo-main{flex:1 1 auto!important;width:min(1500px,100%)!important;max-width:1500px!important;margin:8px auto 0!important;padding:0!important;display:flex!important;flex-direction:column!important;gap:10px!important;overflow:visible!important;}
+#neonDashboardUI .neo-top-grid{display:grid!important;grid-template-columns:1.05fr 2.1fr 1.2fr!important;gap:10px!important;}
+#neonDashboardUI .neo-balance,#neonDashboardUI .neo-journey,#neonDashboardUI .neo-mission{min-height:210px!important;height:210px!important;padding:18px!important;border-radius:22px!important;}
+#neonDashboardUI .neo-balance>strong{font-size:38px!important;}
+#neonDashboardUI .neo-title{font-size:22px!important;color:#fff!important;}
+#neonDashboardUI .neo-journey{padding:20px!important;}
+#neonDashboardUI .neo-stats{margin-top:12px!important;}
+#neonDashboardUI .neo-stats>div{padding:10px!important;}
+#neonDashboardUI .neo-mission{padding:19px!important;}
+#neonDashboardUI .gift{font-size:72px!important;right:16px!important;bottom:10px!important;}
+/* Feature row: same five-card structure as reference */
+#neonDashboardUI .neo-feature-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:9px!important;margin:0!important;}
+#neonDashboardUI .neo-feature{min-height:156px!important;height:156px!important;padding:14px!important;border-radius:20px!important;}
+#neonDashboardUI .neo-feature>span{font-size:50px!important;}
+#neonDashboardUI .neo-feature b{font-size:15px!important;color:#fff!important;}
+#neonDashboardUI .neo-feature small{font-size:10px!important;color:#d5d9ff!important;}
+/* Activity block */
+#neonDashboardUI .neo-activities{margin:0!important;padding:14px 10px 10px!important;border-radius:23px!important;}
+#neonDashboardUI .neo-activities h2{font-size:24px!important;margin:0 0 12px!important;color:#fff!important;}
+#neonDashboardUI .neo-activity-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;}
+#neonDashboardUI .neo-activity{min-height:68px!important;height:68px!important;padding:9px 12px!important;border-radius:17px!important;}
+#neonDashboardUI .neo-activity>span{font-size:34px!important;}
+#neonDashboardUI .neo-activity b{font-size:15px!important;color:#fff!important;}
+#neonDashboardUI .neo-activity small{font-size:10px!important;color:#d9ddff!important;}
+#neonDashboardUI .neo-activity i{width:30px!important;height:30px!important;}
+/* The reference image ends with activities; no extra CTA space. */
+#neonDashboardUI .neo-cta{display:none!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;}
+/* Bottom navigation: flush to bottom, no space underneath */
+#neonDashboardUI .neo-bottom-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;transform:none!important;width:100%!important;max-width:none!important;height:68px!important;margin:0!important;padding:5px 28px!important;border-radius:0!important;border:0!important;border-top:1px solid #6933ff88!important;background:rgba(4,5,28,.98)!important;backdrop-filter:blur(16px)!important;box-shadow:0 -8px 28px #2400ff22!important;z-index:99999!important;}
+#neonDashboardUI .neo-bottom-nav button{height:58px!important;margin:0!important;padding:4px 10px!important;min-width:80px!important;flex:1 1 0!important;border-radius:28px!important;color:#e9ecff!important;background:transparent!important;font-size:22px!important;}
+#neonDashboardUI .neo-bottom-nav button span{font-size:11px!important;color:#e9ecff!important;font-weight:800!important;}
+#neonDashboardUI .neo-bottom-nav button.active{color:#fff!important;background:linear-gradient(90deg,#7b20ff,#d31dff)!important;box-shadow:0 0 24px #c31cff88!important;}
+#neonDashboardUI .neo-bottom-nav button.active span{color:#fff!important;}
+#neonDashboardUI .neo-bottom-nav .neo-theme-switch{flex:0 0 62px!important;color:#fff!important;border:1px solid #25bfff!important;background:#101546!important;}
+/* Readable typography everywhere */
+#neonDashboardUI p,#neonDashboardUI b,#neonDashboardUI strong,#neonDashboardUI small,#neonDashboardUI span,#neonDashboardUI label,#neonDashboardUI h1,#neonDashboardUI h2,#neonDashboardUI h3,#neonDashboardUI button,#neonDashboardUI .neo-title{color:#f7f8ff!important;}
+#neonDashboardUI small,#neonDashboardUI .neo-progress-text,#neonDashboardUI .neo-feature small,#neonDashboardUI .neo-activity small,#neonDashboardUI .neo-cta small{color:#d4d9ff!important;}
+#neonDashboardUI input,#neonDashboardUI textarea,#neonDashboardUI select{color:#fff!important;background:#0b1030!important;border-color:#7350ff!important;}
+/* Desktop compact mode: keep the whole reference dashboard on one screen. */
+@media (min-width:901px){
+  #neonDashboardUI{height:100dvh!important;min-height:100dvh!important;overflow:hidden!important;}
+  #neonDashboardUI .neo-main{min-height:0!important;overflow:visible!important;}
+}
+@media (min-width:901px) and (max-height:850px){
+  #neonDashboardUI .neo-header{flex-basis:66px!important;height:66px!important;}
+  #neonDashboardUI .neo-logo{width:46px!important;height:46px!important;}
+  #neonDashboardUI .neo-chip{height:42px!important;min-height:42px!important;}
+  #neonDashboardUI .neo-balance,#neonDashboardUI .neo-journey,#neonDashboardUI .neo-mission{height:178px!important;min-height:178px!important;padding:14px!important;}
+  #neonDashboardUI .neo-feature{height:126px!important;min-height:126px!important;padding:11px!important;}
+  #neonDashboardUI .neo-feature>span{font-size:42px!important;}
+  #neonDashboardUI .neo-activity{height:60px!important;min-height:60px!important;}
+  #neonDashboardUI .neo-activities h2{margin-bottom:7px!important;font-size:20px!important;}
+  #neonDashboardUI .neo-bottom-nav{height:60px!important;}
+  #neonDashboardUI .neo-bottom-nav button{height:52px!important;}
+}
+/* Mobile: preserve all content, allow natural scrolling, never create blank space. */
+@media (max-width:900px){
+  #neonDashboardUI{min-height:100dvh!important;height:auto!important;padding:7px 7px 0!important;overflow:visible!important;}
+  #neonDashboardUI .neo-header{height:auto!important;min-height:56px!important;flex-basis:auto!important;padding-bottom:7px!important;}
+  #neonDashboardUI .neo-brand{min-width:0!important;}
+  #neonDashboardUI .neo-logo{width:42px!important;height:42px!important;}
+  #neonDashboardUI .neo-brand strong{font-size:16px!important;}
+  #neonDashboardUI .neo-brand small{font-size:8px!important;}
+  #neonDashboardUI .neo-status-row{display:none!important;}
+  #neonDashboardUI .neo-main{margin-top:7px!important;gap:7px!important;padding-bottom:64px!important;}
+  #neonDashboardUI .neo-top-grid{grid-template-columns:1fr!important;gap:7px!important;}
+  #neonDashboardUI .neo-balance,#neonDashboardUI .neo-journey,#neonDashboardUI .neo-mission{height:auto!important;min-height:145px!important;padding:14px!important;}
+  #neonDashboardUI .neo-balance>strong{font-size:30px!important;}
+  #neonDashboardUI .neo-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;}
+  #neonDashboardUI .neo-feature{height:112px!important;min-height:112px!important;padding:10px!important;grid-template-columns:42px 1fr!important;}
+  #neonDashboardUI .neo-feature>span{font-size:36px!important;}
+  #neonDashboardUI .neo-feature b{font-size:12px!important;}
+  #neonDashboardUI .neo-feature small{font-size:8px!important;}
+  #neonDashboardUI .neo-feature em{font-size:8px!important;padding:5px 9px!important;}
+  #neonDashboardUI .neo-activities{padding:10px 7px 7px!important;}
+  #neonDashboardUI .neo-activities h2{font-size:18px!important;margin-bottom:8px!important;}
+  #neonDashboardUI .neo-activity-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;}
+  #neonDashboardUI .neo-activity{height:68px!important;min-height:68px!important;padding:7px 8px!important;grid-template-columns:38px 1fr 27px!important;}
+  #neonDashboardUI .neo-activity>span{font-size:28px!important;}
+  #neonDashboardUI .neo-activity b{font-size:11px!important;}
+  #neonDashboardUI .neo-activity small{font-size:7px!important;}
+  #neonDashboardUI .neo-activity i{width:26px!important;height:26px!important;font-size:20px!important;}
+  #neonDashboardUI .neo-bottom-nav{height:56px!important;padding:3px 4px!important;}
+  #neonDashboardUI .neo-bottom-nav button{height:50px!important;min-width:0!important;padding:3px 2px!important;font-size:17px!important;}
+  #neonDashboardUI .neo-bottom-nav button span{font-size:8px!important;}
+  #neonDashboardUI .neo-bottom-nav .neo-theme-switch{flex:0 0 44px!important;}
+}
+@media (max-width:390px){
+  #neonDashboardUI .neo-feature{height:104px!important;min-height:104px!important;}
+  #neonDashboardUI .neo-activity{height:62px!important;min-height:62px!important;}
+  #neonDashboardUI .neo-activity b{font-size:10px!important;}
+  #neonDashboardUI .neo-activity small{font-size:6.5px!important;}
+}
+</style>
 </head>
 
 <body>
@@ -4241,6 +4362,7 @@ body{min-height:100dvh!important;overflow-y:auto!important;}
             document.body.classList.toggle("dark", dark);
             const btn = document.getElementById("themeBtn");
             if (btn) btn.innerHTML = dark ? "☀️" : "🌙";
+            document.querySelectorAll(".neo-theme-switch").forEach(b => b.textContent = dark ? "☀️" : "🌙");
         }
 
         function toggleTheme() {
@@ -4249,6 +4371,7 @@ body{min-height:100dvh!important;overflow-y:auto!important;}
             localStorage.setItem("studentTheme", dark ? "dark" : "light");
             const btn = document.getElementById("themeBtn");
             if (btn) btn.innerHTML = dark ? "☀️" : "🌙";
+            document.querySelectorAll(".neo-theme-switch").forEach(b => b.textContent = dark ? "☀️" : "🌙");
         }
 
         document.addEventListener("DOMContentLoaded", applySavedTheme);
