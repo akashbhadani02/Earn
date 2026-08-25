@@ -1970,6 +1970,68 @@ body.dark .game-toast{box-shadow:0 20px 70px rgba(0,0,0,.45)}
 @media(prefers-reduced-motion:reduce){body:before,body:after{animation:none!important}.activity-btn,.adventure-card,.wallet-box{animation:none!important}}
 </style>
 
+
+<style id="master-colorful-theme">
+:root{
+  --bg-a:#6d5dfc;--bg-b:#ff4ecd;--bg-c:#00d4ff;--bg-d:#7cf29a;
+  --surface:#ffffff;--surface-soft:rgba(255,255,255,.78);--text:#172033;--muted:#64748b;
+  --border:rgba(255,255,255,.7);--shadow:0 24px 70px rgba(34,25,84,.20);
+  --primary:#635bff;--secondary:#ec4899;--success:#10b981;--warning:#f59e0b;
+}
+html,body{background:#10162d!important}
+body{
+ background:
+ radial-gradient(circle at 8% 12%,rgba(255,111,216,.45),transparent 24%),
+ radial-gradient(circle at 92% 8%,rgba(0,212,255,.42),transparent 24%),
+ radial-gradient(circle at 12% 92%,rgba(124,242,154,.35),transparent 25%),
+ radial-gradient(circle at 92% 88%,rgba(255,190,64,.32),transparent 24%),
+ linear-gradient(135deg,#4f46e5 0%,#7c3aed 45%,#db2777 100%)!important;
+ background-attachment:fixed!important;
+ color:var(--text)!important;
+}
+body:before,body:after{content:"";position:fixed;z-index:-1;border-radius:50%;pointer-events:none;filter:blur(2px);opacity:.35}
+body:before{width:260px;height:260px;left:-90px;top:30%;background:#00e5ff;animation:masterFloat 9s ease-in-out infinite}
+body:after{width:320px;height:320px;right:-120px;bottom:8%;background:#ff61d8;animation:masterFloat 11s ease-in-out infinite reverse}
+@keyframes masterFloat{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(22px,-26px,0) scale(1.08)}}
+.card{background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(248,250,255,.91))!important;border:1px solid rgba(255,255,255,.86)!important;box-shadow:var(--shadow),0 0 50px rgba(255,255,255,.10)!important}
+.dashboard-actions .btn,.dashboard-actions .telegram-btn,.activity-btn,.adventure-card,.activity-action,.kbc-lifeline,.kbc-back{position:relative;overflow:hidden}
+.dashboard-actions .btn:before,.dashboard-actions .telegram-btn:before,.activity-btn:before,.adventure-card:before,.activity-action:before,.kbc-lifeline:before,.kbc-back:before{content:"";position:absolute;inset:-120% 45% auto -45%;height:220%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);transform:rotate(22deg);animation:masterShine 3.8s linear infinite;pointer-events:none}
+@keyframes masterShine{0%{transform:translateX(-120%) rotate(22deg)}100%{transform:translateX(360%) rotate(22deg)}}
+.dashboard-actions .btn,.dashboard-actions .telegram-btn,.activity-btn,.adventure-card{animation:masterFloatCard 4.2s ease-in-out infinite}
+.dashboard-actions .btn:nth-child(2),.activity-btn:nth-child(2),.adventure-card:nth-child(2){animation-delay:.25s}
+.dashboard-actions .btn:nth-child(3),.activity-btn:nth-child(3),.adventure-card:nth-child(3){animation-delay:.5s}
+.dashboard-actions .btn:nth-child(4),.activity-btn:nth-child(4){animation-delay:.75s}
+@keyframes masterFloatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.dashboard-actions .btn:hover,.dashboard-actions .telegram-btn:hover,.activity-btn:hover,.adventure-card:hover{transform:translateY(-6px) scale(1.025)!important;box-shadow:0 18px 34px rgba(15,23,42,.18)!important}
+.wallet-box,.game-hub,.challenge-card,.mission-card{border:1px solid rgba(255,255,255,.75)!important}
+.wallet-box{background:linear-gradient(135deg,#ff1687,#7c3aed 48%,#0ea5e9)!important;background-size:200% 200%!important;animation:walletGradient 7s ease infinite!important}
+@keyframes walletGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.game-hub{background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(238,242,255,.86),rgba(253,242,248,.88))!important}
+.activity-title{background:linear-gradient(90deg,#7c3aed,#ec4899,#0891b2,#7c3aed);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradientText 4s linear infinite}
+#gameToast{top:12%!important;max-width:min(92vw,520px);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+/* Never reserve layout space for the old message placeholder. */
+#message{display:none!important;width:0!important;height:0!important;margin:0!important;padding:0!important;position:absolute!important;overflow:hidden!important}
+/* Keep all hidden notification compatibility elements truly space-free. */
+.notification-card-hidden,.legacy-admin-btn{display:none!important;width:0!important;height:0!important;margin:0!important;padding:0!important}
+body.dark{
+ color:#f8fafc!important;
+ background:
+ radial-gradient(circle at 10% 10%,rgba(139,92,246,.28),transparent 24%),
+ radial-gradient(circle at 90% 15%,rgba(14,165,233,.25),transparent 25%),
+ radial-gradient(circle at 15% 90%,rgba(16,185,129,.18),transparent 25%),
+ linear-gradient(135deg,#080d1d 0%,#15112f 48%,#28112d 100%)!important;
+}
+body.dark .card{background:linear-gradient(145deg,rgba(19,26,48,.97),rgba(24,20,52,.94))!important;color:#f8fafc!important;border-color:rgba(148,163,184,.22)!important;box-shadow:0 24px 70px rgba(0,0,0,.42)!important}
+body.dark .game-hub{background:linear-gradient(135deg,rgba(30,41,59,.94),rgba(49,28,78,.92),rgba(30,58,78,.92))!important}
+body.dark .game-stat,body.dark .mission-card,body.dark .adventure-card{background:rgba(15,23,42,.84)!important;color:#f8fafc!important;border:1px solid rgba(148,163,184,.16)}
+body.dark .game-stat b{color:#fff!important}.dark .game-stat span,body.dark .mission-card small,body.dark .adventure-card small{color:#b8c2d6!important}
+body.dark .challenge-card{background:linear-gradient(135deg,#30200b,#3b1d32)!important;color:#fff!important}
+body.dark .tc-note{background:rgba(15,23,42,.72)!important;color:#aeb9cc!important;border-color:rgba(148,163,184,.18)!important}
+body.dark .activity-option,body.dark .activity-input,body.dark .word-chip,body.dark .answer-box,body.dark .passage{background:#111827!important;color:#f8fafc!important;border-color:#475569!important}
+body.dark .activity-question{color:#f8fafc!important}.activity-feedback{min-height:0}
+@media(prefers-reduced-motion:reduce){body:before,body:after,.dashboard-actions .btn,.dashboard-actions .telegram-btn,.activity-btn,.adventure-card,.wallet-box,.activity-title{animation:none!important}}
+</style>
+
 </head>
 
 <body>
@@ -2163,7 +2225,6 @@ body.dark .game-toast{box-shadow:0 20px 70px rgba(0,0,0,.45)}
             <div class="kbc-tip">💡 સવાલ ધ્યાનથી વાંચો અને પછી જવાબ પસંદ કરો.</div>
             <button class="btn kbc-back" onclick="showScreen('dashboard')">← Dashboard</button>
         </div>
-        <p id="message" style="display:none;">Quiz</p>
     </div>
 </div>
 
