@@ -2455,91 +2455,69 @@ body{min-height:100dvh!important;font-family:Inter,system-ui,-apple-system,"Sego
 }
 </style>
 
-<style id="FINAL-NO-BOTTOM-BLANK-SPACE-FIX">
-/* FINAL FIX: remove artificial empty space below earn dashboard */
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  min-height: 0 !important;
-  height: auto !important;
-  overflow-x: hidden !important;
+<style id="ADUCATE_ONE_PAGE_FINAL_FIX">
+html,body{margin:0!important;padding:0!important;width:100%!important;min-height:0!important;overflow-x:hidden!important;background:#020316!important}
+body{min-height:0!important}
+#dashboard{min-height:0!important;height:auto!important;padding:0!important;margin:0!important;overflow:visible!important}
+#neonDashboardUI.one-page-earn{display:block!important;width:100%!important;min-height:0!important;height:auto!important;margin:0!important;padding:10px 24px 88px!important;box-sizing:border-box!important;overflow:visible!important;background:radial-gradient(circle at 8% 28%,#4320ff20,transparent 25%),radial-gradient(circle at 92% 45%,#ff00aa13,transparent 25%),linear-gradient(135deg,#020315,#07072a 48%,#020316)!important}
+#neonDashboardUI.one-page-earn *{box-sizing:border-box!important}
+#neonDashboardUI.one-page-earn .neo-header{height:74px!important;min-height:74px!important;flex:none!important;margin:0 0 12px!important;padding:0 2px 8px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;border-bottom:1px solid #6c39ff55!important}
+#neonDashboardUI.one-page-earn .neo-brand{min-width:0!important;gap:8px!important}
+#neonDashboardUI.one-page-earn .neo-menu{font-size:24px!important}
+#neonDashboardUI.one-page-earn .neo-logo{width:44px!important;height:44px!important;border-radius:13px!important}
+#neonDashboardUI.one-page-earn .neo-brand strong{font-size:18px!important}
+#neonDashboardUI.one-page-earn .neo-brand small{font-size:9px!important}
+#neonDashboardUI.one-page-earn .welcome-center{display:flex!important;flex-direction:column!important;align-items:center!important;gap:3px!important;flex:1!important;margin:0 18px!important;text-align:center!important}
+#neonDashboardUI.one-page-earn .welcome-center b{font-size:24px!important;color:#fff!important;line-height:1.05!important}
+#neonDashboardUI.one-page-earn .welcome-center span{font-size:13px!important;color:#cbd5f5!important}
+#neonDashboardUI.one-page-earn .compact-status{display:flex!important;gap:8px!important;flex-wrap:nowrap!important}
+#neonDashboardUI.one-page-earn .compact-status .wallet{min-width:150px!important;height:48px!important;min-height:48px!important;padding:7px 12px!important}
+#neonDashboardUI.one-page-earn .compact-status .neo-avatar{width:46px!important;height:46px!important;flex:0 0 46px!important}
+#neonDashboardUI.one-page-earn .one-page-main{display:flex!important;flex-direction:column!important;gap:16px!important;width:min(1450px,100%)!important;max-width:1450px!important;min-height:0!important;height:auto!important;margin:0 auto!important;padding:0!important;overflow:visible!important}
+#neonDashboardUI.one-page-earn .quick-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:0!important;padding:0!important}
+#neonDashboardUI.one-page-earn .quick-card{min-width:0!important;height:100px!important;padding:14px 16px!important;border-radius:19px!important;background:linear-gradient(145deg,#090a2bf5,#040619f5)!important;border:1px solid #773dff94!important;display:grid!important;grid-template-columns:52px 1fr 34px!important;align-items:center!important;text-align:left!important;color:#fff!important;cursor:pointer!important}
+#neonDashboardUI.one-page-earn .quick-card>span{font-size:38px!important}
+#neonDashboardUI.one-page-earn .quick-card b{display:block!important;font-size:16px!important;color:#fff!important}
+#neonDashboardUI.one-page-earn .quick-card small{display:block!important;margin-top:3px!important;font-size:10px!important;color:#cbd5f5!important}
+#neonDashboardUI.one-page-earn .quick-card i{width:32px!important;height:32px!important;border:1px solid #dce4ff!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-style:normal!important;font-size:24px!important;color:#fff!important}
+#neonDashboardUI.one-page-earn .quick-card.green{border-color:#10d95b!important}.quick-card.cyan{border-color:#00bfff!important}.quick-card.orange{border-color:#ff9b00!important}.quick-card.blue{border-color:#00d9ff!important}
+#neonDashboardUI.one-page-earn .one-page-section{margin:0!important;padding:0!important}
+#neonDashboardUI.one-page-earn .one-page-section h2{font-size:21px!important;margin:0 0 9px!important;padding:0 0 8px!important;color:#fff!important;border-bottom:1px solid #7b35ff66!important}
+#neonDashboardUI.one-page-earn .daily-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+#neonDashboardUI.one-page-earn .daily-card{height:218px!important;min-height:218px!important;padding:12px 14px 13px!important;border-radius:18px!important;background:linear-gradient(145deg,#090a2bf5,#040619f5)!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;text-align:center!important;color:#fff!important;cursor:pointer!important}
+#neonDashboardUI.one-page-earn .daily-card>span{width:52px!important;height:52px!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-size:29px!important;margin-bottom:7px!important;background:#8b16ff!important;box-shadow:0 0 22px #8b16ff77!important}
+#neonDashboardUI.one-page-earn .daily-card b{font-size:16px!important;margin-bottom:4px!important;color:#fff!important}.one-page-earn .daily-card small{font-size:10px!important;color:#cbd5f5!important;min-height:28px!important}.one-page-earn .daily-card em{font-style:normal!important;font-size:10px!important;padding:7px 10px!important;border-radius:8px!important;background:#10153d!important;border:1px solid #5639a7!important;color:#fff!important;margin:7px 0 10px!important}.one-page-earn .daily-card strong{width:100%!important;margin-top:auto!important;padding:10px 8px!important;border-radius:20px!important;background:linear-gradient(90deg,#8a13ff,#d51cff)!important;color:#fff!important;font-size:13px!important}
+#neonDashboardUI.one-page-earn .daily-card.green{border-color:#10b981!important}.one-page-earn .daily-card.green>span{background:#21b94f!important}.one-page-earn .daily-card.orange{border-color:#ff6b00!important}.one-page-earn .daily-card.orange>span{background:#ff5a18!important}.one-page-earn .daily-card.pink{border-color:#ff1493!important}.one-page-earn .daily-card.pink>span{background:#f51b79!important}
+#neonDashboardUI.one-page-earn .more-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+#neonDashboardUI.one-page-earn .more-card{height:78px!important;padding:10px 15px!important;border-radius:15px!important;border:1px solid #6739bd!important;background:#060722!important;color:#fff!important;display:grid!important;grid-template-columns:44px 1fr 30px!important;align-items:center!important;text-align:left!important;cursor:pointer!important}
+#neonDashboardUI.one-page-earn .more-card>span{font-size:31px!important}.one-page-earn .more-card b{display:block!important;font-size:13px!important}.one-page-earn .more-card small{display:block!important;margin-top:2px!important;font-size:9px!important;color:#cbd5f5!important}.one-page-earn .more-card i{width:28px!important;height:28px!important;border:1px solid #dce4ff!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-style:normal!important;font-size:21px!important}
+#neonDashboardUI.one-page-earn .one-page-nav{position:fixed!important;left:50%!important;bottom:10px!important;top:auto!important;transform:translateX(-50%)!important;width:min(1480px,calc(100% - 48px))!important;height:66px!important;margin:0!important;padding:5px 12px!important;border-radius:32px!important;border:1px solid #6933ff8c!important;background:rgba(4,5,28,.97)!important;backdrop-filter:blur(16px)!important;box-shadow:0 0 28px #371cff33!important;z-index:99999!important}
+#neonDashboardUI.one-page-earn .one-page-nav button{height:54px!important;min-width:80px!important;margin:0!important;padding:4px 10px!important;border-radius:27px!important;background:transparent!important;color:#e9ecff!important;font-size:21px!important;flex:1 1 0!important}
+#neonDashboardUI.one-page-earn .one-page-nav button span{font-size:10px!important;color:#e9ecff!important;font-weight:800!important}
+#neonDashboardUI.one-page-earn .one-page-nav button.active{background:linear-gradient(90deg,#7b20ff,#d31dff)!important;color:#fff!important;box-shadow:0 0 24px #c31cff88!important}
+#neonDashboardUI.one-page-earn .one-page-nav .neo-theme-switch{flex:0 0 62px!important;border:1px solid #25bfff!important;background:#101546!important}
+@media (min-width:901px) and (max-height:850px){
+ #neonDashboardUI.one-page-earn{padding-top:7px!important;padding-bottom:82px!important}
+ #neonDashboardUI.one-page-earn .neo-header{height:60px!important;min-height:60px!important;margin-bottom:8px!important}
+ #neonDashboardUI.one-page-earn .neo-logo{width:38px!important;height:38px!important}.one-page-earn .neo-brand strong{font-size:16px!important}.one-page-earn .welcome-center b{font-size:20px!important}.one-page-earn .welcome-center span{font-size:11px!important}.one-page-earn .compact-status .wallet{height:40px!important;min-height:40px!important}.one-page-earn .compact-status .neo-avatar{width:40px!important;height:40px!important;flex-basis:40px!important}
+ #neonDashboardUI.one-page-earn .one-page-main{gap:10px!important}
+ #neonDashboardUI.one-page-earn .quick-card{height:70px!important;padding:8px 11px!important;grid-template-columns:42px 1fr 28px!important}.one-page-earn .quick-card>span{font-size:29px!important}.one-page-earn .quick-card b{font-size:13px!important}.one-page-earn .quick-card small{font-size:8px!important}.one-page-earn .quick-card i{width:26px!important;height:26px!important;font-size:19px!important}
+ #neonDashboardUI.one-page-earn .one-page-section h2{font-size:17px!important;margin-bottom:6px!important;padding-bottom:5px!important}
+ #neonDashboardUI.one-page-earn .daily-grid,.one-page-earn .more-grid{gap:8px!important}
+ #neonDashboardUI.one-page-earn .daily-card{height:150px!important;min-height:150px!important;padding:8px 10px!important}.one-page-earn .daily-card>span{width:38px!important;height:38px!important;font-size:21px!important;margin-bottom:4px!important}.one-page-earn .daily-card b{font-size:12px!important}.one-page-earn .daily-card small{font-size:8px!important;min-height:20px!important}.one-page-earn .daily-card em{font-size:8px!important;padding:5px 7px!important;margin:4px 0 6px!important}.one-page-earn .daily-card strong{padding:7px!important;font-size:10px!important}
+ #neonDashboardUI.one-page-earn .more-card{height:55px!important;padding:6px 10px!important;grid-template-columns:33px 1fr 25px!important}.one-page-earn .more-card>span{font-size:23px!important}.one-page-earn .more-card b{font-size:10px!important}.one-page-earn .more-card small{font-size:7px!important}.one-page-earn .more-card i{width:23px!important;height:23px!important;font-size:17px!important}
+ #neonDashboardUI.one-page-earn .one-page-nav{height:56px!important;bottom:5px!important;padding:3px 5px!important}.one-page-earn .one-page-nav button{height:48px!important;min-width:65px!important;font-size:17px!important}.one-page-earn .one-page-nav button span{font-size:8px!important}.one-page-earn .one-page-nav .neo-theme-switch{flex-basis:48px!important}
 }
-
-body {
-  display: block !important;
-  align-items: initial !important;
-  justify-content: initial !important;
-  padding-bottom: 0 !important;
-}
-
-#dashboard,
-#neonDashboardUI,
-.neon-dashboard-ui {
-  width: 100% !important;
-  min-height: 0 !important;
-  height: auto !important;
-  max-height: none !important;
-  margin: 0 !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
-}
-
-#dashboard {
-  padding-bottom: 0 !important;
-}
-
-#neonDashboardUI {
-  padding-bottom: 0 !important;
-}
-
-#neonDashboardUI .neo-main {
-  min-height: 0 !important;
-  height: auto !important;
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-#neonDashboardUI .neo-cta {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-/* Bottom navigation is fixed and therefore must not reserve blank layout space. */
-#neonDashboardUI .neo-bottom-nav {
-  position: fixed !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  top: auto !important;
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-  transform: none !important;
-  box-sizing: border-box !important;
-  z-index: 99999 !important;
-}
-
-/* No viewport-height block on the dashboard. */
-@media (min-width: 901px) {
-  #dashboard,
-  #neonDashboardUI,
-  .neon-dashboard-ui {
-    min-height: 0 !important;
-    height: auto !important;
-  }
-}
-
-@media (max-width: 900px) {
-  #dashboard,
-  #neonDashboardUI,
-  .neon-dashboard-ui {
-    min-height: 0 !important;
-    height: auto !important;
-  }
-  #neonDashboardUI .neo-main {
-    padding-bottom: 0 !important;
-  }
+@media(max-width:900px){
+ #neonDashboardUI.one-page-earn{padding:8px 8px 70px!important;min-height:0!important;height:auto!important}
+ #neonDashboardUI.one-page-earn .neo-header{height:58px!important;min-height:58px!important;margin-bottom:8px!important}.one-page-earn .welcome-center{display:none!important}.one-page-earn .compact-status{margin-left:auto!important}.one-page-earn .compact-status .wallet{min-width:112px!important;height:40px!important;min-height:40px!important}.one-page-earn .compact-status .neo-avatar{width:40px!important;height:40px!important;flex-basis:40px!important}
+ #neonDashboardUI.one-page-earn .one-page-main{gap:10px!important}
+ #neonDashboardUI.one-page-earn .quick-actions,.one-page-earn .daily-grid,.one-page-earn .more-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+ #neonDashboardUI.one-page-earn .quick-card{height:76px!important;padding:9px!important;grid-template-columns:35px 1fr 25px!important}.one-page-earn .quick-card>span{font-size:27px!important}.one-page-earn .quick-card b{font-size:11px!important}.one-page-earn .quick-card small{font-size:7px!important}.one-page-earn .quick-card i{width:24px!important;height:24px!important;font-size:17px!important}
+ #neonDashboardUI.one-page-earn .one-page-section h2{font-size:16px!important;margin-bottom:5px!important;padding-bottom:5px!important}
+ #neonDashboardUI.one-page-earn .daily-card{height:145px!important;min-height:145px!important;padding:8px!important}.one-page-earn .daily-card>span{width:37px!important;height:37px!important;font-size:20px!important}.one-page-earn .daily-card b{font-size:11px!important}.one-page-earn .daily-card small{font-size:7px!important;min-height:18px!important}.one-page-earn .daily-card em{font-size:7px!important;padding:4px 6px!important;margin:4px 0 5px!important}.one-page-earn .daily-card strong{padding:7px!important;font-size:9px!important}
+ #neonDashboardUI.one-page-earn .more-card{height:58px!important;padding:7px 9px!important;grid-template-columns:30px 1fr 23px!important}.one-page-earn .more-card>span{font-size:22px!important}.one-page-earn .more-card b{font-size:9px!important}.one-page-earn .more-card small{font-size:6.5px!important}.one-page-earn .more-card i{width:22px!important;height:22px!important;font-size:16px!important}
+ #neonDashboardUI.one-page-earn .one-page-nav{width:calc(100% - 10px)!important;height:54px!important;bottom:3px!important;padding:2px!important;border-radius:27px!important}.one-page-earn .one-page-nav button{height:48px!important;min-width:0!important;padding:2px!important;font-size:16px!important}.one-page-earn .one-page-nav button span{font-size:7px!important}.one-page-earn .one-page-nav .neo-theme-switch{flex-basis:42px!important}
 }
 </style>
 
@@ -2571,19 +2549,58 @@ body {
 
 
     <div id="dashboard" class="card" aria-hidden="true" style="visibility:hidden;">
-<div id="neonDashboardUI" class="neon-dashboard-ui">
-<header class="neo-header"><div class="neo-brand"><button class="neo-menu" onclick="openNeonMenu()">☰</button><div class="neo-logo"><img data-brand-logo src="/api/branding/icon?v=1&size=512" alt="Aducate English"></div><div><strong>Aducate English</strong><small>★ Learn • Play • Earn ★</small></div></div><div class="neo-status-row">
-<div class="neo-chip">🔥 <b data-bind="streak">0</b><small>Streak<br>Days</small></div><div class="neo-chip">✳️ <b data-bind="xp">0</b><small>XP<br>Total XP</small></div><div class="neo-chip">💎 <b data-bind="level">1</b><small>Level<br>Rising Star</small></div><div class="neo-chip wallet">🪙 <b>₹<span data-bind="wallet">0.00</span></b><button onclick="openWithdrawPopup()">+</button><small>Wallet</small></div><button class="neo-icon" onclick="openNotificationsPanel()">🔔<i>3</i></button><button class="neo-avatar" onclick="location.href='profile.html'">👨‍🎓</button></div></header>
-<main class="neo-main"><section class="neo-top-grid">
-<article class="neo-balance"><span>TOTAL BALANCE</span><strong>₹<span data-bind="wallet">0.00</span></strong><div class="coin-stack">🪙 🪙 🪙</div><button onclick="openWithdrawPopup()">Withdraw <b>→</b></button></article>
-<article class="neo-journey"><div class="neo-title">🚀 Your Quiz Journey</div><div class="neo-progress"><span data-bind-style="xpProgress"></span></div><div class="neo-progress-text"><span data-bind="xpText">0 / 100 XP</span><span><b data-bind="xpRemaining">100</b> XP to next level</span></div><div class="neo-stats"><div><b data-bind="streak">0</b> 🔥<small>STREAK</small></div><div><b data-bind="today">0/20</b><small>DAILY MISSION</small></div><div><b data-bind="best">0</b> ⭐<small>BEST STREAK</small></div></div></article>
-<article class="neo-mission"><div class="neo-title">🎯 Daily Mission</div><p>Answer 20 questions<br>correctly</p><div class="mission-progress"><span data-bind-style="missionProgress"></span></div><div class="mission-bottom"><b data-bind="today">0/20</b><button onclick="showScreen('quiz')">+25 XP</button></div><div class="gift">🎁</div></article></section>
-<section class="neo-feature-grid">
-<button class="neo-feature purple" onclick="openMysteryChest()"><span>🧰</span><div><b>Mystery Chest</b><small>Open and win exciting rewards!</small></div><em>Open Now</em></button><button class="neo-feature green" onclick="startLuckyChallenge()"><span>🍀</span><div><b>Lucky Round</b><small>Try your luck and win big!</small></div><em>Play Now</em></button><button class="neo-feature orange" onclick="showThemePicker()"><span>🎨</span><div><b>Themes</b><small>Change your theme, show your style!</small></div><em>Explore</em></button><button class="neo-feature blue" onclick="openWeeklyChallenge()"><span>🏆</span><div><b>Weekly Challenge</b><small>Compete and win amazing rewards!</small></div><em>View Challenge</em></button><button class="neo-feature pink" onclick="openAchievementsPanel()"><span>🛡️</span><div><b>Achievements</b><small>Unlock achievements and earn glory!</small></div><em>View All</em></button></section>
-<section class="neo-activities"><h2>✦ <span>Choose Your Activity</span> ✦</h2><div class="neo-activity-grid">
-<button class="neo-activity gold" onclick="showScreen('quiz')"><span>🏆</span><div><b>Quiz</b><small>Play Quiz & Earn</small></div><i>›</i></button><button class="neo-activity cyan" onclick="openLeaderboard()"><span>🥇</span><div><b>Leaderboard</b><small>See Top Players</small></div><i>›</i></button><button class="neo-activity pink" onclick="showScreen('quiz')"><span>📅</span><div><b>Daily Quiz</b><small>Play & Earn Daily</small></div><i>›</i></button><button class="neo-activity violet" onclick="spinWheel()"><span>🎡</span><div><b>Spin & Win</b><small>Spin & Win Rewards</small></div><i>›</i></button><button class="neo-activity green" onclick="openScratchCard()"><span>🎟️</span><div><b>Scratch Card</b><small>Scratch & Win</small></div><i>›</i></button><button class="neo-activity blue" onclick="openWatchEarn()"><span>▶️</span><div><b>Watch & Earn</b><small>Watch & Earn Coins</small></div><i>›</i></button><button class="neo-activity orange" onclick="openReferEarn()"><span>👥</span><div><b>Refer & Earn</b><small>Invite & Earn More</small></div><i>›</i></button><button class="neo-activity cyan" onclick="openQuizHistory()"><span>📜</span><div><b>Quiz History</b><small>Check Your History</small></div><i>›</i></button></div></section>
-<section class="neo-cta"><span>🪙</span><div><b>Keep Playing & Keep Earning!</b><small>More you play, more you earn!</small></div><button onclick="showScreen('quiz')">Play Quiz Now 🚀</button></section></main>
-<nav class="neo-bottom-nav"><button class="active" onclick="showScreen('dashboard')">🏠<span>Home</span></button><button onclick="showScreen('quiz')">❔<span>Quiz</span></button><button onclick="openMissionsPanel()">🎯<span>Missions</span></button><button onclick="openWithdrawPopup()">▣<span>Wallet</span></button><button onclick="location.href='profile.html'">♙<span>Profile</span></button><button class="neo-theme-switch" onclick="toggleTheme()">🌙</button></nav></div>
+<div id="neonDashboardUI" class="neon-dashboard-ui one-page-earn">
+<header class="neo-header compact-header">
+  <div class="neo-brand">
+    <button class="neo-menu" onclick="openNeonMenu()" aria-label="Menu">☰</button>
+    <div class="neo-logo"><img data-brand-logo src="/api/branding/icon?v=1&size=512" alt="Aducate English"></div>
+    <div><strong>Aducate English</strong><small>★ Learn • Play • Earn ★</small></div>
+  </div>
+  <div class="welcome-center"><b>👋 Welcome Back!</b><span>Learn English &amp; Earn Rewards Every Day</span></div>
+  <div class="neo-status-row compact-status">
+    <div class="neo-chip wallet">🪙 <b>₹<span data-bind="wallet">0.00</span></b><small>Wallet Balance</small></div>
+    <button class="neo-avatar" onclick="location.href='profile.html'">👨‍🎓</button>
+  </div>
+</header>
+
+<main class="neo-main one-page-main">
+  <section class="quick-actions" aria-label="Quick earning actions">
+    <button class="quick-card green" onclick="openScratchCard()"><span>🎟️</span><div><b>Scratch Card</b><small>Scratch &amp; Win</small></div><i>›</i></button>
+    <button class="quick-card cyan" onclick="openWatchEarn()"><span>▶️</span><div><b>Watch &amp; Earn</b><small>Watch &amp; Earn Coins</small></div><i>›</i></button>
+    <button class="quick-card orange" onclick="openReferEarn()"><span>👥</span><div><b>Refer &amp; Earn</b><small>Invite &amp; Earn More</small></div><i>›</i></button>
+    <button class="quick-card blue" onclick="openQuizHistory()"><span>📜</span><div><b>Quiz History</b><small>Check Your History</small></div><i>›</i></button>
+  </section>
+
+  <section class="one-page-section">
+    <h2>🎁 Daily Activities</h2>
+    <div class="daily-grid">
+      <button class="daily-card purple" onclick="claimDailyReward()"><span>🎁</span><b>Daily Reward</b><small>Claim your daily reward</small><em>+ ₹5.00</em><strong>Claim Now</strong></button>
+      <button class="daily-card green" onclick="spinWheel()"><span>🎡</span><b>Spin Wheel</b><small>Spin &amp; Win Rewards</small><em>2 / 2 Spins Left</em><strong>Spin Now</strong></button>
+      <button class="daily-card orange" onclick="showScreen('quiz')"><span>🎯</span><b>Daily Quiz</b><small>Play Quiz &amp; Earn Coins</small><em>+ ₹2.00 Per Correct</em><strong>Start Quiz</strong></button>
+      <button class="daily-card pink" onclick="openWatchEarn()"><span>🎥</span><b>Watch Video</b><small>Watch Videos &amp; Earn</small><em>+ ₹1.00 Per Video</em><strong>Watch Now</strong></button>
+    </div>
+  </section>
+
+  <section class="one-page-section more-section">
+    <h2>🏆 More Options</h2>
+    <div class="more-grid">
+      <button class="more-card" onclick="openWithdrawPopup()"><span>👛</span><div><b>Wallet</b><small>Check Wallet</small></div><i>›</i></button>
+      <button class="more-card" onclick="openMissionsPanel()"><span>🎯</span><div><b>Missions</b><small>Complete Missions</small></div><i>›</i></button>
+      <button class="more-card" onclick="openLeaderboard()"><span>🏆</span><div><b>Leaderboard</b><small>Top Earners</small></div><i>›</i></button>
+      <button class="more-card" onclick="openNotificationsPanel()"><span>🔔</span><div><b>Notifications</b><small>Check Updates</small></div><i>›</i></button>
+    </div>
+  </section>
+</main>
+
+<nav class="neo-bottom-nav one-page-nav">
+  <button class="active" onclick="showScreen('dashboard')">🏠<span>Home</span></button>
+  <button onclick="showScreen('quiz')">❔<span>Quiz</span></button>
+  <button onclick="openMissionsPanel()">🎯<span>Missions</span></button>
+  <button onclick="openWithdrawPopup()">▣<span>Wallet</span></button>
+  <button onclick="location.href='profile.html'">♙<span>Profile</span></button>
+  <button class="neo-theme-switch" onclick="toggleTheme()">🌙</button>
+</nav>
+</div>
 <script>
 (function(){window.futureFeature=window.futureFeature||function(n){var t=document.getElementById('gameToast');if(t){t.textContent=n+' is ready for future activation 🚀';t.classList.add('show');clearTimeout(window.__futureToast);window.__futureToast=setTimeout(function(){t.classList.remove('show');},5000);}};window.syncNeonDashboard=function(){var g=function(id){var e=document.getElementById(id);return e?e.textContent.trim():''};var w=g('wallet')||'0.00';document.querySelectorAll('[data-bind="wallet"]').forEach(e=>e.textContent=w);var p={streak:(g('gameStreak').replace(/\D/g,'')||'0'),today:g('gameToday')||'0/20',best:g('gameBest')||'0',level:(g('gameLevel').replace(/\D/g,'')||'1'),xp:(g('xpText').split('/')[0].trim()||'0'),xpText:g('xpText')||'0 / 100 XP'};Object.keys(p).forEach(k=>document.querySelectorAll('[data-bind="'+k+'"]').forEach(e=>e.textContent=p[k]));var x=Math.min(100,Math.max(0,parseInt(p.xp)||0));document.querySelectorAll('[data-bind-style="xpProgress"]').forEach(e=>e.style.width=x+'%');var d=Math.min(100,Math.max(0,(parseInt(p.today)||0)/20*100));document.querySelectorAll('[data-bind-style="missionProgress"]').forEach(e=>e.style.width=d+'%');document.querySelectorAll('[data-bind="xpRemaining"]').forEach(e=>e.textContent=Math.max(0,100-(parseInt(p.xp)||0)));};setTimeout(syncNeonDashboard,300);setInterval(syncNeonDashboard,1200)})();
 </script>
