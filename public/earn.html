@@ -1909,6 +1909,67 @@ body{background:radial-gradient(circle at 10% 0%,rgba(109,93,252,.10),transparen
 @media(max-width:600px){.wallet-box:hover,.game-hub:hover,.adventure-card:hover,.activity-btn:hover,.dashboard-actions .btn:hover{transform:none}.adventure-card{animation-duration:4.4s}}
 @media(prefers-reduced-motion:reduce){#dashboard>*,.wallet-box,.adventure-card,.activity-btn,#dashboard .progress-fill{animation:none!important;transition:none!important}}
 </style>
+
+<style id="master-final-polish">
+:root{
+ --bg:#f5f7ff;--surface:rgba(255,255,255,.94);--surface2:#fff;--text:#172033;--muted:#64748b;
+ --border:rgba(99,102,241,.14);--shadow:0 18px 55px rgba(15,23,42,.12);--accent:#635bff;
+}
+html{background:var(--bg);scroll-behavior:smooth}
+body{color:var(--text);background:
+ radial-gradient(circle at 8% 8%,rgba(99,91,255,.16),transparent 28%),
+ radial-gradient(circle at 92% 12%,rgba(236,72,153,.13),transparent 25%),
+ radial-gradient(circle at 50% 100%,rgba(34,197,94,.10),transparent 32%),var(--bg)!important;
+ transition:background .35s ease,color .35s ease}
+body:before,body:after{content:"";position:fixed;border-radius:50%;pointer-events:none;z-index:-1;filter:blur(2px);opacity:.45}
+body:before{width:260px;height:260px;left:-110px;top:18%;background:radial-gradient(circle,rgba(99,91,255,.20),transparent 68%);animation:orbA 9s ease-in-out infinite}
+body:after{width:300px;height:300px;right:-120px;bottom:8%;background:radial-gradient(circle,rgba(236,72,153,.16),transparent 68%);animation:orbB 11s ease-in-out infinite}
+.card,.game-hub,.wallet-box,.adventure-card,.challenge-card,.activity-btn,.achievement,.activity-option,.activity-action,.word-chip{transition:background .35s ease,color .35s ease,border-color .35s ease,box-shadow .25s ease,transform .25s ease}
+.card,.game-hub{background:var(--surface)!important;border-color:var(--border)!important;box-shadow:var(--shadow)}
+.activity-screen,.activity-title{color:var(--text)}
+.activity-question,.passage,.activity-option{color:var(--text)}
+.activity-option,.word-chip{background:var(--surface2);border-color:var(--border)}
+.activity-feedback{color:var(--text)}
+button{font-family:Poppins,sans-serif}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(99,91,255,.35);outline-offset:3px}
+.game-toast{max-width:min(92vw,520px);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);animation:none}
+.game-toast.show{animation:toastIn .45s cubic-bezier(.2,.8,.2,1) both}
+#dashboard,#activities,#activityPlay{width:min(1180px,96vw);margin-inline:auto}
+#dashboard{min-height:calc(100dvh - 24px);padding-bottom:28px}
+#activities{min-height:calc(100dvh - 24px);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 20px}
+#activities .activity-grid{width:min(920px,100%);margin-inline:auto}
+#activities .activity-title,#activities .activity-wallet-bar{width:100%;text-align:center}
+#activityPlay{padding:28px 20px}
+.activity-grid .activity-btn{min-height:82px}
+@keyframes orbA{50%{transform:translate(45px,25px) scale(1.12)}}
+@keyframes orbB{50%{transform:translate(-40px,-25px) scale(1.08)}}
+
+body.dark{
+ --bg:#080d18;--surface:rgba(17,24,39,.92);--surface2:#111827;--text:#f1f5f9;--muted:#a8b3c7;
+ --border:rgba(148,163,184,.20);--shadow:0 22px 65px rgba(0,0,0,.40);--accent:#8b7cff;
+ background:
+ radial-gradient(circle at 10% 8%,rgba(99,91,255,.18),transparent 30%),
+ radial-gradient(circle at 90% 10%,rgba(236,72,153,.13),transparent 28%),#080d18!important;
+}
+body.dark .card,body.dark .game-hub,body.dark .wallet-box,body.dark .adventure-card,body.dark .challenge-card,body.dark .activity-btn{background:var(--surface)!important;color:var(--text)!important;border-color:var(--border)!important}
+body.dark .activity-option,body.dark .word-chip,body.dark .activity-input,body.dark .answer-box{background:#0f172a!important;color:#f8fafc!important;border-color:#334155!important}
+body.dark .activity-question,body.dark .passage,body.dark .activity-title,body.dark .activity-feedback,body.dark .card h2,body.dark .card h3,body.dark .card p{color:var(--text)!important}
+body.dark small,body.dark .activity-wallet-bar span,body.dark .challenge-card small{color:#a8b3c7!important}
+body.dark .challenge-card{background:linear-gradient(135deg,#1f2937,#422006)!important}
+body.dark .challenge-track{background:#1e293b!important}
+body.dark .activity-reward{background:#052e24!important;color:#6ee7b7!important}
+body.dark .game-toast{box-shadow:0 20px 70px rgba(0,0,0,.45)}
+@media(max-width:700px){
+ body{padding:8px!important}
+ #dashboard,#activities,#activityPlay{width:100%;min-height:100dvh}
+ #activities{padding:18px 10px;justify-content:center}
+ #activities .activity-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .activity-grid .activity-btn{min-height:70px;padding:11px 7px}
+}
+@media(max-width:390px){#activities .activity-grid{gap:8px}.activity-grid .activity-btn{min-height:64px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){body:before,body:after{animation:none!important}.activity-btn,.adventure-card,.wallet-box{animation:none!important}}
+</style>
+
 </head>
 
 <body>
@@ -2513,39 +2574,15 @@ body{background:radial-gradient(circle at 10% 0%,rgba(109,93,252,.10),transparen
         }
 
         // ===============================
-        // LOGOUT WHEN STUDENT TAB IS CLOSED
-        // Keep the session while moving between the Student pages, but clear the
-        // student login when this browser tab/window is actually unloaded.
+        // PERSISTENT STUDENT LOGIN
+        // Keep the login token across refresh, tab close and normal navigation.
+        // The token is cleared only by explicit logout or server-side expiry.
         // ===============================
-        let keepStudentSessionOnUnload = false;
+        let keepStudentSessionOnUnload = true;
 
         function navigateStudentPage(url) {
-            keepStudentSessionOnUnload = true;
             window.location.href = url;
         }
-
-        // These are the only normal in-app navigations from this dashboard.
-        // Mark them so pagehide does not treat navigation as closing the tab.
-        document.addEventListener("click", function (event) {
-            const btn = event.target.closest && event.target.closest("button");
-            if (!btn) return;
-            const text = (btn.getAttribute("aria-label") || btn.title || btn.textContent || "").toLowerCase();
-            const onclick = btn.getAttribute("onclick") || "";
-            if (onclick.includes("profile.html") || onclick.includes("admin.html")) {
-                keepStudentSessionOnUnload = true;
-            }
-        }, true);
-
-        window.addEventListener("pagehide", function () {
-            if (keepStudentSessionOnUnload) return;
-            try {
-                localStorage.removeItem("token");
-                localStorage.removeItem("studentToken");
-                localStorage.removeItem("authToken");
-                localStorage.removeItem("user");
-                sessionStorage.removeItem("presenceTabId");
-            } catch (e) {}
-        });
 
         // ===============================
         // STUDENT ONLINE PRESENCE
@@ -3817,17 +3854,23 @@ body{background:radial-gradient(circle at 10% 0%,rgba(109,93,252,.10),transparen
         }
         loadBonusStatus();
 
-        function toggleTheme() {
-            document.body.classList.toggle("dark");
-
+        function applySavedTheme() {
+            const saved = localStorage.getItem("studentTheme");
+            const dark = saved === "dark" || (saved !== "light" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+            document.body.classList.toggle("dark", dark);
             const btn = document.getElementById("themeBtn");
-
-            if (document.body.classList.contains("dark")) {
-                btn.innerHTML = "☀️";
-            } else {
-                btn.innerHTML = "🌙";
-            }
+            if (btn) btn.innerHTML = dark ? "☀️" : "🌙";
         }
+
+        function toggleTheme() {
+            const dark = !document.body.classList.contains("dark");
+            document.body.classList.toggle("dark", dark);
+            localStorage.setItem("studentTheme", dark ? "dark" : "light");
+            const btn = document.getElementById("themeBtn");
+            if (btn) btn.innerHTML = dark ? "☀️" : "🌙";
+        }
+
+        document.addEventListener("DOMContentLoaded", applySavedTheme);
 
     </script>
     <!-- Withdraw Popup -->

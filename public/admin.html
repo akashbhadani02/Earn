@@ -611,6 +611,21 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 })();
 </script>
 
+
+<style id="admin-master-final-polish">
+:root{--adm-bg:#f5f7fb;--adm-surface:#fff;--adm-text:#172033;--adm-muted:#64748b;--adm-border:#e5e7eb}
+html,body{background:var(--adm-bg)!important;color:var(--adm-text)!important;transition:background .3s,color .3s}
+.admin-card,.admin-panel,.command-card,.stat-card,.table-wrap,.modal-card{background:var(--adm-surface)!important;color:var(--adm-text)!important;border-color:var(--adm-border)!important}
+button,input,select,textarea{font-family:inherit}
+button{transition:transform .2s,box-shadow .2s,filter .2s!important}
+button:hover{transform:translateY(-2px);filter:brightness(1.03)}
+button:active{transform:scale(.97)}
+body.dark{--adm-bg:#080d18;--adm-surface:#111827;--adm-text:#f1f5f9;--adm-muted:#a8b3c7;--adm-border:#334155}
+body.dark .admin-card,body.dark .admin-panel,body.dark .command-card,body.dark .stat-card,body.dark .table-wrap,body.dark .modal-card{background:#111827!important;color:#f1f5f9!important;border-color:#334155!important}
+body.dark input,body.dark select,body.dark textarea{background:#0f172a!important;color:#f8fafc!important;border-color:#334155!important}
+body.dark table{color:#f1f5f9!important}
+</style>
+
 </head>
 
 <body>
@@ -1112,6 +1127,9 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         if (!token) {
             location.replace("admin-login.html");
         }
+
+        // Keep admin session across refresh/navigation; explicit logout clears adminToken.
+        window.addEventListener("pagehide", function(){ /* session intentionally persists */ });
 
         // ==========================================
         // ADMIN TOKEN / SESSION HANDLER
