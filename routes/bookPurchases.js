@@ -144,7 +144,7 @@ router.get("/download", auth, async (req, res) => {
     purchase.lastDownloadAt = new Date();
     await purchase.save();
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", 'attachment; filename="book.pdf"');
+    res.setHeader("Content-Disposition", 'inline; filename="book.pdf"');
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
     return res.sendFile(bookPath);
   } catch (err) {

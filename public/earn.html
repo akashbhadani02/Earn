@@ -1638,7 +1638,15 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 @media(max-width:560px){.book-access-card{align-items:flex-start;flex-wrap:wrap}.book-access-main{padding-top:2px}.book-access-download{width:100%;margin-left:54px;margin-top:-2px}.book-access-pill{margin-left:auto}.book-modal-steps span{font-size:9px;padding:7px 2px}.book-purchase-box{padding:26px 16px 18px;border-radius:24px}}
 </style>
 
-</head>
+<style id="protectedBookViewerCSS">
+#bookPdfModal{display:none;position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.82)}
+.book-pdf-overlay{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:12px;box-sizing:border-box}
+.book-pdf-viewer{width:min(1200px,100%);height:min(94vh,100%);background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.45);display:flex;flex-direction:column}
+.book-pdf-header{height:52px;min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#111827;color:#fff}
+.book-pdf-header button{border:0;background:transparent;color:#fff;font-size:22px;cursor:pointer;padding:5px 10px}
+#bookPdfFrame{width:100%;height:100%;border:0;background:#fff}
+@media(max-width:600px){.book-pdf-viewer{height:96vh;border-radius:8px}.book-pdf-header{height:48px;min-height:48px}}
+</style></head>
 
 <body>
 
@@ -3632,17 +3640,59 @@ async function loadBookStatus(){
       host = document.createElement("div"); host.id="studentBookAccessBox"; btn.parentElement.appendChild(host);
     }
     host.className = "student-book-access";
-    host.innerHTML = data.canDownload ? `<div class="book-access-card active"><div class="book-access-icon">📖</div><div class="book-access-main"><div class="book-access-title">Book Access Active</div><div class="book-access-sub">Your book is ready to download.</div></div><button type="button" class="book-access-download" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div class="book-access-card closed"><div class="book-access-icon">🔒</div><div class="book-access-main"><div class="book-access-title">Book Access Closed</div><div class="book-access-sub">Admin has temporarily closed book access.</div></div><span class="book-access-pill">CLOSED</span></div>` : (data.purchase && data.purchase.status === 'rejected' ? `<div class="book-access-card declined"><div class="book-access-icon">🚫</div><div class="book-access-main"><div class="book-access-title">Payment Request Declined</div><div class="book-access-sub">You can submit a new payment confirmation.</div></div><span class="book-access-pill">DECLINED</span></div>` : (data.purchase && data.purchase.status === 'student_confirmed' ? `<div class="book-access-card pending"><div class="book-access-icon">⏳</div><div class="book-access-main"><div class="book-access-title">Verification Pending</div><div class="book-access-sub">Admin is checking your ₹499 payment.</div></div><span class="book-access-pill">PENDING</span></div>` : `<div class="book-access-empty"><span>📚</span><div><strong>Book Access</strong><small>Purchase the book to unlock access.</small></div></div>`)));
+    host.innerHTML = data.canDownload ? `<div class="book-access-card active"><div class="book-access-icon">📖</div><div class="book-access-main"><div class="book-access-title">Book Access Active</div><div class="book-access-sub">Your book is ready to download.</div></div><button type="button" class="book-access-download" onclick="downloadBookSecure()">📖 Open Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div class="book-access-card closed"><div class="book-access-icon">🔒</div><div class="book-access-main"><div class="book-access-title">Book Access Closed</div><div class="book-access-sub">Admin has temporarily closed book access.</div></div><span class="book-access-pill">CLOSED</span></div>` : (data.purchase && data.purchase.status === 'rejected' ? `<div class="book-access-card declined"><div class="book-access-icon">🚫</div><div class="book-access-main"><div class="book-access-title">Payment Request Declined</div><div class="book-access-sub">You can submit a new payment confirmation.</div></div><span class="book-access-pill">DECLINED</span></div>` : (data.purchase && data.purchase.status === 'student_confirmed' ? `<div class="book-access-card pending"><div class="book-access-icon">⏳</div><div class="book-access-main"><div class="book-access-title">Verification Pending</div><div class="book-access-sub">Admin is checking your ₹499 payment.</div></div><span class="book-access-pill">PENDING</span></div>` : `<div class="book-access-empty"><span>📚</span><div><strong>Book Access</strong><small>Purchase the book to unlock access.</small></div></div>`)));
   }catch(e){ console.warn("Book status",e); }
 }
 async function downloadBookSecure(){
   try{
-    const res = await fetch("/api/book-purchases/download?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
-    if(!res.ok){ const d=await res.json().catch(()=>({})); throw new Error(d.message || "Book access is not active"); }
+    const res = await fetch("/api/book-purchases/download?_=" + Date.now(), {
+      headers: authHeaders(),
+      cache: "no-store"
+    });
+    if(!res.ok){
+      const d=await res.json().catch(()=>({}));
+      throw new Error(d.message || "Book access is not active");
+    }
     const blob = await res.blob();
-    const url = URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="book.pdf"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  }catch(e){ alert(e.message); }
+    const url = URL.createObjectURL(blob);
+
+    let modal = document.getElementById("bookPdfModal");
+    if(!modal){
+      modal = document.createElement("div");
+      modal.id = "bookPdfModal";
+      modal.innerHTML = `
+        <div class="book-pdf-overlay" onclick="closeBookPdf(event)">
+          <div class="book-pdf-viewer" onclick="event.stopPropagation()">
+            <div class="book-pdf-header">
+              <strong>📖 Book</strong>
+              <button type="button" onclick="closeBookPdf()">✕</button>
+            </div>
+            <iframe id="bookPdfFrame" title="Book Viewer" src="" frameborder="0" allow="fullscreen"></iframe>
+          </div>
+        </div>`;
+      document.body.appendChild(modal);
+    }
+    document.getElementById("bookPdfFrame").src = url + "#toolbar=0&navpanes=0&scrollbar=1";
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+    window.__bookPdfObjectUrl = url;
+  }catch(e){
+    alert(e.message);
+  }
 }
+function closeBookPdf(event){
+  if(event && event.target && event.target.id !== "bookPdfModal") return;
+  const modal=document.getElementById("bookPdfModal");
+  const frame=document.getElementById("bookPdfFrame");
+  if(frame) frame.src="";
+  if(modal) modal.style.display="none";
+  document.body.style.overflow="";
+  if(window.__bookPdfObjectUrl){
+    URL.revokeObjectURL(window.__bookPdfObjectUrl);
+    window.__bookPdfObjectUrl=null;
+  }
+}
+window.closeBookPdf=closeBookPdf;
 window.buyBook=buyBook; window.closeBookModal=closeBookModal; window.startBookPayment=startBookPayment; window.confirmBookPayment=confirmBookPayment; window.downloadBookSecure=downloadBookSecure;
 document.addEventListener("DOMContentLoaded", loadBookStatus);
 setInterval(loadBookStatus, 8000);
