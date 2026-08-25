@@ -12,7 +12,6 @@
     {"src":"/api/branding/icon?v=student&size=512","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ],
   "shortcuts": [
-    {"name":"Student Login","short_name":"Student","url":"/login.html?app=student","icons":[{"src":"/api/branding/icon?v=student&size=192","sizes":"192x192","type":"image/png"}]},
-    {"name":"Admin Login","short_name":"Admin","url":"/admin-login.html?app=admin","icons":[{"src":"/api/branding/icon?v=admin&size=192","sizes":"192x192","type":"image/png"}]}
+    {"name":"Student Login","short_name":"Student","url":"/login.html?app=student","icons":[{"src":"/api/branding/icon?v=student&size=192","sizes":"192x192","type":"image/png"}]}
   ]
 }
