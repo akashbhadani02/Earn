@@ -1,0 +1,38 @@
+{
+  "name": "aducate-desktop",
+  "version": "1.0.0",
+  "description": "Aducate English Windows desktop app",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^38.1.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.aducate.english",
+    "productName": "Aducate",
+    "executableName": "Aducate",
+    "artifactName": "Aducate-${version}-${arch}.${ext}",
+    "asar": true,
+    "compression": "maximum",
+    "directories": { "output": "dist" },
+    "files": ["main.js", "preload.js", "config.js", "assets/**/*", "package.json"],
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "assets/Aducate.ico",
+      "artifactName": "Aducate-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Aducate"
+    }
+  }
+}

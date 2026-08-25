@@ -157,7 +157,6 @@ color:green;
 .app-switch-btn:hover{background:linear-gradient(90deg,#1976d2,#0097a7);transform:translateY(-1px);box-shadow:0 8px 20px rgba(33,150,243,.32)}
 .app-switch-btn.install{display:none}
 .app-switch-btn.install.show{display:inline-flex}
-.app-switch-btn.platform{display:inline-flex}
 </style>
 
 </head>
@@ -182,8 +181,6 @@ color:green;
 <div class="app-switch-row">
 <button type="button" id="studentInstallBtn" class="app-switch-btn install">📲 Install Student App</button>
 <a class="app-switch-btn" href="/admin-login.html?app=admin">🛡️ Admin App</a>
-<button type="button" class="app-switch-btn platform" data-platform="android" data-app="student">📱 Android App</button>
-<button type="button" class="app-switch-btn platform" data-platform="windows" data-app="student">🖥️ Windows EXE</button>
 </div>
 
 <p>
@@ -582,16 +579,7 @@ async function performLogin(mobile, password){
 
 let studentDeferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();studentDeferredPrompt=e;const b=document.getElementById('studentInstallBtn');if(b)b.classList.add('show');});
-async function installStudentPWA(){
-  if(studentDeferredPrompt){ studentDeferredPrompt.prompt(); await studentDeferredPrompt.userChoice; studentDeferredPrompt=null; return true; }
-  alert('Chrome ma Install app / Add to Home screen option vapro. Android par aa Student App tarike install thashe.');
-  return false;
-}
-document.addEventListener('DOMContentLoaded',()=>{
- const b=document.getElementById('studentInstallBtn'); if(b)b.addEventListener('click',installStudentPWA);
- document.querySelectorAll('[data-platform="android"][data-app="student"]').forEach(x=>x.addEventListener('click',installStudentPWA));
- document.querySelectorAll('[data-platform="windows"][data-app="student"]').forEach(x=>x.addEventListener('click',()=>{ alert('Windows ma Chrome > Install app thi Aducate Student ne desktop app tarike install kari shako. Aa PWA Windows app che; alag .exe build artifact aa ZIP ma included nathi.'); }));
-});
+document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('studentInstallBtn');if(b)b.addEventListener('click',async()=>{if(!studentDeferredPrompt)return;studentDeferredPrompt.prompt();await studentDeferredPrompt.userChoice;studentDeferredPrompt=null;b.classList.remove('show');});});
 </script>
 
 <script id="globalBrandingClient">
