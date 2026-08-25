@@ -341,7 +341,7 @@ const ACTIVITIES = {
     ]
   },
   word: {
-    title: 'Word Builder', reward: 0.05, dailyLimit: 20,
+    title: 'Word Builder', reward: 0.05, dailyLimit: 50,
     questions: [
       ['lpepa','apple'],
     ['raecahte','teacher'],

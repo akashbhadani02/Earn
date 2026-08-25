@@ -1334,34 +1334,32 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         async function showStudentCredentials(id) {
             const user = allUsers.find(u => String(u._id) === String(id));
             if (!user) return;
-
             const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
             const modal = document.createElement('div');
-            modal.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.68);z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;';
-            modal.innerHTML = `<div style="width:min(520px,100%);background:var(--surface,#fff);color:var(--text,#111);border-radius:20px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.35)">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                <div><h2 style="margin:0">🔐 Student Login Details</h2><div style="color:#64748b;margin-top:4px">Give these details to the student if they forget them.</div></div>
-                <button type="button" onclick="this.closest('.admin-credential-modal').remove()" style="background:#ef4444!important;color:#fff!important;border:0;border-radius:10px;padding:8px 12px">✕</button>
-              </div>
-              <div id="adminCredentialBody" style="margin-top:18px">
-                <div style="padding:18px;text-align:center;color:#64748b">Loading secure credentials...</div>
-              </div>
-            </div>`;
             modal.className='admin-credential-modal';
+            modal.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;';
+            modal.innerHTML = `<div style="width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--surface,#fff);color:var(--text,#111);border-radius:22px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.4)">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+                <div><h2 style="margin:0">🔐 Student Login Details</h2><div style="color:#64748b;margin-top:4px">View or change this student's login password.</div></div>
+                <button type="button" onclick="this.closest('.admin-credential-modal').remove()" style="background:#ef4444!important;color:#fff!important;border:0;border-radius:10px;padding:8px 12px;font-weight:900">✕</button>
+              </div>
+              <div id="adminCredentialBody" style="margin-top:18px"><div style="padding:18px;text-align:center;color:#64748b">Loading...</div></div>
+            </div>`;
             document.body.appendChild(modal);
-
             const body = modal.querySelector('#adminCredentialBody');
             try {
-                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '?_=' + Date.now(), {
-                    cache:'no-store', headers:{Authorization:'Bearer ' + token}
-                });
+                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '?_=' + Date.now(), {cache:'no-store',headers:{Authorization:'Bearer ' + token}});
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.message || 'Unable to load credentials');
-
                 body.innerHTML = `<div style="display:grid;gap:12px">
                   <div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${safe(data.studentId || data.loginId || user.mobile || '-')}</div></div>
-                  <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">PASSWORD</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${data.passwordAvailable ? safe(data.password) : '<span style="color:#dc2626;font-size:15px">Old password cannot be recovered.</span>'}</div></div>
-                  ${data.passwordAvailable ? '<div style="font-size:12px;color:#64748b">This password is recovered from the encrypted Admin credential store. It is not stored as plain text in the database.</div>' : '<button type="button" class="btn-warning" onclick="resetStudentPassword(\'' + id + '\', this)">🔄 Generate New Password</button>'}
+                  <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">CURRENT PASSWORD</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${data.passwordAvailable ? safe(data.password) : '<span style="color:#dc2626;font-size:14px">Not recoverable — set a new password below.</span>'}</div></div>
+                  <div style="padding:16px;border:1px solid #e9d5ff;border-radius:16px;background:#faf5ff">
+                    <div style="font-weight:900;color:#6b21a8;margin-bottom:10px">🔑 CHANGE STUDENT PASSWORD</div>
+                    <input id="adminNewStudentPassword" type="text" autocomplete="off" placeholder="Enter new password (minimum 4 characters)" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #c4b5fd;border-radius:12px;font-size:16px;background:#fff;color:#111">
+                    <button type="button" onclick="changeStudentPassword('${id}', this)" style="width:100%;margin-top:10px;padding:12px 14px;border:0;border-radius:12px;background:#7c3aed;color:#fff;font-weight:900;cursor:pointer">🔑 Save New Password</button>
+                    <button type="button" onclick="resetStudentPassword('${id}', this)" style="width:100%;margin-top:8px;padding:11px 14px;border:1px solid #f59e0b;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:900;cursor:pointer">🎲 Generate New Password</button>
+                  </div>
                 </div>`;
             } catch (err) {
                 body.innerHTML = `<div style="padding:14px;border-radius:12px;background:#fef2f2;color:#b91c1c">${safe(err.message)}</div>`;
@@ -1369,40 +1367,44 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         }
 
         async function changeStudentPassword(id, button) {
-            const password = prompt('Enter the new password for this student (minimum 4 characters):');
-            if (password === null) return;
-            if (password.trim().length < 4) { alert('Password must be at least 4 characters.'); return; }
+            const modal = button.closest('.admin-credential-modal');
+            const input = modal?.querySelector('#adminNewStudentPassword');
+            const password = String(input?.value || '').trim();
+            if (password.length < 4) { alert('Password must be at least 4 characters.'); input?.focus(); return; }
+            if (password.length > 72) { alert('Password is too long.'); input?.focus(); return; }
+            if (!confirm('Change this student password now? The old password will stop working.')) return;
             button.disabled = true;
             try {
-                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/change', { method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer ' + token}, body:JSON.stringify({password:password.trim()}) });
+                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/change', {
+                    method:'POST', headers:{'Content-Type':'application/json',Authorization:'Bearer ' + token}, body:JSON.stringify({password})
+                });
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.message || 'Password change failed');
-                const body = button.closest('.admin-credential-modal').querySelector('#adminCredentialBody');
-                const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-                body.innerHTML = `<div style="display:grid;gap:12px"><div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900">${safe(data.studentId)}</div></div><div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">NEW PASSWORD</div><div style="font-size:24px;font-weight:900;letter-spacing:1px">${safe(data.password)}</div></div><div style="padding:12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:700">✅ Password changed. The old password is no longer valid.</div></div>`;
-            } catch (err) { alert(err.message); button.disabled = false; }
+                input.value='';
+                alert('Student password changed successfully.');
+                const current = modal.querySelector('.admin-credential-modal') || modal;
+                showStudentCredentials(id).then(()=>{ if(current && current.parentNode) current.remove(); });
+                return;
+            } catch (err) { alert(err.message); button.disabled=false; }
         }
 
         async function resetStudentPassword(id, button) {
+            const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
             if (!confirm('Generate a new password for this student? The old password will stop working.')) return;
             button.disabled = true;
             try {
-                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/reset', {
-                    method:'POST', headers:{Authorization:'Bearer ' + token}
-                });
+                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/reset', {method:'POST',headers:{Authorization:'Bearer ' + token}});
                 const data = await res.json();
                 if (!res.ok || !data.success) throw new Error(data.message || 'Password reset failed');
-                const body = button.closest('.admin-credential-modal').querySelector('#adminCredentialBody');
-                const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+                const modal = button.closest('.admin-credential-modal');
+                const body = modal.querySelector('#adminCredentialBody');
                 body.innerHTML = `<div style="display:grid;gap:12px">
                   <div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900">${safe(data.studentId)}</div></div>
                   <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">NEW PASSWORD</div><div style="font-size:24px;font-weight:900;letter-spacing:1px">${safe(data.password)}</div></div>
                   <div style="padding:12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:700">⚠️ The previous password is no longer valid. Give this new password to the student.</div>
+                  <button type="button" onclick="showStudentCredentials('${id}');this.closest('.admin-credential-modal').remove()" style="padding:12px;border:0;border-radius:12px;background:#7c3aed;color:#fff;font-weight:900">🔑 Open Password Change</button>
                 </div>`;
-            } catch (err) {
-                alert(err.message);
-                button.disabled = false;
-            }
+            } catch (err) { alert(err.message); button.disabled=false; }
         }
 
         //==========================
