@@ -3011,7 +3011,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 showAducateAnimation("reward", "🎡 Jackpot!", "₹" + Number(data.prize).toFixed(2) + " added to your wallet");
 
                 alert(
-                    "Congratulations! 🎉\n\n"
+                    "Congratulations! 🎉\n\n" +
                     "Spin પર તમને ₹" + Number(data.prize).toFixed(2) + " મળ્યા!\n\n" +
                     "Spin #" + Number(data.spinCount || 0) + " complete.\n" +
                     "હવે ફરી 100 પ્રશ્નો પૂરા કરો અને ફરી Spin કરો."
@@ -3188,6 +3188,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                             return;
                         }
 
+                        const isCorrect = i === Number(q.correct);
                         window.__quizSelectedIndex = i;
                         window.__quizSelectedAnswer = String(q.options[i] ?? "");
                         const saved = await updateWallet(isCorrect, q._id);
@@ -3214,7 +3215,6 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                         // again before the next API request.
                         quizData = quizData.filter(item => String(item?._id) !== String(q._id));
 
-                        const isCorrect = i === Number(q.correct);
                         const buttons = optDiv.querySelectorAll(".option-btn");
                         buttons.forEach(btn => btn.disabled = true);
 

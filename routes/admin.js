@@ -344,6 +344,36 @@ router.get("/credentials/:id", adminAuth, async (req, res) => {
     }
 });
 
+
+// Admin can set a specific student password.
+router.post("/credentials/:id/set", adminAuth, async (req, res) => {
+    try {
+        const { password } = req.body || {};
+        if (typeof password !== "string" || password.length < 4 || password.length > 128) {
+            return res.status(400).json({ success:false, message:"Password must be 4 to 128 characters." });
+        }
+        const user = await User.findOne({ _id: req.params.id, isDeleted: { $ne: true } }).select("+passwordEncrypted");
+        if (!user) return res.status(404).json({ success:false, message:"Student not found" });
+
+        user.password = await bcrypt.hash(password, 10);
+        user.passwordEncrypted = encryptPassword(password);
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+        user.activeSessionId = "";
+        user.isOnline = false;
+        await user.save();
+
+        return res.json({
+            success:true,
+            studentId: String(user.mobile || ""),
+            loginId: String(user.mobile || ""),
+            name: user.name || "Student",
+            message:"Password changed successfully."
+        });
+    } catch (err) {
+        return res.status(500).json({ success:false, message:err.message });
+    }
+});
+
 router.post("/credentials/:id/reset", adminAuth, async (req, res) => {
     try {
         const user = await User.findOne({ _id: req.params.id, isDeleted: { $ne: true } }).select("+passwordEncrypted");

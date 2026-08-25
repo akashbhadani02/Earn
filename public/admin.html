@@ -1361,10 +1361,50 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 body.innerHTML = `<div style="display:grid;gap:12px">
                   <div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${safe(data.studentId || data.loginId || user.mobile || '-')}</div></div>
                   <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">PASSWORD</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${data.passwordAvailable ? safe(data.password) : '<span style="color:#dc2626;font-size:15px">Old password cannot be recovered.</span>'}</div></div>
-                  ${data.passwordAvailable ? '<div style="font-size:12px;color:#64748b">This password is recovered from the encrypted Admin credential store. It is not stored as plain text in the database.</div>' : '<button type="button" class="btn-warning" onclick="resetStudentPassword(\'' + id + '\', this)">🔄 Generate New Password</button>'}
+                  <button type="button" class="btn-warning" onclick="changeStudentPassword('${id}', this)">🔑 Change Student Password</button>
+                  ${data.passwordAvailable ? '<div style="font-size:12px;color:#64748b">The password is protected in the database. Use the button above to set a new password.</div>' : '<div style="font-size:12px;color:#64748b">The old password cannot be recovered, so set a new one.</div>'}
                 </div>`;
             } catch (err) {
                 body.innerHTML = `<div style="padding:14px;border-radius:12px;background:#fef2f2;color:#b91c1c">${safe(err.message)}</div>`;
+            }
+        }
+
+        async function changeStudentPassword(id, button) {
+            const password = prompt('Enter the new password for this student (minimum 4 characters):');
+            if (password === null) return;
+            if (password.length < 4 || password.length > 128) {
+                alert('Password must be 4 to 128 characters.');
+                return;
+            }
+            if (!confirm('Change this student password now? The old password will stop working.')) return;
+
+            button.disabled = true;
+            try {
+                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/set', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json', Authorization:'Bearer ' + token},
+                    body: JSON.stringify({password})
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || 'Password change failed');
+
+                const body = button.closest('.admin-credential-modal').querySelector('#adminCredentialBody');
+                const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+                body.innerHTML = `<div style="display:grid;gap:12px">
+                  <div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff">
+                    <div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div>
+                    <div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${safe(data.studentId)}</div>
+                  </div>
+                  <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4">
+                    <div style="font-size:12px;color:#64748b;font-weight:800">NEW PASSWORD</div>
+                    <div style="font-size:24px;font-weight:900;letter-spacing:1px;margin-top:4px;word-break:break-all">${safe(password)}</div>
+                  </div>
+                  <div style="padding:12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:700">⚠️ Password changed. The previous password is no longer valid. Give this new password to the student.</div>
+                  <button type="button" class="btn-warning" onclick="changeStudentPassword('${id}', this)">🔑 Change Again</button>
+                </div>`;
+            } catch (err) {
+                alert(err.message);
+                button.disabled = false;
             }
         }
 
