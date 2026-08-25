@@ -1636,24 +1636,6 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 .book-access-empty>span{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#fff;font-size:21px;box-shadow:0 4px 12px rgba(15,23,42,.07)}
 .book-access-empty strong{display:block;font-size:14px;color:#0f172a}.book-access-empty small{display:block;margin-top:3px;font-size:11px;color:#64748b}
 @media(max-width:560px){.book-access-card{align-items:flex-start;flex-wrap:wrap}.book-access-main{padding-top:2px}.book-access-download{width:100%;margin-left:54px;margin-top:-2px}.book-access-pill{margin-left:auto}.book-modal-steps span{font-size:9px;padding:7px 2px}.book-purchase-box{padding:26px 16px 18px;border-radius:24px}}
-
-<style id="book-viewer-ui">
-#bookViewerModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:rgba(2,6,23,.72);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);z-index:100000}
-#bookViewerModal.show{display:flex}
-.book-viewer-shell{width:min(1180px,96vw);height:min(900px,92vh);min-height:520px;background:#e5e7eb;border:1px solid rgba(255,255,255,.25);border-radius:22px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.45);display:flex;flex-direction:column}
-.book-viewer-head{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 18px;background:linear-gradient(135deg,#111827,#1e293b);color:#fff;flex:0 0 62px;box-sizing:border-box}
-.book-viewer-title{font-weight:900;font-size:15px;display:flex;align-items:center;gap:9px;white-space:nowrap}.book-title-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:rgba(255,255,255,.1)}
-.book-viewer-tools{display:flex;align-items:center;gap:6px}.book-viewer-tools button{font:inherit}
-.book-zoom-btn,.book-zoom-reset,.book-viewer-close{border:0;cursor:pointer;font-weight:900;color:#fff;height:38px;min-width:38px;border-radius:10px}
-.book-zoom-btn{background:rgba(255,255,255,.11);font-size:22px}.book-zoom-btn:hover{background:rgba(255,255,255,.2)}
-.book-zoom-reset{padding:0 11px;background:rgba(255,255,255,.09);font-size:11px}.book-zoom-reset:hover{background:rgba(255,255,255,.18)}
-#bookZoomLabel{min-width:48px;text-align:center;font-size:11px;font-weight:900;color:#dbeafe}
-.book-viewer-close{background:#ef4444;padding:0 13px;margin-left:4px}.book-viewer-close:hover{background:#dc2626}
-#bookViewerViewport{position:relative;flex:1;overflow:auto;background:#64748b;padding:18px;box-sizing:border-box;overscroll-behavior:contain}
-#bookViewerCanvas{width:100%;height:100%;min-height:100%;display:flex;justify-content:center;align-items:flex-start;transform-origin:top center;transition:transform .18s ease}
-#bookViewerFrame{width:100%;height:100%;min-height:100%;border:0;background:#fff;display:block;border-radius:10px;box-shadow:0 10px 35px rgba(15,23,42,.25)}
-@media(max-width:700px){#bookViewerModal{padding:8px}.book-viewer-shell{width:100%;height:96vh;min-height:420px;border-radius:16px}.book-viewer-head{height:54px;flex-basis:54px;padding:0 8px 0 11px}.book-viewer-title{font-size:12px}.book-title-icon{width:30px;height:30px}.book-viewer-tools{gap:3px}.book-zoom-btn,.book-zoom-reset,.book-viewer-close{height:34px;min-width:34px}.book-zoom-reset{padding:0 7px}.book-viewer-close{padding:0 9px}#bookViewerViewport{padding:10px}}
-</style>
 </style>
 
 </head>
@@ -3589,26 +3571,6 @@ document.addEventListener('click', function(e){
     });
 }, true);
 </script>
-<div id="bookViewerModal" role="dialog" aria-modal="true" aria-label="Book viewer">
-  <div class="book-viewer-shell">
-    <div class="book-viewer-head">
-      <div class="book-viewer-title"><span class="book-title-icon">📖</span><span>Aducate Book</span></div>
-      <div class="book-viewer-tools">
-        <button type="button" class="book-zoom-btn" onclick="bookZoomOut()" aria-label="Zoom out">−</button>
-        <span id="bookZoomLabel">100%</span>
-        <button type="button" class="book-zoom-btn" onclick="bookZoomIn()" aria-label="Zoom in">+</button>
-        <button type="button" class="book-zoom-reset" onclick="bookZoomReset()">Reset</button>
-        <button type="button" class="book-viewer-close" onclick="closeBookViewer()">✕</button>
-      </div>
-    </div>
-    <div id="bookViewerViewport">
-      <div id="bookViewerCanvas">
-        <iframe id="bookViewerFrame" title="Book" loading="eager" referrerpolicy="no-referrer"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div id="bookPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="bookPurchaseTitle">
   <div class="book-purchase-box">
     <h3 id="bookPurchaseTitle">📖 Book Purchase</h3>
@@ -3670,54 +3632,20 @@ async function loadBookStatus(){
       host = document.createElement("div"); host.id="studentBookAccessBox"; btn.parentElement.appendChild(host);
     }
     host.className = "student-book-access";
-    host.innerHTML = data.canDownload ? `<div class="book-access-card active"><div class="book-access-icon">📖</div><div class="book-access-main"><div class="book-access-title">Book Access Active</div><div class="book-access-sub">Your book is ready to download.</div></div><button type="button" class="book-access-download" onclick="openBookViewer()">📖 Open Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div class="book-access-card closed"><div class="book-access-icon">🔒</div><div class="book-access-main"><div class="book-access-title">Book Access Closed</div><div class="book-access-sub">Admin has temporarily closed book access.</div></div><span class="book-access-pill">CLOSED</span></div>` : (data.purchase && data.purchase.status === 'rejected' ? `<div class="book-access-card declined"><div class="book-access-icon">🚫</div><div class="book-access-main"><div class="book-access-title">Payment Request Declined</div><div class="book-access-sub">You can submit a new payment confirmation.</div></div><span class="book-access-pill">DECLINED</span></div>` : (data.purchase && data.purchase.status === 'student_confirmed' ? `<div class="book-access-card pending"><div class="book-access-icon">⏳</div><div class="book-access-main"><div class="book-access-title">Verification Pending</div><div class="book-access-sub">Admin is checking your ₹499 payment.</div></div><span class="book-access-pill">PENDING</span></div>` : `<div class="book-access-empty"><span>📚</span><div><strong>Book Access</strong><small>Purchase the book to unlock access.</small></div></div>`)));
+    host.innerHTML = data.canDownload ? `<div class="book-access-card active"><div class="book-access-icon">📖</div><div class="book-access-main"><div class="book-access-title">Book Access Active</div><div class="book-access-sub">Your book is ready to download.</div></div><button type="button" class="book-access-download" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div class="book-access-card closed"><div class="book-access-icon">🔒</div><div class="book-access-main"><div class="book-access-title">Book Access Closed</div><div class="book-access-sub">Admin has temporarily closed book access.</div></div><span class="book-access-pill">CLOSED</span></div>` : (data.purchase && data.purchase.status === 'rejected' ? `<div class="book-access-card declined"><div class="book-access-icon">🚫</div><div class="book-access-main"><div class="book-access-title">Payment Request Declined</div><div class="book-access-sub">You can submit a new payment confirmation.</div></div><span class="book-access-pill">DECLINED</span></div>` : (data.purchase && data.purchase.status === 'student_confirmed' ? `<div class="book-access-card pending"><div class="book-access-icon">⏳</div><div class="book-access-main"><div class="book-access-title">Verification Pending</div><div class="book-access-sub">Admin is checking your ₹499 payment.</div></div><span class="book-access-pill">PENDING</span></div>` : `<div class="book-access-empty"><span>📚</span><div><strong>Book Access</strong><small>Purchase the book to unlock access.</small></div></div>`)));
   }catch(e){ console.warn("Book status",e); }
 }
-let bookZoom=1;
-function applyBookZoom(){
-  const canvas=document.getElementById("bookViewerCanvas");
-  const label=document.getElementById("bookZoomLabel");
-  if(!canvas) return;
-  canvas.style.transform=`scale(${bookZoom})`;
-  if(label) label.textContent=Math.round(bookZoom*100)+"%";
-}
-function bookZoomIn(){ bookZoom=Math.min(1.6, +(bookZoom+0.1).toFixed(2)); applyBookZoom(); }
-function bookZoomOut(){ bookZoom=Math.max(0.7, +(bookZoom-0.1).toFixed(2)); applyBookZoom(); }
-function bookZoomReset(){ bookZoom=1; applyBookZoom(); }
-async function openBookViewer(){
+async function downloadBookSecure(){
   try{
-    // Never open the viewer from the client alone. The server is the final authority.
-    const statusRes = await fetch(BOOK_STATUS_API + "?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
-    const statusData = await statusRes.json().catch(()=>({}));
-    if(!statusRes.ok || !statusData.canDownload || !statusData.purchase || statusData.purchase.status !== "admin_verified" || !statusData.purchase.accessGranted || !statusData.purchase.adminVerified){
-      throw new Error("Book access is not granted by admin.");
-    }
-
-    const res = await fetch("/api/book-purchases/viewer-token?_=" + Date.now(), {
-      headers: authHeaders(), cache:"no-store"
-    });
-    const data = await res.json().catch(()=>({}));
-    if(!res.ok || !data.token) throw new Error(data.message || "Book access is not active");
-    const modal = document.getElementById("bookViewerModal");
-    const frame = document.getElementById("bookViewerFrame");
-    if(!modal || !frame) throw new Error("Book viewer is unavailable");
-    frame.src = "/api/book-purchases/view?vt=" + encodeURIComponent(data.token);
-    bookZoomReset();
-    modal.classList.add("show");
-    document.body.style.overflow = "hidden";
-  }catch(e){ alert(e.message || "Unable to open book"); }
+    const res = await fetch("/api/book-purchases/download?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
+    if(!res.ok){ const d=await res.json().catch(()=>({})); throw new Error(d.message || "Book access is not active"); }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="book.pdf"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }catch(e){ alert(e.message); }
 }
-function closeBookViewer(){
-  const modal=document.getElementById("bookViewerModal");
-  const frame=document.getElementById("bookViewerFrame");
-  if(frame) frame.src="about:blank";
-  if(modal) modal.classList.remove("show");
-  document.body.style.overflow="";
-}
-
-window.buyBook=buyBook; window.closeBookModal=closeBookModal; window.startBookPayment=startBookPayment; window.confirmBookPayment=confirmBookPayment; window.openBookViewer=openBookViewer; window.closeBookViewer=closeBookViewer; window.bookZoomIn=bookZoomIn; window.bookZoomOut=bookZoomOut; window.bookZoomReset=bookZoomReset;
+window.buyBook=buyBook; window.closeBookModal=closeBookModal; window.startBookPayment=startBookPayment; window.confirmBookPayment=confirmBookPayment; window.downloadBookSecure=downloadBookSecure;
 document.addEventListener("DOMContentLoaded", loadBookStatus);
-setInterval(loadBookStatus, 30000);
+setInterval(loadBookStatus, 8000);
 </script>
 
 <script id="globalBrandingClient">

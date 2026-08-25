@@ -11,7 +11,6 @@ const BookPurchase = require("../models/BookPurchase");
 
 const BOOK_PRICE = 499;
 const UPI_ID = "baa836610@okaxis";
-const JWT_SECRET = process.env.JWT_SECRET;
 
 router.get("/status", auth, async (req, res) => {
   try {
@@ -27,13 +26,12 @@ router.get("/status", auth, async (req, res) => {
         upiId: purchase.upiId,
         status: purchase.status,
         accessGranted: !!purchase.accessGranted,
-        adminVerified: purchase.status === "admin_verified" && !!purchase.accessGranted && !!purchase.verifiedBy,
         downloadCount: Number(purchase.downloadCount || 0),
         lastDownloadAt: purchase.lastDownloadAt,
         createdAt: purchase.createdAt,
         verifiedAt: purchase.verifiedAt
       },
-      canDownload: purchase.status === "admin_verified" && !!purchase.accessGranted && !!purchase.verifiedBy
+      canDownload: purchase.status === "admin_verified" && !!purchase.accessGranted
     });
   } catch (err) {
     console.error("Book status error:", err);
@@ -135,56 +133,24 @@ router.put("/admin/:userId/close", adminAuth, async (req, res) => {
   }
 });
 
-// Create a short-lived viewer token. The browser PDF viewer can then load the
-// PDF directly (streamed) without downloading the whole file into JavaScript.
-router.get("/viewer-token", auth, async (req, res) => {
+// Secure download: the PDF is not exposed through the public static folder.
+router.get("/download", auth, async (req, res) => {
   try {
-    const purchase = await BookPurchase.findOne({
-      user: req.user.id,
-      status: "admin_verified",
-      status: "admin_verified",
-      accessGranted: true,
-      verifiedBy: { $exists: true, $ne: null }
-    }).sort({ createdAt: -1 }).lean();
-    if (!purchase) return res.status(403).json({ success: false, message: "Book access is not active." });
-    const token = require("jsonwebtoken").sign(
-      { uid: String(req.user.id), type: "book-view" },
-      JWT_SECRET,
-      { expiresIn: "5m" }
-    );
-    return res.json({ success: true, token });
-  } catch (err) {
-    console.error("Book viewer token error:", err);
-    return res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// Stream the PDF to the browser's built-in viewer. This is NOT a download endpoint.
-router.get("/view", async (req, res) => {
-  try {
-    const jwt = require("jsonwebtoken");
-    const decoded = jwt.verify(String(req.query.vt || ""), JWT_SECRET);
-    if (decoded.type !== "book-view" || !decoded.uid) return res.status(403).end();
-
-    const purchase = await BookPurchase.findOne({
-      user: decoded.uid,
-      status: "admin_verified",
-      accessGranted: true,
-      verifiedBy: { $exists: true, $ne: null }
-    }).lean();
-    if (!purchase) return res.status(403).end();
-
+    const purchase = await BookPurchase.findOne({ user: req.user.id, status: "admin_verified", accessGranted: true }).sort({ createdAt: -1 });
+    if (!purchase) return res.status(403).json({ success: false, message: "Book access is not active. Please wait for admin verification." });
     const bookPath = path.join(__dirname, "..", "public", "books", "book.pdf");
-    if (!fs.existsSync(bookPath)) return res.status(404).end();
-
+    if (!fs.existsSync(bookPath)) return res.status(404).json({ success: false, message: "Book PDF not found on server." });
+    purchase.downloadCount = Number(purchase.downloadCount || 0) + 1;
+    purchase.lastDownloadAt = new Date();
+    await purchase.save();
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "inline; filename=book.pdf");
-    res.setHeader("Accept-Ranges", "bytes");
-    res.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
-    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Content-Disposition", 'attachment; filename="book.pdf"');
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
     return res.sendFile(bookPath);
   } catch (err) {
-    return res.status(403).end();
+    console.error("Secure book download error:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
+
 module.exports = router;
