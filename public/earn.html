@@ -1791,6 +1791,104 @@ body{background:radial-gradient(circle at 10% 0%,rgba(109,93,252,.10),transparen
 @media(max-width:700px){#quiz.kbc-quiz-screen{padding:7px 8px!important}.kbc-question-no{margin-top:2px!important}.kbc-question-title{opacity:.75}.game-hub{border-radius:20px!important}.game-stat{border-radius:13px!important}.game-stat b{font-size:15px!important}.xp-track{height:9px!important}.mission-card{padding:10px!important}.achievement-row{padding-bottom:2px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 </style>
+
+<style id="student-dashboard-full-animation">
+/* ===== Full Student Dashboard Motion Pack ===== */
+#dashboard{position:relative;overflow:hidden!important;isolation:isolate}
+#dashboard::before,#dashboard::after{content:"";position:absolute;z-index:-1;border-radius:50%;pointer-events:none;filter:blur(2px)}
+#dashboard::before{width:240px;height:240px;right:-120px;top:70px;background:radial-gradient(circle,rgba(236,72,153,.18),transparent 68%);animation:dashOrbA 7s ease-in-out infinite}
+#dashboard::after{width:220px;height:220px;left:-130px;bottom:80px;background:radial-gradient(circle,rgba(34,197,94,.14),transparent 68%);animation:dashOrbB 8s ease-in-out infinite}
+@keyframes dashOrbA{50%{transform:translate(-24px,26px) scale(1.15)}}
+@keyframes dashOrbB{50%{transform:translate(28px,-18px) scale(1.12)}}
+.dashboard-topbar{animation:dashDrop .65s cubic-bezier(.2,.8,.2,1) both}
+#dashboard>h2{animation:dashTitle .8s .08s cubic-bezier(.2,.8,.2,1) both!important}
+.wallet-box{position:relative;overflow:hidden;animation:dashRise .7s .14s cubic-bezier(.2,.8,.2,1) both;transform-origin:center}
+.wallet-box::before{content:"";position:absolute;inset:-40% -20%;background:linear-gradient(100deg,transparent 38%,rgba(255,255,255,.38) 50%,transparent 62%);transform:translateX(-70%) rotate(8deg);animation:walletShine 4.5s 1s ease-in-out infinite}
+.wallet-box::after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-35px;bottom:-42px;background:rgba(255,255,255,.14);animation:walletBubble 3s ease-in-out infinite}
+.wallet-val{position:relative;z-index:1;animation:walletPulse 2.8s ease-in-out infinite}
+.game-hub{animation:dashRise .72s .22s cubic-bezier(.2,.8,.2,1) both}
+.game-hub-top,.xp-track,.game-stats,.mission-card,.adventure-grid,.challenge-card,.achievement-row{animation:contentLift .55s ease both}
+.game-hub-top{animation-delay:.28s}.xp-track{animation-delay:.34s}.game-stats{animation-delay:.40s}.mission-card{animation-delay:.46s}.adventure-grid{animation-delay:.52s}.challenge-card{animation-delay:.58s}.achievement-row{animation-delay:.64s}
+.game-stat{animation:statFloat 3.2s ease-in-out infinite;animation-delay:calc(var(--i,0)*.18s)}
+.game-stat:nth-child(2){--i:1}.game-stat:nth-child(3){--i:2}
+.game-stat b{animation:numberGlow 2.6s ease-in-out infinite}
+.mission-card{position:relative;overflow:hidden}
+.mission-card::after{content:"";position:absolute;inset:0;transform:translateX(-110%);background:linear-gradient(100deg,transparent,rgba(124,58,237,.08),transparent);animation:missionShimmer 5s ease-in-out infinite}
+.adventure-card{position:relative;overflow:hidden;animation:adventureBob 4s ease-in-out infinite;animation-delay:calc(var(--a,0)*.25s)}
+.adventure-card:nth-child(2){--a:1}.adventure-card:nth-child(3){--a:2}
+.adventure-card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:cardShine 5s 1.2s ease-in-out infinite}
+.adventure-icon{animation:iconFloat 2.5s ease-in-out infinite}
+.challenge-card{position:relative;overflow:hidden}
+.challenge-card::before{content:"";position:absolute;width:80px;height:80px;right:-20px;top:-28px;border-radius:50%;background:rgba(245,158,11,.14);animation:challengeOrb 3.5s ease-in-out infinite}
+.challenge-fill{position:relative;overflow:hidden}
+.challenge-fill::after{content:"";position:absolute;inset:0;width:45%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);animation:progressShine 2.8s linear infinite}
+.achievement{transition:transform .25s,box-shadow .25s,opacity .25s!important}
+.achievement:hover{transform:translateY(-5px) rotate(-1deg) scale(1.04)}
+.achievement.unlocked{animation:badgeUnlock .65s cubic-bezier(.2,.8,.2,1)}
+.achievement .badge{animation:badgeFloat 2.8s ease-in-out infinite}
+.dashboard-actions{animation:dashRise .75s .70s cubic-bezier(.2,.8,.2,1) both}
+.dashboard-actions .btn,.dashboard-actions .telegram-btn{position:relative;overflow:hidden;transform:translateZ(0);transition:transform .2s,box-shadow .2s,filter .2s!important}
+.dashboard-actions .btn::before,.dashboard-actions .telegram-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 28%,rgba(255,255,255,.25) 50%,transparent 72%);transform:translateX(-130%);animation:buttonSweep 5.5s ease-in-out infinite;pointer-events:none}
+.dashboard-actions .btn:hover,.dashboard-actions .telegram-btn:hover{transform:translateY(-4px) scale(1.015)!important;box-shadow:0 14px 28px rgba(15,23,42,.16)!important;filter:brightness(1.04)}
+.dashboard-actions .btn:active,.dashboard-actions .telegram-btn:active{transform:scale(.97)!important}
+.btn-quiz{animation:primaryGlow 2.4s ease-in-out infinite}
+.btn-reward{animation:rewardPulse 2.8s ease-in-out infinite}
+.btn-bonus{animation:bonusPulse 3.1s ease-in-out infinite}
+.telegram-btn{animation:telegramFloat 3.6s ease-in-out infinite}
+#gameToast.show{animation:toastPop .45s cubic-bezier(.2,.8,.2,1) both}
+.pwa-install-tools{animation:installFloat 3s ease-in-out infinite}
+@keyframes dashDrop{from{opacity:0;transform:translateY(-22px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes dashRise{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes dashTitle{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes contentLift{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes walletShine{0%,55%{transform:translateX(-75%) rotate(8deg)}75%,100%{transform:translateX(75%) rotate(8deg)}}
+@keyframes walletBubble{50%{transform:translate(-8px,-8px) scale(1.12)}}
+@keyframes walletPulse{50%{transform:scale(1.035);text-shadow:0 3px 18px rgba(255,255,255,.28)}}
+@keyframes statFloat{50%{transform:translateY(-3px)}}
+@keyframes numberGlow{50%{filter:drop-shadow(0 0 5px rgba(109,93,252,.25))}}
+@keyframes missionShimmer{0%,55%{transform:translateX(-110%)}75%,100%{transform:translateX(110%)}}
+@keyframes adventureBob{50%{transform:translateY(-2px)}}
+@keyframes cardShine{0%,55%{transform:translateX(-120%)}75%,100%{transform:translateX(120%)}}
+@keyframes iconFloat{50%{transform:translateY(-4px) rotate(3deg)}}
+@keyframes challengeOrb{50%{transform:translate(-10px,8px) scale(1.15)}}
+@keyframes progressShine{from{transform:translateX(-150%)}to{transform:translateX(330%)}}
+@keyframes badgeUnlock{0%{transform:scale(.8) rotate(-8deg)}60%{transform:scale(1.12) rotate(4deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes badgeFloat{50%{transform:translateY(-2px)}}
+@keyframes buttonSweep{0%,58%{transform:translateX(-130%)}75%,100%{transform:translateX(130%)}}
+@keyframes primaryGlow{50%{box-shadow:0 0 0 6px rgba(255,11,69,.08),0 12px 28px rgba(255,11,69,.24)}}
+@keyframes rewardPulse{50%{box-shadow:0 0 0 5px rgba(219,39,119,.07),0 12px 25px rgba(124,43,199,.2)}}
+@keyframes bonusPulse{50%{box-shadow:0 0 0 5px rgba(250,61,133,.07),0 12px 25px rgba(255,92,97,.2)}}
+@keyframes telegramFloat{50%{transform:translateY(-2px)}}
+@keyframes installFloat{50%{transform:translateY(-3px)}}
+@keyframes toastPop{from{opacity:0;transform:translate(-50%,14px) scale(.88)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+/* Learning/activity screen motion */
+#activities .activity-title{animation:dashTitle .65s ease both}
+#activities .activity-wallet-bar{animation:dashRise .55s .08s ease both}
+#activities .activity-grid{animation:dashRise .7s .16s ease both}
+.activity-grid .activity-btn{position:relative;overflow:hidden;animation:activityIn .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--n,0)*.07s);transition:transform .2s,box-shadow .2s!important}
+.activity-grid .activity-btn:nth-child(1){--n:1}.activity-grid .activity-btn:nth-child(2){--n:2}.activity-grid .activity-btn:nth-child(3){--n:3}.activity-grid .activity-btn:nth-child(4){--n:4}.activity-grid .activity-btn:nth-child(5){--n:5}.activity-grid .activity-btn:nth-child(6){--n:6}.activity-grid .activity-btn:nth-child(7){--n:7}.activity-grid .activity-btn:nth-child(8){--n:8}
+.activity-grid .activity-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);transform:translateX(-130%);animation:buttonSweep 6s ease-in-out infinite;pointer-events:none}
+.activity-grid .activity-btn:hover{transform:translateY(-6px) scale(1.02)!important;box-shadow:0 16px 30px rgba(15,23,42,.18)!important}
+.activity-grid .activity-btn:active{transform:scale(.97)!important}
+#activityPlay .activity-title{animation:dashTitle .6s ease both}
+#activityPlay #activityContent{animation:contentLift .55s .1s ease both}
+#activityPlay .activity-option,#activityPlay .word-chip,#activityPlay .activity-action{transition:transform .18s,box-shadow .18s,filter .18s!important}
+#activityPlay .activity-option:hover,#activityPlay .word-chip:hover,#activityPlay .activity-action:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(15,23,42,.12);filter:brightness(1.02)}
+/* Soft screen transitions */
+#dashboard.dashboard-enter,#activities.dashboard-enter,#activityPlay.dashboard-enter{animation:screenEnter .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes screenEnter{from{opacity:0;transform:translateY(18px) scale(.985);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}
+@media(max-width:560px){
+  #dashboard::before{width:170px;height:170px;right:-95px}
+  #dashboard::after{width:160px;height:160px;left:-95px}
+  .wallet-val{font-size:34px}
+  .adventure-card:hover{transform:translateY(-2px)!important}
+  .dashboard-actions .btn:hover,.dashboard-actions .telegram-btn:hover{transform:translateY(-2px) scale(1.01)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -4149,6 +4247,39 @@ body {
 </style>
 
 
+
+<script id="student-dashboard-motion-js">
+(function(){
+  function animateScreen(id){
+    const el=document.getElementById(id); if(!el) return;
+    el.classList.remove('dashboard-enter'); void el.offsetWidth; el.classList.add('dashboard-enter');
+    setTimeout(()=>el.classList.remove('dashboard-enter'),650);
+  }
+  function ripple(e){
+    const b=e.currentTarget; if(!b || b.dataset.noRipple==='1') return;
+    const r=document.createElement('span'); r.className='student-ripple';
+    const rect=b.getBoundingClientRect(); const size=Math.max(rect.width,rect.height)*1.25;
+    r.style.width=r.style.height=size+'px'; r.style.left=(e.clientX-rect.left-size/2)+'px'; r.style.top=(e.clientY-rect.top-size/2)+'px';
+    b.appendChild(r); setTimeout(()=>r.remove(),650);
+  }
+  function bind(){
+    document.querySelectorAll('#dashboard .btn,#dashboard .telegram-btn,#dashboard .icon-btn,#dashboard .adventure-card,#activities .activity-btn,#activityPlay .activity-option,#activityPlay .activity-action,#activityPlay .word-chip').forEach(b=>{
+      if(b.dataset.motionBound==='1')return; b.dataset.motionBound='1'; b.addEventListener('click',ripple,{passive:true});
+    });
+    const wallet=document.getElementById('wallet');
+    if(wallet && wallet.dataset.motionBound!=='1'){wallet.dataset.motionBound='1'; wallet.addEventListener('DOMCharacterDataModified',()=>{});}
+  }
+  const style=document.createElement('style'); style.textContent='.student-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.42);pointer-events:none;transform:scale(0);animation:studentRipple .62s ease-out forwards;z-index:4}@keyframes studentRipple{to{transform:scale(1);opacity:0}}'; document.head.appendChild(style);
+  document.addEventListener('DOMContentLoaded',()=>{bind(); animateScreen('dashboard');});
+  const mo=new MutationObserver(bind); mo.observe(document.body,{subtree:true,childList:true});
+  let last='';
+  setInterval(()=>{
+    const ids=['dashboard','activities','activityPlay','quiz'];
+    const active=ids.find(id=>{const e=document.getElementById(id);return e&&getComputedStyle(e).display!=='none'&&!e.classList.contains('hidden')});
+    if(active && active!==last){last=active; if(active!=='quiz') animateScreen(active); bind();}
+  },250);
+})();
+</script>
 <script id="final-polish-js">
 (function(){
   function fxLayer(){let x=document.getElementById('fxLayer');if(!x){x=document.createElement('div');x.id='fxLayer';x.className='fx-layer';document.body.appendChild(x)}return x}
