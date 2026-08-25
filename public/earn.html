@@ -4751,3 +4751,55 @@ html,body{width:100%;height:100%;min-height:100%;overflow:hidden!important}
 }
 
 </style>
+
+<style id="final-scroll-color-fix">
+/* FINAL SCROLL + READABILITY FIX */
+html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;background:#06081f!important;color:#f8fbff!important;scroll-behavior:smooth!important}
+body{padding-bottom:calc(86px + env(safe-area-inset-bottom))!important}
+#dashboard,#neonDashboardUI{height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important}
+#neonDashboardUI{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+.neo-main{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;padding-bottom:10px!important}
+.neo-top-grid,.neo-feature-grid,.neo-activities,.neo-activity-grid{overflow:visible!important}
+.neo-activities{min-height:280px!important}
+.neo-activity-grid{flex:none!important;min-height:0!important}
+.neo-cta{margin-bottom:8px!important}
+/* Keep the neon theme readable: no accidental black text on dark backgrounds */
+.neo-main,.neo-main *,.neo-header,.neo-header *{color:#f7fbff}
+.neo-main small,.neo-main .muted,.neo-main .neo-feature small,.neo-main .neo-activity small,.neo-main .neo-chip small{color:#b8c7e6!important}
+.neo-title,.neo-main h1,.neo-main h2,.neo-main h3,.neo-main h4,.neo-main strong,.neo-main b{color:#ffffff!important}
+.neo-balance,.neo-journey,.neo-mission,.neo-feature,.neo-activities,.neo-activity,.neo-cta{color:#fff!important}
+.neo-feature small,.neo-activity small{color:#c6d4f2!important}
+.game-hub-title,.game-level,.game-stat b,.game-stat span,.mission-card small,.mission-reward,.achievement,.challenge-card,.challenge-head{color:#fff!important}
+.game-stat,.mission-card,.achievement,.adventure-card{background:rgba(14,20,52,.88)!important;border:1px solid rgba(132,112,255,.24)!important;color:#fff!important}
+.adventure-card small{color:#c6d4f2!important}
+.challenge-card{background:linear-gradient(135deg,rgba(91,53,160,.45),rgba(21,75,125,.42))!important;color:#fff!important}
+.challenge-track{background:rgba(255,255,255,.12)!important}
+.activity-screen,.activity-screen *{color:#f8fbff}
+.activity-question{color:#fff!important}
+.activity-input{background:#0c1130!important;color:#fff!important;border-color:#5564a8!important}
+.activity-input::placeholder{color:#9eadd0!important}
+.activity-option{background:#11183d!important;color:#fff!important;border-color:#5364a8!important}
+.word-chip{background:#1a2450!important;color:#fff!important}
+.answer-box{background:#11183d!important;color:#fff!important;border-color:#8b7cff!important}
+.passage{background:#101735!important;color:#f8fbff!important}
+.mic-status{color:#b8c7e6!important}
+/* Prevent fixed bottom nav from hiding the last content */
+.neo-bottom-nav{position:fixed!important;z-index:9999!important}
+/* visible scrollbar, but styled to match the neon theme */
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#080b26}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#7c3aed,#06b6d4);border-radius:99px;border:2px solid #080b26}
+*{scrollbar-color:#635bff #080b26;scrollbar-width:thin}
+@media(max-width:700px){
+ html,body{overflow-y:auto!important}
+ body{padding-bottom:calc(72px + env(safe-area-inset-bottom))!important}
+ #neonDashboardUI{padding-bottom:calc(86px + env(safe-area-inset-bottom))!important}
+ .neo-main{height:auto!important;overflow:visible!important}
+ .neo-top-grid{height:auto!important;min-height:190px!important;grid-template-rows:auto auto!important}
+ .neo-feature-grid{height:auto!important;min-height:0!important}
+ .neo-activities{min-height:390px!important}
+ .neo-activity-grid{height:auto!important;grid-template-rows:repeat(4,minmax(74px,auto))!important}
+ .neo-activity{height:auto!important;min-height:74px!important}
+ .neo-cta{min-height:58px!important;height:auto!important}
+}
+</style>
