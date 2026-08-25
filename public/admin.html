@@ -1368,6 +1368,21 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             }
         }
 
+        async function changeStudentPassword(id, button) {
+            const password = prompt('Enter the new password for this student (minimum 4 characters):');
+            if (password === null) return;
+            if (password.trim().length < 4) { alert('Password must be at least 4 characters.'); return; }
+            button.disabled = true;
+            try {
+                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/change', { method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer ' + token}, body:JSON.stringify({password:password.trim()}) });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || 'Password change failed');
+                const body = button.closest('.admin-credential-modal').querySelector('#adminCredentialBody');
+                const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+                body.innerHTML = `<div style="display:grid;gap:12px"><div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900">${safe(data.studentId)}</div></div><div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">NEW PASSWORD</div><div style="font-size:24px;font-weight:900;letter-spacing:1px">${safe(data.password)}</div></div><div style="padding:12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:700">✅ Password changed. The old password is no longer valid.</div></div>`;
+            } catch (err) { alert(err.message); button.disabled = false; }
+        }
+
         async function resetStudentPassword(id, button) {
             if (!confirm('Generate a new password for this student? The old password will stop working.')) return;
             button.disabled = true;
