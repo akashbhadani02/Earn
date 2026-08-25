@@ -27,12 +27,13 @@ router.get("/status", auth, async (req, res) => {
         upiId: purchase.upiId,
         status: purchase.status,
         accessGranted: !!purchase.accessGranted,
+        adminVerified: purchase.status === "admin_verified" && !!purchase.accessGranted && !!purchase.verifiedBy,
         downloadCount: Number(purchase.downloadCount || 0),
         lastDownloadAt: purchase.lastDownloadAt,
         createdAt: purchase.createdAt,
         verifiedAt: purchase.verifiedAt
       },
-      canDownload: purchase.status === "admin_verified" && !!purchase.accessGranted
+      canDownload: purchase.status === "admin_verified" && !!purchase.accessGranted && !!purchase.verifiedBy
     });
   } catch (err) {
     console.error("Book status error:", err);
@@ -141,7 +142,9 @@ router.get("/viewer-token", auth, async (req, res) => {
     const purchase = await BookPurchase.findOne({
       user: req.user.id,
       status: "admin_verified",
-      accessGranted: true
+      status: "admin_verified",
+      accessGranted: true,
+      verifiedBy: { $exists: true, $ne: null }
     }).sort({ createdAt: -1 }).lean();
     if (!purchase) return res.status(403).json({ success: false, message: "Book access is not active." });
     const token = require("jsonwebtoken").sign(
@@ -166,7 +169,8 @@ router.get("/view", async (req, res) => {
     const purchase = await BookPurchase.findOne({
       user: decoded.uid,
       status: "admin_verified",
-      accessGranted: true
+      accessGranted: true,
+      verifiedBy: { $exists: true, $ne: null }
     }).lean();
     if (!purchase) return res.status(403).end();
 

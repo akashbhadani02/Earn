@@ -3686,6 +3686,13 @@ function bookZoomOut(){ bookZoom=Math.max(0.7, +(bookZoom-0.1).toFixed(2)); appl
 function bookZoomReset(){ bookZoom=1; applyBookZoom(); }
 async function openBookViewer(){
   try{
+    // Never open the viewer from the client alone. The server is the final authority.
+    const statusRes = await fetch(BOOK_STATUS_API + "?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
+    const statusData = await statusRes.json().catch(()=>({}));
+    if(!statusRes.ok || !statusData.canDownload || !statusData.purchase || statusData.purchase.status !== "admin_verified" || !statusData.purchase.accessGranted || !statusData.purchase.adminVerified){
+      throw new Error("Book access is not granted by admin.");
+    }
+
     const res = await fetch("/api/book-purchases/viewer-token?_=" + Date.now(), {
       headers: authHeaders(), cache:"no-store"
     });
