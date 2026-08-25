@@ -423,16 +423,9 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 <style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
-
-<style id="cross-app-and-anti-inspect-style">
-.cross-app-btn{position:fixed;right:14px;top:14px;z-index:2147483000;display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:12px;text-decoration:none;font:700 13px/1.2 Arial,sans-serif;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.35)}
-.cross-app-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-@media(max-width:600px){.cross-app-btn{right:8px;top:8px;padding:7px 10px;font-size:11px;border-radius:10px}}
-</style>
 </head>
 
 <body>
-<a href="/login.html" class="cross-app-btn" aria-label="Open Student App">🎓 Student App</a>
 
     <div class="admin-brand-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:12px;min-width:0;">
@@ -3331,23 +3324,7 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script>
-<script id="anti-inspect-protection">
-(function(){
-  // Discourage common browser DevTools/inspect shortcuts. This cannot override browser-level controls.
-  document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, {capture:true});
-  document.addEventListener('dragstart', function(e){ e.preventDefault(); }, {capture:true});
-  document.addEventListener('keydown', function(e){
-    var k=(e.key||'').toLowerCase();
-    var blocked = k==='f12' ||
-      (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(k)) ||
-      (e.ctrlKey && k==='u') ||
-      (e.metaKey && e.altKey && ['i','j','c'].includes(k));
-    if(blocked){ e.preventDefault(); e.stopPropagation(); return false; }
-  }, {capture:true});
-})();
-</script>
-</body>
+<script src="/mobile-branding.js" defer></script></body>
 
 </html><style id="command-center-mobile-card-fix">
 /* Command Center compact card layout */
