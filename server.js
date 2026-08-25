@@ -15,6 +15,7 @@ const notificationRoutes = require("./routes/notifications");
 const activityRoutes = require("./routes/activities");
 const bonusRoutes = require("./routes/bonus");
 const bookPurchaseRoutes = require("./routes/bookPurchases");
+const engagementRoutes = require("./routes/engagement");
 const Branding = require("./models/Branding");
 
 const app = express();
@@ -59,6 +60,7 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/bonus", bonusRoutes);
 app.use("/api/book-purchases", bookPurchaseRoutes);
+app.use("/api/engagement", engagementRoutes);
 
 // Public branding endpoints. The logo itself is intentionally read-only here; only admins can change it.
 app.get("/api/branding", async (req, res) => {
