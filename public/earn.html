@@ -1249,6 +1249,10 @@ body.kbc-fullscreen-active #quiz.kbc-quiz-screen{border-radius:0!important}
 .level-pop{animation:levelPop .8s cubic-bezier(.2,.8,.2,1)}@keyframes levelPop{0%{transform:scale(.7) rotate(-3deg);opacity:0}60%{transform:scale(1.08) rotate(1deg);opacity:1}100%{transform:scale(1);opacity:1}}
 .option-correct{animation:correctPulse .7s ease}@keyframes correctPulse{0%{transform:scale(1)}45%{transform:scale(1.04)}100%{transform:scale(1)}}
 @media(max-width:560px){.game-hub{padding:12px}.game-stats{gap:5px}.game-stat{padding:8px 4px}.game-stat b{font-size:16px}.mission-card{font-size:12px}}
+/* ===== Adventure / Engagement Upgrade ===== */
+.adventure-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}.adventure-card{border:0;border-radius:16px;padding:12px 8px;background:#fff;cursor:pointer;font-family:Poppins,sans-serif;font-weight:800;box-shadow:0 7px 18px rgba(15,23,42,.08);transition:.2s}.adventure-card:hover{transform:translateY(-3px) scale(1.01)}.adventure-card small{display:block;font-size:10px;color:#64748b;margin-top:3px}.adventure-icon{font-size:24px;display:block;margin-bottom:3px}.challenge-card{margin-top:10px;padding:12px;border-radius:16px;background:linear-gradient(135deg,#fff7ed,#fef3c7);font-size:12px}.challenge-head{display:flex;justify-content:space-between;gap:8px;font-weight:900}.challenge-track{height:8px;background:#fff;border-radius:99px;overflow:hidden;margin-top:8px}.challenge-fill{height:100%;width:0;background:linear-gradient(90deg,#f59e0b,#ef4444);transition:width .5s}.theme-dots{display:flex;gap:6px;justify-content:center;margin-top:7px}.theme-dot{width:22px;height:22px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #cbd5e1;cursor:pointer}.theme-dot.locked{opacity:.3;cursor:not-allowed}.adventure-theme{background-image:linear-gradient(135deg,#eff6ff,#fdf2f8)!important}.adventure-theme .game-hub{background:linear-gradient(135deg,#ecfeff,#eef2ff 55%,#fdf2f8)!important}.chest-pop{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;z-index:100000;padding:18px}.chest-pop.show{display:flex}.chest-box{width:min(360px,100%);background:#fff;border-radius:26px;padding:28px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.35);animation:chestIn .5s cubic-bezier(.2,.8,.2,1)}.chest-emoji{font-size:72px;animation:chestBounce 1s ease infinite alternate}.chest-box h3{margin:8px 0 4px;font-size:24px}.chest-box p{color:#64748b;font-size:13px}.chest-close{border:0;border-radius:13px;padding:12px 22px;background:#4f46e5;color:#fff;font-weight:900;cursor:pointer}@keyframes chestIn{0%{transform:scale(.65) rotate(-4deg);opacity:0}100%{transform:scale(1);opacity:1}}@keyframes chestBounce{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-8px) rotate(3deg)}}
+@media(max-width:560px){.adventure-grid{grid-template-columns:repeat(3,1fr);gap:6px}.adventure-card{padding:10px 4px;font-size:11px}}
+
 
 </style>
 <style id="book-purchase-style">
@@ -1785,6 +1789,17 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 <div class="game-stat"><b id="gameBest">0</b><span>BEST STREAK</span></div>
             </div>
             <div class="mission-card"><div>🎯 <strong id="missionTitle">Today's Mission</strong><small id="missionSub">Answer 20 questions correctly</small></div><div class="mission-reward" id="missionReward">+25 XP</div></div>
+
+            <div class="adventure-grid" aria-label="Extra game modes">
+                <button class="adventure-card" onclick="openMysteryChest()"><span class="adventure-icon">🧰</span>Mystery Chest<small id="chestStatus">Unlocks at 10 Q</small></button>
+                <button class="adventure-card" onclick="startLuckyChallenge()"><span class="adventure-icon">🍀</span>Lucky Round<small>Bonus XP mode</small></button>
+                <button class="adventure-card" onclick="showThemePicker()"><span class="adventure-icon">🎨</span>Themes<small id="themeStatus">1 unlocked</small></button>
+            </div>
+            <div class="challenge-card">
+                <div class="challenge-head"><span>🏁 Weekly Challenge</span><span id="weeklyChallengeText">0 / 75 correct</span></div>
+                <div class="challenge-track"><div class="challenge-fill" id="weeklyChallengeFill"></div></div>
+                <div style="font-size:10px;color:#92400e;margin-top:5px">Complete 75 correct answers this week to unlock a special XP boost.</div>
+            </div>
             <div class="achievement-row" id="achievementRow">
                 <div class="achievement" data-ach="10"><span class="badge">🌱</span>10 Q</div>
                 <div class="achievement" data-ach="50"><span class="badge">⭐</span>50 Q</div>
@@ -1794,6 +1809,15 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             </div>
         </section>
         <div id="gameToast" class="game-toast" aria-live="polite"></div>
+<div id="chestPop" class="chest-pop" aria-hidden="true">
+  <div class="chest-box">
+    <div class="chest-emoji">🎁</div>
+    <h3 id="chestTitle">Mystery Chest!</h3>
+    <p id="chestText">Keep playing to discover your next surprise.</p>
+    <button class="chest-close" onclick="closeMysteryChest()">Continue Playing 🚀</button>
+  </div>
+</div>
+
 
         <div class="dashboard-actions">
             <button class="btn btn-quiz" onclick="showScreen('quiz')">📚 Quiz</button>
@@ -2824,6 +2848,66 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
         }
         function gameWrong(){const g=getGameProgress();g.streak=0;saveGameProgress(g);showGameToast('💪 Keep going! Streak reset')}
         renderGameProgress();
+
+        // ===== Adventure / Engagement Upgrade =====
+        const ADVENTURE_KEY='aducate_adventure_v1';
+        function adventureState(){
+            const now=new Date(), start=new Date(now);
+            const day=(now.getDay()+6)%7; start.setDate(now.getDate()-day);
+            const week=start.toISOString().slice(0,10);
+            let a={week,weekly:0,weeklyClaimed:false,chestClaimed:false,lucky:false,luckyDate:'',themes:1,activeTheme:1};
+            try{a={...a,...JSON.parse(localStorage.getItem(ADVENTURE_KEY)||'{}')}}catch(e){}
+            if(a.week!==week){a.week=week;a.weekly=0;a.weeklyClaimed=false;}
+            const today=now.toISOString().slice(0,10); if(a.luckyDate!==today){a.lucky=false;a.luckyDate=today;}
+            return a;
+        }
+        function saveAdventure(a){localStorage.setItem(ADVENTURE_KEY,JSON.stringify(a));renderAdventure(a)}
+        function renderAdventure(a=adventureState()){
+            const fill=document.getElementById('weeklyChallengeFill'); if(fill)fill.style.width=Math.min(100,a.weekly/75*100)+'%';
+            const tx=document.getElementById('weeklyChallengeText'); if(tx)tx.textContent=Math.min(75,a.weekly)+' / 75 correct';
+            const cs=document.getElementById('chestStatus'); if(cs)cs.textContent=a.chestClaimed?'Opened ✓':(getGameProgress().total>=10?'Ready to open!':'Unlocks at 10 Q');
+            const ts=document.getElementById('themeStatus'); if(ts)ts.textContent=a.themes+' unlocked';
+        }
+        function openMysteryChest(){
+            const a=adventureState(), g=getGameProgress();
+            if(a.chestClaimed){showGameToast('🧰 Chest already opened — keep playing!');return;}
+            if(g.total<10){showGameToast(`🔒 Answer ${10-g.total} more questions to unlock the chest.`);return;}
+            const reward=[15,20,25,40][Math.floor(Math.random()*4)];
+            g.xp+=reward; saveGameProgress(g); a.chestClaimed=true; saveAdventure(a);
+            const t=document.getElementById('chestTitle'),p=document.getElementById('chestText'),m=document.getElementById('chestPop');
+            if(t)t.textContent='🎉 You found a reward!'; if(p)p.textContent=`+${reward} XP added to your Quiz Journey. Keep going for the next unlock!`;
+            if(m){m.classList.add('show');m.setAttribute('aria-hidden','false');}
+        }
+        function closeMysteryChest(){const m=document.getElementById('chestPop');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
+        function startLuckyChallenge(){
+            const a=adventureState();
+            if(a.lucky){showGameToast('🍀 Lucky Round already used today!');return;}
+            a.lucky=true;saveAdventure(a);
+            showGameToast('🍀 LUCKY ROUND! Next 3 correct answers earn extra XP.',true);
+            try{sessionStorage.setItem('aducateLuckyRound','3')}catch(e){}
+            showScreen('quiz');
+        }
+        function showThemePicker(){
+            const a=adventureState();
+            if(a.themes<2 && getGameProgress().total>=50){a.themes=2;saveAdventure(a);showGameToast('🎨 New theme unlocked! Tap Themes again to activate it.',true);return;}
+            if(a.themes<2){showGameToast(`🔒 Reach 50 answered questions to unlock a new theme.`);return;}
+            a.activeTheme=a.activeTheme===2?1:2; saveAdventure(a);
+            document.body.classList.toggle('adventure-theme',a.activeTheme===2);
+            showGameToast(a.activeTheme===2?'🎨 Adventure Theme ON':'🎨 Classic Theme ON',true);
+        }
+        function applyAdventureTheme(){const a=adventureState();document.body.classList.toggle('adventure-theme',a.activeTheme===2);}
+        const __oldGameCorrect=window.gameCorrect;
+        // Wrap the existing correct-answer handler without changing quiz/server logic.
+        window.gameCorrect=function(){
+            const before=getGameProgress();
+            __oldGameCorrect();
+            const a=adventureState(); a.weekly++;
+            let lucky=0; try{lucky=Number(sessionStorage.getItem('aducateLuckyRound')||0)}catch(e){}
+            if(lucky>0){const g=getGameProgress();g.xp+=10;saveGameProgress(g);lucky--;try{sessionStorage.setItem('aducateLuckyRound',String(lucky))}catch(e){};showGameToast(`🍀 Lucky bonus +10 XP (${lucky} left)`,true)}
+            if(a.weekly>=75 && !a.weeklyClaimed){a.weeklyClaimed=true;const g=getGameProgress();g.xp+=50;saveGameProgress(g);showGameToast('🏁 Weekly Challenge Complete! +50 XP',true)}
+            saveAdventure(a);
+        };
+        renderAdventure(); applyAdventureTheme();
 
         function updateQuestionProgress() {
             // Today's total answer count never resets after Spin.
