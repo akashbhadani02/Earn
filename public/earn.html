@@ -7598,14 +7598,14 @@
 
         /* No artificial bottom padding: the nav is in normal flow, not an overlay. */
         #neonDashboardUI .neo-bottom-nav {
-            position: sticky !important;
+            position: fixed !important;
             bottom: 0 !important;
-            left: auto !important;
-            right: auto !important;
+            left: 0 !important;
+            right: 0 !important;
             transform: none !important;
             width: 100% !important;
-            max-width: 1100px !important;
-            margin: 10px auto 0 !important;
+            max-width: none !important;
+            margin: 0 !important;
             z-index: 100 !important;
             flex: 0 0 auto !important;
         }
@@ -10883,7 +10883,7 @@
         }
 
         #dashboard {
-            padding: clamp(18px, 2.2vw, 34px) clamp(18px, 3vw, 56px) 28px !important;
+            padding: clamp(18px, 2.2vw, 34px) clamp(18px, 3vw, 56px) 88px !important;
             overflow-x: hidden;
         }
 
