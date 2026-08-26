@@ -7598,14 +7598,14 @@
 
         /* No artificial bottom padding: the nav is in normal flow, not an overlay. */
         #neonDashboardUI .neo-bottom-nav {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
+            position: relative !important;
+            left: auto !important;
+            right: auto !important;
+            bottom: auto !important;
             transform: none !important;
             width: 100% !important;
             max-width: none !important;
-            margin: 0 !important;
+            margin: 12px 0 0 !important;
             z-index: 100 !important;
             flex: 0 0 auto !important;
         }
@@ -8507,6 +8507,39 @@ html, body { margin:0 !important; }
 }
 
 </style>
+
+<style id="activity-end-bottom-nav-fix">
+/* Bottom navigation belongs directly after Choose Your Activity; it is NOT fixed/overlayed. */
+#neonDashboardUI .neo-bottom-nav {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 68px !important;
+  margin: 12px 0 0 !important;
+  padding: 5px 28px !important;
+  border-radius: 14px !important;
+  box-sizing: border-box !important;
+  z-index: 10 !important;
+  flex: 0 0 auto !important;
+}
+#dashboard > #neonDashboardUI {
+  padding-bottom: 0 !important;
+}
+@media (max-width:700px) {
+  #neonDashboardUI .neo-bottom-nav {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: 60px !important;
+    margin: 10px 0 0 !important;
+    padding: 2px 4px !important;
+    padding-bottom: calc(2px + env(safe-area-inset-bottom)) !important;
+    border-radius: 12px !important;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -8619,11 +8652,6 @@ html, body { margin:0 !important; }
                         </button>
                     </div>
                 </section>
-                <section class="neo-cta"><span>🪙</span>
-                    <div><b>Keep Playing & Keep Earning!</b><small>More you play, more you earn!</small></div><button
-                        onclick="showScreen('quiz')">Play Quiz Now 🚀</button>
-                </section>
-            </main>
             <nav class="neo-bottom-nav"><button class="active"
                     onclick="showScreen('dashboard')">🏠<span>Home</span></button><button
                     onclick="showScreen('quiz')">❔<span>Quiz</span></button><button
@@ -8631,6 +8659,12 @@ html, body { margin:0 !important; }
                     onclick="openWithdrawPopup()">▣<span>Wallet</span></button><button
                     onclick="location.href='profile.html'">♙<span>Profile</span></button><button
                     class="neo-theme-switch" onclick="toggleTheme()">🌙</button></nav>
+                <section class="neo-cta"><span>🪙</span>
+                    <div><b>Keep Playing & Keep Earning!</b><small>More you play, more you earn!</small></div><button
+                        onclick="showScreen('quiz')">Play Quiz Now 🚀</button>
+                </section>
+            </main>
+
         </div>
         <script>
             (function () { window.futureFeature = window.futureFeature || function (n) { var t = document.getElementById('gameToast'); if (t) { t.textContent = n + ' is ready for future activation 🚀'; t.classList.add('show'); clearTimeout(window.__futureToast); window.__futureToast = setTimeout(function () { t.classList.remove('show'); }, 5000); } }; window.syncNeonDashboard = function () { var g = function (id) { var e = document.getElementById(id); return e ? e.textContent.trim() : '' }; var w = g('wallet') || '0.00'; document.querySelectorAll('[data-bind="wallet"]').forEach(e => e.textContent = w); var p = { streak: (g('gameStreak').replace(/\D/g, '') || '0'), today: g('gameToday') || '0/20', best: g('gameBest') || '0', level: (g('gameLevel').replace(/\D/g, '') || '1'), xp: (g('xpText').split('/')[0].trim() || '0'), xpText: g('xpText') || '0 / 100 XP' }; Object.keys(p).forEach(k => document.querySelectorAll('[data-bind="' + k + '"]').forEach(e => e.textContent = p[k])); var x = Math.min(100, Math.max(0, parseInt(p.xp) || 0)); document.querySelectorAll('[data-bind-style="xpProgress"]').forEach(e => e.style.width = x + '%'); var d = Math.min(100, Math.max(0, (parseInt(p.today) || 0) / 20 * 100)); document.querySelectorAll('[data-bind-style="missionProgress"]').forEach(e => e.style.width = d + '%'); document.querySelectorAll('[data-bind="xpRemaining"]').forEach(e => e.textContent = Math.max(0, 100 - (parseInt(p.xp) || 0))); }; setTimeout(syncNeonDashboard, 300); setInterval(syncNeonDashboard, 1200) })();
