@@ -423,6 +423,37 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 <style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
+
+<style id="admin-credentials-ui">
+.all-users-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:18px 0 12px}
+.all-users-subtitle{font-size:11px;color:#64748b;font-weight:700;margin-top:3px}
+.admin-add-admin-btn{border:0;border-radius:12px;padding:11px 15px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 8px 18px rgba(37,99,235,.18)}
+.credentials-btn{background:linear-gradient(135deg,#0f766e,#0891b2)!important;color:#fff!important}
+.admin-credentials-panel{margin:16px 0;padding:16px;border:1px solid #dbeafe;border-radius:18px;background:linear-gradient(135deg,#f8fbff,#eef2ff);box-shadow:0 10px 25px rgba(15,23,42,.07)}
+.admin-credentials-panel[hidden]{display:none}
+.admin-credentials-panel-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.admin-credentials-panel-head h3{margin:0}.admin-credentials-panel-head p{margin:4px 0 0;color:#64748b;font-size:11px;font-weight:700}
+.cred-close{border:0;background:#fee2e2;color:#991b1b;border-radius:10px;padding:8px 11px;font-weight:900;cursor:pointer}
+.admin-create-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-top:14px}
+.admin-create-grid input{min-width:0;border:1px solid #cbd5e1;border-radius:11px;padding:11px 12px;font-weight:700;background:#fff}
+.admin-create-grid button{border:0;border-radius:11px;padding:11px 14px;background:#16a34a;color:#fff;font-weight:900;cursor:pointer}
+.admin-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin-top:14px}
+.admin-list-card{background:#fff;border:1px solid #e2e8f0;border-radius:13px;padding:11px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.admin-list-card b{display:block}.admin-list-card small{color:#64748b}
+.admin-list-card button{border:0;border-radius:9px;padding:8px 10px;background:#e0f2fe;color:#075985;font-weight:900;cursor:pointer}
+.credentials-modal{position:fixed;inset:0;background:rgba(15,23,42,.58);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:99999}
+.credentials-modal.show{display:flex}
+.credentials-dialog{position:relative;width:min(430px,100%);background:#fff;border-radius:22px;padding:22px;box-shadow:0 25px 70px rgba(0,0,0,.25);box-sizing:border-box}
+.credentials-x{position:absolute;right:13px;top:13px;border:0;background:#f1f5f9;color:#334155;border-radius:10px;padding:8px 10px;font-weight:900;cursor:pointer}
+.credentials-icon{font-size:28px}.credentials-dialog h3{margin:5px 0 4px}.credentials-meta{font-size:12px;color:#64748b;font-weight:700;margin-bottom:15px}
+.credentials-field{margin:11px 0}.credentials-field label{display:block;font-size:11px;font-weight:900;color:#475569;margin-bottom:5px}
+.credentials-readonly,.password-row{border:1px solid #cbd5e1;border-radius:11px;background:#f8fafc;min-height:43px;box-sizing:border-box}
+.credentials-readonly{padding:11px 12px;font-weight:800}
+.password-row{display:flex;background:#fff}.password-row input{border:0;outline:0;min-width:0;flex:1;padding:11px 12px;border-radius:11px;font-weight:700}.password-row button{border:0;background:#f1f5f9;padding:0 12px;border-radius:0 11px 11px 0;cursor:pointer}
+.credentials-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:16px}.credentials-actions button{border:0;border-radius:11px;padding:11px;font-weight:900;cursor:pointer}.cred-cancel{background:#e2e8f0;color:#334155}.cred-save{background:linear-gradient(135deg,#0f766e,#0891b2);color:#fff}
+.credentials-result{margin-top:10px;font-size:12px;font-weight:900;min-height:16px}.credentials-result.ok{color:#15803d}.credentials-result.err{color:#dc2626}
+@media(max-width:600px){.admin-create-grid{grid-template-columns:1fr}.credentials-dialog{padding:18px;border-radius:18px}.credentials-actions{grid-template-columns:1fr}.admin-add-admin-btn{width:100%}}
+</style>
 </head>
 
 <body>
@@ -569,8 +600,49 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     </div>
     <input id="search" placeholder="Search User" onkeyup="searchUser()">
 
-    <h2>All Users</h2>
+    <div class="all-users-toolbar">
+      <div><h2 style="margin:0">All Users</h2><div class="all-users-subtitle">Manage each student's Login ID and password from their card.</div></div>
+      <button class="admin-add-admin-btn" type="button" onclick="openAdminManagement()">👨‍💼 Admin Management</button>
+    </div>
     <div id="userCards" class="admin-user-cards" aria-live="polite"></div>
+
+    <div id="adminManagementPanel" class="admin-credentials-panel" hidden>
+      <div class="admin-credentials-panel-head">
+        <div><h3>👨‍💼 Admin Management</h3><p>Add a new admin or change an existing admin password.</p></div>
+        <button type="button" class="cred-close" onclick="closeAdminManagement()">✕</button>
+      </div>
+      <div class="admin-create-grid">
+        <input id="newAdminUsername" autocomplete="off" placeholder="New Admin ID">
+        <input id="newAdminPassword" type="password" autocomplete="new-password" placeholder="New Admin Password (6+ chars)">
+        <button type="button" onclick="createNewAdmin()">➕ Create Admin</button>
+      </div>
+      <div id="adminList" class="admin-list">Loading admins...</div>
+    </div>
+
+    <div id="userCredentialsModal" class="credentials-modal" aria-hidden="true">
+      <div class="credentials-dialog" role="dialog" aria-modal="true" aria-labelledby="credentialsTitle">
+        <button type="button" class="credentials-x" onclick="closeUserCredentials()">✕</button>
+        <div class="credentials-icon">🔐</div>
+        <h3 id="credentialsTitle">Student Login Details</h3>
+        <div id="credentialsMeta" class="credentials-meta"></div>
+        <div class="credentials-field">
+          <label>Login ID / Mobile</label>
+          <div class="credentials-readonly" id="credentialsLoginId">-</div>
+        </div>
+        <div class="credentials-field">
+          <label>New Password</label>
+          <div class="password-row">
+            <input id="credentialsPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Enter new password">
+            <button type="button" onclick="toggleCredentialPassword()">👁️</button>
+          </div>
+        </div>
+        <div class="credentials-actions">
+          <button type="button" class="cred-cancel" onclick="closeUserCredentials()">Cancel</button>
+          <button type="button" class="cred-save" onclick="changeStudentPassword()">🔑 Change Password</button>
+        </div>
+        <div id="credentialsResult" class="credentials-result"></div>
+      </div>
+    </div>
     <div id="userTable" style="display:none"></div>
     </section>
 
@@ -1119,7 +1191,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick="editWallet('${user._id}',${user.wallet || 0})" title="Edit Wallet">💰 Wallet</button>
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
-                        <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
+                        <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>\n                        <button onclick="openUserCredentials('${user._id}')" class="credentials-btn" title="View Login ID / Change Password">🔐 ID / Password</button>
                         <button onclick="showBonusDetails('${user._id}')" class="gold" title="Mystery Bonus Details">🎁 Bonus</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
                         ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
@@ -3324,7 +3396,95 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script></body>
+<script src="/mobile-branding.js" defer></script>
+<script id="adminCredentialsJS">
+(function(){
+  let credentialUserId = "";
+  const adminToken = () => localStorage.getItem("adminToken") || "";
+  async function credApi(url, options={}){
+    options.headers = Object.assign({"Content-Type":"application/json","Authorization":"Bearer "+adminToken()}, options.headers||{});
+    const r=await fetch("/api/admin"+url,options);
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok || !d.success) throw new Error(d.message||"Request failed");
+    return d;
+  }
+  window.openUserCredentials=async function(id){
+    credentialUserId=String(id||"");
+    const modal=document.getElementById("userCredentialsModal");
+    const result=document.getElementById("credentialsResult");
+    const input=document.getElementById("credentialsPassword");
+    result.className="credentials-result"; result.textContent="Loading...";
+    input.value="";
+    modal.classList.add("show"); modal.setAttribute("aria-hidden","false");
+    try{
+      const d=await credApi("/user-credentials/"+encodeURIComponent(credentialUserId));
+      document.getElementById("credentialsTitle").textContent="🔐 "+(d.user.name||"Student")+" — Login Details";
+      document.getElementById("credentialsMeta").textContent="Student ID: "+(d.user.id||"-");
+      document.getElementById("credentialsLoginId").textContent=d.user.mobile||d.user.id||"-";
+      result.textContent="Existing password is protected. Set a new password below.";
+    }catch(e){result.className="credentials-result err";result.textContent="❌ "+e.message;}
+  };
+  window.closeUserCredentials=function(){
+    const modal=document.getElementById("userCredentialsModal"); if(!modal)return;
+    modal.classList.remove("show"); modal.setAttribute("aria-hidden","true"); credentialUserId="";
+  };
+  window.toggleCredentialPassword=function(){
+    const i=document.getElementById("credentialsPassword"); i.type=i.type==="password"?"text":"password";
+  };
+  window.changeStudentPassword=async function(){
+    if(!credentialUserId)return;
+    const input=document.getElementById("credentialsPassword"), password=input.value;
+    const result=document.getElementById("credentialsResult");
+    if(password.length<6){result.className="credentials-result err";result.textContent="❌ Password must be at least 6 characters.";return;}
+    if(!confirm("Change this student's password?"))return;
+    try{
+      const d=await credApi("/user-credentials/"+encodeURIComponent(credentialUserId)+"/password",{method:"PUT",body:JSON.stringify({password})});
+      result.className="credentials-result ok";
+      result.textContent="✅ Password changed. New password: "+d.password;
+      input.value=d.password; input.type="text";
+    }catch(e){result.className="credentials-result err";result.textContent="❌ "+e.message;}
+  };
+  window.openAdminManagement=async function(){
+    const panel=document.getElementById("adminManagementPanel"); if(!panel)return;
+    panel.hidden=false; panel.scrollIntoView({behavior:"smooth",block:"center"});
+    await loadAdminList();
+  };
+  window.closeAdminManagement=function(){const p=document.getElementById("adminManagementPanel");if(p)p.hidden=true;};
+  async function loadAdminList(){
+    const box=document.getElementById("adminList"); if(!box)return;
+    try{
+      const d=await credApi("/admins");
+      box.innerHTML=(d.admins||[]).map(a=>`<div class="admin-list-card"><div><b>👨‍💼 ${escapeHtml(a.username)}</b><small>Admin ID</small></div><button onclick="changeAdminPassword('${escapeAttr(a.id)}','${escapeAttr(a.username)}')">🔑 Change Password</button></div>`).join("")||"<div>No admins found.</div>";
+    }catch(e){box.textContent="❌ "+e.message;}
+  }
+  window.createNewAdmin=async function(){
+    const username=document.getElementById("newAdminUsername").value.trim();
+    const password=document.getElementById("newAdminPassword").value;
+    if(!username||password.length<6){alert("Enter Admin ID and a password of at least 6 characters.");return;}
+    try{
+      const d=await credApi("/admins",{method:"POST",body:JSON.stringify({username,password})});
+      alert("✅ Admin created.\n\nAdmin ID: "+d.admin.username+"\nPassword: "+d.password);
+      document.getElementById("newAdminUsername").value="";document.getElementById("newAdminPassword").value="";
+      await loadAdminList();
+    }catch(e){alert("❌ "+e.message);}
+  };
+  window.changeAdminPassword=async function(id,username){
+    const password=prompt("New password for Admin: "+username);
+    if(password===null)return;
+    if(password.length<6){alert("Password must be at least 6 characters.");return;}
+    try{
+      const d=await credApi("/admins/"+encodeURIComponent(id)+"/password",{method:"PUT",body:JSON.stringify({password})});
+      alert("✅ Admin password changed.\n\nAdmin ID: "+username+"\nNew Password: "+d.password);
+      await loadAdminList();
+    }catch(e){alert("❌ "+e.message);}
+  };
+  function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+  function escapeAttr(v){return escapeHtml(v).replace(/`/g,"&#096;");}
+  document.addEventListener("click",e=>{const m=document.getElementById("userCredentialsModal");if(m&&e.target===m)window.closeUserCredentials();});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){const m=document.getElementById("userCredentialsModal");if(m&&m.classList.contains("show"))window.closeUserCredentials();}});
+})();
+</script>
+</body>
 
 </html><style id="command-center-mobile-card-fix">
 /* Command Center compact card layout */
