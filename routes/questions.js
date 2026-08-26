@@ -184,7 +184,7 @@ router.get("/admin/repeated", adminAuth, async (req, res) => {
     }
 });
 
-router.get("/download", async (req, res) => {
+router.get("/download", adminAuth, async (req, res) => {
     try {
         const questions = await Question.find({ isDeleted: { $ne: true } }).lean();
 

@@ -20,9 +20,15 @@ router.post("/signup", async (req, res) => {
 
     try {
 
-        const { name, mobile, password } = req.body;
+        const nameValue = String(req.body?.name || '').trim();
+        const mobileValue = String(req.body?.mobile || '').trim();
+        const passwordValue = String(req.body?.password || '');
 
-        const user = await User.findOne({ mobile });
+        if (nameValue.length < 2) return res.status(400).json({ success:false, message:'Name must be at least 2 characters.' });
+        if (!/^[0-9+()\-\s]{7,20}$/.test(mobileValue)) return res.status(400).json({ success:false, message:'Please enter a valid mobile number.' });
+        if (passwordValue.length < 4 || passwordValue.length > 72) return res.status(400).json({ success:false, message:'Password must be between 4 and 72 characters.' });
+
+        const user = await User.findOne({ mobile: mobileValue });
 
         if (user) {
             return res.status(400).json({
@@ -31,13 +37,13 @@ router.post("/signup", async (req, res) => {
             });
         }
 
-        const hash = await bcrypt.hash(password, 10);
+        const hash = await bcrypt.hash(passwordValue, 10);
 
         const newUser = new User({
-            name,
-            mobile,
+            name: nameValue,
+            mobile: mobileValue,
             password: hash,
-            passwordEncrypted: encryptPassword(password)
+            passwordEncrypted: encryptPassword(passwordValue)
         });
 
         await newUser.save();
@@ -69,9 +75,10 @@ router.post("/login", async (req, res) => {
 
     try {
 
-        const { mobile, password } = req.body;
+        const mobileValue = String(req.body?.mobile || '').trim();
+        const passwordValue = String(req.body?.password || '');
 
-        const user = await User.findOne({ mobile, isDeleted: { $ne: true } });
+        const user = await User.findOne({ mobile: mobileValue, isDeleted: { $ne: true } });
 
         if (!user) {
 
@@ -93,7 +100,7 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        const match = await bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(passwordValue, user.password);
 
         if (!match) {
 
@@ -204,15 +211,11 @@ router.post("/login", async (req, res) => {
 
         );
 
-        res.json({
+        const safeUser = user.toObject();
+        delete safeUser.password;
+        delete safeUser.passwordEncrypted;
 
-            success: true,
-
-            token,
-
-            user
-
-        });
+        res.json({ success:true, token, user:safeUser });
 
     } catch (err) {
 
