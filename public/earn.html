@@ -883,6 +883,47 @@
         }
 
         /* Interactive English earning activities */
+
+        /* Premium English Activities theme */
+        .activity-launch {
+            border: 1px solid rgba(91, 64, 255, .75) !important;
+            background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 48%, #2563eb 100%);
+            box-shadow: 0 0 0 1px rgba(139,92,246,.18), 0 12px 30px rgba(76,29,149,.32);
+        }
+        .activity-launch:hover { transform: translateY(-4px) scale(1.01); }
+        .activities-pro-card {
+            position: relative; overflow: hidden; margin-bottom: 18px; padding: 18px;
+            border-radius: 22px; color: #fff;
+            background: radial-gradient(circle at 85% 15%, rgba(59,130,246,.28), transparent 32%),
+                        radial-gradient(circle at 10% 90%, rgba(168,85,247,.28), transparent 35%),
+                        linear-gradient(135deg,#11143f,#1d1450 52%,#0b1c45);
+            border: 1px solid rgba(139,92,246,.55);
+            box-shadow: 0 14px 35px rgba(15,23,42,.22);
+        }
+        .activities-pro-card h3 { margin: 0 0 5px; font-size: 22px; }
+        .activities-pro-card p { margin: 0; color: #d9ddff; font-size: 13px; line-height: 1.5; }
+        .activities-pro-card .activity-badge {
+            display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:7px 11px;
+            border-radius:999px; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.15);
+            font-size:12px; font-weight:800;
+        }
+        .activities-pro-card .activity-badge strong { color:#facc15; }
+        .activity-screen { background: linear-gradient(180deg,#fff,#f8faff); }
+        .activity-screen .activity-play-head {
+            display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px;
+        }
+        .activity-close-btn {
+            width:42px; height:42px; border:0; border-radius:50%; cursor:pointer;
+            background:#eef2ff; color:#312e81; font-size:28px; line-height:1;
+            box-shadow:0 5px 14px rgba(49,46,129,.12);
+        }
+        .activity-close-btn:hover { background:#e0e7ff; transform:scale(1.04); }
+        @media(max-width:600px) {
+            .activity-launch { grid-column: span 2; }
+            .activity-screen .activity-play-head { align-items:flex-start; }
+            .activity-title { font-size:20px; }
+        }
+
         .activity-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -8503,6 +8544,8 @@
                     <div class="neo-activity-grid">
                         <button class="neo-activity gold" onclick="showScreen('quiz')"><span>🏆</span>
                             <div><b>Quiz</b><small>Play Quiz & Earn</small></div><i>›</i>
+                        </button><button class="neo-activity activity-launch" onclick="showScreen('activities')"><span>🎮</span>
+                            <div><b>English Activities</b><small>Practice • Learn • Earn</small></div><i>›</i>
                         </button><button class="neo-activity cyan" onclick="openLeaderboard()"><span>🥇</span>
                             <div><b>Leaderboard</b><small>See Top Players</small></div><i>›</i>
                         </button><button class="neo-activity pink" onclick="showScreen('quiz')"><span>📅</span>
@@ -8523,6 +8566,7 @@
             <nav class="neo-bottom-nav"><button class="active"
                     onclick="showScreen('dashboard')">🏠<span>Home</span></button><button
                     onclick="showScreen('quiz')">❔<span>Quiz</span></button><button
+                    onclick="showScreen('activities')">🎮<span>Activities</span></button><button
                     onclick="openMissionsPanel()">🎯<span>Missions</span></button><button
                     onclick="openWithdrawPopup()">▣<span>Wallet</span></button><button
                     onclick="location.href='profile.html'">♙<span>Profile</span></button><button
@@ -8619,7 +8663,7 @@
 
         <div class="dashboard-actions">
             <button class="btn btn-quiz" onclick="showScreen('quiz')">📚 Quiz</button>
-            <button class="btn btn-learning" type="button" onclick="showScreen('activities')">🎮 Learning</button>
+            <button class="btn btn-learning" type="button" onclick="showScreen('activities')">🎮 Activities</button>
 
             <button id="spinBtn" type="button" class="btn btn-spin" onclick="spinWheel()">🔒 Spin Wheel — Complete 100
                 Questions</button>
@@ -8667,8 +8711,11 @@
             <strong id="activityWalletBalance">₹0.00</strong>
         </div>
 
-        <h2 class="activity-title">🎮 English Earning Zone</h2>
-        <p style="text-align:center;color:#64748b;margin-bottom:8px">Learn English, complete tasks and earn points.</p>
+        <div class="activities-pro-card">
+            <h3>🎮 English Activities</h3>
+            <p>Short English practice tasks — solve, learn and earn directly in your wallet.</p>
+            <div class="activity-badge">⚡ Daily limits • <strong>Instant wallet update</strong></div>
+        </div>
         <div class="activity-grid">
             <button type="button" class="activity-btn a1" onclick="openActivity('arrange')">🔀 Arrange
                 Sentence<small>+10 points</small></button>
