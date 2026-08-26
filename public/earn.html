@@ -6288,6 +6288,15 @@
             }
         }
     </style>
+    <style id="reliable-close-controls">
+        .activity-screen{position:relative;}
+        .activity-close-btn{position:absolute;right:12px;top:12px;width:40px;height:40px;border:0;border-radius:50%;background:#11183d;color:#fff;font-size:27px;line-height:40px;text-align:center;cursor:pointer;z-index:20;box-shadow:0 4px 18px rgba(0,0,0,.22)}
+        .activity-close-btn:hover{transform:scale(1.05);filter:brightness(1.15)}
+        .neon-feature-close{z-index:20!important;pointer-events:auto!important;touch-action:manipulation;}
+        .neon-feature-backdrop{z-index:1;pointer-events:auto;}
+        .neon-feature-dialog,.neon-menu-dialog{z-index:2;}
+        .neon-feature-dialog button,.neon-menu-dialog button{pointer-events:auto!important;touch-action:manipulation;}
+    </style>
     <style id="neon-functional-feature-style">
         .neon-feature-modal,
         .neon-menu-panel {
@@ -8711,6 +8720,7 @@
             <strong class="activityWalletBalance">₹0.00</strong>
         </div>
 
+        <button type="button" class="activity-close-btn" aria-label="Close Activity" onclick="closeActivityScreen()">×</button>
         <div class="activity-title" id="activityName">Activity</div>
         <div class="activity-reward" id="activityMeta">Earn points</div>
         <div id="activityContent"></div>
@@ -9688,11 +9698,19 @@
         }
         function showThemePicker() {
             const a = adventureState();
-            if (a.themes < 2 && getGameProgress().total >= 50) { a.themes = 2; saveAdventure(a); showGameToast('🎨 New theme unlocked! Tap Themes again to activate it.', true); return; }
-            if (a.themes < 2) { showGameToast(`🔒 Reach 50 answered questions to unlock a new theme.`); return; }
+            const total = Number(getGameProgress().total || 0);
+            if (a.themes < 2 && total >= 50) { a.themes = 2; saveAdventure(a); }
+            if (a.themes < 2) {
+                if (typeof window.closeNeonFeatureModal === 'function' && typeof window.openNeonMenu === 'function') {
+                    const body = document.getElementById('neonFeatureBody');
+                    if (body && typeof window.openNeonFeatureModal === 'function') window.openNeonFeatureModal('🎨','Themes',`<div class="feature-note">🔒 Answer ${Math.max(0,50-total)} more questions to unlock the Adventure Theme.</div><button type="button" class="feature-primary" onclick="closeNeonFeatureModal()">Close</button>`);
+                } else showGameToast(`🔒 Reach 50 answered questions to unlock a new theme.`);
+                return;
+            }
             a.activeTheme = a.activeTheme === 2 ? 1 : 2; saveAdventure(a);
             document.body.classList.toggle('adventure-theme', a.activeTheme === 2);
-            showGameToast(a.activeTheme === 2 ? '🎨 Adventure Theme ON' : '🎨 Classic Theme ON', true);
+            if (typeof window.openNeonFeatureModal === 'function') window.openNeonFeatureModal('🎨','Themes',`<div class="feature-note">${a.activeTheme === 2 ? '✨ Adventure Theme is now ON.' : '🌈 Classic Theme is now ON.'}</div><button type="button" class="feature-primary" onclick="closeNeonFeatureModal()">Close</button>`);
+            else showGameToast(a.activeTheme === 2 ? '🎨 Adventure Theme ON' : '🎨 Classic Theme ON', true);
         }
         function applyAdventureTheme() { const a = adventureState(); document.body.classList.toggle('adventure-theme', a.activeTheme === 2); }
         const __oldGameCorrect = window.gameCorrect;
@@ -10172,6 +10190,13 @@
         function showActivityScreen(id) {
             ['dashboard', 'quiz', 'activities', 'activityPlay'].forEach(x => { const e = document.getElementById(x); if (e) { e.classList.toggle('hidden', x !== id); e.style.visibility = x === id ? 'visible' : 'hidden'; e.setAttribute('aria-hidden', x === id ? 'false' : 'true'); } });
         }
+        function closeActivityScreen() {
+            const play = document.getElementById('activityPlay');
+            if (play) { play.classList.add('hidden'); play.style.visibility = 'hidden'; play.setAttribute('aria-hidden','true'); }
+            activityType = ''; activityQuestions = []; activityIndex = 0; activityData = null; arrangeWords = [];
+            showScreen('activities');
+        }
+        window.closeActivityScreen = closeActivityScreen;
         async function openActivity(type) {
             // Open the activity screen immediately. Do not wait for the API.
             activityType = type;
@@ -10510,7 +10535,7 @@
             const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
             const modal = document.getElementById('neonFeatureModal'), title = document.getElementById('neonFeatureTitle'), icon = document.getElementById('neonFeatureIcon'), body = document.getElementById('neonFeatureBody');
             function open(iconText, titleText, html) { if (!modal) return; icon.textContent = iconText; title.textContent = titleText; body.innerHTML = html; modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('neon-modal-open'); }
-            window.closeNeonFeatureModal = function () { if (modal) { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('neon-modal-open') } };
+            window.openNeonFeatureModal = open; window.closeNeonFeatureModal = function () { if (modal) { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('neon-modal-open') } };
             window.openNeonMenu = function () { const p = document.getElementById('neonMenuPanel'); if (p) { p.classList.add('show'); p.setAttribute('aria-hidden', 'false') } };
             window.closeNeonMenu = function () { const p = document.getElementById('neonMenuPanel'); if (p) { p.classList.remove('show'); p.setAttribute('aria-hidden', 'true') } };
             window.openNotificationsPanel = function () {
@@ -11385,6 +11410,22 @@
     });
 })();
 </script>
+
+        // Reliable close handling for Activity, Lucky Round, Themes and Weekly Challenge.
+        document.addEventListener('click', function(e){
+            const t = e.target;
+            if (!t) return;
+            if (t.closest && t.closest('.activity-close-btn')) { e.preventDefault(); e.stopPropagation(); closeActivityScreen(); return; }
+            const closeBtn = t.closest && t.closest('.neon-feature-close');
+            if (closeBtn) { e.preventDefault(); e.stopPropagation(); if (typeof window.closeNeonFeatureModal==='function') window.closeNeonFeatureModal(); return; }
+        }, true);
+
+        document.addEventListener('keydown', function(e){
+            if (e.key !== 'Escape') return;
+            try { closeActivityScreen(); } catch (_) {}
+            try { if (typeof window.closeNeonFeatureModal==='function') window.closeNeonFeatureModal(); } catch (_) {}
+            try { if (typeof window.closeMysteryChest==='function') window.closeMysteryChest(); } catch (_) {}
+        }, true);
 </body>
 
 </html>
