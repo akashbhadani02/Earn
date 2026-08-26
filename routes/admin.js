@@ -517,62 +517,6 @@ router.put("/total-earn/:id", adminAuth, async (req, res) => {
 });
 
 // ===========================
-// Student Login Details / Password Reset
-// ===========================
-// Passwords are stored as bcrypt hashes, so the existing password cannot be
-// safely recovered or displayed. Admin can see the Login ID and set a new
-// password from this protected endpoint.
-router.get("/user/:id/login-details", adminAuth, async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id).select("name mobile").lean();
-        if (!user) return res.status(404).json({ success:false, message:"User Not Found" });
-        return res.json({
-            success: true,
-            loginId: user.mobile || "",
-            password: null,
-            passwordRecoverable: false,
-            passwordCanBeDisplayed: false,
-            message: "Passwords are encrypted and cannot be displayed. Use Reset Password to set a new one."
-        });
-    } catch (err) {
-        return res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-router.put("/user/:id/password", adminAuth, async (req, res) => {
-    try {
-        const password = String(req.body?.password || "");
-        if (password.length < 6 || password.length > 128) {
-            return res.status(400).json({ success:false, message:"Password must be 6-128 characters." });
-        }
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ success:false, message:"User Not Found" });
-        user.password = await bcrypt.hash(password, 10);
-        // Invalidate the previous active login when admin changes credentials.
-        user.activeSessionId = "";
-        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
-        await user.save();
-
-        // Broadcast the credential change to every connected device/session
-        // for this user. The student UI immediately logs out and refreshes
-        // account state, while other admin screens refresh the user card.
-        const io = req.app.get('io');
-        if (io) {
-            io.to(`user:${String(user._id)}`).emit('userCredentialsChanged', {
-                userId: String(user._id),
-                sessionVersion: Number(user.sessionVersion || 0),
-                message: 'Your password was changed by Admin. Please login again.'
-            });
-            io.emit('adminUserUpdated', { userId: String(user._id), type: 'passwordChanged' });
-        }
-
-        return res.json({ success:true, message:"Student password reset successfully.", userId:String(user._id), sessionVersion:Number(user.sessionVersion || 0) });
-    } catch (err) {
-        return res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-// ===========================
 // Delete User
 // ===========================
 

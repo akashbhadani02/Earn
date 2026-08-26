@@ -651,71 +651,6 @@
 
         }
 
-        body.activity-modal-open { overflow: hidden !important; touch-action: none; }
-        body.activity-modal-open > * { }
-
-        /* Activity player is a real viewport-level modal. It never participates in the page flow. */
-        #activityPlay {
-            position: fixed !important;
-            top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important;
-            z-index: 2147483000 !important;
-            width: 100vw !important;
-            height: 100dvh !important;
-            max-width: none !important;
-            max-height: none !important;
-            margin: 0 !important;
-            padding: 18px !important;
-            box-sizing: border-box !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            display: none !important;
-            align-items: center !important;
-            justify-content: center !important;
-            background: rgba(2,4,22,.78) !important;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 0 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-        }
-        #activityPlay:not(.hidden) { display: flex !important; }
-        #activityPlay::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba(2,4,22,.12);
-            pointer-events: none;
-        }
-        #activityPlay .activity-modal-card {
-            position: relative;
-            z-index: 2;
-            width: min(720px, 100%);
-            max-height: min(820px, calc(100dvh - 36px));
-            overflow-y: auto;
-            box-sizing: border-box;
-            padding: 22px;
-            border-radius: 26px;
-            background: linear-gradient(145deg,#121047,#070a2c);
-            border: 1px solid rgba(128,105,255,.42);
-            box-shadow: 0 28px 90px rgba(0,0,0,.65);
-        }
-        #activityPlay .activity-close {
-            position: absolute; top: 10px; right: 10px; z-index: 5;
-            width: 40px; height: 40px; border: 0; border-radius: 50%;
-            background: rgba(255,255,255,.10); color: #fff;
-            font-size: 25px; line-height: 1; cursor: pointer;
-        }
-        #activityPlay .activity-close:hover { background: rgba(255,255,255,.18); }
-        #activityPlay .activity-modal-card > * { width: 100%; box-sizing: border-box; }
-        @media (max-width:600px) {
-            #activityPlay { padding: 8px !important; }
-            #activityPlay .activity-modal-card {
-                width: 100%; max-height: calc(100dvh - 16px);
-                padding: 18px 14px 14px; border-radius: 22px;
-            }
-        }
-
-
 
         /* =====================================
    MOBILE
@@ -2067,9 +2002,9 @@ body{margin:0;padding:0;min-width:0}
         <div class="tc-note" hidden><strong>Note:</strong> This app is only for educational purposes.</div>
     </div>
     <div id="activities" class="card hidden" aria-hidden="true" style="visibility:hidden;">
-<div class="activity-wallet-bar">
+<div id="activityWalletBar" class="activity-wallet-bar">
     <span>💰 Wallet Balance</span>
-    <strong class="activity-wallet-balance">₹0.00</strong>
+    <strong id="activityWalletBalance">₹0.00</strong>
 </div>
 
 <h2 class="activity-title">🎮 English Earning Zone</h2>
@@ -2087,19 +2022,17 @@ body{margin:0;padding:0;min-width:0}
 <button class="btn" style="background:#374151;margin-top:16px" onclick="showScreen('dashboard')">Back to Dashboard</button>
 </div>
 
-<div id="activityPlay" class="hidden activity-screen" aria-hidden="true">
-  <div class="activity-modal-card">
-    <button class="activity-close" type="button" aria-label="Close activity" onclick="showScreen('activities')">×</button>
-    <div class="activity-wallet-bar">
-      <span>💰 Wallet Balance</span>
-      <strong class="activity-wallet-balance">₹0.00</strong>
-    </div>
-    <div class="activity-title" id="activityName">Activity</div>
-    <div class="activity-reward" id="activityMeta">Earn points</div>
-    <div id="activityContent"></div>
-    <div class="activity-feedback" id="activityFeedback"></div>
-    <button class="btn activity-back-btn" type="button" onclick="showScreen('activities')">← Back to Activities</button>
-  </div>
+<div id="activityPlay" class="card hidden activity-screen" aria-hidden="true" style="visibility:hidden;">
+<div id="activityWalletBar" class="activity-wallet-bar">
+    <span>💰 Wallet Balance</span>
+    <strong id="activityWalletBalance">₹0.00</strong>
+</div>
+
+<div class="activity-title" id="activityName">Activity</div>
+<div class="activity-reward" id="activityMeta">Earn points</div>
+<div id="activityContent"></div>
+<div class="activity-feedback" id="activityFeedback"></div>
+<button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to Activities</button>
 </div>
 
 <div id="quiz" class="card hidden kbc-quiz-screen" aria-hidden="true" style="visibility:hidden;">
@@ -2923,7 +2856,7 @@ body{margin:0;padding:0;min-width:0}
 
             const topWallet = document.getElementById("topWallet");
             if (topWallet) topWallet.textContent = wallet.toFixed(2);
-            document.querySelectorAll(".activity-wallet-balance").forEach(el => {
+            document.querySelectorAll("#activityWalletBalance").forEach(el => {
                 el.innerText = "₹" + wallet.toFixed(2);
             });
 
@@ -3045,13 +2978,8 @@ body{margin:0;padding:0;min-width:0}
                 if (!el) return;
                 const active = screenId === id;
                 el.classList.toggle('hidden', !active);
-                if (screenId === 'activityPlay') {
-                    el.style.display = active ? 'flex' : 'none';
-                    el.style.visibility = active ? 'visible' : 'hidden';
-                } else {
-                    el.style.display = active ? '' : 'none';
-                    el.style.visibility = active ? 'visible' : 'hidden';
-                }
+                el.style.display = active ? '' : 'none';
+                el.style.visibility = active ? 'visible' : 'hidden';
                 el.setAttribute('aria-hidden', active ? 'false' : 'true');
             });
         }
@@ -3097,7 +3025,6 @@ body{margin:0;padding:0;min-width:0}
 
             currentScreen = id;
             setScreenVisibility(id);
-            document.body.classList.toggle('activity-modal-open', id === 'activityPlay');
             if (id === 'quiz') enterQuizFullscreen();
             else exitQuizFullscreen();
 
@@ -3120,22 +3047,11 @@ body{margin:0;padding:0;min-width:0}
 
         function updateActivityWallet() {
             const amount = Number(typeof wallet !== 'undefined' ? wallet : 0);
-            document.querySelectorAll('.activity-wallet-balance').forEach(el => {
+            document.querySelectorAll('#activityWalletBalance').forEach(el => {
                 el.textContent = '₹' + amount.toFixed(2);
             });
         }
 
-
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('activityPlay');
-            if (!modal || modal.classList.contains('hidden')) return;
-            if (e.target === modal) showScreen('activities');
-        });
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !document.getElementById('activityPlay')?.classList.contains('hidden')) {
-                showScreen('activities');
-            }
-        });
         // Browser/mobile system Back button
         window.addEventListener('popstate', function () {
             navigatingBack = true;
@@ -3460,7 +3376,7 @@ body{margin:0;padding:0;min-width:0}
         // ==========================================
         // INTERACTIVE ENGLISH EARNING ACTIVITIES
         // ==========================================
-        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[], activitySubmitting=false;
+        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[];
         function showActivityScreen(id){
             ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
         }
@@ -3516,21 +3432,15 @@ body{margin:0;padding:0;min-width:0}
                 activityQuestions=Array.isArray(data.questions)?data.questions:[];
                 activityData=data;
 
-                if(Number(data.remainingToday||0)<=0){
-                    if(nameEl) nameEl.textContent=data.title || titles[type];
-                    if(metaEl) metaEl.textContent='✅ Today limit completed';
-                    if(box) box.innerHTML='<div class="activity-question">🎉 આજની activity limit પૂર્ણ થઈ ગઈ છે.</div><p style="color:#64748b">કાલે ફરી આ activity રમી શકશો.</p>';
-                    return;
-                }
                 if(!activityQuestions.length){
-                    throw new Error('આ activity માટે નવા questions ઉપલબ્ધ નથી.');
+                    throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
                 }
 
                 activityIndex=Math.floor(Math.random()*activityQuestions.length);
                 arrangeWords=[];
 
                 if(nameEl) nameEl.textContent=data.title || titles[type];
-                if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • '+Number(data.remainingToday||data.dailyLimit)+' left today';
+                if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • Today limit '+data.dailyLimit;
                 renderActivity();
                 updateActivityWallet();
             }catch(e){
@@ -3545,7 +3455,7 @@ body{margin:0;padding:0;min-width:0}
                 if(fb) fb.textContent=e.message || 'Activity load failed';
             }
         }
-        function nextActivityQuestion(){ if(!activityQuestions.length){ openActivity(activityType); return; } activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
+        function nextActivityQuestion(){ if(!activityQuestions.length)return; activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
         function renderActivity(){
             const q=activityQuestions[activityIndex], box=document.getElementById('activityContent'), fb=document.getElementById('activityFeedback'); fb.textContent='';
             if(activityType==='arrange'){
@@ -3568,28 +3478,15 @@ body{margin:0;padding:0;min-width:0}
         async function submitArrange(){submitActivity(arrangeWords.join(' '));}
         async function submitTypedActivity(){const e=document.getElementById('activityAnswer');if(!e||!e.value.trim()){setFeedback(false,'Answer લખો.');return}submitActivity(e.value.trim());}
         async function submitActivity(answer){
-            if(activitySubmitting) return;
             const q=activityQuestions[activityIndex];
-            if(!q) return;
-            activitySubmitting=true;
-            const box=document.getElementById('activityContent');
-            if(box) box.querySelectorAll('button,input,textarea').forEach(el=>el.disabled=true);
             try{
-                const token=localStorage.getItem('token')||localStorage.getItem('studentToken')||'';
-                const res=await fetch('/api/activities/'+encodeURIComponent(activityType)+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({questionId:q.id,answer})});
-                const data=await res.json().catch(()=>({}));
-                if(!res.ok||!data.success){
-                    setFeedback(false,data.message||'Try again');
-                    if(data.repeated){ activityQuestions.splice(activityIndex,1); if(activityQuestions.length){activityIndex=Math.min(activityIndex,activityQuestions.length-1);renderActivity();}else{openActivity(activityType);} }
-                    return;
-                }
+                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
+                const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
-                if(data.correct){setFeedback(true,'🎉 Correct! +'+(Number(data.reward||0)*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
-                else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again')+' • Penalty ₹'+Number(data.penalty||0).toFixed(2));}
-                activityQuestions.splice(activityIndex,1);
-                setTimeout(()=>{activitySubmitting=false;if(activityQuestions.length){activityIndex=Math.min(activityIndex,activityQuestions.length-1);arrangeWords=[];renderActivity();}else{openActivity(activityType);}},1200);
+                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
+                else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
+                setTimeout(()=>nextActivityQuestion(),1200);
             }catch(e){setFeedback(false,'Network error. Please try again.');}
-            finally{if(!document.hidden) setTimeout(()=>{activitySubmitting=false;},1400);}
         }
         let spokenText='';
         function startSpeaking(){
@@ -3602,15 +3499,7 @@ body{margin:0;padding:0;min-width:0}
             r.onend=()=>{if(!spokenText)document.getElementById('micStatus').textContent='No speech detected. Try again.'};r.start();
         }
         function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
-        async function speakCurrent(){
-            const q=activityQuestions[activityIndex]; if(!q) return;
-            try{
-                const token=localStorage.getItem('token')||localStorage.getItem('studentToken')||'';
-                const r=await fetch('/api/activities/listening/audio/'+encodeURIComponent(q.id),{headers:{Authorization:'Bearer '+token},cache:'no-store'});
-                const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Audio unavailable');
-                const u=new SpeechSynthesisUtterance(d.text);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);
-            }catch(e){setFeedback(false,'Audio load failed. Please try again.');}
-        }
+        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
         async function showLeaderboard(){
             const modal=document.getElementById('infoModal'), box=document.getElementById('infoModalContent');
             if(!modal||!box)return; modal.hidden=false; box.innerHTML='<div class="info-title">🏆 Leaderboard</div><p style="color:#aeb4d4">Loading top players...</p>';
@@ -4099,29 +3988,6 @@ setInterval(loadBookStatus, 8000);
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script><script src="/socket.io/socket.io.js"></script>
-<script>
-(function(){
-  try {
-    const token = localStorage.getItem('token');
-    const userRaw = localStorage.getItem('user');
-    if (!token || !userRaw) return;
-    const user = JSON.parse(userRaw);
-    if (!user || !user._id) return;
-    const socket = window.io ? window.io({ transports: ['websocket','polling'] }) : null;
-    if (!socket) return;
-    window.__aducateUserSocket = socket;
-    socket.on('connect', function(){ socket.emit('join', 'user:' + String(user._id)); });
-    socket.on('userCredentialsChanged', function(payload){
-      if (!payload || String(payload.userId) !== String(user._id)) return;
-      try { localStorage.removeItem('token'); } catch(e) {}
-      try { sessionStorage.clear(); } catch(e) {}
-      alert(payload.message || 'Admin changed your password. Please login again.');
-      window.location.href = '/login.html?reason=password-changed';
-    });
-  } catch(e) { console.warn('User live-sync disabled:', e); }
-})();
-</script>
-</body>
+<script src="/mobile-branding.js" defer></script></body>
 
 </html>

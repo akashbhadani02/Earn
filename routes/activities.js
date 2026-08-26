@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/User');
-const ActivityAnswerHistory = require('../models/ActivityAnswerHistory');
 
 const ACTIVITIES = {
   arrange: {
@@ -1768,14 +1767,15 @@ function todayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolka
 function normalize(s){return String(s||'').toLowerCase().replace(/[’']/g,"'").replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
 function fieldName(type){return `activity_${type}`;}
 function publicQuestion(type,q){
-  if(type==='arrange') return {prompt:q[0]};
-  if(type==='correction'||type==='translate') return {prompt:q[0]};
-  if(type==='word') return {prompt:q[0]};
-  if(type==='fill') return {prompt:q[0],options:q[1]};
-  if(type==='listening') return {prompt:'🎧 Press Play Audio, listen carefully, then type the sentence.'};
-  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2]};
+  if(type==='arrange') return {prompt:q[0],answer:q[1]};
+  if(type==='correction'||type==='translate') return {prompt:q[0],answer:q[1]};
+  if(type==='word') return {prompt:q[0],answer:q[1]};
+  if(type==='fill') return {prompt:q[0],options:q[1],answer:q[2]};
+  if(type==='listening') return {prompt:q,answer:q};
+  if(type==='reading') return {passage:q[0],prompt:q[1],options:q[2],answer:q[3]};
   return {prompt:q};
 }
+
 function mapGet(map, key) {
   if (!map) return 0;
   if (typeof map.get === 'function') return Number(map.get(key) || 0);
@@ -1785,32 +1785,21 @@ function mapSet(map, key, value) {
   if (map && typeof map.set === 'function') map.set(key, value);
   else if (map) map[key] = value;
 }
-async function pickRandomQuestions(type, activity, user) {
-  const answered = await ActivityAnswerHistory.find({userId:user._id,activityType:type}).select('questionId -_id').lean();
-  const answeredSet = new Set(answered.map(x=>String(x.questionId)));
-  const all=activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)})).filter(x=>!answeredSet.has(String(x.id)));
-  if(!all.length) return [];
-  const last=mapGet(user?.activityLastQuestion,type);
-  const shuffled=all.sort(()=>Math.random()-.5);
-  const withoutLast=shuffled.filter(x=>x.id!==last);
-  return (withoutLast.length?withoutLast:shuffled).slice(0,Math.min(30,shuffled.length));
+function pickRandomQuestions(type, activity, user) {
+  const all = activity.questions.map((q,i)=>({id:i,...publicQuestion(type,q)}));
+  if (!all.length) return [];
+  const last = mapGet(user?.activityLastQuestion, type);
+  const shuffled = all.sort(() => Math.random() - 0.5);
+  const withoutLast = shuffled.filter(x => x.id !== last);
+  return (withoutLast.length ? withoutLast : shuffled).slice(0, Math.min(30, shuffled.length));
 }
+
 router.get('/:type', auth, async (req,res)=>{
   const type=req.params.type; const activity=ACTIVITIES[type];
   if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-  const user=await User.findById(req.user.id).select('activityLastQuestion activityDate activityCounts');
-  if(!user) return res.status(404).json({success:false,message:'User not found'});
-  const items=await pickRandomQuestions(type,activity,user);
-  const count=mapGet(user.activityCounts,type);
-  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,attemptsToday:count,remainingToday:Math.max(0,activity.dailyLimit-count),questions:items});
-});
-
-router.get('/:type/audio/:questionId', auth, async (req,res)=>{
-  try {
-    const type=req.params.type, activity=ACTIVITIES[type], index=Number(req.params.questionId);
-    if(type!=='listening'||!activity||!Number.isInteger(index)||!activity.questions[index]) return res.status(404).json({success:false,message:'Audio question not found'});
-    return res.json({success:true,text:String(activity.questions[index])});
-  } catch(e) { return res.status(500).json({success:false,message:'Audio unavailable'}); }
+  const user=await User.findById(req.user.id).select('activityLastQuestion');
+  const items=pickRandomQuestions(type,activity,user);
+  res.json({success:true,type,title:activity.title,reward:activity.reward,dailyLimit:activity.dailyLimit,questions:items});
 });
 
 router.post('/:type/tab-change', auth, async (req,res)=>{
@@ -1829,48 +1818,84 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
 
 router.post('/:type/submit', auth, async (req,res)=>{
   try{
-    const type=req.params.type, activity=ACTIVITIES[type];
+    const type=req.params.type; const activity=ACTIVITIES[type];
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
-    const index=Number(req.body.questionId), answer=String(req.body.answer||'').trim();
-    const q=activity.questions[index];
-    if(!Number.isInteger(index)||!q) return res.status(400).json({success:false,message:'Invalid question'});
-    if(!answer) return res.status(400).json({success:false,message:'Answer is required'});
-    const user=await User.findById(req.user.id);
-    if(!user) return res.status(404).json({success:false,message:'User not found'});
+    const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
+    const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
+    const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
+    let correct=false;
+    if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;
+    else correct=normalize(answer)===normalize(expected);
+    const user=await User.findById(req.user.id); if(!user) return res.status(404).json({success:false,message:'User not found'});
     const today=todayKey();
-    if(!user.activityDate||user.activityDate!==today){user.activityDate=today;user.activityCounts=new Map();}
-    const count=mapGet(user.activityCounts,type);
+    if(!user.activityDate || user.activityDate!==today){ user.activityDate=today; user.activityCounts={}; }
+    if(!user.activityCounts) user.activityCounts={};
+    const count=Number(user.activityCounts.get ? user.activityCounts.get(type)||0 : user.activityCounts[type]||0);
     if(count>=activity.dailyLimit) return res.status(400).json({success:false,message:`આજની ${activity.title} limit પૂર્ણ થઈ ગઈ છે.`,wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),correct:false,limitReached:true});
-    const existing=await ActivityAnswerHistory.findOne({userId:user._id,activityType:type,questionId:String(index)}).lean();
-    if(existing) return res.status(409).json({success:false,repeated:true,message:'આ question તમે પહેલેથી answer કરી ચૂક્યા છો.',wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0)});
-    const expected=type==='fill'?q[2]:type==='reading'?q[3]:type==='listening'?q:type==='speaking'?null:q[1];
-    const correct=type==='speaking' ? normalize(answer).split(' ').filter(Boolean).length>=4 : normalize(answer)===normalize(expected);
-    const reward=Number(activity.reward||0); let penalty=0;
+    mapSet(user.activityCounts,type,count+1);
+    mapSet(user.activityLastQuestion,type,index);
+    const correctCount=mapGet(user.activityCorrect,type);
+    const wrongCount=mapGet(user.activityWrong,type);
+    const earned=mapGet(user.activityEarn,type);
+    const deducted=mapGet(user.activityDeduct,type);
     if(correct){
-      user.wallet=Number(user.wallet||0)+reward; user.totalEarn=Number(user.totalEarn||0)+reward;
-      mapSet(user.activityCorrect,type,mapGet(user.activityCorrect,type)+1); mapSet(user.activityEarn,type,mapGet(user.activityEarn,type)+reward);
+      user.wallet=Number(user.wallet||0)+activity.reward;
+      user.totalEarn=Number(user.totalEarn||0)+activity.reward;
+      mapSet(user.activityCorrect,type,correctCount+1);
+      mapSet(user.activityEarn,type,earned+activity.reward);
     }else{
-      penalty=reward; user.wallet=Number(user.wallet||0)-penalty;
-      mapSet(user.activityWrong,type,mapGet(user.activityWrong,type)+1); mapSet(user.activityDeduct,type,mapGet(user.activityDeduct,type)+penalty);
+      const deduction=Math.min(Number(user.wallet||0),activity.reward);
+      user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
+      mapSet(user.activityWrong,type,wrongCount+1);
+      mapSet(user.activityDeduct,type,deducted+deduction);
     }
-    mapSet(user.activityCounts,type,count+1); mapSet(user.activityLastQuestion,type,index);
-    user.walletTransactions=Array.isArray(user.walletTransactions)?user.walletTransactions:[];
-    user.walletTransactions.push({time:new Date(),type:correct?'CREDIT':'DEBIT',amount:correct?reward:-penalty,reason:`Activity: ${activity.title}`,adminId:''});
-    if(user.walletTransactions.length>300) user.walletTransactions=user.walletTransactions.slice(-300);
-    if(user.bonusDate!==today){
-      user.bonusDate=today; user.bonusTarget=70+Math.floor(Math.random()*31); user.bonusProgress=0; user.bonusQuizProgress=0; user.bonusLearningProgress=0; user.bonusUnlocked=false; user.bonusClaimed=false; user.bonusSource=''; user.bonusReward=0; user.bonusUnlockedAt=null; user.bonusClaimedAt=null; user.bonusLastQuestionText=''; user.bonusLastQuestionType='';
+    // Mystery Bonus: correct answers in any English Learning activity also count.
+    const bonusToday = todayKey();
+    if (user.bonusDate !== bonusToday) {
+      user.bonusDate = bonusToday;
+      user.bonusTarget = 70 + Math.floor(Math.random() * 31);
+      user.bonusProgress = 0; user.bonusQuizProgress = 0; user.bonusLearningProgress = 0;
+      user.bonusUnlocked = false; user.bonusClaimed = false; user.bonusSource = "";
+      user.bonusReward = 0; user.bonusUnlockedAt = null; user.bonusClaimedAt = null;
+      user.bonusLastQuestionText = ""; user.bonusLastQuestionType = "";
     }
-    if(correct&&!user.bonusUnlocked&&!user.bonusClaimed){
-      user.bonusProgress=Number(user.bonusProgress||0)+1; user.bonusLearningProgress=Number(user.bonusLearningProgress||0)+1; user.bonusSource='learning'; user.bonusLastQuestionText=String(q[0]||q.prompt||q.passage||''); user.bonusLastQuestionType=type;
-      if(user.bonusProgress>=Number(user.bonusTarget||70)){user.bonusProgress=Number(user.bonusTarget||70);user.bonusUnlocked=true;user.bonusUnlockedAt=new Date();user.bonusReward=[11,22,55,70][Math.floor(Math.random()*4)];}
+    if (correct && !user.bonusUnlocked && !user.bonusClaimed) {
+      user.bonusProgress = Number(user.bonusProgress || 0) + 1;
+      user.bonusLearningProgress = Number(user.bonusLearningProgress || 0) + 1;
+      user.bonusSource = "learning";
+      user.bonusLastQuestionText = String(q[0] || q.prompt || q.passage || "");
+      user.bonusLastQuestionType = type;
+      if (user.bonusProgress >= Number(user.bonusTarget || 70)) {
+        user.bonusProgress = Number(user.bonusTarget || 70);
+        user.bonusUnlocked = true;
+        user.bonusUnlockedAt = new Date();
+      }
     }
-    try{await ActivityAnswerHistory.create({userId:user._id,activityType:type,questionId:String(index),correct,reward:correct?reward:0,penalty,answer:answer.slice(0,1000)});}catch(historyErr){
-      if(historyErr?.code===11000) return res.status(409).json({success:false,repeated:true,message:'આ question તમે પહેલેથી answer કરી ચૂક્યા છો.',wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0)});
-      throw historyErr;
-    }
-    await user.save();
-    return res.json({success:true,correct,reward:correct?reward:0,penalty,correctAnswer:correct?undefined:String(expected),wallet:Number(user.wallet||0),totalEarn:Number(user.totalEarn||0),activityCount:count+1,dailyLimit:activity.dailyLimit,activityCorrect:mapGet(user.activityCorrect,type),activityWrong:mapGet(user.activityWrong,type),activityEarn:mapGet(user.activityEarn,type),activityDeduct:mapGet(user.activityDeduct,type),bonusProgress:Number(user.bonusProgress||0),bonusTarget:Number(user.bonusTarget||0),bonusUnlocked:Boolean(user.bonusUnlocked)});
-  }catch(e){console.error('Activity submit error:',e);return res.status(500).json({success:false,message:'Activity submit failed. Please try again.'});}
-});
 
+    await user.save();
+    res.json({
+      success:true,
+      correct,
+      reward:correct?activity.reward:-activity.reward,
+      wallet:Number(user.wallet||0),
+      totalEarn:Number(user.totalEarn||0),
+      used:count+1,
+      remaining:Math.max(0,activity.dailyLimit-count-1),
+      correctCount:correct?correctCount+1:correctCount,
+      wrongCount:correct?wrongCount:wrongCount+1,
+      activityEarn:correct?earned+activity.reward:earned,
+      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
+      correctAnswer:expected,
+      bonus: {
+        target: Number(user.bonusTarget || 0),
+        progress: Number(user.bonusProgress || 0),
+        quizProgress: Number(user.bonusQuizProgress || 0),
+        learningProgress: Number(user.bonusLearningProgress || 0),
+        unlocked: !!user.bonusUnlocked,
+        claimed: !!user.bonusClaimed,
+        source: user.bonusSource || ""
+      }
+    });
+  }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
+});
 module.exports=router;
