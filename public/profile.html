@@ -5,7 +5,7 @@
     <link rel="icon" href="/api/branding/icon?v=1&size=32" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="/api/branding/icon?v=1&size=192">
     <link rel="apple-touch-icon" sizes="180x180" href="/api/branding/icon?v=1&size=180">
-    <link rel="manifest" href="/student-manifest.webmanifest?v=student-v2">
+    <link rel="manifest" href="/manifest.webmanifest?v=aducate20260822">
     <meta name="theme-color" content="#667eea">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -718,70 +718,6 @@
 
     </style>
 
-    <script src="/developer-guard.js"></script>
-
-<script>
-(function () {
-  let unlocked = false;
-
-  function unlockDevTools() {
-    unlocked = true;
-    window.__DEVTOOLS_UNLOCKED__ = true;
-    document.documentElement.setAttribute('data-devtools-unlocked', 'true');
-  }
-
-  document.addEventListener('keydown', function (e) {
-    // Unlock ONLY with Ctrl+Shift+Alt+Z.
-    if (e.ctrlKey && e.shiftKey && e.altKey && (e.key === 'z' || e.key === 'Z')) {
-      e.preventDefault();
-      e.stopPropagation();
-      unlockDevTools();
-      return;
-    }
-
-    if (unlocked) return;
-
-    const key = (e.key || '').toLowerCase();
-
-    // Block common DevTools / source shortcuts.
-    if (
-      e.key === 'F12' ||
-      (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(key)) ||
-      (e.ctrlKey && key === 'u') ||
-      (e.metaKey && e.altKey && ['i','j','c'].includes(key))
-    ) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
-  }, true);
-
-  // Disable browser context menu until the unlock combination is used.
-  document.addEventListener('contextmenu', function (e) {
-    if (!unlocked) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
-  }, true);
-
-  // Also block mouse right-button events before they reach page handlers.
-  document.addEventListener('mousedown', function (e) {
-    if (!unlocked && e.button === 2) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
-  }, true);
-
-  // Block select/copy source-style inspection helpers before unlock.
-  document.addEventListener('selectstart', function (e) {
-    if (!unlocked && e.target && e.target.closest &&
-        e.target.closest('[data-allow-select="true"]')) return;
-  }, true);
-})();
-</script>
-
 </head>
 
 
@@ -1119,7 +1055,7 @@
     document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
     setLink('icon', src, '192x192');
     setLink('apple-touch-icon', src, '180x180');
-    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/student-manifest.webmanifest?v=student-v2&brand=${version}&t=${Date.now()}`;
+    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
     // Broadcast the new branding to every open tab/window immediately.
     try { localStorage.setItem('aducate-branding-version', String(version)); } catch(e) {}
     try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = window.__aducateBrandChannel || new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.postMessage({type:'BRANDING_UPDATED',version}); } } catch(e) {}

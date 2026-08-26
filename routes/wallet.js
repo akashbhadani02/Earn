@@ -97,14 +97,18 @@ router.get("/", auth, async (req, res) => {
 // =============================
 router.post("/quiz", auth, async (req, res) => {
     try {
-        const { questionId, selectedIndex, selectedAnswer } = req.body;
+        const { correct, questionId, selectedIndex, selectedAnswer } = req.body;
 
-        if (!questionId || !Number.isInteger(Number(selectedIndex))) {
+        if (typeof correct !== "boolean" || !questionId) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid quiz answer"
+                message: "Invalid quiz result or question"
             });
         }
+
+        const amount = correct
+            ? QUIZ_CORRECT_REWARD
+            : -QUIZ_WRONG_PENALTY;
 
         const user = await User.findById(req.user.id);
 
@@ -120,31 +124,19 @@ router.post("/quiz", auth, async (req, res) => {
             return res.status(404).json({ success: false, message: "Question is no longer available" });
         }
 
-        const pickedIndex = Number(selectedIndex);
-        if (pickedIndex < 0 || pickedIndex >= question.options.length) {
-            return res.status(400).json({ success: false, message: "Invalid answer option" });
-        }
-        // Never trust the browser's claimed `correct` flag. The server is the authority.
-        const correct = pickedIndex === Number(question.correct);
-        const amount = correct ? QUIZ_CORRECT_REWARD : -QUIZ_WRONG_PENALTY;
-
-        // Atomically claim the question so two fast/double submissions cannot both earn.
-        const claimedUser = await User.findOneAndUpdate(
-            { _id: user._id, answeredQuestionIds: { $ne: question._id } },
-            { $addToSet: { answeredQuestionIds: question._id } },
-            { new: true }
-        );
-        if (!claimedUser) {
+        const answered = Array.isArray(user.answeredQuestionIds) ? user.answeredQuestionIds : [];
+        if (answered.some(id => String(id) === String(question._id))) {
             return res.status(409).json({
                 success: false,
                 repeated: true,
                 message: "This question was already answered and cannot be repeated."
             });
         }
-        user.set(claimedUser.toObject());
+        user.answeredQuestionIds = answered.concat(question._id);
 
         // Permanent question-wise answer history for Admin analytics.
         // Store the exact question, correct answer and the answer selected by the student.
+        const pickedIndex = Number.isInteger(Number(selectedIndex)) ? Number(selectedIndex) : null;
         const pickedAnswer = selectedAnswer != null ? String(selectedAnswer) : (pickedIndex != null && question.options?.[pickedIndex] != null ? String(question.options[pickedIndex]) : "");
         await QuizAnswerHistory.updateOne(
             { userId: user._id, questionId: question._id },
@@ -234,10 +226,12 @@ router.post("/quiz", auth, async (req, res) => {
             }
         }
 
-        // Penalties are allowed to take the wallet below zero.
-        // Example: ₹0 wallet + ₹0.30 wrong-answer penalty => -₹0.30.
-        // Future rewards/bonuses can bring the balance back above zero.
         user.wallet = Number(user.wallet || 0) + amount;
+
+        // Wallet should never become negative.
+        if (user.wallet < 0) {
+            user.wallet = 0;
+        }
 
         // totalEarn = only actual positive earnings.
         if (correct) {
@@ -319,25 +313,40 @@ router.post("/lifeline", auth, async (req, res) => {
 router.post("/daily-reward", auth, async (req, res) => {
     try {
         const today = todayKey();
-        const updated = await User.findOneAndUpdate(
-            { _id: req.user.id, lastClaim: { $ne: today } },
-            {
-                $inc: { wallet: DAILY_REWARD_AMOUNT, totalEarn: DAILY_REWARD_AMOUNT, dailyReward: DAILY_REWARD_AMOUNT },
-                $set: { lastClaim: today }
-            },
-            { new: true }
-        );
+        const user = await User.findById(req.user.id);
 
-        if (!updated) {
-            const user = await User.findById(req.user.id);
-            if (!user) return res.status(404).json({ success:false, message:"User not found" });
-            return res.status(400).json({ success:false, message:"તમે આજનો Daily Reward લઈ લીધો છે! કાલે ફરી લઈ શકશો.", ...walletResponse(user) });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
         }
 
-        return res.json({ ...walletResponse(updated), reward: DAILY_REWARD_AMOUNT });
+        if (user.lastClaim === today) {
+            return res.status(400).json({
+                success: false,
+                message: "તમે આજનો Daily Reward લઈ લીધો છે! કાલે ફરી લઈ શકશો.",
+                ...walletResponse(user)
+            });
+        }
+
+        user.wallet = Number(user.wallet || 0) + DAILY_REWARD_AMOUNT;
+        user.totalEarn = Number(user.totalEarn || 0) + DAILY_REWARD_AMOUNT;
+        user.dailyReward = Number(user.dailyReward || 0) + DAILY_REWARD_AMOUNT;
+        user.lastClaim = today;
+
+        await user.save();
+
+        return res.json({
+            ...walletResponse(user),
+            reward: DAILY_REWARD_AMOUNT
+        });
     } catch (err) {
         console.error("Daily Reward Error:", err);
-        return res.status(500).json({ success:false, message:err.message });
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
     }
 });
 
@@ -384,30 +393,32 @@ router.post("/spin", auth, async (req, res) => {
             });
         }
 
-        // Every completed set of 100 questions gives one spin. The update is atomic
-        // so double-clicks cannot award the same spin twice. Extra completed
-        // questions carry forward to the next spin.
+        // Every completed set of 100 questions gives one spin.
+        // There is no daily spin limit: after each spin the current
+        // 100-question cycle starts again from 0.
+//************************************************************* */
         const prize = Math.floor(Math.random() * 40) + 1;
-        const updated = await User.findOneAndUpdate(
-            { _id: req.user.id, dailyQuestionsDate: today, spinCycleQuestionsAnswered: { $gte: 100 } },
-            {
-                $inc: {
-                    spinCycleQuestionsAnswered: -100,
-                    spinCount: 1,
-                    wallet: prize,
-                    totalEarn: prize,
-                    spinReward: prize
-                },
-                $set: { lastSpinDate: today, lastSpin: today }
-            },
-            { new: true }
-        );
-        if (!updated) {
-            const fresh = await User.findById(req.user.id);
-            return res.status(400).json({ success:false, message:"Spin માટે 100 પ્રશ્નો પૂર્ણ કરો.", ...(fresh ? walletResponse(fresh) : { wallet:0 }) });
-        }
+//************************************************************* */
+        user.spinCount = Number(user.spinCount || 0) + 1;
+        user.lastSpinDate = today;
+        user.lastSpin = today;
 
-        return res.json({ ...walletResponse(updated), prize, remainingSpins: null, nextSpinQuestions: 100 });
+        // Reset ONLY the current spin-cycle counter.
+        // Today's total and lifetime total remain unchanged.
+        user.spinCycleQuestionsAnswered = 0;
+
+        user.wallet = Number(user.wallet || 0) + prize;
+        user.totalEarn = Number(user.totalEarn || 0) + prize;
+        user.spinReward = Number(user.spinReward || 0) + prize;
+
+        await user.save();
+
+        return res.json({
+            ...walletResponse(user),
+            prize,
+            remainingSpins: null,
+            nextSpinQuestions: 100
+        });
     } catch (err) {
         console.error("Spin Error:", err);
         return res.status(500).json({
@@ -457,23 +468,14 @@ router.post("/withdraw", auth, async (req, res) => {
             });
         }
 
-        const { paymentMethod, upiId, bankName, accountHolderName, accountNumber, ifscCode } = req.body || {};
-
-        if (!['UPI', 'Bank'].includes(paymentMethod)) {
-            return res.status(400).json({ success:false, message:'Please select a valid payment method.', ...walletResponse(user) });
-        }
-        if (paymentMethod === 'UPI') {
-            const cleanUpi = String(upiId || '').trim();
-            if (!/^[A-Za-z0-9._-]{2,}@[A-Za-z0-9.-]{2,}$/.test(cleanUpi)) {
-                return res.status(400).json({ success:false, message:'Please enter a valid UPI ID.', ...walletResponse(user) });
-            }
-        } else {
-            const cleanAccount = String(accountNumber || '').replace(/\s+/g, '');
-            const cleanIfsc = String(ifscCode || '').trim().toUpperCase();
-            if (String(accountHolderName || '').trim().length < 2) return res.status(400).json({ success:false, message:'Please enter account holder name.', ...walletResponse(user) });
-            if (!/^[0-9]{6,24}$/.test(cleanAccount)) return res.status(400).json({ success:false, message:'Please enter a valid bank account number.', ...walletResponse(user) });
-            if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(cleanIfsc)) return res.status(400).json({ success:false, message:'Please enter a valid IFSC code.', ...walletResponse(user) });
-        }
+        const {
+    paymentMethod,
+    upiId,
+    bankName,
+    accountHolderName,
+    accountNumber,
+    ifscCode
+} = req.body;
 
         const amount = wallet;
 

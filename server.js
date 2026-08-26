@@ -15,7 +15,6 @@ const notificationRoutes = require("./routes/notifications");
 const activityRoutes = require("./routes/activities");
 const bonusRoutes = require("./routes/bonus");
 const bookPurchaseRoutes = require("./routes/bookPurchases");
-const engagementRoutes = require("./routes/engagement");
 const Branding = require("./models/Branding");
 
 const app = express();
@@ -23,17 +22,6 @@ app.disable("x-powered-by");
 
 app.use(cors());
 app.use(express.json({ limit: "3mb" }));
-
-app.use((req, res, next) => {
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-    res.setHeader("X-Frame-Options", "SAMEORIGIN");
-    next();
-});
-
-app.get("/api/health", (req, res) => {
-    res.status(200).json({ success: true, service: "Aducate English", status: "ok" });
-});
 
 // Always wait for MongoDB before any API route runs.
 // This prevents Mongoose "users.findOne() buffering timed out" errors.
@@ -60,7 +48,6 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/bonus", bonusRoutes);
 app.use("/api/book-purchases", bookPurchaseRoutes);
-app.use("/api/engagement", engagementRoutes);
 
 // Public branding endpoints. The logo itself is intentionally read-only here; only admins can change it.
 app.get("/api/branding", async (req, res) => {
@@ -115,18 +102,6 @@ app.use((req, res, next) => {
     if (req.path === "/books/book.pdf") return res.status(403).json({ success: false, message: "Book download requires active student access." });
     next();
 });
-app.get("/student-manifest.webmanifest", (req,res)=>{
-    res.set("Content-Type","application/manifest+json; charset=utf-8");
-    res.set("Cache-Control","no-store, max-age=0");
-    return res.sendFile(path.join(__dirname,"public","student-manifest.webmanifest"));
-});
-
-app.get("/admin-manifest.webmanifest", (req,res)=>{
-    res.set("Content-Type","application/manifest+json; charset=utf-8");
-    res.set("Cache-Control","no-store, max-age=0");
-    return res.sendFile(path.join(__dirname,"public","admin-manifest.webmanifest"));
-});
-
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{

@@ -1,3 +1,0 @@
-Aducate Student Windows wrapper target
-Start URL: https://YOUR-DOMAIN/login.html?app=student
-Recommended app ID: com.aducate.student

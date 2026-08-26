@@ -5,7 +5,7 @@ const User = require('../models/User');
 
 const ACTIVITIES = {
   arrange: {
-    title: 'Arrange Sentence', reward: 0.10, dailyLimit: 10,
+    title: 'Arrange Sentence', reward: 0.10, dailyLimit: 70,
     questions: [
       ['school / I / every / go / day / to','I go to school every day.'],
     ['is / my / this / book','This is my book.'],
@@ -110,7 +110,7 @@ const ACTIVITIES = {
     ]
   },
   correction: {
-    title: 'Fix the Sentence', reward: 0.15, dailyLimit: 10,
+    title: 'Fix the Sentence', reward: 0.15, dailyLimit: 70,
     questions: [
       ['He go to school every day.','He goes to school every day.'],
     ['She are my friend.','She is my friend.'],
@@ -226,7 +226,7 @@ const ACTIVITIES = {
     ]
   },
   translate: {
-    title: 'Translate to English', reward: 0.15, dailyLimit: 10,
+    title: 'Translate to English', reward: 0.15, dailyLimit: 70,
     questions: [
       ['હું દરરોજ અંગ્રેજી શીખું છું.','I learn English every day.'],
     ['મારું નામ રાહુલ છે.','My name is Rahul.'],
@@ -456,7 +456,7 @@ const ACTIVITIES = {
     ]
   },
   fill: {
-    title: 'Fill in the Blank', reward: 0.10, dailyLimit: 10,
+    title: 'Fill in the Blank', reward: 0.10, dailyLimit: 70,
     questions: [
       ['I ___ a student.',['am','is','are'],'am'],
     ['She ___ to school every day.',['go','goes','going'],'goes'],
@@ -585,7 +585,7 @@ const ACTIVITIES = {
     ]
   },
   listening: {
-    title: 'Listen & Type', reward: 0.15, dailyLimit: 10,
+    title: 'Listen & Type', reward: 0.15, dailyLimit: 70,
     questions: [
        'I am learning English.',
     'My name is Mahesh.',
@@ -710,7 +710,7 @@ const ACTIVITIES = {
     ]
   },
   reading: {
-    title: 'Reading Challenge', reward: 0.15, dailyLimit: 10,
+    title: 'Reading Challenge', reward: 0.15, dailyLimit: 70,
     questions: [
       [
         'Riya wakes up at 6 o’clock every morning. She brushes her teeth and goes for a walk.',
@@ -1844,10 +1844,8 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityCorrect,type,correctCount+1);
       mapSet(user.activityEarn,type,earned+activity.reward);
     }else{
-      // Wrong-answer penalties are allowed to create a negative wallet balance.
-      // Example: ₹0 wallet with ₹1 penalty becomes -₹1.
-      const deduction=Number(activity.reward);
-      user.wallet=Number(user.wallet||0)-Number(activity.reward);
+      const deduction=Math.min(Number(user.wallet||0),activity.reward);
+      user.wallet=Math.max(0, Number(user.wallet||0)-activity.reward);
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
@@ -1886,7 +1884,7 @@ router.post('/:type/submit', auth, async (req,res)=>{
       correctCount:correct?correctCount+1:correctCount,
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
-      activityDeduct:correct?deducted:deducted+Number(activity.reward),
+      activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
       correctAnswer:expected,
       bonus: {
         target: Number(user.bonusTarget || 0),

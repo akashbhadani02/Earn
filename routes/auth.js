@@ -6,7 +6,6 @@ const auth = require("../middleware/auth");
 
 const User = require("../models/User");
 const Admin = require("../models/Admin");
-const { encryptPassword } = require("../services/credentialVault");
 
 const router = express.Router();
 const { registerViolation, getBlockRemainingMs, BLOCK_DURATION_MS, WARNINGS_PER_BLOCK } = require("../services/antiCheat");
@@ -20,15 +19,9 @@ router.post("/signup", async (req, res) => {
 
     try {
 
-        const nameValue = String(req.body?.name || '').trim();
-        const mobileValue = String(req.body?.mobile || '').trim();
-        const passwordValue = String(req.body?.password || '');
+        const { name, mobile, password } = req.body;
 
-        if (nameValue.length < 2) return res.status(400).json({ success:false, message:'Name must be at least 2 characters.' });
-        if (!/^[0-9+()\-\s]{7,20}$/.test(mobileValue)) return res.status(400).json({ success:false, message:'Please enter a valid mobile number.' });
-        if (passwordValue.length < 4 || passwordValue.length > 72) return res.status(400).json({ success:false, message:'Password must be between 4 and 72 characters.' });
-
-        const user = await User.findOne({ mobile: mobileValue });
+        const user = await User.findOne({ mobile });
 
         if (user) {
             return res.status(400).json({
@@ -37,13 +30,12 @@ router.post("/signup", async (req, res) => {
             });
         }
 
-        const hash = await bcrypt.hash(passwordValue, 10);
+        const hash = await bcrypt.hash(password, 10);
 
         const newUser = new User({
-            name: nameValue,
-            mobile: mobileValue,
-            password: hash,
-            passwordEncrypted: encryptPassword(passwordValue)
+            name,
+            mobile,
+            password: hash
         });
 
         await newUser.save();
@@ -75,10 +67,9 @@ router.post("/login", async (req, res) => {
 
     try {
 
-        const mobileValue = String(req.body?.mobile || '').trim();
-        const passwordValue = String(req.body?.password || '');
+        const { mobile, password } = req.body;
 
-        const user = await User.findOne({ mobile: mobileValue, isDeleted: { $ne: true } });
+        const user = await User.findOne({ mobile, isDeleted: { $ne: true } });
 
         if (!user) {
 
@@ -100,7 +91,7 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        const match = await bcrypt.compare(passwordValue, user.password);
+        const match = await bcrypt.compare(password, user.password);
 
         if (!match) {
 
@@ -211,11 +202,15 @@ router.post("/login", async (req, res) => {
 
         );
 
-        const safeUser = user.toObject();
-        delete safeUser.password;
-        delete safeUser.passwordEncrypted;
+        res.json({
 
-        res.json({ success:true, token, user:safeUser });
+            success: true,
+
+            token,
+
+            user
+
+        });
 
     } catch (err) {
 

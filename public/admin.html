@@ -5,7 +5,7 @@
     <link rel="icon" href="/api/branding/icon?v=1&size=32" sizes="any">
     <link rel="icon" type="image/png" sizes="192x192" href="/api/branding/icon?v=1&size=192">
     <link rel="apple-touch-icon" sizes="180x180" href="/api/branding/icon?v=1&size=180">
-    <link rel="manifest" href="/admin-manifest.webmanifest?v=admin-v2">
+    <link rel="manifest" href="/manifest.webmanifest?v=aducate20260822">
     <meta name="theme-color" content="#667eea">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -423,217 +423,9 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 <style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
-
-<style id="pwaInstallToolsStyle">
-.pwa-install-tools{position:fixed;right:14px;top:14px;z-index:100000;display:flex;gap:7px;flex-wrap:wrap;align-items:center;max-width:min(96vw,430px);padding:7px;border-radius:14px;background:rgba(255,255,255,.96);border:1px solid #d9e2ef;box-shadow:0 8px 28px rgba(15,23,42,.14);backdrop-filter:blur(8px)}
-.pwa-install-tools a,.pwa-install-tools button{width:170px;box-sizing:border-box;appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border:0;border-radius:9px;background:#2563eb;color:#fff!important;text-decoration:none;font:700 13px Inter,Segoe UI,Arial,sans-serif;cursor:pointer;white-space:nowrap}
-.pwa-install-tools a:hover,.pwa-install-tools button:hover{background:#1d4ed8}
-@media(max-width:600px){.pwa-install-tools{left:10px;right:10px;top:10px;justify-content:center}.pwa-install-tools a,.pwa-install-tools button{flex:1 1 135px}}
-</style>
-
-<style id="post-login-role-button-hide">
-/* Admin/Student switch buttons are shown only on the login screen. */
-.pwa-install-tools{display:none !important;}
-</style>
-
-
-
-<style id="admin-dashboard-button-arrangement">
-/* Professional arrangement — Admin Dashboard controls only */
-.admin-brand-head{
-  position:relative !important;
-  display:grid !important;
-  grid-template-columns:minmax(220px,1fr) auto !important;
-  align-items:center !important;
-  gap:18px !important;
-  padding:16px 18px !important;
-  margin-bottom:14px !important;
-  background:var(--surface,#fff) !important;
-  border:1px solid var(--border,#d9e2ef) !important;
-  border-radius:18px !important;
-  box-shadow:0 8px 28px rgba(15,23,42,.08) !important;
-}
-.admin-brand-head > div:first-child{
-  min-width:0 !important;
-}
-.admin-brand-head > div:last-child{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(125px,1fr)) !important;
-  gap:8px !important;
-  align-items:stretch !important;
-}
-.admin-brand-head > div:last-child > button{
-  width:100% !important;
-  min-width:125px !important;
-  min-height:42px !important;
-  margin:0 !important;
-  padding:10px 12px !important;
-  border-radius:11px !important;
-  border:1px solid transparent !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  text-align:center !important;
-  white-space:nowrap !important;
-  font-size:13px !important;
-  font-weight:800 !important;
-  box-shadow:0 3px 10px rgba(15,23,42,.08) !important;
-  transform:none !important;
-}
-.admin-brand-head > div:last-child > button:hover{
-  transform:translateY(-1px) !important;
-  box-shadow:0 6px 16px rgba(15,23,42,.12) !important;
-}
-/* Main admin navigation: evenly sized professional buttons */
-.admin-main-menu{
-  display:grid !important;
-  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-  gap:8px !important;
-  padding:9px !important;
-  margin-bottom:18px !important;
-}
-.admin-main-menu button{
-  width:100% !important;
-  min-height:44px !important;
-  padding:10px 12px !important;
-  margin:0 !important;
-  border-radius:11px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  text-align:center !important;
-  white-space:nowrap !important;
-  font-size:13px !important;
-  font-weight:800 !important;
-}
-@media (max-width:900px){
-  .admin-brand-head{
-    grid-template-columns:1fr !important;
-  }
-  .admin-brand-head > div:last-child{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-  .admin-brand-head > div:last-child > button{
-    min-width:0 !important;
-  }
-  .admin-main-menu{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  }
-}
-@media (max-width:520px){
-  .admin-brand-head{
-    padding:13px !important;
-    gap:12px !important;
-  }
-  .admin-brand-head > div:last-child{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:7px !important;
-  }
-  .admin-brand-head > div:last-child > button{
-    min-height:40px !important;
-    padding:8px 6px !important;
-    font-size:11px !important;
-  }
-  .admin-main-menu{
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:7px !important;
-    padding:7px !important;
-  }
-  .admin-main-menu button{
-    min-height:42px !important;
-    padding:8px 5px !important;
-    font-size:11px !important;
-  }
-}
-</style>
-
-    <script src="/developer-guard.js"></script>
-
-<script>
-(function () {
-  let unlocked = false;
-
-  function unlockDevTools() {
-    unlocked = true;
-    window.__DEVTOOLS_UNLOCKED__ = true;
-    document.documentElement.setAttribute('data-devtools-unlocked', 'true');
-  }
-
-  document.addEventListener('keydown', function (e) {
-    // Unlock ONLY with Ctrl+Shift+Alt+Z.
-    if (e.ctrlKey && e.shiftKey && e.altKey && (e.key === 'z' || e.key === 'Z')) {
-      e.preventDefault();
-      e.stopPropagation();
-      unlockDevTools();
-      return;
-    }
-
-    if (unlocked) return;
-
-    const key = (e.key || '').toLowerCase();
-
-    // Block common DevTools / source shortcuts.
-    if (
-      e.key === 'F12' ||
-      (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(key)) ||
-      (e.ctrlKey && key === 'u') ||
-      (e.metaKey && e.altKey && ['i','j','c'].includes(key))
-    ) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
-  }, true);
-
-  // Disable browser context menu until the unlock combination is used.
-  document.addEventListener('contextmenu', function (e) {
-    if (!unlocked) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
-  }, true);
-
-  // Also block mouse right-button events before they reach page handlers.
-  document.addEventListener('mousedown', function (e) {
-    if (!unlocked && e.button === 2) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      return false;
-    }
-  }, true);
-
-  // Block select/copy source-style inspection helpers before unlock.
-  document.addEventListener('selectstart', function (e) {
-    if (!unlocked && e.target && e.target.closest &&
-        e.target.closest('[data-allow-select="true"]')) return;
-  }, true);
-})();
-</script>
-
-
-<style id="admin-master-final-polish">
-:root{--adm-bg:#f5f7fb;--adm-surface:#fff;--adm-text:#172033;--adm-muted:#64748b;--adm-border:#e5e7eb}
-html,body{background:var(--adm-bg)!important;color:var(--adm-text)!important;transition:background .3s,color .3s}
-.admin-card,.admin-panel,.command-card,.stat-card,.table-wrap,.modal-card{background:var(--adm-surface)!important;color:var(--adm-text)!important;border-color:var(--adm-border)!important}
-button,input,select,textarea{font-family:inherit}
-button{transition:transform .2s,box-shadow .2s,filter .2s!important}
-button:hover{transform:translateY(-2px);filter:brightness(1.03)}
-button:active{transform:scale(.97)}
-body.dark{--adm-bg:#080d18;--adm-surface:#111827;--adm-text:#f1f5f9;--adm-muted:#a8b3c7;--adm-border:#334155}
-body.dark .admin-card,body.dark .admin-panel,body.dark .command-card,body.dark .stat-card,body.dark .table-wrap,body.dark .modal-card{background:#111827!important;color:#f1f5f9!important;border-color:#334155!important}
-body.dark input,body.dark select,body.dark textarea{background:#0f172a!important;color:#f8fafc!important;border-color:#334155!important}
-body.dark table{color:#f1f5f9!important}
-</style>
-
 </head>
 
 <body>
-<div id="pwaInstallTools" class="pwa-install-tools" aria-label="Aducate App shortcuts">
-  <button type="button" id="pwaInstallBtn">📲 Install Admin App</button>
-  <a href="/login.html?app=student">🎓 Student App</a>
-</div>
-
 
     <div class="admin-brand-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:12px;min-width:0;">
@@ -1128,9 +920,6 @@ body.dark table{color:#f1f5f9!important}
             location.replace("admin-login.html");
         }
 
-        // Keep admin session across refresh/navigation; explicit logout clears adminToken.
-        window.addEventListener("pagehide", function(){ /* session intentionally persists */ });
-
         // ==========================================
         // ADMIN TOKEN / SESSION HANDLER
         // If the JWT expires or becomes invalid,
@@ -1327,7 +1116,6 @@ body.dark table{color:#f1f5f9!important}
                     </div>
 
                     <div class="admin-user-actions" onclick="event.stopPropagation()">
-                        <button onclick="showStudentCredentials('${user._id}')" class="purple" title="Student ID & Password">🔐 ID & Password</button>
                         <button onclick="editWallet('${user._id}',${user.wallet || 0})" title="Edit Wallet">💰 Wallet</button>
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
@@ -1344,85 +1132,6 @@ body.dark table{color:#f1f5f9!important}
                     </div>
                 </article>`;
             }).join('');
-        }
-
-        //==========================
-        // Student ID & Password
-        //==========================
-        async function showStudentCredentials(id) {
-            const user = allUsers.find(u => String(u._id) === String(id));
-            if (!user) return;
-            const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            const modal = document.createElement('div');
-            modal.className='admin-credential-modal';
-            modal.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:100000;display:flex;align-items:center;justify-content:center;padding:16px;';
-            modal.innerHTML = `<div style="width:min(560px,100%);max-height:92vh;overflow:auto;background:var(--surface,#fff);color:var(--text,#111);border-radius:22px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.4)">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                <div><h2 style="margin:0">🔐 Student Login Details</h2><div style="color:#64748b;margin-top:4px">View or change this student's login password.</div></div>
-                <button type="button" onclick="this.closest('.admin-credential-modal').remove()" style="background:#ef4444!important;color:#fff!important;border:0;border-radius:10px;padding:8px 12px;font-weight:900">✕</button>
-              </div>
-              <div id="adminCredentialBody" style="margin-top:18px"><div style="padding:18px;text-align:center;color:#64748b">Loading...</div></div>
-            </div>`;
-            document.body.appendChild(modal);
-            const body = modal.querySelector('#adminCredentialBody');
-            try {
-                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '?_=' + Date.now(), {cache:'no-store',headers:{Authorization:'Bearer ' + token}});
-                const data = await res.json();
-                if (!res.ok || !data.success) throw new Error(data.message || 'Unable to load credentials');
-                body.innerHTML = `<div style="display:grid;gap:12px">
-                  <div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${safe(data.studentId || data.loginId || user.mobile || '-')}</div></div>
-                  <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">CURRENT PASSWORD</div><div style="font-size:22px;font-weight:900;margin-top:4px;word-break:break-all">${data.passwordAvailable ? safe(data.password) : '<span style="color:#dc2626;font-size:14px">Not recoverable — set a new password below.</span>'}</div></div>
-                  <div style="padding:16px;border:1px solid #e9d5ff;border-radius:16px;background:#faf5ff">
-                    <div style="font-weight:900;color:#6b21a8;margin-bottom:10px">🔑 CHANGE STUDENT PASSWORD</div>
-                    <input id="adminNewStudentPassword" type="text" autocomplete="off" placeholder="Enter new password (minimum 4 characters)" style="width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #c4b5fd;border-radius:12px;font-size:16px;background:#fff;color:#111">
-                    <button type="button" onclick="changeStudentPassword('${id}', this)" style="width:100%;margin-top:10px;padding:12px 14px;border:0;border-radius:12px;background:#7c3aed;color:#fff;font-weight:900;cursor:pointer">🔑 Save New Password</button>
-                    <button type="button" onclick="resetStudentPassword('${id}', this)" style="width:100%;margin-top:8px;padding:11px 14px;border:1px solid #f59e0b;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:900;cursor:pointer">🎲 Generate New Password</button>
-                  </div>
-                </div>`;
-            } catch (err) {
-                body.innerHTML = `<div style="padding:14px;border-radius:12px;background:#fef2f2;color:#b91c1c">${safe(err.message)}</div>`;
-            }
-        }
-
-        async function changeStudentPassword(id, button) {
-            const modal = button.closest('.admin-credential-modal');
-            const input = modal?.querySelector('#adminNewStudentPassword');
-            const password = String(input?.value || '').trim();
-            if (password.length < 4) { alert('Password must be at least 4 characters.'); input?.focus(); return; }
-            if (password.length > 72) { alert('Password is too long.'); input?.focus(); return; }
-            if (!confirm('Change this student password now? The old password will stop working.')) return;
-            button.disabled = true;
-            try {
-                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/change', {
-                    method:'POST', headers:{'Content-Type':'application/json',Authorization:'Bearer ' + token}, body:JSON.stringify({password})
-                });
-                const data = await res.json();
-                if (!res.ok || !data.success) throw new Error(data.message || 'Password change failed');
-                input.value='';
-                alert('Student password changed successfully.');
-                const current = modal.querySelector('.admin-credential-modal') || modal;
-                showStudentCredentials(id).then(()=>{ if(current && current.parentNode) current.remove(); });
-                return;
-            } catch (err) { alert(err.message); button.disabled=false; }
-        }
-
-        async function resetStudentPassword(id, button) {
-            const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            if (!confirm('Generate a new password for this student? The old password will stop working.')) return;
-            button.disabled = true;
-            try {
-                const res = await fetch('/api/admin/credentials/' + encodeURIComponent(id) + '/reset', {method:'POST',headers:{Authorization:'Bearer ' + token}});
-                const data = await res.json();
-                if (!res.ok || !data.success) throw new Error(data.message || 'Password reset failed');
-                const modal = button.closest('.admin-credential-modal');
-                const body = modal.querySelector('#adminCredentialBody');
-                body.innerHTML = `<div style="display:grid;gap:12px">
-                  <div style="padding:14px;border:1px solid #dbeafe;border-radius:14px;background:#eff6ff"><div style="font-size:12px;color:#64748b;font-weight:800">STUDENT ID / LOGIN ID</div><div style="font-size:22px;font-weight:900">${safe(data.studentId)}</div></div>
-                  <div style="padding:14px;border:1px solid #dcfce7;border-radius:14px;background:#f0fdf4"><div style="font-size:12px;color:#64748b;font-weight:800">NEW PASSWORD</div><div style="font-size:24px;font-weight:900;letter-spacing:1px">${safe(data.password)}</div></div>
-                  <div style="padding:12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:700">⚠️ The previous password is no longer valid. Give this new password to the student.</div>
-                  <button type="button" onclick="showStudentCredentials('${id}');this.closest('.admin-credential-modal').remove()" style="padding:12px;border:0;border-radius:12px;background:#7c3aed;color:#fff;font-weight:900">🔑 Open Password Change</button>
-                </div>`;
-            } catch (err) { alert(err.message); button.disabled=false; }
         }
 
         //==========================
@@ -2333,6 +2042,14 @@ body.dark table{color:#f1f5f9!important}
             await loadDashboard();
         }
 
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
 
         async function loadWithdraws() {
 
@@ -3587,7 +3304,7 @@ ${w.status === "Approved" ? `
     document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
     setLink('icon', src, '192x192');
     setLink('apple-touch-icon', src, '180x180');
-    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/admin-manifest.webmanifest?v=admin-v2&brand=${version}&t=${Date.now()}`;
+    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
     // Broadcast the new branding to every open tab/window immediately.
     try { localStorage.setItem('aducate-branding-version', String(version)); } catch(e) {}
     try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = window.__aducateBrandChannel || new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.postMessage({type:'BRANDING_UPDATED',version}); } } catch(e) {}
@@ -3607,111 +3324,7 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script>
-<script id="pwaInstallController">
-(function(){
- let deferred=null;
- const btn=()=>document.getElementById('pwaInstallBtn');
- window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;});
- window.addEventListener('appinstalled',()=>{deferred=null;});
- async function install(){
-   if(deferred){deferred.prompt();try{await deferred.userChoice;}catch(e){}deferred=null;return;}
-   const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-   if(standalone){alert('Aducate Admin App is already installed/open as an app.');return;}
-   return;
- }
- document.addEventListener('DOMContentLoaded',()=>{if(btn())btn().addEventListener('click',install);if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(()=>{});});
-})();
-</script>
-
-<style id="universal-admin-modal-close-fix">
-/* Reliable close buttons for every Admin activity/history/theme/mystery popup */
-.universal-modal-close,
-#closeActivityStats,
-.admin-credential-modal button,
-.ap2-modal .ap2-btn {
-  position: relative !important;
-  z-index: 100002 !important;
-  pointer-events: auto !important;
-  cursor: pointer !important;
-  touch-action: manipulation !important;
-}
-</style>
-<script id="universal-admin-modal-close-fix-js">
-(function () {
-  function closeOverlay(el) {
-    if (!el) return false;
-    // Known fixed/dynamic modal containers
-    if (el.id === 'ap2Modal' && typeof window.ap2Close === 'function') {
-      window.ap2Close(); return true;
-    }
-    if (el.id === 'ap2BlockedTimeModal' && typeof window.ap2CloseBlockedTime === 'function') {
-      window.ap2CloseBlockedTime(); return true;
-    }
-    if (el.id === 'questionModal' && typeof window.closeQuestionEditor === 'function') {
-      window.closeQuestionEditor(); return true;
-    }
-    if (el.remove) { el.remove(); return true; }
-    return false;
-  }
-
-  document.addEventListener('click', function (e) {
-    const btn = e.target.closest(
-      '.universal-modal-close, #closeActivityStats, .admin-credential-modal .admin-modal-close'
-    );
-    if (!btn) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const modal = btn.closest(
-      '.admin-credential-modal, .admin-book-modal, .question-editor-modal, ' +
-      '.modal, .popup, .admin-modal, .activity-stats-modal, [role="dialog"], ' +
-      '[style*="position:fixed"], [style*="position: fixed"]'
-    );
-
-    // Prefer the nearest actual overlay; never remove the whole page.
-    if (modal) {
-      if (modal.id === 'ap2Modal' && typeof window.ap2Close === 'function') window.ap2Close();
-      else if (modal.id === 'ap2BlockedTimeModal' && typeof window.ap2CloseBlockedTime === 'function') window.ap2CloseBlockedTime();
-      else if (modal.id === 'questionModal' && typeof window.closeQuestionEditor === 'function') window.closeQuestionEditor();
-      else modal.remove();
-    }
-  }, true);
-
-  // Backdrop click for dynamically-created fixed popups.
-  document.addEventListener('click', function (e) {
-    const t = e.target;
-    if (!(t instanceof HTMLElement)) return;
-    const isFixed = getComputedStyle(t).position === 'fixed' ||
-      (t.style && (String(t.style.cssText).includes('position:fixed') || String(t.style.cssText).includes('position: fixed')));
-    if (!isFixed) return;
-
-    const first = t.firstElementChild;
-    if (first && (e.clientX < first.getBoundingClientRect().left ||
-                  e.clientX > first.getBoundingClientRect().right ||
-                  e.clientY < first.getBoundingClientRect().top ||
-                  e.clientY > first.getBoundingClientRect().bottom)) {
-      closeOverlay(t);
-    }
-  }, false);
-
-  // Escape closes the topmost dynamic popup.
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Escape') return;
-    const overlays = Array.from(document.querySelectorAll(
-      '.admin-credential-modal, .admin-book-modal, .modal, .popup, .admin-modal, [style*="position:fixed"], [style*="position: fixed"]'
-    )).filter(x => {
-      const cs = getComputedStyle(x);
-      return cs.display !== 'none' && cs.visibility !== 'hidden';
-    });
-    const top = overlays[overlays.length - 1];
-    if (top) closeOverlay(top);
-  });
-})();
-</script>
-
-</body>
+<script src="/mobile-branding.js" defer></script></body>
 
 </html><style id="command-center-mobile-card-fix">
 /* Command Center compact card layout */

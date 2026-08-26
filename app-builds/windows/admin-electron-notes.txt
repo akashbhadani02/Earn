@@ -1,3 +1,0 @@
-Aducate Admin Windows wrapper target
-Start URL: https://YOUR-DOMAIN/admin-login.html?app=admin
-Recommended app ID: com.aducate.admin

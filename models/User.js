@@ -20,15 +20,6 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
 
-        // Encrypted copy of the current login password. This is used only by
-        // authenticated Admin credential recovery; the normal password field
-        // remains bcrypt-hashed for login verification.
-        passwordEncrypted: {
-            type: String,
-            default: "",
-            select: false
-        },
-
         wallet: {
             type: Number,
             default: 0,
