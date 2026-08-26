@@ -1,0 +1,116 @@
+/* FINAL BOTTOM NAV FIX - mobile + desktop */
+html, body { margin:0 !important; }
+
+#dashboard > #neonDashboardUI {
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  padding-bottom:0 !important;
+}
+
+#neonDashboardUI .neo-bottom-nav {
+  position:fixed !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:0 !important;
+  top:auto !important;
+  transform:none !important;
+  width:100vw !important;
+  max-width:none !important;
+  height:68px !important;
+  margin:0 !important;
+  padding:4px 12px !important;
+  box-sizing:border-box !important;
+  border-radius:0 !important;
+  border:0 !important;
+  border-top:1px solid rgba(105,51,255,.55) !important;
+  background:rgba(4,5,28,.98) !important;
+  backdrop-filter:blur(16px) !important;
+  -webkit-backdrop-filter:blur(16px) !important;
+  box-shadow:0 -8px 28px rgba(36,0,255,.14) !important;
+  z-index:2147483647 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-around !important;
+  gap:4px !important;
+}
+
+#neonDashboardUI .neo-bottom-nav button {
+  height:58px !important;
+  min-width:0 !important;
+  flex:1 1 0 !important;
+  margin:0 !important;
+  padding:3px 6px !important;
+  border-radius:26px !important;
+  font-size:21px !important;
+  line-height:1 !important;
+}
+
+#neonDashboardUI .neo-bottom-nav button span {
+  display:block !important;
+  margin-top:3px !important;
+  font-size:10px !important;
+  line-height:1.1 !important;
+}
+
+#neonDashboardUI .neo-bottom-nav .neo-theme-switch {
+  flex:0 0 58px !important;
+  min-width:58px !important;
+}
+
+@media (max-width:700px) {
+  #dashboard > #neonDashboardUI {
+    min-height:100dvh !important;
+    height:auto !important;
+    max-height:none !important;
+    padding:7px 7px 0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+  }
+
+  #neonDashboardUI .neo-bottom-nav {
+    height:60px !important;
+    padding:2px 4px !important;
+    padding-bottom:calc(2px + env(safe-area-inset-bottom)) !important;
+  }
+
+  #neonDashboardUI .neo-bottom-nav button {
+    height:54px !important;
+    padding:2px 1px !important;
+    font-size:17px !important;
+    border-radius:24px !important;
+  }
+
+  #neonDashboardUI .neo-bottom-nav button span {
+    font-size:8px !important;
+    margin-top:2px !important;
+  }
+
+  #neonDashboardUI .neo-bottom-nav .neo-theme-switch {
+    flex:0 0 45px !important;
+    min-width:45px !important;
+  }
+}
+
+@media (min-width:701px) {
+  #neonDashboardUI .neo-bottom-nav {
+    height:68px !important;
+    padding:4px 18px !important;
+  }
+}
+
+@media (max-width:390px) {
+  #neonDashboardUI .neo-bottom-nav {
+    height:58px !important;
+  }
+  #neonDashboardUI .neo-bottom-nav button {
+    height:52px !important;
+    font-size:16px !important;
+  }
+  #neonDashboardUI .neo-bottom-nav button span {
+    font-size:7.5px !important;
+  }
+  #neonDashboardUI .neo-bottom-nav .neo-theme-switch {
+    flex-basis:42px !important;
+    min-width:42px !important;
+  }
+}
