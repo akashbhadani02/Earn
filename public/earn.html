@@ -11263,3 +11263,128 @@
 </body>
 
 </html>
+<!-- FINAL BOTTOM NAV FIX: Home / Quiz / Missions / Wallet / Profile / Day-Night stay at the bottom -->
+<style id="final-bottom-nav-fix">
+html, body {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+#neonDashboardUI {
+    position: relative !important;
+    min-height: 100dvh !important;
+    box-sizing: border-box !important;
+    padding-bottom: 86px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+#neonDashboardUI .neo-bottom-nav {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 70px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 5px 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    gap: 4px !important;
+    border-radius: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    border-top: 1px solid #6933ff88 !important;
+    background: rgba(4, 5, 28, .98) !important;
+    backdrop-filter: blur(18px) !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+    box-shadow: 0 -8px 30px rgba(36, 0, 255, .18) !important;
+    z-index: 2147483647 !important;
+}
+
+#neonDashboardUI .neo-bottom-nav button {
+    position: relative !important;
+    flex: 1 1 0 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 150px !important;
+    height: 58px !important;
+    margin: 0 !important;
+    padding: 4px 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 0 !important;
+    border-radius: 26px !important;
+    background: transparent !important;
+    color: #e9ecff !important;
+    font-size: 21px !important;
+    line-height: 1 !important;
+}
+
+#neonDashboardUI .neo-bottom-nav button span {
+    display: block !important;
+    margin-top: 4px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    font-weight: 800 !important;
+    color: inherit !important;
+}
+
+#neonDashboardUI .neo-bottom-nav button.active {
+    background: linear-gradient(90deg, #7b20ff, #d31dff) !important;
+    color: #fff !important;
+    box-shadow: 0 0 22px rgba(195, 28, 255, .5) !important;
+}
+
+#neonDashboardUI .neo-bottom-nav .neo-theme-switch {
+    flex: 0 0 58px !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    max-width: 58px !important;
+    border: 1px solid #25bfff !important;
+    background: #101546 !important;
+    border-radius: 50% !important;
+}
+
+/* Keep the last dashboard content clear of the fixed navigation. */
+#neonDashboardUI .neo-main {
+    padding-bottom: 18px !important;
+}
+
+@media (max-width: 600px) {
+    #neonDashboardUI {
+        padding-bottom: 76px !important;
+    }
+
+    #neonDashboardUI .neo-bottom-nav {
+        height: 64px !important;
+        padding: 3px 4px !important;
+    }
+
+    #neonDashboardUI .neo-bottom-nav button {
+        height: 56px !important;
+        padding: 3px 2px !important;
+        font-size: 18px !important;
+    }
+
+    #neonDashboardUI .neo-bottom-nav button span {
+        margin-top: 3px !important;
+        font-size: 8px !important;
+    }
+
+    #neonDashboardUI .neo-bottom-nav .neo-theme-switch {
+        flex: 0 0 45px !important;
+        width: 45px !important;
+        min-width: 45px !important;
+        max-width: 45px !important;
+    }
+}
+</style>
