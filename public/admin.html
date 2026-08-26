@@ -3631,6 +3631,94 @@ ${w.status === "Approved" ? `
  document.addEventListener('DOMContentLoaded',()=>{if(btn())btn().addEventListener('click',install);if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(()=>{});});
 })();
 </script>
+
+<style id="universal-admin-modal-close-fix">
+/* Reliable close buttons for every Admin activity/history/theme/mystery popup */
+.universal-modal-close,
+#closeActivityStats,
+.admin-credential-modal button,
+.ap2-modal .ap2-btn {
+  position: relative !important;
+  z-index: 100002 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+}
+</style>
+<script id="universal-admin-modal-close-fix-js">
+(function () {
+  function closeOverlay(el) {
+    if (!el) return false;
+    // Known fixed/dynamic modal containers
+    if (el.id === 'ap2Modal' && typeof window.ap2Close === 'function') {
+      window.ap2Close(); return true;
+    }
+    if (el.id === 'ap2BlockedTimeModal' && typeof window.ap2CloseBlockedTime === 'function') {
+      window.ap2CloseBlockedTime(); return true;
+    }
+    if (el.id === 'questionModal' && typeof window.closeQuestionEditor === 'function') {
+      window.closeQuestionEditor(); return true;
+    }
+    if (el.remove) { el.remove(); return true; }
+    return false;
+  }
+
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest(
+      '.universal-modal-close, #closeActivityStats, .admin-credential-modal .admin-modal-close'
+    );
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const modal = btn.closest(
+      '.admin-credential-modal, .admin-book-modal, .question-editor-modal, ' +
+      '.modal, .popup, .admin-modal, .activity-stats-modal, [role="dialog"], ' +
+      '[style*="position:fixed"], [style*="position: fixed"]'
+    );
+
+    // Prefer the nearest actual overlay; never remove the whole page.
+    if (modal) {
+      if (modal.id === 'ap2Modal' && typeof window.ap2Close === 'function') window.ap2Close();
+      else if (modal.id === 'ap2BlockedTimeModal' && typeof window.ap2CloseBlockedTime === 'function') window.ap2CloseBlockedTime();
+      else if (modal.id === 'questionModal' && typeof window.closeQuestionEditor === 'function') window.closeQuestionEditor();
+      else modal.remove();
+    }
+  }, true);
+
+  // Backdrop click for dynamically-created fixed popups.
+  document.addEventListener('click', function (e) {
+    const t = e.target;
+    if (!(t instanceof HTMLElement)) return;
+    const isFixed = getComputedStyle(t).position === 'fixed' ||
+      (t.style && (String(t.style.cssText).includes('position:fixed') || String(t.style.cssText).includes('position: fixed')));
+    if (!isFixed) return;
+
+    const first = t.firstElementChild;
+    if (first && (e.clientX < first.getBoundingClientRect().left ||
+                  e.clientX > first.getBoundingClientRect().right ||
+                  e.clientY < first.getBoundingClientRect().top ||
+                  e.clientY > first.getBoundingClientRect().bottom)) {
+      closeOverlay(t);
+    }
+  }, false);
+
+  // Escape closes the topmost dynamic popup.
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    const overlays = Array.from(document.querySelectorAll(
+      '.admin-credential-modal, .admin-book-modal, .modal, .popup, .admin-modal, [style*="position:fixed"], [style*="position: fixed"]'
+    )).filter(x => {
+      const cs = getComputedStyle(x);
+      return cs.display !== 'none' && cs.visibility !== 'hidden';
+    });
+    const top = overlays[overlays.length - 1];
+    if (top) closeOverlay(top);
+  });
+})();
+</script>
+
 </body>
 
 </html><style id="command-center-mobile-card-fix">
