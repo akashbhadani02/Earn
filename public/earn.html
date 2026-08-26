@@ -651,6 +651,71 @@
 
         }
 
+        body.activity-modal-open { overflow: hidden !important; touch-action: none; }
+        body.activity-modal-open > * { }
+
+        /* Activity player is a real viewport-level modal. It never participates in the page flow. */
+        #activityPlay {
+            position: fixed !important;
+            top: 0 !important; right: 0 !important; bottom: 0 !important; left: 0 !important;
+            z-index: 2147483000 !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            max-width: none !important;
+            max-height: none !important;
+            margin: 0 !important;
+            padding: 18px !important;
+            box-sizing: border-box !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: rgba(2,4,22,.78) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+        #activityPlay:not(.hidden) { display: flex !important; }
+        #activityPlay::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(2,4,22,.12);
+            pointer-events: none;
+        }
+        #activityPlay .activity-modal-card {
+            position: relative;
+            z-index: 2;
+            width: min(720px, 100%);
+            max-height: min(820px, calc(100dvh - 36px));
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 22px;
+            border-radius: 26px;
+            background: linear-gradient(145deg,#121047,#070a2c);
+            border: 1px solid rgba(128,105,255,.42);
+            box-shadow: 0 28px 90px rgba(0,0,0,.65);
+        }
+        #activityPlay .activity-close {
+            position: absolute; top: 10px; right: 10px; z-index: 5;
+            width: 40px; height: 40px; border: 0; border-radius: 50%;
+            background: rgba(255,255,255,.10); color: #fff;
+            font-size: 25px; line-height: 1; cursor: pointer;
+        }
+        #activityPlay .activity-close:hover { background: rgba(255,255,255,.18); }
+        #activityPlay .activity-modal-card > * { width: 100%; box-sizing: border-box; }
+        @media (max-width:600px) {
+            #activityPlay { padding: 8px !important; }
+            #activityPlay .activity-modal-card {
+                width: 100%; max-height: calc(100dvh - 16px);
+                padding: 18px 14px 14px; border-radius: 22px;
+            }
+        }
+
+
 
         /* =====================================
    MOBILE
@@ -1638,6 +1703,244 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 @media(max-width:560px){.book-access-card{align-items:flex-start;flex-wrap:wrap}.book-access-main{padding-top:2px}.book-access-download{width:100%;margin-left:54px;margin-top:-2px}.book-access-pill{margin-left:auto}.book-modal-steps span{font-size:9px;padding:7px 2px}.book-purchase-box{padding:26px 16px 18px;border-radius:24px}}
 </style>
 
+
+<style id="earn-reference-dashboard-style">
+/* ===== Premium dark earn.html dashboard — reference image layout ===== */
+:root{--bg:#03051f;--panel:#080a2c;--muted:#aeb4d4;--white:#f8f9ff;--purple:#9c3cff;--cyan:#16d9ff;--pink:#ff1c9b;}
+body{padding:0!important;display:block!important;min-height:100vh;background:radial-gradient(circle at 70% 25%,rgba(62,31,151,.28),transparent 30%),radial-gradient(circle at 15% 80%,rgba(0,86,255,.18),transparent 30%),linear-gradient(135deg,#02031a,#05072c 55%,#02051d)!important;color:var(--white)!important;overflow-x:hidden;}
+#dashboard.earn-dashboard{display:block!important;visibility:visible!important;width:100%;max-width:none;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#fff;overflow:visible;}
+.earn-header{height:106px;padding:18px 32px;display:flex;align-items:center;gap:28px;border-bottom:1px solid rgba(130,75,255,.22);background:rgba(2,3,22,.86);backdrop-filter:blur(14px);position:relative;z-index:50;}
+.hamburger-btn{width:42px;height:42px;background:transparent;border:0;display:flex;flex-direction:column;justify-content:center;gap:6px;cursor:pointer;flex:0 0 auto}.hamburger-btn span{display:block;width:32px;height:4px;border-radius:9px;background:#fff}
+.earn-brand{display:flex;align-items:center;gap:14px;min-width:300px}.earn-brand-logo{width:66px;height:66px;border-radius:18px;padding:5px;background:#fff;box-shadow:0 0 24px rgba(174,73,255,.65);overflow:hidden}.earn-brand-logo img{width:100%;height:100%;object-fit:contain;border-radius:13px}.earn-brand-name{font-size:29px;font-weight:800;line-height:1.05}.earn-brand-tag{color:#ffd800;font-size:15px;font-weight:600;margin-top:3px}.earn-brand-tag b{color:#b46cff;margin:0 3px}
+.earn-stats{margin-left:auto;display:flex;align-items:center;gap:18px}.stat-pill{min-width:130px;height:68px;padding:8px 15px;border-radius:20px;border:1px solid rgba(130,75,255,.34);background:linear-gradient(180deg,rgba(14,11,54,.86),rgba(7,7,33,.86));display:flex;align-items:center;gap:10px;color:#fff}.stat-pill>span:last-child{display:flex;flex-direction:column;line-height:1}.stat-pill small{font-size:11px;color:#b9b8d0}.stat-pill strong{font-size:17px;margin-top:4px}.stat-pill em{font-style:normal;font-size:10px;color:#999ab9;margin-top:3px}.stat-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;font-weight:900;font-size:20px;flex:0 0 38px}.stat-icon.fire{font-size:27px}.stat-icon.xp{background:#0d7d2e;border:2px solid #63ff8a;color:#fff;font-size:14px}.stat-icon.level{background:linear-gradient(145deg,#4d1ba8,#9d3cff);clip-path:polygon(50% 0,92% 25%,92% 75%,50% 100%,8% 75%,8% 25%);font-size:17px}.stat-icon.coin{background:#ffbe12;color:#5d3400;border:2px solid #ffe37b}.wallet-pill{min-width:220px;cursor:pointer;position:relative}.wallet-pill .plus-btn{margin-left:auto;width:32px;height:32px;display:grid;place-items:center;background:#ffd11a;color:#241600;border-radius:7px;font-size:25px;line-height:1}.header-icon-btn{width:66px;height:66px;border-radius:50%;border:1px solid rgba(126,91,255,.4);background:#080a2b;color:#fff;font-size:30px;position:relative;cursor:pointer}.header-icon-btn i{position:absolute;right:-1px;top:-1px;width:22px;height:22px;border-radius:50%;background:#ff3d52;color:#fff;font-size:12px;font-style:normal;display:grid;place-items:center}.profile-avatar{width:74px;height:74px;border-radius:50%;border:2px solid #bd4cff;background:radial-gradient(circle at 50% 35%,#ffd7b4 0 18%,#f09d5b 19% 27%,#572f21 28% 43%,#15203d 44%);font-size:42px;display:grid;place-items:center;box-shadow:0 0 24px rgba(211,73,255,.7);cursor:pointer}
+.earn-menu{position:absolute;top:88px;left:72px;z-index:100;background:#0c0d36;border:1px solid #3c2d7f;border-radius:16px;padding:8px;box-shadow:0 18px 45px rgba(0,0,0,.45)}.earn-menu button{display:block;width:150px;text-align:left;padding:11px 13px;background:transparent;border:0;color:#fff;border-radius:10px;cursor:pointer;font-weight:700}.earn-menu button:hover{background:#171858}
+.earn-main{padding:20px 24px 0}.hero-grid{display:grid;grid-template-columns:1fr 2.15fr 1.35fr;gap:24px;max-width:1490px;margin:0 auto}.hero-grid>article{min-height:235px;border-radius:24px;position:relative;overflow:hidden}.balance-card{padding:30px 34px;background:radial-gradient(circle at 50% 85%,rgba(251,0,255,.36),transparent 38%),linear-gradient(145deg,#1738bf,#6c0fc7 70%,#a500de);border:1px solid #3d80ff;box-shadow:0 0 30px rgba(103,38,255,.45)}.balance-label{text-align:center;font-size:16px;font-weight:800;letter-spacing:.4px}.balance-amount{text-align:center;font-size:47px;font-weight:800;margin-top:10px}.coin-stack{height:62px;display:flex;align-items:flex-end;justify-content:center;margin-top:15px;position:relative}.coin-stack span{font-size:43px;filter:drop-shadow(0 4px 7px rgba(0,0,0,.4));margin-left:-8px}.coin-stack span:nth-child(2){transform:translateY(9px)}.coin-stack span:nth-child(3){transform:translateY(-1px)}.hero-withdraw{position:absolute;right:16px;bottom:18px;border:1px solid rgba(255,255,255,.45);background:rgba(68,20,157,.65);color:#fff;padding:10px 16px;border-radius:13px;font-weight:800;font-size:14px;cursor:pointer}.hero-withdraw b{font-size:21px}.hero-withdraw:disabled{opacity:1}
+.journey-card{padding:20px 30px;background:radial-gradient(circle at 60% 25%,rgba(55,43,130,.22),transparent 45%),linear-gradient(180deg,#07081f,#060721);border:1px solid rgba(104,64,190,.45)}.journey-title{font-size:23px;font-weight:800}.journey-title span{margin-right:8px}.journey-progress{height:13px;border-radius:20px;background:#2b2257;margin:17px 0 14px;overflow:hidden}.journey-progress span{display:block;width:32%;height:100%;border-radius:20px;background:linear-gradient(90deg,#2d73ff,#bf21ff,#ff5bca);box-shadow:0 0 12px #be31ff}.journey-meta{display:flex;justify-content:space-between;font-size:14px;color:#e2e2f3}.journey-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:17px}.journey-stats>div{border-radius:16px;background:rgba(19,17,64,.82);padding:16px;text-align:center;border:1px solid rgba(67,61,133,.38)}.journey-stats strong{font-size:24px;display:block}.journey-stats small{display:block;margin-top:8px;font-size:13px;font-weight:800}
+.mission-card{padding:28px;background:radial-gradient(circle at 75% 48%,rgba(255,126,0,.25),transparent 35%),linear-gradient(145deg,#8d2208,#2d0717);border:1px solid #ffac00;box-shadow:0 0 28px rgba(255,103,0,.2)}.mission-head{display:flex;align-items:center;gap:10px;font-size:22px}.mission-head span{font-size:30px}.mission-card p{font-size:17px;line-height:1.55;margin:16px 0 15px}.mission-progress{height:12px;border-radius:20px;background:#442338;overflow:hidden}.mission-progress span{display:block;height:100%;background:linear-gradient(90deg,#1478ff,#fa37d8);border-radius:20px}.mission-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:12px}.mission-bottom>b{font-size:19px;color:#fff000}.mission-bottom button{border:1px solid #5aff69;background:linear-gradient(180deg,#25b735,#117d28);color:#fff;border-radius:22px;padding:9px 18px;font-weight:900;font-size:16px;cursor:pointer}.gift{position:absolute;right:15px;top:65px;font-size:77px;filter:drop-shadow(0 0 12px rgba(255,186,0,.5))}
+.feature-row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;max-width:1490px;margin:32px auto 24px}.feature-card{min-height:190px;border-radius:22px;padding:20px 15px;display:flex;align-items:center;gap:14px;border:1px solid;background:linear-gradient(145deg,rgba(21,9,62,.98),rgba(4,7,31,.98));box-shadow:0 10px 28px rgba(0,0,0,.25)}.feature-card.purple{border-color:#8d23ff}.feature-card.green{border-color:#20be4c}.feature-card.orange{border-color:#e86a0a}.feature-card.blue{border-color:#0b87ff}.feature-card.pink{border-color:#db1d99}.feature-icon{font-size:70px;line-height:1;flex:0 0 88px;text-align:center;filter:drop-shadow(0 0 10px rgba(255,255,255,.18))}.feature-card h3{font-size:20px;margin-bottom:9px}.feature-card p{font-size:14px;line-height:1.55;color:#e1e0ed}.feature-card button{border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:8px 20px;margin-top:11px;color:#fff;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#6421c6,#9d1cd8)}.feature-card.green button{background:#095e28}.feature-card.orange button{background:#5e2016}.feature-card.blue button{background:#173b88}.feature-card.pink button{background:#94126d}.mini-progress{display:flex;align-items:center;gap:8px;margin-top:10px}.mini-progress span{display:block;width:82px;height:7px;background:linear-gradient(90deg,#ffac00 60%,#41344e 60%);border-radius:10px}.mini-progress b{font-size:10px;color:#aaa}
+.activity-panel{max-width:1490px;margin:0 auto 18px;padding:10px 10px 16px;border-radius:25px;background:linear-gradient(180deg,rgba(10,10,53,.9),rgba(5,10,43,.82));border:1px solid rgba(64,67,153,.3)}.activity-heading{display:flex;justify-content:center;align-items:center;gap:12px;margin:0 0 16px}.activity-heading h2{font-size:26px;margin:0}.activity-heading span{color:#ffbc00;font-size:20px}.activity-home-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.home-activity{height:100px;border-radius:20px;padding:14px 18px;display:flex;align-items:center;gap:16px;text-align:left;color:#fff;background:linear-gradient(135deg,#0a173f,#09122c);border:1px solid;cursor:pointer;position:relative;overflow:hidden}.home-activity span{font-size:46px;line-height:1}.home-activity b{font-size:19px;display:flex;flex-direction:column}.home-activity small{font-size:14px;color:#d4d4e4;font-weight:500;margin-top:5px}.home-activity i{margin-left:auto;width:45px;height:45px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-style:normal;border:1px solid currentColor}.home-activity.yellow{border-color:#ffc800}.home-activity.cyan,.home-activity.cyan2{border-color:#00a9ff}.home-activity.pink2{border-color:#ff1687}.home-activity.violet{border-color:#b42dff}.home-activity.green2{border-color:#00e86a}.home-activity.blue2{border-color:#00bde8}.home-activity.orange2{border-color:#ff9200}.home-activity:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(44,92,255,.18)}
+.earn-bottom-nav{max-width:1290px;height:84px;margin:10px auto 18px;padding:8px 18px;border-radius:45px;border:1px solid rgba(74,52,185,.5);background:rgba(7,8,47,.93);display:flex;align-items:center;justify-content:space-around;gap:8px;box-shadow:0 0 35px rgba(19,22,116,.25)}.earn-bottom-nav button{height:66px;min-width:120px;padding:7px 17px;border:0;background:transparent;color:#a6a6c8;border-radius:34px;display:flex;align-items:center;justify-content:center;gap:7px;flex-direction:column;font-family:Poppins,sans-serif;cursor:pointer}.earn-bottom-nav button span{font-size:28px;line-height:1}.earn-bottom-nav button b{font-size:13px}.earn-bottom-nav button.active{min-width:180px;background:linear-gradient(90deg,#7220e8,#8c2cff);color:#fff;box-shadow:0 0 22px rgba(154,50,255,.55)}.earn-bottom-nav .theme-switch{margin-left:auto;min-width:100px;width:100px;flex-direction:row;background:linear-gradient(90deg,#101d65,#101452);border:1px solid #2379ff;color:#fff;font-size:30px}.earn-bottom-nav .theme-switch b{display:none}
+#dashboard .notification-card-hidden,#dashboard .legacy-admin-btn,#dashboard .btn-spin,#dashboard .btn-reward,#dashboard .btn-bonus,#dashboard .telegram-btn,#dashboard .btn-book,#dashboard .tc-note{display:none!important}
+body.dark .earn-dashboard{color:#fff}.hidden{display:none!important}
+@media(max-width:1200px){.earn-stats{gap:8px}.stat-pill{min-width:100px}.wallet-pill{min-width:170px}.earn-brand{min-width:260px}.feature-row{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr 1.5fr}.mission-card{grid-column:1/-1}.activity-home-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:820px){.earn-header{height:auto;min-height:84px;padding:12px 16px;gap:12px;flex-wrap:wrap}.earn-brand{min-width:0;flex:1}.earn-brand-logo{width:50px;height:50px}.earn-brand-name{font-size:20px}.earn-brand-tag{font-size:11px}.earn-stats{order:3;width:100%;overflow-x:auto;padding-bottom:2px;justify-content:flex-start}.stat-pill{height:55px;min-width:108px}.wallet-pill{min-width:160px}.header-icon-btn,.profile-avatar{display:none}.hero-grid{grid-template-columns:1fr}.mission-card{grid-column:auto}.feature-row{grid-template-columns:1fr 1fr}.activity-home-grid{grid-template-columns:1fr 1fr}.earn-main{padding:12px}.earn-bottom-nav{margin:8px 8px 12px;height:72px;padding:5px}.earn-bottom-nav button{min-width:55px;height:60px;padding:4px}.earn-bottom-nav button.active{min-width:82px}.earn-bottom-nav .theme-switch{min-width:62px;width:62px}.earn-bottom-nav button b{font-size:10px}.earn-bottom-nav button span{font-size:22px}}
+@media(max-width:560px){.earn-header{padding:10px 12px}.hamburger-btn{width:32px}.hamburger-btn span{width:27px;height:3px}.earn-brand{gap:8px}.earn-brand-name{font-size:17px}.earn-brand-tag{font-size:9px}.earn-brand-logo{width:44px;height:44px;border-radius:13px}.earn-stats{gap:6px}.stat-pill{min-width:92px;height:51px;padding:6px 8px;border-radius:14px}.stat-icon{width:30px;height:30px;flex-basis:30px;font-size:16px}.stat-pill small{font-size:8px}.stat-pill strong{font-size:13px}.stat-pill em{font-size:8px}.wallet-pill{min-width:145px}.earn-main{padding:10px 8px}.hero-grid{gap:10px}.hero-grid>article{min-height:205px}.balance-card{padding:22px 18px}.balance-amount{font-size:39px}.journey-card{padding:18px 16px}.journey-title{font-size:19px}.journey-meta{font-size:11px}.journey-stats{gap:7px}.journey-stats>div{padding:12px 4px}.journey-stats strong{font-size:18px}.journey-stats small{font-size:9px}.mission-card{padding:20px}.mission-head{font-size:19px}.mission-card p{font-size:14px}.gift{font-size:55px;top:55px}.feature-row{gap:8px;margin:14px 0}.feature-card{min-height:155px;padding:13px 9px;gap:6px;flex-direction:column;text-align:center}.feature-icon{font-size:50px;flex-basis:auto}.feature-card h3{font-size:14px}.feature-card p{font-size:10px}.feature-card button{font-size:10px;padding:7px 12px}.activity-panel{padding:10px 7px;border-radius:18px}.activity-heading h2{font-size:19px}.home-activity{height:85px;padding:10px 8px;gap:8px;border-radius:15px}.home-activity span{font-size:29px}.home-activity b{font-size:12px}.home-activity small{font-size:9px}.home-activity i{width:30px;height:30px;font-size:25px}.earn-bottom-nav button b{font-size:8px}.earn-bottom-nav button.active{min-width:68px}.earn-bottom-nav{overflow:hidden}}
+<style id="earn-final-responsive-fix">
+/* Final full-screen + responsive layout fix */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{margin:0!important;padding:0!important;min-width:0!important}
+#dashboard.earn-dashboard{min-height:100svh!important;width:100%!important;max-width:none!important}
+.earn-header{width:100%;max-width:none;min-width:0}
+.earn-main{width:100%;max-width:none;margin:0 auto;padding:20px 24px 8px}
+.hero-grid,.feature-row,.activity-panel{width:100%;max-width:1490px}
+.hero-grid{grid-template-columns:minmax(280px,1fr) minmax(430px,2.15fr) minmax(300px,1.35fr);align-items:stretch}
+.hero-grid>article{min-width:0}
+.feature-row{grid-template-columns:repeat(5,minmax(0,1fr))}
+.feature-card{min-width:0}
+.feature-card>div:last-child{min-width:0}
+.activity-home-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.home-activity{min-width:0}
+.earn-bottom-nav{position:sticky;bottom:10px;z-index:40;margin:10px auto 18px;width:calc(100% - 48px);max-width:1290px}
+
+@media (max-width:1350px){
+  .earn-header{padding-left:22px;padding-right:22px;gap:16px}
+  .earn-brand{min-width:250px}
+  .earn-stats{gap:8px}
+  .stat-pill{min-width:105px;padding-left:10px;padding-right:10px}
+  .wallet-pill{min-width:180px}
+  .hero-grid{grid-template-columns:minmax(250px,1fr) minmax(390px,1.8fr) minmax(270px,1.2fr);gap:16px}
+  .feature-row{gap:12px}
+  .feature-card{padding:17px 12px;gap:8px}
+  .feature-icon{font-size:58px;flex-basis:68px}
+  .feature-card h3{font-size:17px}
+  .feature-card p{font-size:12px}
+}
+
+@media (max-width:1100px){
+  .earn-header{flex-wrap:wrap;height:auto;min-height:86px}
+  .earn-brand{flex:1;min-width:0}
+  .earn-stats{order:3;width:100%;margin-left:0;overflow-x:auto;justify-content:flex-start;padding:2px 2px 5px;scrollbar-width:none}
+  .earn-stats::-webkit-scrollbar{display:none}
+  .hero-grid{grid-template-columns:1fr 1.5fr;gap:14px}
+  .mission-card{grid-column:1/-1}
+  .feature-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .activity-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media (max-width:820px){
+  .earn-header{padding:10px 14px;gap:10px}
+  .earn-brand-logo{width:50px;height:50px}
+  .earn-brand-name{font-size:20px}
+  .earn-brand-tag{font-size:10px}
+  .header-icon-btn,.profile-avatar{display:none}
+  .earn-main{padding:12px 12px 6px}
+  .hero-grid{grid-template-columns:1fr;gap:12px}
+  .hero-grid>article{min-height:205px}
+  .mission-card{grid-column:auto}
+  .feature-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px auto 16px}
+  .feature-card{min-height:165px;padding:14px 10px;flex-direction:column;text-align:center;justify-content:center}
+  .feature-icon{font-size:52px;flex-basis:auto}
+  .feature-card h3{font-size:15px}
+  .feature-card p{font-size:11px}
+  .feature-card button{font-size:11px;padding:7px 13px}
+  .activity-panel{padding:10px 8px 14px;border-radius:20px}
+  .activity-heading h2{font-size:20px}
+  .home-activity{height:92px;padding:10px 9px;gap:9px}
+  .home-activity span{font-size:34px}
+  .home-activity b{font-size:13px}
+  .home-activity small{font-size:9px}
+  .home-activity i{width:34px;height:34px;font-size:27px;flex:0 0 34px}
+  .earn-bottom-nav{width:calc(100% - 20px);margin:8px auto 10px;height:70px;padding:4px 5px;border-radius:28px;gap:2px;bottom:6px}
+  .earn-bottom-nav button{min-width:0!important;flex:1;height:60px;padding:3px 4px;gap:3px}
+  .earn-bottom-nav button span{font-size:21px}
+  .earn-bottom-nav button b{font-size:9px}
+  .earn-bottom-nav button.active{flex:1;background:linear-gradient(90deg,#7220e8,#8c2cff)}
+  .earn-bottom-nav .theme-switch{flex:0 0 58px;width:58px;min-width:58px!important}
+}
+
+@media (max-width:560px){
+  .earn-header{padding:9px 10px}
+  .hamburger-btn{width:30px}
+  .hamburger-btn span{width:25px;height:3px}
+  .earn-brand{gap:7px}
+  .earn-brand-logo{width:43px;height:43px;border-radius:12px;padding:3px}
+  .earn-brand-name{font-size:16px;white-space:nowrap}
+  .earn-brand-tag{font-size:8px;white-space:nowrap}
+  .stat-pill{height:49px;min-width:88px;border-radius:13px;padding:5px 7px;gap:6px}
+  .wallet-pill{min-width:137px}
+  .stat-icon{width:28px;height:28px;flex-basis:28px;font-size:14px}
+  .stat-icon.fire{font-size:21px}
+  .stat-pill small{font-size:7px}
+  .stat-pill strong{font-size:12px}
+  .stat-pill em{font-size:7px}
+  .earn-main{padding:9px 8px 4px}
+  .hero-grid>article{min-height:190px}
+  .balance-card{padding:20px 15px}
+  .balance-amount{font-size:36px}
+  .journey-card{padding:17px 14px}
+  .journey-title{font-size:18px}
+  .journey-progress{height:10px;margin:13px 0 11px}
+  .journey-meta{font-size:10px}
+  .journey-stats{gap:5px;margin-top:13px}
+  .journey-stats>div{padding:10px 3px;border-radius:12px}
+  .journey-stats strong{font-size:17px}
+  .journey-stats small{font-size:8px;margin-top:5px}
+  .mission-card{padding:18px}
+  .mission-head{font-size:18px}
+  .mission-head span{font-size:25px}
+  .mission-card p{font-size:13px;margin:12px 0}
+  .gift{font-size:52px;right:5px;top:48px}
+  .mission-bottom button{font-size:13px;padding:8px 13px}
+  .feature-row{gap:8px}
+  .feature-card{min-height:150px;padding:11px 7px;border-radius:17px}
+  .feature-icon{font-size:43px}
+  .feature-card h3{font-size:13px;margin-bottom:5px}
+  .feature-card p{font-size:9px;line-height:1.35}
+  .feature-card button{font-size:9px;padding:6px 10px;margin-top:7px}
+  .mini-progress span{width:55px;height:6px}
+  .mini-progress b{font-size:8px}
+  .activity-heading{margin-bottom:10px;gap:7px}
+  .activity-heading h2{font-size:17px}
+  .activity-heading span{font-size:14px}
+  .activity-home-grid{gap:7px}
+  .home-activity{height:78px;padding:8px 6px;gap:6px;border-radius:13px}
+  .home-activity span{font-size:27px}
+  .home-activity b{font-size:10px}
+  .home-activity small{font-size:7px;margin-top:2px}
+  .home-activity i{width:27px;height:27px;font-size:22px;flex-basis:27px}
+  .earn-bottom-nav{width:calc(100% - 12px);margin-bottom:6px;height:64px;border-radius:24px}
+  .earn-bottom-nav button{height:56px}
+  .earn-bottom-nav button span{font-size:19px}
+  .earn-bottom-nav button b{font-size:8px}
+  .earn-bottom-nav .theme-switch{flex-basis:50px;width:50px}
+}
+
+@media (max-width:380px){
+  .earn-brand-name{font-size:14px}
+  .earn-brand-tag{font-size:7px}
+  .earn-brand-logo{width:39px;height:39px}
+  .feature-card{min-height:142px}
+  .feature-icon{font-size:38px}
+  .feature-card h3{font-size:12px}
+  .home-activity span{font-size:24px}
+  .home-activity b{font-size:9px}
+  .home-activity small{font-size:6.5px}
+  .home-activity i{width:24px;height:24px;font-size:19px;flex-basis:24px}
+  .earn-bottom-nav button b{font-size:7px}
+}
+
+/* All real English activities are also visible on the dashboard. */
+.earn-all-activities{margin:16px auto 0;max-width:1490px;padding:16px 18px 18px;border:1px solid rgba(73,91,255,.32);border-radius:22px;background:linear-gradient(180deg,rgba(10,12,47,.92),rgba(5,8,32,.86));box-shadow:0 16px 35px rgba(0,0,0,.22)}
+.earn-all-title{display:flex;align-items:center;gap:9px;margin-bottom:12px;color:#fff}.earn-all-title strong{font-size:18px}.earn-all-title button{margin-left:auto;border:1px solid rgba(83,217,255,.4);background:rgba(20,50,90,.7);color:#fff;border-radius:999px;padding:7px 12px;font-weight:800;cursor:pointer}.earn-all-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.earn-all-grid button{min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:12px;border-radius:15px;border:1px solid rgba(90,115,255,.28);background:linear-gradient(135deg,rgba(20,24,71,.95),rgba(8,12,44,.95));color:#fff;cursor:pointer;transition:.18s transform,.18s border-color,.18s box-shadow}.earn-all-grid button:hover{transform:translateY(-2px);border-color:#6f5cff;box-shadow:0 8px 20px rgba(78,62,255,.25)}.earn-all-grid button>span{font-size:28px;flex:0 0 auto}.earn-all-grid b{font-size:12px;display:flex;flex-direction:column}.earn-all-grid small{font-size:9px;color:#aeb4d4;margin-top:3px;font-weight:600}
+.earn-info-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}.earn-info-modal[hidden]{display:none}.earn-info-box{position:relative;width:min(560px,100%);max-height:82vh;overflow:auto;border:1px solid rgba(141,83,255,.55);border-radius:24px;background:linear-gradient(160deg,#10134a,#070923);color:#fff;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.6)}.earn-info-close{position:absolute;right:12px;top:10px;width:36px;height:36px;border:0;border-radius:50%;background:#1b1f5c;color:#fff;font-size:25px;cursor:pointer}.info-title{font-size:22px;font-weight:800;margin-bottom:15px}.leader-row,.history-row{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.08)}.leader-row:last-child,.history-row:last-child{border-bottom:0}.leader-rank{font-weight:900;color:#ffd84a}.leader-name{font-weight:700}.leader-score,.history-result{font-weight:800}.history-row{grid-template-columns:1fr auto}.history-q{font-size:12px;color:#d9dcf5;line-height:1.35}.history-result.ok{color:#45f09b}.history-result.bad{color:#ff6b7d}
+@media(max-width:820px){.earn-all-activities{margin-top:10px;padding:12px 10px}.earn-all-title strong{font-size:15px}.earn-all-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.earn-all-grid button{padding:9px}.earn-all-grid button>span{font-size:24px}.earn-all-grid b{font-size:10px}.earn-all-grid small{font-size:8px}.earn-info-box{padding:20px 14px;border-radius:20px}.info-title{font-size:19px}}
+</style>
+<script>
+function toggleEarnMenu(){const m=document.getElementById('earnMenu');if(m)m.hidden=!m.hidden;}
+document.addEventListener('click',e=>{const m=document.getElementById('earnMenu');const b=document.querySelector('.hamburger-btn');if(m&&!m.hidden&&!m.contains(e.target)&&!b?.contains(e.target))m.hidden=true;});
+</script>
+
+
+<style id="earn-dashboard-final-layout">
+/* Final dashboard layout: one viewport on desktop, natural scroll on phones */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{margin:0;padding:0;min-width:0}
+#dashboard.earn-dashboard{width:100%;min-height:100svh}
+@media (min-width:1201px){
+  .earn-main{padding:14px 24px 4px}
+  .hero-grid{gap:16px}
+  .hero-grid>article{min-height:205px}
+  .balance-card{padding:22px 28px}
+  .balance-amount{font-size:42px;margin-top:6px}
+  .coin-stack{height:50px;margin-top:8px}
+  .coin-stack span{font-size:36px}
+  .journey-card{padding:18px 24px}
+  .journey-title{font-size:21px}
+  .journey-progress{height:11px;margin:12px 0 10px}
+  .journey-stats{margin-top:12px}
+  .journey-stats>div{padding:12px}
+  .mission-card{padding:20px 24px}
+  .mission-card p{margin:10px 0 11px}
+  .gift{font-size:62px;top:48px}
+  .feature-row{gap:12px;margin:16px auto 14px}
+  .feature-card{min-height:145px;padding:14px 11px;gap:9px}
+  .feature-icon{font-size:52px;flex-basis:64px}
+  .feature-card h3{font-size:16px;margin-bottom:6px}
+  .feature-card p{font-size:11px;line-height:1.35}
+  .feature-card button{font-size:11px;padding:7px 14px;margin-top:7px}
+  .activity-panel{margin-bottom:8px;padding:8px 10px 10px}
+  .activity-heading{margin-bottom:8px}
+  .activity-heading h2{font-size:22px}
+  .activity-home-grid{gap:10px}
+  .home-activity{height:76px;padding:8px 11px;gap:9px;border-radius:17px}
+  .home-activity span{font-size:34px}
+  .home-activity b{font-size:14px}
+  .home-activity small{font-size:9px;margin-top:2px}
+  .home-activity i{width:32px;height:32px;font-size:25px;flex-basis:32px}
+  .earn-bottom-nav{height:72px;margin:6px auto 10px;padding:6px 14px}
+  .earn-bottom-nav button{height:58px}
+}
+/* At shorter laptop/desktop heights, compact the dashboard further so the activity grid stays visible. */
+@media (min-width:821px) and (max-height:850px){
+  .earn-header{height:82px;padding:10px 22px}
+  .earn-brand-logo{width:52px;height:52px}.earn-brand-name{font-size:23px}.earn-brand-tag{font-size:12px}
+  .stat-pill{height:54px;min-width:110px}.wallet-pill{min-width:175px}.profile-avatar{width:58px;height:58px}.header-icon-btn{width:54px;height:54px}
+  .earn-main{padding:9px 18px 2px}
+  .hero-grid{gap:10px}.hero-grid>article{min-height:170px}
+  .balance-card{padding:16px 20px}.balance-amount{font-size:36px}.coin-stack{height:36px;margin-top:5px}.coin-stack span{font-size:29px}
+  .journey-card{padding:14px 18px}.journey-title{font-size:18px}.journey-progress{margin:9px 0;height:9px}.journey-stats{margin-top:9px;gap:7px}.journey-stats>div{padding:9px}.journey-stats strong{font-size:19px}.journey-stats small{font-size:10px;margin-top:4px}
+  .mission-card{padding:15px 18px}.mission-head{font-size:18px}.mission-card p{font-size:13px;margin:7px 0}.gift{font-size:48px;top:36px}.mission-progress{height:9px}.mission-bottom{margin-top:8px}.mission-bottom button{font-size:12px;padding:7px 12px}
+  .feature-row{gap:8px;margin:10px auto}.feature-card{min-height:112px;padding:10px 8px;gap:5px}.feature-icon{font-size:40px;flex-basis:48px}.feature-card h3{font-size:13px;margin-bottom:4px}.feature-card p{font-size:9px}.feature-card button{font-size:9px;padding:5px 9px;margin-top:5px}
+  .activity-panel{padding:6px 8px 8px;margin-bottom:5px}.activity-heading{margin-bottom:5px}.activity-heading h2{font-size:18px}.activity-home-grid{gap:7px}.home-activity{height:58px;padding:6px 8px;gap:6px;border-radius:13px}.home-activity span{font-size:26px}.home-activity b{font-size:10px}.home-activity small{font-size:7px}.home-activity i{width:25px;height:25px;font-size:20px;flex-basis:25px}
+  .earn-bottom-nav{height:60px;margin:4px auto 6px}.earn-bottom-nav button{height:50px}.earn-bottom-nav button span{font-size:22px}.earn-bottom-nav button b{font-size:10px}
+}
+/* Phones: keep it responsive and readable; vertical scrolling is intentional on small screens. */
+@media (max-width:820px){
+  .earn-main{width:100%;box-sizing:border-box}.hero-grid,.feature-row,.activity-panel{max-width:none;width:100%;box-sizing:border-box}
+  .activity-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .home-activity{min-width:0}.home-activity b,.home-activity small{min-width:0;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
 </head>
 
 <body>
@@ -1660,75 +1963,113 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
 
 
-    <div id="dashboard" class="card" aria-hidden="true" style="visibility:hidden;">
-        <div class="dashboard-topbar">
-            <div class="student-live-brand-logo" title="Current App Logo" aria-label="Current App Logo">
-                <img data-brand-logo src="/api/branding/icon?v=1&size=512" alt="Aducate Logo">
+    <div id="dashboard" class="earn-dashboard" aria-hidden="true" style="visibility:hidden;">
+        <header class="earn-header">
+            <button class="hamburger-btn" type="button" aria-label="Menu" onclick="toggleEarnMenu()"><span></span><span></span><span></span></button>
+            <div class="earn-brand">
+                <div class="earn-brand-logo"><img data-brand-logo src="/api/branding/icon?v=1&size=512" alt="Aducate Logo"></div>
+                <div class="earn-brand-copy">
+                    <div class="earn-brand-name">Aducate English</div>
+                    <div class="earn-brand-tag">★ Learn <b>•</b> Play <b>•</b> Earn ★</div>
+                </div>
             </div>
-            <div class="topbar-right">
-                <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
-                <button class="icon-btn" onclick="location.href='profile.html'" aria-label="Profile" title="Profile">👤</button>
-                <button class="icon-btn" onclick="location.href='admin.html'" aria-label="Admin" title="Admin">⚙️</button>
+            <div class="earn-stats">
+                <div class="stat-pill"><span class="stat-icon fire">🔥</span><span><small>Streak</small><strong>4</strong><em>Days</em></span></div>
+                <div class="stat-pill"><span class="stat-icon xp">XP</span><span><small>XP</small><strong id="topXp">85</strong><em>Total XP</em></span></div>
+                <div class="stat-pill"><span class="stat-icon level">3</span><span><small>Level</small><strong>3</strong><em>Rising Star</em></span></div>
+                <button class="stat-pill wallet-pill" type="button" onclick="openWithdrawPopup()"><span class="stat-icon coin">₹</span><span><small>Wallet</small><strong>₹<span id="topWallet">0.00</span></strong></span><b class="plus-btn">+</b></button>
+                <button class="header-icon-btn" type="button" aria-label="Notifications">♧<i>3</i></button>
+                <button class="profile-avatar" type="button" onclick="location.href='profile.html'" aria-label="Profile">👨🏻‍💼</button>
             </div>
+        </header>
+
+        <div id="earnMenu" class="earn-menu" hidden>
+            <button type="button" onclick="location.href='profile.html'">👤 Profile</button>
+            <button type="button" onclick="location.href='admin.html'">⚙️ Admin</button>
+            <button type="button" onclick="toggleTheme()">🌙 Theme</button>
         </div>
 
-        <h2>Student Dashboard</h2>
+        <main class="earn-main">
+            <section class="hero-grid">
+                <article class="balance-card">
+                    <div class="balance-label">TOTAL BALANCE</div>
+                    <div class="balance-amount">₹<span id="wallet">0.00</span></div>
+                    <div class="coin-stack" aria-hidden="true"><span>🪙</span><span>🪙</span><span>🪙</span><span>🪙</span></div>
+                    <button class="hero-withdraw" id="withdrawBtn" type="button" onclick="openWithdrawPopup()" disabled>Withdraw <b>➜</b></button>
+                </article>
 
-        <div class="wallet-box">
-            <small>Total Balance</small>
-            <span class="wallet-val">₹<span id="wallet">0.00</span></span>
+                <article class="journey-card">
+                    <div class="journey-title"><span>🚀</span> Your Quiz Journey</div>
+                    <div class="journey-progress"><span></span></div>
+                    <div class="journey-meta"><span>15 / 100 XP&nbsp; ✦</span><span>85 XP to next level</span></div>
+                    <div class="journey-stats">
+                        <div><strong>4 🔥</strong><small>STREAK</small></div>
+                        <div><strong>12 / 20</strong><small>DAILY MISSION</small></div>
+                        <div><strong>4 ⭐</strong><small>BEST STREAK</small></div>
+                    </div>
+                </article>
+
+                <article class="mission-card">
+                    <div class="mission-head"><span>🎯</span><strong>Daily Mission</strong></div>
+                    <p>Answer 20 questions<br>correctly</p>
+                    <div class="mission-progress"><span style="width:82%"></span></div>
+                    <div class="mission-bottom"><b>18 / 20</b><button type="button" onclick="showScreen('quiz')">+25 XP</button></div>
+                    <span class="gift">🎁</span>
+                </article>
+            </section>
+
+            <section class="feature-row">
+                <article class="feature-card purple"><div class="feature-icon">🧰</div><div><h3>Mystery Chest</h3><p>Open and win<br>exciting rewards!</p><button type="button" onclick="claimBonus()">Open Now</button></div></article>
+                <article class="feature-card green"><div class="feature-icon">🍀</div><div><h3>Lucky Round</h3><p>Try your luck and<br>win big!</p><button type="button" onclick="spinWheel()">Play Now</button></div></article>
+                <article class="feature-card orange"><div class="feature-icon">🎨</div><div><h3>Themes</h3><p>Change your theme,<br>show your style!</p><button type="button" onclick="toggleTheme()">Explore</button></div></article>
+                <article class="feature-card blue"><div class="feature-icon">🏆</div><div><h3>Weekly Challenge</h3><p>Compete and win<br>amazing rewards!</p><div class="mini-progress"><span></span><b>60%</b></div><button type="button" onclick="showScreen('quiz')">View Challenge</button></div></article>
+                <article class="feature-card pink"><div class="feature-icon">🛡️</div><div><h3>Achievements</h3><p>Unlock achievements<br>and earn glory!</p><button type="button" onclick="showScreen('activities')">View All</button></div></article>
+            </section>
+
+            <section class="activity-panel">
+                <div class="activity-heading"><span>✦</span><h2>Choose Your Activity</h2><span>✦</span></div>
+                <div class="activity-home-grid">
+                    <button class="home-activity yellow" type="button" onclick="showScreen('quiz')"><span>🏆</span><b>Quiz<small>Play Quiz &amp; Earn</small></b><i>›</i></button>
+                    <button class="home-activity cyan" type="button" onclick="showLeaderboard()"><span>🏅</span><b>Leaderboard<small>See Top Players</small></b><i>›</i></button>
+                    <button class="home-activity pink2" type="button" onclick="showScreen('quiz')"><span>🗓️</span><b>Daily Quiz<small>Play &amp; Earn Daily</small></b><i>›</i></button>
+                    <button class="home-activity violet" type="button" onclick="spinWheel()"><span>🎡</span><b>Spin &amp; Win<small>Spin &amp; Win Rewards</small></b><i>›</i></button>
+                    <button class="home-activity green2" type="button" onclick="showScreen('activities')"><span>🎟️</span><b>Scratch Card<small>Scratch &amp; Win</small></b><i>›</i></button>
+                    <button class="home-activity blue2" type="button" onclick="showScreen('activities')"><span>▶️</span><b>Watch &amp; Earn<small>Watch &amp; Earn Coins</small></b><i>›</i></button>
+                    <button class="home-activity orange2" type="button" onclick="location.href='profile.html'"><span>🧑‍🤝‍🧑</span><b>Refer &amp; Earn<small>Invite &amp; Earn More</small></b><i>›</i></button>
+                    <button class="home-activity cyan2" type="button" onclick="showQuizHistory()"><span>📄</span><b>Quiz History<small>Check Your History</small></b><i>›</i></button>
+                </div>
+
+            </section>
+        </main>
+
+        <nav class="earn-bottom-nav" aria-label="Main navigation">
+            <button class="active" type="button" onclick="showScreen('dashboard')"><span>🏠</span><b>Home</b></button>
+            <button type="button" onclick="showScreen('quiz')"><span>❓</span><b>Quiz</b></button>
+            <button type="button" onclick="showScreen('activities')"><span>🎯</span><b>Missions</b></button>
+            <button type="button" onclick="openWithdrawPopup()"><span>▣</span><b>Wallet</b></button>
+            <button type="button" onclick="location.href='profile.html'"><span>♙</span><b>Profile</b></button>
+            <button class="theme-switch" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
+        </nav>
+
+        <div id="studentNotificationCard" class="notification-card-hidden"></div>
+
+        <div id="infoModal" class="earn-info-modal" hidden>
+            <div class="earn-info-box">
+                <button type="button" class="earn-info-close" onclick="closeInfoModal()">×</button>
+                <div id="infoModalContent"></div>
+            </div>
         </div>
-
-        <div class="dashboard-actions">
-            <button class="btn btn-quiz" onclick="showScreen('quiz')">📚 Quiz</button>
-            <button class="btn btn-learning" type="button" onclick="showScreen('activities')">🎮 Learning</button>
-
-            <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions</button>
-
-            <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Reward</button>
-            <button class="btn btn-bonus" id="bonusBtn" onclick="claimBonus()">🎁 Mystery Bonus</button>
-
-            <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw<span>(Min ₹500)</span></button>
-
-            <a href="https://t.me/+blPfoyArs0U1NmI1" target="_blank" rel="noopener noreferrer" class="telegram-btn">
-                <svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M21.5 3.5L18.3 20c-.24 1.17-.88 1.46-1.79.91l-4.91-3.62-2.37 2.28c-.26.26-.48.48-.99.48l.35-5.01 9.12-8.24c.4-.35-.09-.55-.62-.2L6.04 13.72l-4.82-1.51c-1.05-.33-1.07-1.05.22-1.55L20.27 3.02c.89-.33 1.67.21 1.23.48z"/>
-                </svg>
-                Join Telegram
-            </a>
-
-            <button type="button" class="btn btn-book" onclick="buyBook()">📖 Buy Book</button>
-
-            <!-- Small T&C Note -->
-            
-            
-            <a href="https://englishlabsurat.vercel.app/"
-            style="display:inline-block;width:5px;height:5px;color:transparent;text-decoration:none;">
-            •
-        </a>
-    </span>
-    
-    <!-- Kept in the DOM so existing notification functionality continues to work. -->
-    <div id="studentNotificationCard" class="notification-card-hidden">
-        <div id="studentNotificationText">Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો.</div>
-        <button id="studentEnableNotificationBtn" type="button" onclick="enableStudentNotifications()">🔔 Enable App Notifications</button>
+        <button class="btn btn-spin" id="spinBtn" type="button" onclick="spinWheel()" disabled hidden>Spin</button>
+        <button class="btn btn-reward" type="button" onclick="claimDailyReward()" hidden>Reward</button>
+        <button class="btn btn-bonus" id="bonusBtn" type="button" onclick="claimBonus()" hidden>Mystery Bonus</button>
+        <a class="telegram-btn" href="https://t.me/+blPfoyArs0U1NmI1" target="_blank" rel="noopener noreferrer" hidden>Telegram</a>
+        <button class="btn btn-book" type="button" onclick="buyBook()" hidden>Buy Book</button>
+        <div class="tc-note" hidden><strong>Note:</strong> This app is only for educational purposes.</div>
     </div>
-    
-    <!-- Existing admin/profile functionality is now available from the top-right icons. -->
-    <button class="btn btn-Admin legacy-admin-btn" onclick="location.href='admin.html'">👤 Admin</button>
-</div>
-<div class="tc-note">
-    <strong>Note:</strong>
-    This app is only for educational purposes. All rights reserved to the respective owners.
-</div>
-
-    </div>
-
-
     <div id="activities" class="card hidden" aria-hidden="true" style="visibility:hidden;">
-<div id="activityWalletBar" class="activity-wallet-bar">
+<div class="activity-wallet-bar">
     <span>💰 Wallet Balance</span>
-    <strong id="activityWalletBalance">₹0.00</strong>
+    <strong class="activity-wallet-balance">₹0.00</strong>
 </div>
 
 <h2 class="activity-title">🎮 English Earning Zone</h2>
@@ -1746,17 +2087,19 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 <button class="btn" style="background:#374151;margin-top:16px" onclick="showScreen('dashboard')">Back to Dashboard</button>
 </div>
 
-<div id="activityPlay" class="card hidden activity-screen" aria-hidden="true" style="visibility:hidden;">
-<div id="activityWalletBar" class="activity-wallet-bar">
-    <span>💰 Wallet Balance</span>
-    <strong id="activityWalletBalance">₹0.00</strong>
-</div>
-
-<div class="activity-title" id="activityName">Activity</div>
-<div class="activity-reward" id="activityMeta">Earn points</div>
-<div id="activityContent"></div>
-<div class="activity-feedback" id="activityFeedback"></div>
-<button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to Activities</button>
+<div id="activityPlay" class="hidden activity-screen" aria-hidden="true">
+  <div class="activity-modal-card">
+    <button class="activity-close" type="button" aria-label="Close activity" onclick="showScreen('activities')">×</button>
+    <div class="activity-wallet-bar">
+      <span>💰 Wallet Balance</span>
+      <strong class="activity-wallet-balance">₹0.00</strong>
+    </div>
+    <div class="activity-title" id="activityName">Activity</div>
+    <div class="activity-reward" id="activityMeta">Earn points</div>
+    <div id="activityContent"></div>
+    <div class="activity-feedback" id="activityFeedback"></div>
+    <button class="btn activity-back-btn" type="button" onclick="showScreen('activities')">← Back to Activities</button>
+  </div>
 </div>
 
 <div id="quiz" class="card hidden kbc-quiz-screen" aria-hidden="true" style="visibility:hidden;">
@@ -2578,7 +2921,9 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 quizWallet.innerText = wallet.toFixed(2);
             }
 
-            document.querySelectorAll("#activityWalletBalance").forEach(el => {
+            const topWallet = document.getElementById("topWallet");
+            if (topWallet) topWallet.textContent = wallet.toFixed(2);
+            document.querySelectorAll(".activity-wallet-balance").forEach(el => {
                 el.innerText = "₹" + wallet.toFixed(2);
             });
 
@@ -2700,8 +3045,13 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 if (!el) return;
                 const active = screenId === id;
                 el.classList.toggle('hidden', !active);
-                el.style.display = active ? '' : 'none';
-                el.style.visibility = active ? 'visible' : 'hidden';
+                if (screenId === 'activityPlay') {
+                    el.style.display = active ? 'flex' : 'none';
+                    el.style.visibility = active ? 'visible' : 'hidden';
+                } else {
+                    el.style.display = active ? '' : 'none';
+                    el.style.visibility = active ? 'visible' : 'hidden';
+                }
                 el.setAttribute('aria-hidden', active ? 'false' : 'true');
             });
         }
@@ -2747,6 +3097,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
             currentScreen = id;
             setScreenVisibility(id);
+            document.body.classList.toggle('activity-modal-open', id === 'activityPlay');
             if (id === 'quiz') enterQuizFullscreen();
             else exitQuizFullscreen();
 
@@ -2769,11 +3120,22 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
 
         function updateActivityWallet() {
             const amount = Number(typeof wallet !== 'undefined' ? wallet : 0);
-            document.querySelectorAll('#activityWalletBalance').forEach(el => {
+            document.querySelectorAll('.activity-wallet-balance').forEach(el => {
                 el.textContent = '₹' + amount.toFixed(2);
             });
         }
 
+
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('activityPlay');
+            if (!modal || modal.classList.contains('hidden')) return;
+            if (e.target === modal) showScreen('activities');
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !document.getElementById('activityPlay')?.classList.contains('hidden')) {
+                showScreen('activities');
+            }
+        });
         // Browser/mobile system Back button
         window.addEventListener('popstate', function () {
             navigatingBack = true;
@@ -3098,7 +3460,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
         // ==========================================
         // INTERACTIVE ENGLISH EARNING ACTIVITIES
         // ==========================================
-        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[];
+        let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[], activitySubmitting=false;
         function showActivityScreen(id){
             ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
         }
@@ -3154,15 +3516,21 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 activityQuestions=Array.isArray(data.questions)?data.questions:[];
                 activityData=data;
 
+                if(Number(data.remainingToday||0)<=0){
+                    if(nameEl) nameEl.textContent=data.title || titles[type];
+                    if(metaEl) metaEl.textContent='✅ Today limit completed';
+                    if(box) box.innerHTML='<div class="activity-question">🎉 આજની activity limit પૂર્ણ થઈ ગઈ છે.</div><p style="color:#64748b">કાલે ફરી આ activity રમી શકશો.</p>';
+                    return;
+                }
                 if(!activityQuestions.length){
-                    throw new Error('આ activity માટે હાલ questions ઉપલબ્ધ નથી.');
+                    throw new Error('આ activity માટે નવા questions ઉપલબ્ધ નથી.');
                 }
 
                 activityIndex=Math.floor(Math.random()*activityQuestions.length);
                 arrangeWords=[];
 
                 if(nameEl) nameEl.textContent=data.title || titles[type];
-                if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • Today limit '+data.dailyLimit;
+                if(metaEl) metaEl.textContent='💰 +'+Number(data.reward*100).toFixed(0)+' points • '+Number(data.remainingToday||data.dailyLimit)+' left today';
                 renderActivity();
                 updateActivityWallet();
             }catch(e){
@@ -3177,7 +3545,7 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
                 if(fb) fb.textContent=e.message || 'Activity load failed';
             }
         }
-        function nextActivityQuestion(){ if(!activityQuestions.length)return; activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
+        function nextActivityQuestion(){ if(!activityQuestions.length){ openActivity(activityType); return; } activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
         function renderActivity(){
             const q=activityQuestions[activityIndex], box=document.getElementById('activityContent'), fb=document.getElementById('activityFeedback'); fb.textContent='';
             if(activityType==='arrange'){
@@ -3200,15 +3568,28 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
         async function submitArrange(){submitActivity(arrangeWords.join(' '));}
         async function submitTypedActivity(){const e=document.getElementById('activityAnswer');if(!e||!e.value.trim()){setFeedback(false,'Answer લખો.');return}submitActivity(e.value.trim());}
         async function submitActivity(answer){
+            if(activitySubmitting) return;
             const q=activityQuestions[activityIndex];
+            if(!q) return;
+            activitySubmitting=true;
+            const box=document.getElementById('activityContent');
+            if(box) box.querySelectorAll('button,input,textarea').forEach(el=>el.disabled=true);
             try{
-                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
-                const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
+                const token=localStorage.getItem('token')||localStorage.getItem('studentToken')||'';
+                const res=await fetch('/api/activities/'+encodeURIComponent(activityType)+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({questionId:q.id,answer})});
+                const data=await res.json().catch(()=>({}));
+                if(!res.ok||!data.success){
+                    setFeedback(false,data.message||'Try again');
+                    if(data.repeated){ activityQuestions.splice(activityIndex,1); if(activityQuestions.length){activityIndex=Math.min(activityIndex,activityQuestions.length-1);renderActivity();}else{openActivity(activityType);} }
+                    return;
+                }
                 applyWalletData(data);
-                if(data.correct){setFeedback(true,'🎉 Correct! +'+(data.reward*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
-                else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again'));}
-                setTimeout(()=>nextActivityQuestion(),1200);
+                if(data.correct){setFeedback(true,'🎉 Correct! +'+(Number(data.reward||0)*100).toFixed(0)+' points earned. Wallet: ₹'+Number(data.wallet).toFixed(2));}
+                else{setFeedback(false,'❌ Wrong. Correct answer: '+(data.correctAnswer||'Try again')+' • Penalty ₹'+Number(data.penalty||0).toFixed(2));}
+                activityQuestions.splice(activityIndex,1);
+                setTimeout(()=>{activitySubmitting=false;if(activityQuestions.length){activityIndex=Math.min(activityIndex,activityQuestions.length-1);arrangeWords=[];renderActivity();}else{openActivity(activityType);}},1200);
             }catch(e){setFeedback(false,'Network error. Please try again.');}
+            finally{if(!document.hidden) setTimeout(()=>{activitySubmitting=false;},1400);}
         }
         let spokenText='';
         function startSpeaking(){
@@ -3221,7 +3602,39 @@ body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,
             r.onend=()=>{if(!spokenText)document.getElementById('micStatus').textContent='No speech detected. Try again.'};r.start();
         }
         function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
-        function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
+        async function speakCurrent(){
+            const q=activityQuestions[activityIndex]; if(!q) return;
+            try{
+                const token=localStorage.getItem('token')||localStorage.getItem('studentToken')||'';
+                const r=await fetch('/api/activities/listening/audio/'+encodeURIComponent(q.id),{headers:{Authorization:'Bearer '+token},cache:'no-store'});
+                const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Audio unavailable');
+                const u=new SpeechSynthesisUtterance(d.text);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);
+            }catch(e){setFeedback(false,'Audio load failed. Please try again.');}
+        }
+        async function showLeaderboard(){
+            const modal=document.getElementById('infoModal'), box=document.getElementById('infoModalContent');
+            if(!modal||!box)return; modal.hidden=false; box.innerHTML='<div class="info-title">🏆 Leaderboard</div><p style="color:#aeb4d4">Loading top players...</p>';
+            try{
+                const token=localStorage.getItem('token')||'';
+                const r=await fetch('/api/student/leaderboard',{headers:token?{Authorization:'Bearer '+token}:{}});
+                const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Leaderboard unavailable');
+                box.innerHTML='<div class="info-title">🏆 Leaderboard</div>'+d.players.map((u,i)=>`<div class="leader-row"><span class="leader-rank">#${i+1}</span><span class="leader-name">${escapeHtml(u.name||'Student')}</span><span class="leader-score">${Number(u.quizScore||0)} XP</span></div>`).join('')||'<p>No players yet.</p>';
+            }catch(e){box.innerHTML='<div class="info-title">🏆 Leaderboard</div><p style="color:#ff8b9a">'+escapeHtml(e.message||'Unable to load leaderboard')+'</p>';}
+        }
+        async function showQuizHistory(){
+            const modal=document.getElementById('infoModal'), box=document.getElementById('infoModalContent');
+            if(!modal||!box)return; modal.hidden=false; box.innerHTML='<div class="info-title">📄 Quiz History</div><p style="color:#aeb4d4">Loading history...</p>';
+            try{
+                const token=localStorage.getItem('token')||'';
+                const r=await fetch('/api/student/quiz-history?limit=50',{headers:token?{Authorization:'Bearer '+token}:{}});
+                const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'History unavailable');
+                box.innerHTML='<div class="info-title">📄 Quiz History</div>'+(d.history.length?d.history.map(x=>`<div class="history-row"><span class="history-q">${escapeHtml(x.questionText||'Question')}</span><span class="history-result ${x.isCorrect?'ok':'bad'}">${x.isCorrect?'✓ Correct':'✕ Wrong'}</span></div>`).join(''):'<p style="color:#aeb4d4">No quiz history yet.</p>');
+            }catch(e){box.innerHTML='<div class="info-title">📄 Quiz History</div><p style="color:#ff8b9a">'+escapeHtml(e.message||'Unable to load history')+'</p>';}
+        }
+        function closeInfoModal(){const m=document.getElementById('infoModal');if(m)m.hidden=true;}
+        function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInfoModal();});
+
         loadQuestionBank();
         // Wallet is fetched from the server; do not overwrite it with the initial 0.
         loadWallet();
@@ -3686,6 +4099,29 @@ setInterval(loadBookStatus, 8000);
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script></body>
+<script src="/mobile-branding.js" defer></script><script src="/socket.io/socket.io.js"></script>
+<script>
+(function(){
+  try {
+    const token = localStorage.getItem('token');
+    const userRaw = localStorage.getItem('user');
+    if (!token || !userRaw) return;
+    const user = JSON.parse(userRaw);
+    if (!user || !user._id) return;
+    const socket = window.io ? window.io({ transports: ['websocket','polling'] }) : null;
+    if (!socket) return;
+    window.__aducateUserSocket = socket;
+    socket.on('connect', function(){ socket.emit('join', 'user:' + String(user._id)); });
+    socket.on('userCredentialsChanged', function(payload){
+      if (!payload || String(payload.userId) !== String(user._id)) return;
+      try { localStorage.removeItem('token'); } catch(e) {}
+      try { sessionStorage.clear(); } catch(e) {}
+      alert(payload.message || 'Admin changed your password. Please login again.');
+      window.location.href = '/login.html?reason=password-changed';
+    });
+  } catch(e) { console.warn('User live-sync disabled:', e); }
+})();
+</script>
+</body>
 
 </html>

@@ -423,6 +423,11 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 </style>
 
 <style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
+
+<style id="student-login-details-style">
+.login-details-box{width:min(520px,96vw);background:var(--surface,#fff);color:var(--text,#111827);border:1px solid var(--border,#e5e7eb);border-radius:18px;padding:20px;box-shadow:0 24px 80px rgba(0,0,0,.25)}
+.login-detail-grid{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}.login-detail-item{padding:12px;border:1px solid var(--border,#e5e7eb);border-radius:12px;background:var(--surface2,#f8fafc)}.login-detail-label{font-size:12px;color:var(--muted,#64748b);font-weight:700}.login-detail-value{font-size:17px;font-weight:800;margin-top:4px;word-break:break-word}.login-detail-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.login-detail-actions button{min-height:40px}
+</style>
 </head>
 
 <body>
@@ -1119,6 +1124,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick="editWallet('${user._id}',${user.wallet || 0})" title="Edit Wallet">💰 Wallet</button>
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
+                        <button onclick="showLoginDetails('${user._id}')" class="blue" title="Student Login ID / Reset Password">🔐 Login ID</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
                         <button onclick="showBonusDetails('${user._id}')" class="gold" title="Mystery Bonus Details">🎁 Bonus</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
@@ -1910,6 +1916,78 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 alert("🔒 Book access closed.");
                 await loadUsers();
             }catch(e){ alert(e.message); }
+        }
+
+        //==========================
+        // Student Login Details
+        //==========================
+        async function showLoginDetails(id) {
+            const user = allUsers.find(x => String(x._id) === String(id));
+            if (!user) return;
+            try {
+                const res = await fetch("/api/admin/user/" + id + "/login-details?_=" + Date.now(), {
+                    headers: { Authorization: "Bearer " + token },
+                    cache: "no-store"
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Unable to load login details");
+
+                const old = document.getElementById("studentLoginDetailsModal");
+                if (old) old.remove();
+                const modal = document.createElement("div");
+                modal.id = "studentLoginDetailsModal";
+                modal.className = "modal";
+                modal.setAttribute("role", "dialog");
+                modal.setAttribute("aria-modal", "true");
+                modal.innerHTML = `
+                    <div class="login-details-box" onclick="event.stopPropagation()">
+                        <h2 style="margin:0 0 4px">🔐 Student Login Details</h2>
+                        <div style="color:var(--muted,#64748b);font-size:13px">${esc(user.name || 'Student')}</div>
+                        <div class="login-detail-grid">
+                            <div class="login-detail-item"><div class="login-detail-label">LOGIN ID / MOBILE</div><div class="login-detail-value" id="loginDetailId">${esc(data.loginId || user.mobile || '-')}</div></div>
+                            <div class="login-detail-item"><div class="login-detail-label">CURRENT PASSWORD</div><div class="login-detail-value" style="font-size:14px">🔒 Hidden (encrypted)</div></div>
+                        </div>
+                        <div style="font-size:12px;color:var(--muted,#64748b);margin-bottom:14px">The existing encrypted password cannot be recovered. Set a new password below; after saving, the new password remains visible here for the admin to copy/share with the student.</div>
+                        <div class="login-detail-grid">
+                            <input id="adminNewStudentPassword" type="text" minlength="6" maxlength="128" autocomplete="new-password" placeholder="New password (minimum 6 characters)">
+                            <input id="adminNewStudentPassword2" type="text" minlength="6" maxlength="128" autocomplete="new-password" placeholder="Confirm new password">
+                        </div>
+                        <div class="password-success-note" style="font-size:12px;color:#166534;font-weight:800;margin:4px 0 10px">Set a password above and save it. The new password will remain visible after a successful change.</div>
+                        <div class="login-detail-actions">
+                            <button type="button" onclick="document.getElementById('studentLoginDetailsModal')?.remove()">Close</button>
+                            <button type="button" class="blue" onclick="resetStudentPassword('${id}')">🔑 Change Password</button>
+                        </div>
+                    </div>`;
+                modal.addEventListener("click", () => modal.remove());
+                document.body.appendChild(modal);
+            } catch (e) { alert(e.message); }
+        }
+
+        async function resetStudentPassword(id) {
+            const p1 = document.getElementById("adminNewStudentPassword")?.value || "";
+            const p2 = document.getElementById("adminNewStudentPassword2")?.value || "";
+            if (p1.length < 6) return alert("Password must be at least 6 characters.");
+            if (p1 !== p2) return alert("Passwords do not match.");
+            if (!confirm("Reset this student's password? Their previous login session will be invalidated.")) return;
+            try {
+                const res = await fetch("/api/admin/user/" + id + "/password", {
+                    method: "PUT",
+                    headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+                    body: JSON.stringify({ password: p1 })
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.message || "Password reset failed");
+                alert("✅ Student password changed successfully. The new password is shown in the login details window.");
+                const a = document.getElementById("adminNewStudentPassword");
+                const b = document.getElementById("adminNewStudentPassword2");
+                if (a) a.value = p1;
+                if (b) b.value = p1;
+                const box = document.querySelector("#studentLoginDetailsModal .login-details-box");
+                if (box) {
+                    const note = box.querySelector(".password-success-note");
+                    if (note) note.textContent = "✅ New password saved. Keep this value safe.";
+                }
+            } catch (e) { alert(e.message); }
         }
 
         //==========================
@@ -2861,6 +2939,17 @@ ${w.status === "Approved" ? `
   };
 })();
 </script>
+<script id="adminGlobalEscFix">
+(function(){
+  if (typeof window.esc !== "function") {
+    window.esc = function(value) {
+      return String(value ?? "").replace(/[&<>"\']/g, function(m) {
+        return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#039;"})[m];
+      });
+    };
+  }
+})();
+</script>
 <script id="adminProV2JS">
         (function () {
             let D = { users: [], withdrawals: [], stats: {} };
@@ -3324,7 +3413,26 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
-<script src="/mobile-branding.js" defer></script></body>
+<script src="/mobile-branding.js" defer></script><script src="/socket.io/socket.io.js"></script>
+<script>
+(function(){
+  try {
+    const socket = window.io ? window.io({ transports: ['websocket','polling'] }) : null;
+    if (!socket) return;
+    window.__aducateAdminSocket = socket;
+    socket.on('adminUserUpdated', function(payload){
+      if (!payload || !payload.userId) return;
+      // If the All Users view is open, refresh it so changes made from
+      // another admin device appear without a manual page refresh.
+      try {
+        if (typeof loadUsers === 'function') loadUsers();
+        else if (typeof loadAllUsers === 'function') loadAllUsers();
+      } catch(e) { console.warn('Admin live refresh failed:', e); }
+    });
+  } catch(e) { console.warn('Admin live-sync disabled:', e); }
+})();
+</script>
+</body>
 
 </html><style id="command-center-mobile-card-fix">
 /* Command Center compact card layout */
