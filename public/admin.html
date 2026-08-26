@@ -460,7 +460,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
   <button data-admin-section="branding" onclick="showAdminSection('dashboard');setTimeout(()=>document.getElementById('dashboardBrandingCard')?.scrollIntoView({behavior:'smooth',block:'center'}),50)">🎨 Logo & Branding</button>
 <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
-  <button data-admin-section="admins" onclick="showAdminSection('admins')">👨‍💼 Admin Management</button>
 </div>
 
 
@@ -825,25 +824,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     </div>
 
     <!-- ========================= QUESTION BANK ========================= -->
-    <section id="adminSectionAdmins" style="margin-top:34px;" class="admin-section-hidden">
-      <div class="panel" style="padding:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
-          <div><h2 style="margin:0">👨‍💼 Admin Management</h2><div style="font-size:12px;color:var(--muted,#64748b);margin-top:4px">Create admin accounts and manage their passwords.</div></div>
-          <button class="ap2-btn" type="button" onclick="loadAdminAccounts()">🔄 Refresh</button>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;">
-          <input id="newAdminUsername" maxlength="80" placeholder="New Admin ID" autocomplete="off">
-          <input id="newAdminPassword" type="text" minlength="6" maxlength="128" placeholder="Password (6+ chars)" autocomplete="new-password">
-          <button class="ap2-btn" type="button" onclick="createAdminAccount()">➕ Add Admin</button>
-        </div>
-        <div id="adminCreateNote" style="font-size:12px;font-weight:800;margin-top:8px;color:#475569"></div>
-        <div class="table-wrap" style="margin-top:14px;">
-          <table><thead><tr><th>Admin ID</th><th>Password</th><th>Actions</th></tr></thead><tbody id="adminAccountsRows"><tr><td colspan="3">Loading...</td></tr></tbody></table>
-        </div>
-        <div style="font-size:11px;color:#64748b;margin-top:10px">Existing passwords are stored encrypted and cannot be recovered. A password can be reset; the newly entered password is shown once after a successful change.</div>
-      </div>
-    </section>
-
     <section id="adminSectionQuestions" style="margin-top:34px;">
         <h2>Question Bank — Add / Edit Questions</h2>
         <div class="question-toolbar">
@@ -924,8 +904,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 withdrawals:'adminSectionWithdrawals',
                 deleted:'adminSectionDeleted',
                 command:'adminSectionCommand',
-                questions:'adminSectionQuestions',
-                admins:'adminSectionAdmins'
+                questions:'adminSectionQuestions'
             };
             Object.keys(map).forEach(k=>{
                 const el=document.getElementById(map[k]);
@@ -937,7 +916,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             if(name==='deleted' && typeof loadDeletedUsers==='function') loadDeletedUsers();
             if(name==='command' && typeof ap2Refresh==='function') ap2Refresh();
             if(name==='questions' && typeof loadQuestions==='function') loadQuestions();
-            if(name==='admins' && typeof loadAdminAccounts==='function') loadAdminAccounts();
         }
         window.addEventListener('DOMContentLoaded',()=>showAdminSection('users'));
 
@@ -1146,7 +1124,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick="editWallet('${user._id}',${user.wallet || 0})" title="Edit Wallet">💰 Wallet</button>
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
-                        <button onclick="showLoginDetails('${user._id}')" class="blue" title="Student Login ID / Password Management">🔐 ID / Password</button>
+                        <button onclick="showLoginDetails('${user._id}')" class="blue" title="Student Login ID / Reset Password">🔐 Login ID</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
                         <button onclick="showBonusDetails('${user._id}')" class="gold" title="Mystery Bonus Details">🎁 Bonus</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
@@ -2888,57 +2866,6 @@ ${w.status === "Approved" ? `
         document
             .getElementById("downloadBtn")
             .addEventListener("click", downloadQuestions);
-
-        async function loadAdminAccounts() {
-            const body = document.getElementById('adminAccountsRows');
-            if (!body) return;
-            try {
-                const r = await fetch('/api/admin/admins?_=' + Date.now(), { cache:'no-store', headers:{ Authorization:'Bearer ' + token } });
-                const d = await r.json();
-                if (!r.ok || !d.success) throw new Error(d.message || 'Unable to load admins');
-                body.innerHTML = (d.admins || []).map(a => `
-                    <tr>
-                      <td><b>${esc(a.username)}</b></td>
-                      <td><span style="font-weight:800;color:#64748b">🔒 Encrypted</span></td>
-                      <td style="display:flex;gap:6px;flex-wrap:wrap">
-                        <button type="button" class="blue" onclick="changeAdminPassword('${esc(a._id)}','${esc(a.username)}')">🔑 Change Password</button>
-                        <button type="button" class="red" onclick="deleteAdminAccount('${esc(a._id)}','${esc(a.username)}')">🗑️ Delete</button>
-                      </td>
-                    </tr>`).join('') || '<tr><td colspan="3">No admin accounts found.</td></tr>';
-            } catch (e) { body.innerHTML = `<tr><td colspan="3">⚠️ ${esc(e.message)}</td></tr>`; }
-        }
-        async function createAdminAccount() {
-            const username = String(document.getElementById('newAdminUsername')?.value || '').trim();
-            const password = String(document.getElementById('newAdminPassword')?.value || '');
-            const note = document.getElementById('adminCreateNote');
-            if (!username || !password) { if(note) note.textContent='Enter Admin ID and password.'; return; }
-            try {
-                const r = await fetch('/api/admin/admins', { method:'POST', headers:{'Content-Type':'application/json',Authorization:'Bearer '+token}, body:JSON.stringify({username,password}) });
-                const d = await r.json(); if (!r.ok || !d.success) throw new Error(d.message || 'Admin creation failed');
-                if(note) note.innerHTML = `✅ Admin <b>${esc(d.admin.username)}</b> created. Password: <code>${esc(d.createdPassword)}</code>`;
-                document.getElementById('newAdminUsername').value=''; document.getElementById('newAdminPassword').value='';
-                await loadAdminAccounts();
-            } catch(e) { if(note) note.textContent='❌ '+e.message; }
-        }
-        async function changeAdminPassword(id, username) {
-            const password = prompt(`New password for ${username} (minimum 6 characters):`);
-            if (password === null) return;
-            if (password.length < 6) { alert('Password must be at least 6 characters.'); return; }
-            try {
-                const r = await fetch('/api/admin/admins/'+encodeURIComponent(id)+'/password', { method:'PUT', headers:{'Content-Type':'application/json',Authorization:'Bearer '+token}, body:JSON.stringify({password}) });
-                const d = await r.json(); if(!r.ok || !d.success) throw new Error(d.message || 'Password change failed');
-                alert(`Password changed successfully.\n\nAdmin ID: ${username}\nNew Password: ${password}`);
-                await loadAdminAccounts();
-            } catch(e) { alert(e.message); }
-        }
-        async function deleteAdminAccount(id, username) {
-            if (!confirm(`Delete admin account "${username}"?`)) return;
-            try {
-                const r = await fetch('/api/admin/admins/'+encodeURIComponent(id), { method:'DELETE', headers:{Authorization:'Bearer '+token} });
-                const d = await r.json(); if(!r.ok || !d.success) throw new Error(d.message || 'Delete failed');
-                await loadAdminAccounts();
-            } catch(e) { alert(e.message); }
-        }
 
         async function downloadQuestions() {
             try {
