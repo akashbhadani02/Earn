@@ -97,6 +97,15 @@ background:#0b7dda;
 
 }
 
+.admin-login-btn{
+    background:#111827;
+    margin-top:10px;
+}
+
+.admin-login-btn:hover{
+    background:#000;
+}
+
 p{
 
 text-align:center;
@@ -171,6 +180,10 @@ color:green;
 <input type="password" id="loginPassword" placeholder="Password">
 
 <button onclick="login()">Login</button>
+
+<button type="button" class="admin-login-btn" onclick="window.location.href='/admin-login.html'">
+    🔐 Admin Login
+</button>
 
 <p>
 
