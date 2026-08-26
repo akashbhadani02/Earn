@@ -6288,15 +6288,6 @@
             }
         }
     </style>
-    <style id="reliable-close-controls">
-        .activity-screen{position:relative;}
-        .activity-close-btn{position:absolute;right:12px;top:12px;width:40px;height:40px;border:0;border-radius:50%;background:#11183d;color:#fff;font-size:27px;line-height:40px;text-align:center;cursor:pointer;z-index:20;box-shadow:0 4px 18px rgba(0,0,0,.22)}
-        .activity-close-btn:hover{transform:scale(1.05);filter:brightness(1.15)}
-        .neon-feature-close{z-index:20!important;pointer-events:auto!important;touch-action:manipulation;}
-        .neon-feature-backdrop{z-index:1;pointer-events:auto;}
-        .neon-feature-dialog,.neon-menu-dialog{z-index:2;}
-        .neon-feature-dialog button,.neon-menu-dialog button{pointer-events:auto!important;touch-action:manipulation;}
-    </style>
     <style id="neon-functional-feature-style">
         .neon-feature-modal,
         .neon-menu-panel {
@@ -8400,36 +8391,22 @@
 
 
 <style id="activity-end-bottom-nav-fix">
-/* Bottom navigation belongs directly after Choose Your Activity; it is NOT fixed/overlayed. */
+/* Bottom navigation is part of normal document flow. Never reserve artificial desktop space. */
 #neonDashboardUI .neo-bottom-nav {
-  position: relative !important;
-  inset: auto !important;
-  transform: none !important;
-  width: 100% !important;
-  max-width: none !important;
-  height: 68px !important;
-  margin: 12px 0 0 !important;
-  padding: 5px 28px !important;
-  border-radius: 14px !important;
-  box-sizing: border-box !important;
-  z-index: 10 !important;
-  flex: 0 0 auto !important;
+  position: relative !important; left:auto !important; right:auto !important; bottom:auto !important;
+  transform:none !important; width:100% !important; max-width:none !important;
+  height:68px !important; min-height:68px !important; margin:8px 0 0 !important;
+  padding:5px 28px !important; box-sizing:border-box !important;
+  border-radius:14px !important; z-index:20 !important; flex:0 0 auto !important;
 }
-#dashboard > #neonDashboardUI {
-  padding-bottom: 0 !important;
-}
+#dashboard > #neonDashboardUI, #neonDashboardUI .neo-main, #neonDashboardUI .neo-activities { padding-bottom:0 !important; margin-bottom:0 !important; }
 @media (max-width:700px) {
-  #neonDashboardUI .neo-bottom-nav {
-    position: relative !important;
-    inset: auto !important;
-    width: 100% !important;
-    height: 60px !important;
-    margin: 10px 0 0 !important;
-    padding: 2px 4px !important;
-    padding-bottom: calc(2px + env(safe-area-inset-bottom)) !important;
-    border-radius: 12px !important;
-  }
+  #neonDashboardUI .neo-bottom-nav { height:60px !important; min-height:60px !important; margin:6px 0 0 !important; padding:2px 4px !important; padding-bottom:calc(2px + env(safe-area-inset-bottom)) !important; border-radius:12px !important; }
 }
+.activity-play-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.activity-play-head > div:first-child { min-width:0; flex:1; }
+.activity-close-btn { width:42px; height:42px; flex:0 0 42px; border:1px solid rgba(100,116,139,.35); border-radius:50%; background:#374151; color:#fff; font-size:27px; line-height:1; cursor:pointer; display:grid; place-items:center; }
+.activity-close-btn:hover { transform:scale(1.04); background:#1f2937; }
 </style>
 </head>
 
@@ -8720,9 +8697,13 @@
             <strong class="activityWalletBalance">₹0.00</strong>
         </div>
 
-        <button type="button" class="activity-close-btn" aria-label="Close Activity" onclick="closeActivityScreen()">×</button>
-        <div class="activity-title" id="activityName">Activity</div>
-        <div class="activity-reward" id="activityMeta">Earn points</div>
+        <div class="activity-play-head">
+            <div>
+                <div class="activity-title" id="activityName">Activity</div>
+                <div class="activity-reward" id="activityMeta">Earn points</div>
+            </div>
+            <button type="button" class="activity-close-btn" aria-label="Close activity" title="Close" onclick="closeActivityPlay()">×</button>
+        </div>
         <div id="activityContent"></div>
         <div class="activity-feedback" id="activityFeedback"></div>
         <button class="btn" style="background:#374151" type="button" onclick="showScreen('activities')">Back to
@@ -9690,28 +9671,48 @@
         function closeMysteryChest() { const m = document.getElementById('chestPop'); if (m) { m.classList.remove('show'); m.setAttribute('aria-hidden', 'true') } }
         function startLuckyChallenge() {
             const a = adventureState();
-            if (a.lucky) { showGameToast('🍀 Lucky Round already used today!'); return; }
-            a.lucky = true; saveAdventure(a);
-            showGameToast('🍀 LUCKY ROUND! Next 3 correct answers earn extra XP.', true);
-            try { sessionStorage.setItem('aducateLuckyRound', '3') } catch (e) { }
-            showScreen('quiz');
-        }
-        function showThemePicker() {
-            const a = adventureState();
-            const total = Number(getGameProgress().total || 0);
-            if (a.themes < 2 && total >= 50) { a.themes = 2; saveAdventure(a); }
-            if (a.themes < 2) {
-                if (typeof window.closeNeonFeatureModal === 'function' && typeof window.openNeonMenu === 'function') {
-                    const body = document.getElementById('neonFeatureBody');
-                    if (body && typeof window.openNeonFeatureModal === 'function') window.openNeonFeatureModal('🎨','Themes',`<div class="feature-note">🔒 Answer ${Math.max(0,50-total)} more questions to unlock the Adventure Theme.</div><button type="button" class="feature-primary" onclick="closeNeonFeatureModal()">Close</button>`);
-                } else showGameToast(`🔒 Reach 50 answered questions to unlock a new theme.`);
+            if (a.lucky) {
+                if (typeof window.openNeonFeatureModal === 'function') window.openNeonFeatureModal('🍀','Lucky Round', '<div class="feature-list"><div>🍀 <b>Already Used Today</b><small>Your Lucky Round has already been activated today. Come back tomorrow.</small></div></div><button type="button" class="feature-primary" onclick="closeNeonFeatureModal()">Close</button>');
+                else showGameToast('🍀 Lucky Round already used today!');
                 return;
             }
-            a.activeTheme = a.activeTheme === 2 ? 1 : 2; saveAdventure(a);
-            document.body.classList.toggle('adventure-theme', a.activeTheme === 2);
-            if (typeof window.openNeonFeatureModal === 'function') window.openNeonFeatureModal('🎨','Themes',`<div class="feature-note">${a.activeTheme === 2 ? '✨ Adventure Theme is now ON.' : '🌈 Classic Theme is now ON.'}</div><button type="button" class="feature-primary" onclick="closeNeonFeatureModal()">Close</button>`);
-            else showGameToast(a.activeTheme === 2 ? '🎨 Adventure Theme ON' : '🎨 Classic Theme ON', true);
+            if (typeof window.openNeonFeatureModal === 'function') {
+                window.openNeonFeatureModal('🍀','Lucky Round', '<div class="challenge-big"><strong>Next 3 correct answers</strong><p>Earn an extra <b>+10 XP</b> bonus for each of your next three correct answers.</p></div><button type="button" class="feature-primary" onclick="activateLuckyRound()">🍀 Activate Lucky Round</button>');
+                return;
+            }
+            activateLuckyRound();
         }
+        function activateLuckyRound() {
+            const a = adventureState();
+            if (a.lucky) return;
+            a.lucky = true; saveAdventure(a);
+            try { sessionStorage.setItem('aducateLuckyRound', '3'); } catch (e) {}
+            if (typeof window.closeNeonFeatureModal === 'function') window.closeNeonFeatureModal();
+            showGameToast('🍀 LUCKY ROUND! Next 3 correct answers earn extra XP.', true);
+            showScreen('quiz');
+        }
+        window.activateLuckyRound = activateLuckyRound;
+        function showThemePicker() {
+            const a = adventureState();
+            if (a.themes < 2 && getGameProgress().total >= 50) { a.themes = 2; saveAdventure(a); }
+            if (a.themes < 2) {
+                if (typeof window.openNeonFeatureModal === 'function') window.openNeonFeatureModal('🎨','Themes', '<div class="challenge-big"><strong>🔒 Theme Locked</strong><p>Answer <b>' + Math.max(0, 50 - Number(getGameProgress().total || 0)) + '</b> more questions to unlock the Adventure Theme.</p></div><button type="button" class="feature-primary" onclick="closeNeonFeatureModal()">Close</button>');
+                else showGameToast(`🔒 Reach 50 answered questions to unlock a new theme.`);
+                return;
+            }
+            const next = a.activeTheme === 2 ? 1 : 2;
+            if (typeof window.openNeonFeatureModal === 'function') {
+                window.openNeonFeatureModal('🎨','Themes', '<div class="feature-list"><div>🌈 <b>Classic Theme</b><small>Clean Aducate learning theme.</small></div><div>🚀 <b>Adventure Theme</b><small>Colorful game-style theme.</small></div></div><button type="button" class="feature-primary" onclick="activateTheme(' + next + ')">' + (next === 2 ? '🚀 Use Adventure Theme' : '🌈 Use Classic Theme') + '</button>');
+            } else { activateTheme(next); }
+        }
+        function activateTheme(theme) {
+            const a = adventureState();
+            a.activeTheme = Number(theme) === 2 ? 2 : 1; saveAdventure(a);
+            document.body.classList.toggle('adventure-theme', a.activeTheme === 2);
+            if (typeof window.closeNeonFeatureModal === 'function') window.closeNeonFeatureModal();
+            showGameToast(a.activeTheme === 2 ? '🎨 Adventure Theme ON' : '🎨 Classic Theme ON', true);
+        }
+        window.activateTheme = activateTheme;
         function applyAdventureTheme() { const a = adventureState(); document.body.classList.toggle('adventure-theme', a.activeTheme === 2); }
         const __oldGameCorrect = window.gameCorrect;
         // Wrap the existing correct-answer handler without changing quiz/server logic.
@@ -10190,13 +10191,14 @@
         function showActivityScreen(id) {
             ['dashboard', 'quiz', 'activities', 'activityPlay'].forEach(x => { const e = document.getElementById(x); if (e) { e.classList.toggle('hidden', x !== id); e.style.visibility = x === id ? 'visible' : 'hidden'; e.setAttribute('aria-hidden', x === id ? 'false' : 'true'); } });
         }
-        function closeActivityScreen() {
-            const play = document.getElementById('activityPlay');
-            if (play) { play.classList.add('hidden'); play.style.visibility = 'hidden'; play.setAttribute('aria-hidden','true'); }
-            activityType = ''; activityQuestions = []; activityIndex = 0; activityData = null; arrangeWords = [];
+        function closeActivityPlay() {
+            try {
+                if (window.speechSynthesis) window.speechSynthesis.cancel();
+                if (window.__activityRecognition && typeof window.__activityRecognition.stop === 'function') window.__activityRecognition.stop();
+            } catch (e) {}
             showScreen('activities');
         }
-        window.closeActivityScreen = closeActivityScreen;
+        window.closeActivityPlay = closeActivityPlay;
         async function openActivity(type) {
             // Open the activity screen immediately. Do not wait for the API.
             activityType = type;
@@ -10535,7 +10537,8 @@
             const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date());
             const modal = document.getElementById('neonFeatureModal'), title = document.getElementById('neonFeatureTitle'), icon = document.getElementById('neonFeatureIcon'), body = document.getElementById('neonFeatureBody');
             function open(iconText, titleText, html) { if (!modal) return; icon.textContent = iconText; title.textContent = titleText; body.innerHTML = html; modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('neon-modal-open'); }
-            window.openNeonFeatureModal = open; window.closeNeonFeatureModal = function () { if (modal) { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('neon-modal-open') } };
+            window.closeNeonFeatureModal = function () { if (modal) { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('neon-modal-open') } };
+            window.openNeonFeatureModal = open;
             window.openNeonMenu = function () { const p = document.getElementById('neonMenuPanel'); if (p) { p.classList.add('show'); p.setAttribute('aria-hidden', 'false') } };
             window.closeNeonMenu = function () { const p = document.getElementById('neonMenuPanel'); if (p) { p.classList.remove('show'); p.setAttribute('aria-hidden', 'true') } };
             window.openNotificationsPanel = function () {
@@ -11349,6 +11352,8 @@
         if (w) w.style.display = 'none';
         var c = document.getElementById('chestPop');
         if (c) { c.classList.remove('show'); c.setAttribute('aria-hidden','true'); }
+        var b = document.getElementById('bookPurchaseModal');
+        if (b) b.classList.remove('show');
         document.body.classList.remove('neon-modal-open');
     }
     window.closeAllEarnModals = closeEverything;
@@ -11410,22 +11415,6 @@
     });
 })();
 </script>
-
-        // Reliable close handling for Activity, Lucky Round, Themes and Weekly Challenge.
-        document.addEventListener('click', function(e){
-            const t = e.target;
-            if (!t) return;
-            if (t.closest && t.closest('.activity-close-btn')) { e.preventDefault(); e.stopPropagation(); closeActivityScreen(); return; }
-            const closeBtn = t.closest && t.closest('.neon-feature-close');
-            if (closeBtn) { e.preventDefault(); e.stopPropagation(); if (typeof window.closeNeonFeatureModal==='function') window.closeNeonFeatureModal(); return; }
-        }, true);
-
-        document.addEventListener('keydown', function(e){
-            if (e.key !== 'Escape') return;
-            try { closeActivityScreen(); } catch (_) {}
-            try { if (typeof window.closeNeonFeatureModal==='function') window.closeNeonFeatureModal(); } catch (_) {}
-            try { if (typeof window.closeMysteryChest==='function') window.closeMysteryChest(); } catch (_) {}
-        }, true);
 </body>
 
 </html>
