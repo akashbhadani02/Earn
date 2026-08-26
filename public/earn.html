@@ -9551,56 +9551,95 @@
             updateQuestionProgress();
         }
 
+        let dailyRewardBusy = false;
         async function claimDailyReward() {
+            if (dailyRewardBusy) return;
+            dailyRewardBusy = true;
             try {
+                const currentToken = localStorage.getItem("token") || "";
+                if (!currentToken) { window.location.replace("login.html"); return; }
                 const res = await fetch("/api/wallet/daily-reward", {
                     method: "POST",
-                    headers: { Authorization: "Bearer " + token }
+                    cache: "no-store",
+                    headers: { Authorization: "Bearer " + currentToken, Accept: "application/json" }
                 });
-
-                const data = await res.json();
-
-                if (!data.success) {
+                let data = {};
+                try { data = await res.json(); } catch (_) { data = { success: false, message: "Invalid server response." }; }
+                if (res.status === 401 || data.forceLogout) {
+                    localStorage.removeItem("token"); localStorage.removeItem("studentToken"); localStorage.removeItem("user");
+                    alert(data.message || "Your session has ended. Please login again.");
+                    window.location.replace("login.html");
+                    return;
+                }
+                if (!res.ok || !data.success) {
+                    applyWalletData(data);
                     alert(data.message || "Daily Reward failed");
                     return;
                 }
-
                 applyWalletData(data);
-                alert("🎁 Daily Reward મળ્યું! +₹" + Number(data.reward).toFixed(2));
+                alert("🎁 Daily Reward મળ્યું! +₹" + Number(data.reward || 0).toFixed(2));
             } catch (err) {
                 console.error("Daily Reward Error:", err);
                 alert("Server સાથે connect થવામાં error આવ્યો.");
+            } finally {
+                dailyRewardBusy = false;
             }
         }
 
         async function updateWallet(correct, questionId) {
             try {
+                const currentToken = localStorage.getItem("token") || "";
+                if (!currentToken) {
+                    window.location.replace("login.html");
+                    return { ok: false, repeated: false, auth: true };
+                }
+
                 const res = await fetch("/api/wallet/quiz", {
                     method: "POST",
+                    cache: "no-store",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: "Bearer " + token
+                        Authorization: "Bearer " + currentToken,
+                        "Accept": "application/json"
                     },
-                    body: JSON.stringify({ correct: Boolean(correct), questionId, selectedIndex: window.__quizSelectedIndex ?? null, selectedAnswer: window.__quizSelectedAnswer ?? "" })
+                    body: JSON.stringify({
+                        correct: Boolean(correct),
+                        questionId,
+                        selectedIndex: window.__quizSelectedIndex ?? null,
+                        selectedAnswer: window.__quizSelectedAnswer ?? ""
+                    })
                 });
 
-                const data = await res.json();
+                let data = {};
+                try { data = await res.json(); } catch (_) {
+                    data = { success: false, message: "Server returned an invalid response." };
+                }
+
+                if (res.status === 401 || data.forceLogout) {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("studentToken");
+                    alert(data.message || "Your session has ended. Please login again.");
+                    window.location.replace("login.html");
+                    return { ok: false, repeated: false, auth: true };
+                }
 
                 if (!data.success) {
                     if (data.repeated || res.status === 409 || /already answered|cannot be repeated|repeat/i.test(String(data.message || ""))) {
-                        // Do not show the technical duplicate message to students.
-                        return false;
+                        // A duplicate is safe to skip because the server has already
+                        // recorded that this question was answered earlier.
+                        return { ok: false, repeated: true, auth: false };
                     }
-                    alert(data.message || "Quiz reward failed");
-                    return false;
+                    alert(data.message || "Quiz reward failed. Your question was not marked as answered.");
+                    return { ok: false, repeated: false, auth: false };
                 }
 
                 applyWalletData(data);
-                return true;
+                return { ok: true, repeated: false, auth: false };
             } catch (err) {
                 console.error("Quiz Reward Error:", err);
-                alert("Server સાથે connect થવામાં error આવ્યો.");
-                return false;
+                alert("Network/server error. Your question was NOT submitted. Please try again.");
+                return { ok: false, repeated: false, auth: false };
             }
         }
 
@@ -9881,6 +9920,8 @@
 
         // Start with dashboard without creating an extra history entry.
         window.addEventListener('DOMContentLoaded', function () {
+            // Re-sync authoritative server state after refresh/navigation.
+            setTimeout(() => { loadWallet(); loadBonusStatus(); }, 150);
             const initial = (location.hash || '#dashboard').replace('#', '');
             showScreen(
                 ['dashboard', 'quiz', 'activities', 'activityPlay'].includes(initial) ? initial : 'dashboard',
@@ -9946,7 +9987,12 @@
         });
 
 
+        let spinBusy = false;
         async function spinWheel() {
+            if (spinBusy) return;
+            spinBusy = true;
+            const spinButton = document.getElementById('spinBtn');
+            if (spinButton) spinButton.disabled = true;
             try {
                 const res = await fetch("/api/wallet/spin", {
                     method: "POST",
@@ -9972,10 +10018,21 @@
             } catch (err) {
                 console.error("Spin Error:", err);
                 alert("Server સાથે connect થવામાં error આવ્યો.");
+            } finally {
+                spinBusy = false;
+                updateQuestionProgress();
             }
         }
 
+        let withdrawBusy = false;
         async function submitWithdraw() {
+            if (withdrawBusy) return;
+            if (Number(wallet || 0) < 1000) {
+                alert("Withdraw કરવા માટે Wallet માં ઓછામાં ઓછા ₹1000 હોવા જોઈએ.");
+                return;
+            }
+            withdrawBusy = true;
+            document.querySelectorAll('#withdrawPopup .withdraw-buttons button').forEach(b => b.disabled = true);
 
             const paymentMethod = document.getElementById("paymentMethod").value;
 
@@ -9990,7 +10047,16 @@
                 document.getElementById("accountNumber").value;
 
             const ifscCode =
-                document.getElementById("ifscCode").value;
+                document.getElementById("ifscCode").value.trim();
+
+            if (paymentMethod === "UPI" && !upiId.trim()) {
+                alert("UPI ID દાખલ કરો.");
+                return;
+            }
+            if (paymentMethod === "Bank" && (!bankName.trim() || !accountHolderName.trim() || !accountNumber.trim() || !ifscCode.trim())) {
+                alert("Bank ના બધા જરૂરી details દાખલ કરો.");
+                return;
+            }
 
             try {
 
@@ -10040,9 +10106,11 @@
                 }
 
             } catch (err) {
-
-                console.log(err);
-
+                console.error("Withdraw Error:", err);
+                alert("Server સાથે connect થવામાં error આવ્યો. Withdraw request submit થઈ નથી.");
+            } finally {
+                withdrawBusy = false;
+                document.querySelectorAll('#withdrawPopup .withdraw-buttons button').forEach(b => b.disabled = false);
             }
 
         }
@@ -10114,21 +10182,21 @@
                         const isCorrect = i === Number(q.correct);
                         window.__quizSelectedIndex = i;
                         window.__quizSelectedAnswer = String(q.options[i] ?? "");
-                        const saved = await updateWallet(isCorrect, q._id);
+                        const saveResult = await updateWallet(isCorrect, q._id);
                         window.__quizSelectedIndex = null;
                         window.__quizSelectedAnswer = "";
 
-                        if (!saved) {
-                            // A duplicate answer is never shown as an error to the student.
-                            // Remove the question from the local batch and immediately move on.
-                            quizData = quizData.filter(item => String(item?._id) !== String(q._id));
-                            if (!quizData.length) {
-                                await loadQuestionBank();
-                            }
-                            if (quizData.length) {
-                                setTimeout(() => {
-                                    if (!document.getElementById("quiz")?.classList.contains("hidden")) loadQuiz();
-                                }, 50);
+                        if (!saveResult.ok) {
+                            // Only a confirmed duplicate is removed locally. A network/API
+                            // failure keeps the question available so the student can retry.
+                            if (saveResult.repeated) {
+                                quizData = quizData.filter(item => String(item?._id) !== String(q._id));
+                                if (!quizData.length) await loadQuestionBank();
+                                if (quizData.length) {
+                                    setTimeout(() => {
+                                        if (!document.getElementById("quiz")?.classList.contains("hidden")) loadQuiz();
+                                    }, 50);
+                                }
                             }
                             return;
                         }
@@ -10296,16 +10364,56 @@
         function setFeedback(ok, msg) { const e = document.getElementById('activityFeedback'); e.textContent = msg; e.style.color = ok ? '#16a34a' : '#dc2626'; }
         async function submitArrange() { submitActivity(arrangeWords.join(' ')); }
         async function submitTypedActivity() { const e = document.getElementById('activityAnswer'); if (!e || !e.value.trim()) { setFeedback(false, 'Answer લખો.'); return } submitActivity(e.value.trim()); }
+        let activitySubmitBusy = false;
         async function submitActivity(answer) {
+            if (activitySubmitBusy) return;
             const q = activityQuestions[activityIndex];
+            if (!q || q.id === undefined || q.id === null) {
+                setFeedback(false, 'Question is not ready. Please try again.');
+                return;
+            }
+            activitySubmitBusy = true;
+            document.querySelectorAll('#activityContent button').forEach(btn => btn.disabled = true);
             try {
-                const res = await fetch('/api/activities/' + activityType + '/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + localStorage.getItem('token') }, body: JSON.stringify({ questionId: q.id, answer }) });
-                const data = await res.json(); if (!data.success) { setFeedback(false, data.message || 'Try again'); return }
+                const currentToken = localStorage.getItem('token') || localStorage.getItem('studentToken') || '';
+                if (!currentToken) {
+                    window.location.replace('login.html');
+                    return;
+                }
+                const res = await fetch('/api/activities/' + encodeURIComponent(activityType) + '/submit', {
+                    method: 'POST',
+                    cache: 'no-store',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + currentToken, Accept: 'application/json' },
+                    body: JSON.stringify({ questionId: q.id, answer: String(answer || '') })
+                });
+                let data = {};
+                try { data = await res.json(); } catch (_) { data = { success: false, message: 'Invalid server response.' }; }
+                if (res.status === 401 || data.forceLogout) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('studentToken');
+                    localStorage.removeItem('user');
+                    alert(data.message || 'Your session has ended. Please login again.');
+                    window.location.replace('login.html');
+                    return;
+                }
+                if (!res.ok || !data.success) {
+                    setFeedback(false, data.message || 'Try again');
+                    return;
+                }
                 applyWalletData(data);
-                if (data.correct) { setFeedback(true, '🎉 Correct! +' + (data.reward * 100).toFixed(0) + ' points earned. Wallet: ₹' + Number(data.wallet).toFixed(2)); }
-                else { setFeedback(false, '❌ Wrong. Correct answer: ' + (data.correctAnswer || 'Try again')); }
+                if (data.correct) {
+                    setFeedback(true, '🎉 Correct! +' + (Number(data.reward || 0) * 100).toFixed(0) + ' points earned. Wallet: ₹' + Number(data.wallet || 0).toFixed(2));
+                } else {
+                    setFeedback(false, '❌ Wrong. Correct answer: ' + (data.correctAnswer || 'Try again'));
+                }
                 setTimeout(() => nextActivityQuestion(), 1200);
-            } catch (e) { setFeedback(false, 'Network error. Please try again.'); }
+            } catch (e) {
+                console.error('Activity submit error:', e);
+                setFeedback(false, 'Network error. Your answer was not submitted. Please try again.');
+            } finally {
+                activitySubmitBusy = false;
+                document.querySelectorAll('#activityContent button').forEach(btn => btn.disabled = false);
+            }
         }
         let spokenText = '';
         function startSpeaking() {
@@ -11324,6 +11432,32 @@
         })();
     </script>
 
+
+<!-- Earn stability layer: server-state refresh, safe auth handling and interaction guards -->
+<script id="earn-stability-layer">
+(function () {
+    'use strict';
+    let refreshTimer = null;
+    function refreshAuthoritativeState() {
+        if (!localStorage.getItem('token')) return;
+        if (typeof loadWallet === 'function') loadWallet();
+        if (typeof loadBonusStatus === 'function') loadBonusStatus();
+    }
+    window.addEventListener('focus', function () {
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(refreshAuthoritativeState, 180);
+    });
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(refreshAuthoritativeState, 180);
+        }
+    });
+    window.addEventListener('online', refreshAuthoritativeState);
+    // Prevent accidental form submission/reload from dynamically injected controls.
+    document.addEventListener('submit', function (e) { e.preventDefault(); }, true);
+})();
+</script>
 
 <!-- Final interaction safety layer: keeps every modal/card/button usable -->
 <script id="final-interaction-fix">
