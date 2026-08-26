@@ -114,6 +114,75 @@ router.post("/login", async (req, res) => {
 });
 
 // ===========================
+// Admin Management
+// ===========================
+// Existing admin passwords remain bcrypt hashes and cannot be displayed.
+// Admin can create a new admin and set/reset an admin password.
+router.get("/admins", adminAuth, async (req, res) => {
+    try {
+        const admins = await Admin.find({}).select("_id username userLoginLocked").sort({ username: 1 }).lean();
+        return res.json({ success: true, admins });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.post("/admins", adminAuth, async (req, res) => {
+    try {
+        const username = String(req.body?.username || "").trim();
+        const password = String(req.body?.password || "");
+        if (!/^[A-Za-z0-9._-]{3,80}$/.test(username)) {
+            return res.status(400).json({ success: false, message: "Admin ID must be 3-80 characters and use letters, numbers, dot, underscore or hyphen." });
+        }
+        if (password.length < 6 || password.length > 128) {
+            return res.status(400).json({ success: false, message: "Password must be 6-128 characters." });
+        }
+        const exists = await Admin.findOne({ username }).lean();
+        if (exists) return res.status(409).json({ success: false, message: "Admin ID already exists." });
+        const admin = await Admin.create({ username, password: await bcrypt.hash(password, 12), userLoginLocked: false });
+        return res.status(201).json({
+            success: true,
+            message: "New admin created successfully.",
+            admin: { id: String(admin._id), username: admin.username },
+            createdPassword: password
+        });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/admins/:id/password", adminAuth, async (req, res) => {
+    try {
+        const password = String(req.body?.password || "");
+        if (password.length < 6 || password.length > 128) {
+            return res.status(400).json({ success: false, message: "Password must be 6-128 characters." });
+        }
+        const admin = await Admin.findById(req.params.id);
+        if (!admin) return res.status(404).json({ success: false, message: "Admin Not Found" });
+        admin.password = await bcrypt.hash(password, 12);
+        await admin.save();
+        return res.json({ success: true, message: "Admin password changed successfully.", adminId: String(admin._id), username: admin.username, newPassword: password });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.delete("/admins/:id", adminAuth, async (req, res) => {
+    try {
+        if (String(req.params.id) === String(req.admin.id)) {
+            return res.status(400).json({ success: false, message: "You cannot delete the admin account you are currently using." });
+        }
+        const count = await Admin.countDocuments({});
+        if (count <= 1) return res.status(400).json({ success: false, message: "At least one admin account must remain." });
+        const admin = await Admin.findByIdAndDelete(req.params.id);
+        if (!admin) return res.status(404).json({ success: false, message: "Admin Not Found" });
+        return res.json({ success: true, message: "Admin deleted successfully." });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// ===========================
 // Force logout all students + keep student login locked
 // ===========================
 router.get("/user-login-lock-status", adminAuth, async (req, res) => {
