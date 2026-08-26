@@ -8408,48 +8408,6 @@
 .activity-close-btn { width:42px; height:42px; flex:0 0 42px; border:1px solid rgba(100,116,139,.35); border-radius:50%; background:#374151; color:#fff; font-size:27px; line-height:1; cursor:pointer; display:grid; place-items:center; }
 .activity-close-btn:hover { transform:scale(1.04); background:#1f2937; }
 </style>
-<style id="mobile-final-layout-fix">
-/* Final responsive navigation/layout fix */
-#neonDashboardUI { box-sizing:border-box !important; }
-#neonDashboardUI .neo-main { padding-bottom:86px !important; }
-#neonDashboardUI .neo-bottom-nav {
-  position:fixed !important; left:50% !important; right:auto !important; bottom:10px !important;
-  transform:translateX(-50%) !important; width:min(1200px,calc(100% - 24px)) !important;
-  height:68px !important; min-height:68px !important; margin:0 !important;
-  padding:5px 10px !important; display:flex !important; align-items:center !important;
-  justify-content:space-around !important; gap:3px !important; box-sizing:border-box !important;
-  border-radius:18px !important; z-index:2147483000 !important;
-}
-#neonDashboardUI .neo-bottom-nav button {
-  flex:1 1 0 !important; min-width:0 !important; width:auto !important;
-  height:56px !important; margin:0 !important; padding:4px 5px !important;
-  display:flex !important; flex-direction:column !important; align-items:center !important;
-  justify-content:center !important; gap:2px !important; line-height:1 !important;
-  touch-action:manipulation !important; -webkit-tap-highlight-color:transparent !important;
-}
-#neonDashboardUI .neo-bottom-nav button span { margin:0 !important; font-size:10px !important; line-height:1.1 !important; }
-#neonDashboardUI .neo-bottom-nav .neo-theme-switch { flex:0 0 54px !important; min-width:54px !important; }
-@media (max-width:700px) {
-  #dashboard > #neonDashboardUI { width:100% !important; min-height:100dvh !important; height:auto !important; overflow-x:hidden !important; overflow-y:auto !important; padding:6px 6px 0 !important; }
-  #neonDashboardUI .neo-main { padding-bottom:76px !important; }
-  #neonDashboardUI .neo-bottom-nav {
-    left:6px !important; right:6px !important; bottom:calc(5px + env(safe-area-inset-bottom)) !important;
-    transform:none !important; width:auto !important; height:62px !important; min-height:62px !important;
-    padding:3px 3px !important; border-radius:16px !important; gap:2px !important;
-  }
-  #neonDashboardUI .neo-bottom-nav button { height:56px !important; font-size:18px !important; padding:2px 1px !important; border-radius:13px !important; }
-  #neonDashboardUI .neo-bottom-nav button span { font-size:8.5px !important; font-weight:800 !important; }
-  #neonDashboardUI .neo-bottom-nav .neo-theme-switch { flex:0 0 44px !important; min-width:44px !important; }
-}
-@media (max-width:390px) {
-  #neonDashboardUI .neo-main { padding-bottom:72px !important; }
-  #neonDashboardUI .neo-bottom-nav { height:58px !important; min-height:58px !important; }
-  #neonDashboardUI .neo-bottom-nav button { height:52px !important; font-size:16px !important; }
-  #neonDashboardUI .neo-bottom-nav button span { font-size:7.5px !important; }
-  #neonDashboardUI .neo-bottom-nav .neo-theme-switch { flex-basis:40px !important; min-width:40px !important; }
-}
-</style>
-
 </head>
 
 <body>
@@ -11457,7 +11415,99 @@
     });
 })();
 </script>
-<script src="/interaction-recovery.js"></script>
+<!-- FINAL SAFE INTERACTION + MOBILE LAYOUT LAYER (does not redesign existing view) -->
+<style id="final-safe-mobile-layout">
+  /* Keep the existing dashboard design; only prevent touch/viewport clipping. */
+  html, body { width:100%; max-width:100%; overflow-x:hidden; }
+  button, a, [role="button"] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .neon-dashboard-ui { box-sizing:border-box; }
+  .neo-bottom-nav { max-width:calc(100vw - 12px); box-sizing:border-box; }
+  @media (max-width:600px) {
+    .neon-dashboard-ui { width:100%; max-width:100%; box-sizing:border-box; padding-bottom:94px !important; }
+    .neo-bottom-nav { width:calc(100% - 12px) !important; left:50% !important; right:auto !important; bottom:6px !important; transform:translateX(-50%) !important; }
+    .neo-bottom-nav button { min-width:48px !important; flex:1 1 0; }
+    .neo-bottom-nav .neo-theme-switch { flex:0 0 48px; min-width:48px !important; }
+  }
+</style>
+<script id="final-safe-interaction-layer">
+(function(){
+  'use strict';
+  function hide(el){
+    if(!el) return;
+    el.classList.remove('show');
+    el.setAttribute('aria-hidden','true');
+    if(el.id==='withdrawPopup') el.style.display='none';
+    if(el.id==='bookPurchaseModal') el.style.display='none';
+  }
+  function closeTarget(btn){
+    if(!btn) return false;
+    var cls=(btn.className||'').toString().toLowerCase();
+    var txt=(btn.textContent||'').trim().toLowerCase();
+    var isClose=cls.indexOf('close')>=0 || /^(×|x|close|cancel|not now|continue playing)/i.test(txt);
+    if(!isClose) return false;
+
+    var activity=btn.closest('#activityPlay');
+    if(activity && (cls.indexOf('activity-close')>=0 || txt==='×' || txt==='x')){
+      try { if(typeof window.closeActivityPlay==='function') window.closeActivityPlay(); else if(typeof window.showScreen==='function') window.showScreen('activities'); } catch(e) {}
+      return true;
+    }
+    var chest=btn.closest('#chestPop');
+    if(chest){
+      hide(chest); return true;
+    }
+    var withdraw=btn.closest('#withdrawPopup');
+    if(withdraw){
+      hide(withdraw); return true;
+    }
+    var book=btn.closest('#bookPurchaseModal');
+    if(book){
+      try { if(typeof window.closeBookModal==='function') window.closeBookModal(); } catch(e) {}
+      hide(book); return true;
+    }
+    var menu=btn.closest('#neonMenuPanel');
+    if(menu){
+      try { if(typeof window.closeNeonMenu==='function') window.closeNeonMenu(); } catch(e) {}
+      hide(menu); return true;
+    }
+    var modal=btn.closest('#neonFeatureModal');
+    if(modal){
+      try { if(typeof window.closeNeonFeatureModal==='function') window.closeNeonFeatureModal(); } catch(e) {}
+      hide(modal); return true;
+    }
+    var dialog=btn.closest('[role="dialog"]');
+    if(dialog){
+      var root=dialog.closest('.neon-feature-modal,.neon-menu-panel,#withdrawPopup,#bookPurchaseModal,#chestPop');
+      if(root){ hide(root); return true; }
+    }
+    return false;
+  }
+  function closeAll(){
+    ['neonFeatureModal','neonMenuPanel','withdrawPopup','chestPop','bookPurchaseModal'].forEach(function(id){hide(document.getElementById(id));});
+    document.body.classList.remove('neon-modal-open');
+    try{ if(typeof window.speechSynthesis!=='undefined') window.speechSynthesis.cancel(); }catch(e){}
+  }
+  window.closeAllEarnModals=closeAll;
+
+  /* Capture only close/cancel interactions. Navigation buttons are left untouched. */
+  document.addEventListener('click',function(e){
+    var btn=e.target && e.target.closest ? e.target.closest('button,a,[role="button"]') : null;
+    if(!btn) return;
+    closeTarget(btn);
+  },true);
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') closeAll();
+  },true);
+
+  /* Backdrop close: direct DOM fallback, without changing the visual design. */
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(!t || !t.classList || !t.classList.contains('neon-feature-backdrop')) return;
+    var root=t.closest('#neonFeatureModal,#neonMenuPanel');
+    if(root) hide(root);
+  },true);
+})();
+</script>
 </body>
 
 </html>
