@@ -708,6 +708,13 @@
 
         }
 
+
+        .password-section { margin: 10px 0 25px; padding: 20px; border-radius: 18px; background: linear-gradient(135deg,#eef2ff,#f5f3ff); border: 1px solid #c4b5fd; }
+        .password-section h3 { margin: 0 0 14px; color:#5b21b6; }
+        .password-section input { width:100%; padding:13px 14px; margin:7px 0; border:1px solid #c4b5fd; border-radius:10px; font-size:15px; outline:none; }
+        .password-section button { width:100%; margin-top:8px; background:linear-gradient(135deg,#7c3aed,#5b21b6); color:#fff; border:none; border-radius:10px; padding:13px; font-weight:bold; cursor:pointer; }
+        .password-msg { margin-top:10px; font-size:14px; font-weight:bold; text-align:center; }
+
     </style>
 
 </head>
@@ -774,6 +781,17 @@
 
         </div>
 
+
+
+        <!-- CHANGE PASSWORD -->
+        <div class="password-section">
+            <h3>🔐 Change Password</h3>
+            <input id="currentPassword" type="password" autocomplete="current-password" placeholder="Current password">
+            <input id="newPassword" type="password" autocomplete="new-password" placeholder="New password (minimum 4 characters)">
+            <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirm new password">
+            <button type="button" onclick="changePassword()">🔑 Change Password</button>
+            <div id="passwordMsg" class="password-msg"></div>
+        </div>
 
         <!-- WITHDRAW HISTORY -->
 
@@ -999,6 +1017,37 @@
 
         }
 
+
+
+        async function changePassword() {
+            const currentPassword = document.getElementById("currentPassword").value;
+            const newPassword = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const msg = document.getElementById("passwordMsg");
+            msg.textContent = "";
+            msg.style.color = "#b91c1c";
+
+            if (!currentPassword || !newPassword || !confirmPassword) { msg.textContent = "Please fill all password fields."; return; }
+            if (newPassword !== confirmPassword) { msg.textContent = "New password and confirm password do not match."; return; }
+
+            try {
+                const res = await fetch("/api/profile/password", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+                const data = await res.json();
+                msg.textContent = data.message || (data.success ? "Password changed successfully." : "Password change failed.");
+                msg.style.color = data.success ? "#15803d" : "#b91c1c";
+                if (data.success) {
+                    document.getElementById("currentPassword").value = "";
+                    document.getElementById("newPassword").value = "";
+                    document.getElementById("confirmPassword").value = "";
+                }
+            } catch (error) {
+                msg.textContent = "Unable to change password. Please try again.";
+            }
+        }
 
         // =========================
         // BACK
