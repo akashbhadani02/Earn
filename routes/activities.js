@@ -712,1052 +712,878 @@ const ACTIVITIES = {
   reading: {
     title: 'Reading Challenge', reward: 0.15, dailyLimit: 70,
     questions: [
-      [
-        'Riya wakes up at 6 o’clock every morning. She brushes her teeth and goes for a walk.',
-        'What can we understand from the paragraph?',
-        ['early in the morning','late in the morning','in the morning'],
-        'early in the morning'
-      ],
-      [
-        'Amit likes reading books. He reads for thirty minutes every evening.',
-        'Which statement is best supported by the paragraph?',
-        ['enjoying films','enjoying books','playing a ball game'],
-        'enjoying books'
-      ],
-      [
-        'John has a small dog named Bruno. Bruno likes to play in the garden.',
-        'Which option best matches the situation described?',
-        ['Tom','John','John’s pet dog'],
-        'John’s pet dog'
-      ],
-      [
-        'Meena goes to the market on Sunday. She buys vegetables and fruit.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['the last weekday','the weekend','the first workday of the week'],
-        'the weekend'
-      ],
-      [
-        'Raj studies English every day because he wants to speak confidently.',
-        'Which answer best fits the details given?',
-        ['to have fun with games','to become confident while speaking','to rest'],
-        'to become confident while speaking'
-      ],
-      [
-        'Neha has a blue bicycle. She rides it to school every morning.',
-        'What can we understand from the paragraph?',
-        ['a warm primary color','a common plant color','a cool-toned primary color'],
-        'a cool-toned primary color'
-      ],
-      [
-        'Rahul lives in Ahmedabad with his parents. He works in a small office.',
-        'Which statement is best supported by the paragraph?',
-        ['his home city','Mumbai','Delhi'],
-        'his home city'
-      ],
-      [
-        'Maya likes flowers. Her favorite flower is the rose.',
-        'Which option best matches the situation described?',
-        ['Sunflower','a fragrant garden flower','Lotus'],
-        'a fragrant garden flower'
-      ],
-      [
-        'Arjun plays cricket every evening with his friends in the park.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['nightly','each evening','each morning'],
-        'each evening'
-      ],
-      [
-        'Sara has two brothers and one sister. They all live together.',
-        'Which answer best fits the details given?',
-        ['a single story','a group of three','a pair'],
-        'a pair'
-      ],
-      [
-        'Karan drinks milk every morning before going to school.',
-        'What can we understand from the paragraph?',
-        ['a hot beverage','a fruit-based drink','a dairy drink'],
-        'a dairy drink'
-      ],
-      [
-        'Priya is a teacher. She teaches English to young students.',
-        'Which statement is best supported by the paragraph?',
-        ['Maths','the language he/she is learning','the subject about the natural world'],
-        'the language he/she is learning'
-      ],
-      [
-        'Vijay bought a new phone yesterday. The phone is black.',
-        'Which option best matches the situation described?',
-        ['White','a cool-toned primary color','a very dark color'],
-        'a very dark color'
-      ],
-      [
-        'Anita goes for a walk every morning. She usually walks for thirty minutes.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['sixty minutes','a brief period of time','half an hour'],
-        'half an hour'
-      ],
-      [
-        'Rohan likes football. He watches football matches on television every weekend.',
-        'Which answer best fits the details given?',
-        ['Cricket','Tennis','a sport played mainly with the feet'],
-        'a sport played mainly with the feet'
-      ],
-      [
-        'Pooja has a cat named Kitty. Kitty likes sleeping on the sofa.',
-        'What can we understand from the paragraph?',
-        ['Pooja','Mimi','Pooja’s pet cat'],
-        'Pooja’s pet cat'
-      ],
-      [
-        'Dev wakes up early because he has to catch the school bus at seven o’clock.',
-        'Which statement is best supported by the paragraph?',
-        ['To play cricket','to reach the school transport on time','To watch TV'],
-        'to reach the school transport on time'
-      ],
-      [
-        'Nisha loves cooking. She makes delicious food for her family every Sunday.',
-        'Which option best matches the situation described?',
-        ['Dancing','Singing','preparing food'],
-        'preparing food'
-      ],
-      [
-        'Aman has a small garden behind his house. He grows tomatoes and flowers there.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Rice and wheat','food crops and decorative plants','Apples and mangoes'],
-        'food crops and decorative plants'
-      ],
-      [
-        'Mehul goes to the library every Saturday. He borrows two books each time.',
-        'Which answer best fits the details given?',
-        ['the weekend','the first workday of the week','the weekend day before Sunday'],
-        'the weekend day before Sunday'
-      ],
-      [
-        'Ravi is very hardworking. He studies for two hours every evening.',
-        'What can we understand from the paragraph?',
-        ['sixty minutes','Three hours','a two-hour period'],
-        'a two-hour period'
-      ],
-      [
-        'Kavya likes music. She listens to English songs before going to bed.',
-        'Which statement is best supported by the paragraph?',
-        ['News','Stories','songs performed in English'],
-        'songs performed in English'
-      ],
-      [
-        'Harsh has a red school bag. He keeps his books and notebooks inside it.',
-        'Which option best matches the situation described?',
-        ['a cool-toned primary color','a very dark color','a warm primary color'],
-        'a warm primary color'
-      ],
-      [
-        'Isha visits her grandmother every weekend. Her grandmother lives in a nearby village.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Her teacher','a female friend','an older female relative'],
-        'an older female relative'
-      ],
-      [
-        'Manav loves animals. He wants to become a veterinarian when he grows up.',
-        'Which answer best fits the details given?',
-        ['A teacher','A driver','an animal doctor'],
-        'an animal doctor'
-      ],
-      [
-        'Sonal wakes up at seven and has breakfast before going to work.',
-        'What can we understand from the paragraph?',
-        ['After going to work','At night','before starting the workday'],
-        'before starting the workday'
-      ],
-      [
-        'Yash bought three apples and two bananas from the market.',
-        'Which statement is best supported by the paragraph?',
-        ['a pair','a total of five','a group of three'],
-        'a group of three'
-      ],
-      [
-        'Komal is learning English because she wants to work in another country.',
-        'Which option best matches the situation described?',
-        ['to have fun with games','to get a job overseas','To watch movies'],
-        'to get a job overseas'
-      ],
-      [
-        'A school bus arrives at eight o’clock every morning. The students wait near the gate.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['at seven in the evening','At nine o’clock','in the morning at the scheduled time'],
-        'in the morning at the scheduled time'
-      ],
-      [
-        'Milan has a pet parrot named Mithu. Mithu can say a few words.',
-        'Which answer best fits the details given?',
-        ['Milan','Raju','Milan’s pet parrot'],
-        'Milan’s pet parrot'
-      ],
-      [
-        'Rina likes painting. She paints pictures of flowers, trees, and mountains.',
-        'What can we understand from the paragraph?',
-        ['Dancing','preparing food','creating pictures with paint'],
-        'creating pictures with paint'
-      ],
-      [
-        'Jay works at a hospital. He helps doctors and takes care of patients.',
-        'Which statement is best supported by the paragraph?',
-        ['At a school','at a financial institution','at a place where patients receive medical care'],
-        'at a place where patients receive medical care'
-      ],
-      [
-        'Tina drinks a glass of water after waking up every morning.',
-        'Which option best matches the situation described?',
-        ['a dairy drink','a fruit-based drink','a simple hydrating drink'],
-        'a simple hydrating drink'
-      ],
-      [
-        'Nitin has a blue car. He drives it to work every day.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['a very dark color','White','a cool-toned primary color'],
-        'a cool-toned primary color'
-      ],
-      [
-        'Asha enjoys gardening. She plants new flowers in her garden every month.',
-        'Which answer best fits the details given?',
-        ['Reading','Swimming','taking care of plants'],
-        'taking care of plants'
-      ],
-      [
-        'Rakesh went to the beach with his family last Sunday. They played in the sand.',
-        'What can we understand from the paragraph?',
-        ['to an outdoor recreation area','To the market','to a seaside place'],
-        'to a seaside place'
-      ],
-      [
-        'Divya studies at night because her house is quiet after dinner.',
-        'Which statement is best supported by the paragraph?',
-        ['Because she likes sleeping','Because school is closed','because the home environment is peaceful'],
-        'because the home environment is peaceful'
-      ],
-      [
-        'A small bird built a nest in the tree near Ravi’s house.',
-        'Which option best matches the situation described?',
-        ['On a roof','In a box','up in the branches of a tree'],
-        'up in the branches of a tree'
-      ],
-      [
-        'Sahil bought a new pair of shoes because his old shoes were damaged.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['He lost his bag','He wanted a bicycle','his previous pair could no longer be used'],
-        'his previous pair could no longer be used'
-      ],
-      [
-        'Mira goes to the gym three times a week. She exercises for one hour each time.',
-        'Which answer best fits the details given?',
-        ['Every day','Once a month','on three days each week'],
-        'on three days each week'
-      ],
-      [
-        'Vishal loves mangoes. During summer, he eats them almost every day.',
-        'What can we understand from the paragraph?',
-        ['Apples','Oranges','a tropical summer fruit'],
-        'a tropical summer fruit'
-      ],
-      [
-        'Reema has a beautiful dress for her sister’s wedding. The dress is pink.',
-        'Which statement is best supported by the paragraph?',
-        ['Yellow','a common plant color','a light shade of red'],
-        'a light shade of red'
-      ],
-      [
-        'A boy named Sam helps his mother clean the house every Saturday.',
-        'Which option best matches the situation described?',
-        ['Every Monday','Every Sunday','each Saturday'],
-        'each Saturday'
-      ],
-      [
-        'Lalit is learning to drive. He practices with his father every evening.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['His brother','His friend','his dad'],
-        'his dad'
-      ],
-      [
-        'The train leaves the station at nine in the morning. Many passengers are waiting.',
-        'Which answer best fits the details given?',
-        ['At ten at night','At eight in the evening','at nine during the morning'],
-        'at nine during the morning'
-      ],
-      [
-        'A family went to the zoo on Sunday. They saw lions, elephants, and monkeys.',
-        'What can we understand from the paragraph?',
-        ['To the museum','to a seaside place','to a place where many animals are kept'],
-        'to a place where many animals are kept'
-      ],
-      [
-        'Ritu likes chocolate ice cream. She usually eats it after dinner.',
-        'Which statement is best supported by the paragraph?',
-        ['Vanilla','Mango','a cocoa-based flavor'],
-        'a cocoa-based flavor'
-      ],
-      [
-        'Mohan has a small shop near the bus station. He sells books and stationery.',
-        'Which option best matches the situation described?',
-        ['Clothes and shoes','Vegetables and fruit','reading materials and writing supplies'],
-        'reading materials and writing supplies'
-      ],
-      [
-        'Aarti is preparing for her English exam. She studies grammar and vocabulary every day.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['A music exam','A driving test','a test of English'],
-        'a test of English'
-      ],
-      [
-        'The children went to the park after school. They played on the swings.',
-        'Which answer best fits the details given?',
-        ['To the library','To the hospital','to an outdoor recreation area'],
-        'to an outdoor recreation area'
-      ],
-      [
-        'Vivek likes swimming. He goes to the swimming pool every Wednesday.',
-        'What can we understand from the paragraph?',
-        ['the last weekday','the weekend','the middle weekday'],
-        'the middle weekday'
-      ],
-      [
-        'Sita keeps her important documents in a drawer in her bedroom.',
-        'Which statement is best supported by the paragraph?',
-        ['In a bag','Under the bed','inside a storage compartment'],
-        'inside a storage compartment'
-      ],
-      [
-        'A farmer works in his field from early morning until afternoon.',
-        'Which option best matches the situation described?',
-        ['In an office','In a shop','on the farmland he works'],
-        'on the farmland he works'
-      ],
-      [
-        'Neeraj bought a birthday gift for his best friend. He bought a watch.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['A phone','A book','a timekeeping device'],
-        'a timekeeping device'
-      ],
-      [
-        'The teacher gave the students homework on Monday. They had to finish it by Friday.',
-        'Which answer best fits the details given?',
-        ['the last weekday','the weekend','the first workday of the week'],
-        'the first workday of the week'
-      ],
-      [
-        'Mansi enjoys watching movies with her family on Saturday nights.',
-        'What can we understand from the paragraph?',
-        ['Sunday mornings','Monday afternoons','Saturday evenings'],
-        'Saturday evenings'
-      ],
-      [
-        'A young boy found a lost wallet near the school gate. He gave it to his teacher.',
-        'Which statement is best supported by the paragraph?',
-        ['In the classroom','At home','beside the entrance of the school'],
-        'beside the entrance of the school'
-      ],
-      [
-        'Kishan goes jogging every morning before breakfast.',
-        'Which option best matches the situation described?',
-        ['later in the evening','At midnight','earlier than the morning meal'],
-        'earlier than the morning meal'
-      ],
-      [
-        'The shop opens at ten in the morning and closes at eight in the evening.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['At eight in the morning','At nine at night','during the morning'],
-        'during the morning'
-      ],
-      [
-        'Pinal has a small notebook. She writes new English words in it every day.',
-        'Which answer best fits the details given?',
-        ['Stories','Phone numbers','fresh vocabulary'],
-        'fresh vocabulary'
-      ],
-      [
-        'Amit’s favorite subject at school is science. He wants to become a scientist.',
-        'What can we understand from the paragraph?',
-        ['the language he/she is learning','History','the subject about the natural world'],
-        'the subject about the natural world'
-      ],
-      [
-        'Rupal went shopping with her mother and bought a new pair of shoes.',
-        'Which statement is best supported by the paragraph?',
-        ['Her sister','a female friend','her female parent'],
-        'her female parent'
-      ],
-      [
-        'The family had dinner together at seven o’clock in the evening.',
-        'Which option best matches the situation described?',
-        ['At six o’clock','At nine o’clock','at seven in the evening'],
-        'at seven in the evening'
-      ],
-      [
-        'A boy named Rohit loves drawing. He draws pictures in his notebook after school.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Swimming','Reading','making pictures by hand'],
-        'making pictures by hand'
-      ],
-      [
-        'Sneha has an English class every Tuesday and Thursday.',
-        'Which answer best fits the details given?',
-        ['Monday and Friday','Wednesday and Saturday','two weekdays in the middle and later part of the week'],
-        'two weekdays in the middle and later part of the week'
-      ],
-      [
-        'A man was waiting for a bus when he saw his old friend across the street.',
-        'What can we understand from the paragraph?',
-        ['A train','A taxi','public road transport'],
-        'public road transport'
-      ],
-      [
-        'Pooja cleaned her room because her friends were coming to visit her.',
-        'Which statement is best supported by the paragraph?',
-        ['She was going to school','She wanted to sleep','visitors were expected'],
-        'visitors were expected'
-      ],
-      [
-        'The library is closed on Sunday, so Rahul visits it on Saturday.',
-        'Which option best matches the situation described?',
-        ['He has school on Sunday','He works there','the library is unavailable that day'],
-        'the library is unavailable that day'
-      ],
-      [
-        'A farmer has ten cows and five goats on his farm.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['a total of five','Fifteen','a total of ten'],
-        'a total of ten'
-      ],
-      [
-        'Meena bought vegetables, fruits, and milk from the supermarket.',
-        'Which answer best fits the details given?',
-        ['School','Hospital','a large food store'],
-        'a large food store'
-      ],
-      [
-        'A young girl named Tara loves reading storybooks before going to bed.',
-        'What can we understand from the paragraph?',
-        ['earlier than the morning meal','At school','just before sleeping'],
-        'just before sleeping'
-      ],
-      [
-        'Rajesh works from Monday to Friday and rests on Saturday and Sunday.',
-        'Which statement is best supported by the paragraph?',
-        ['Monday and Tuesday','Wednesday and Thursday','the two weekend days'],
-        'the two weekend days'
-      ],
-      [
-        'Kiran has a small computer on his desk. He uses it for studying English.',
-        'Which option best matches the situation described?',
-        ['For playing cricket','For cooking','for learning the English language'],
-        'for learning the English language'
-      ],
-      [
-        'A woman named Lata grows vegetables in her backyard. She grows tomatoes and potatoes.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Carrots and onions','Beans and peas','two vegetables grown in the garden'],
-        'two vegetables grown in the garden'
-      ],
-      [
-        'The students listened carefully while the teacher explained the lesson.',
-        'Which answer best fits the details given?',
-        ['The students','The principal','the person conducting the lesson'],
-        'the person conducting the lesson'
-      ],
-      [
-        'Arun forgot his umbrella, so he got wet while walking home in the rain.',
-        'What can we understand from the paragraph?',
-        ['He went swimming','He washed his clothes','he went out without rain protection'],
-        'he went out without rain protection'
-      ],
-      [
-        'A family has a large dog named Max. Max sleeps outside the house at night.',
-        'Which statement is best supported by the paragraph?',
-        ['in the room used for cooking','In the car','in the open area around the home'],
-        'in the open area around the home'
-      ],
-      [
-        'Naina practices speaking English with her friend every evening.',
-        'Which option best matches the situation described?',
-        ['Her teacher','Her brother','a female friend'],
-        'a female friend'
-      ],
-      [
-        'The bus was late because there was heavy traffic on the road.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Because of rain','Because of an accident','because the roads were very busy'],
-        'because the roads were very busy'
-      ],
-      [
-        'Suresh saves some money every month because he wants to buy a new laptop.',
-        'Which answer best fits the details given?',
-        ['To buy a bicycle','To travel abroad','to save for a new computer'],
-        'to save for a new computer'
-      ],
-      [
-        'A girl named Rani has a beautiful garden. She waters the plants every morning.',
-        'What can we understand from the paragraph?',
-        ['each evening','Every Sunday','each morning'],
-        'each morning'
-      ],
-      [
-        'The students went to the museum to learn about history.',
-        'Which statement is best supported by the paragraph?',
-        ['to have fun with games','To buy books','to gain knowledge of the past'],
-        'to gain knowledge of the past'
-      ],
-      [
-        'A man named Deepak rides his bicycle to work because his office is close to his home.',
-        'Which option best matches the situation described?',
-        ['He does not have a car','He likes buses','his workplace is nearby'],
-        'his workplace is nearby'
-      ],
-      [
-        'Kajal drinks warm milk before sleeping every night.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Cold water','a hot beverage','a heated dairy drink'],
-        'a heated dairy drink'
-      ],
-      [
-        'A boy named Amar wants to improve his English, so he reads English newspapers every morning.',
-        'Which answer best fits the details given?',
-        ['Storybooks','Magazines','newspapers written in English'],
-        'newspapers written in English'
-      ],
-      [
-        'The family visited a hill station during their summer vacation. They enjoyed the cool weather.',
-        'What can we understand from the paragraph?',
-        ['During winter','During the rainy season','during the school holiday in summer'],
-        'during the school holiday in summer'
-      ],
-      [
-        'Ramesh keeps his bicycle in the garage when he is not using it.',
-        'Which statement is best supported by the paragraph?',
-        ['In the garden','In his bedroom','in the vehicle storage area'],
-        'in the vehicle storage area'
-      ],
-      [
-        'A teacher asked the students to write five sentences in English.',
-        'Which option best matches the situation described?',
-        ['A story','A letter','five written sentences in English'],
-        'five written sentences in English'
-      ],
-      [
-        'Mitali goes to bed at ten o’clock because she wakes up early for school.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['She is tired from work','She has dinner late','her school schedule starts early'],
-        'her school schedule starts early'
-      ],
-      [
-        'A boy named Kunal found a small puppy in the street and took it home.',
-        'Which answer best fits the details given?',
-        ['A kitten','A bird','a young dog'],
-        'a young dog'
-      ],
-      [
-        'Riya’s family celebrates her birthday every year with a small party at home.',
-        'What can we understand from the paragraph?',
-        ['With a trip','At a restaurant','with a modest celebration at home'],
-        'with a modest celebration at home'
-      ],
-      [
-        'Anil wants to become a doctor because he likes helping sick people.',
-        'Which statement is best supported by the paragraph?',
-        ['He likes teaching','He likes driving','he wants to help ill people'],
-        'he wants to help ill people'
-      ],
-      [
-        'The girl opened the window because the room was very hot.',
-        'Which option best matches the situation described?',
-        ['It was raining','She wanted to sleep','the room had excessive heat'],
-        'the room had excessive heat'
-      ],
-      [
-        'Mohan visits his uncle every month. His uncle lives in another city.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Every week','Every day','once each month'],
-        'once each month'
-      ],
-      [
-        'A student named Ravi studies for his exams every evening and takes short breaks.',
-        'Which answer best fits the details given?',
-        ['each morning','Only on weekends','each evening'],
-        'each evening'
-      ],
-      [
-        'The children planted five trees near their school as part of an environment project.',
-        'What can we understand from the paragraph?',
-        ['a group of three','a total of ten','a total of five'],
-        'a total of five'
-      ],
-      [
-        'A woman named Seema goes to the market early because it is less crowded in the morning.',
-        'Which statement is best supported by the paragraph?',
-        ['She has no time','The market closes early','there are fewer people around'],
-        'there are fewer people around'
-      ],
-      [
-        'Vikas enjoys cycling on weekends. He usually cycles for two hours with his friends.',
-        'Which option best matches the situation described?',
-        ['sixty minutes','Three hours','a two-hour period'],
-        'a two-hour period'
-      ],
-      [
-        'The English teacher gave the class a simple story to read and discuss.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['A difficult test','A poem','an easy-to-read story'],
-        'an easy-to-read story'
-      ],
-      [
-        'A family went to a restaurant to celebrate their father’s birthday.',
-        'Which answer best fits the details given?',
-        ['To study','To buy clothes','to mark their father’s birthday'],
-        'to mark their father’s birthday'
-      ],
-      [
-        'Nikhil drinks fresh fruit juice after his morning exercise.',
-        'What can we understand from the paragraph?',
-        ['a hot beverage','Coffee','a drink made from fresh fruit'],
-        'a drink made from fresh fruit'
-      ],
-      [
-        'Priti keeps a diary and writes about her day every night before sleeping.',
-        'Which statement is best supported by the paragraph?',
-        ['each morning','Every Sunday','nightly'],
-        'nightly'
-      ],
-      [
-        'A boy named Jay loves helping his father in the garden during the weekend.',
-        'Which option best matches the situation described?',
-        ['His mother','His teacher','his dad'],
-        'his dad'
-      ],
-      [
-        'The train arrived late because of heavy rain.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Because of traffic','Because of a broken road','because of very strong rainfall'],
-        'because of very strong rainfall'
-      ],
-      [
-        'Rohini bought a dictionary because she wanted to learn new English words.',
-        'Which answer best fits the details given?',
-        ['To read stories','To write letters','to expand English vocabulary'],
-        'to expand English vocabulary'
-      ],
-      [
-        'A family lives in a small house near a river. They enjoy walking beside the river in the evening.',
-        'What can we understand from the paragraph?',
-        ['Near a mountain','Near a school','close to a river'],
-        'close to a river'
-      ],
-      [
-        'A student named Varun practices English speaking for twenty minutes every morning.',
-        'Which statement is best supported by the paragraph?',
-        ['half an hour','sixty minutes','one third of an hour'],
-        'one third of an hour'
-      ],
-      [
-        'The shopkeeper arranged all the books neatly on the shelf before opening the shop.',
-        'Which option best matches the situation described?',
-        ['Shoes','Vegetables','reading material'],
-        'reading material'
-      ],
-      [
-        'A girl named Nisha saved her pocket money for three months to buy a school bag.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['To buy a phone','To buy a bicycle','to save for a bag used at school'],
-        'to save for a bag used at school'
-      ],
-      [
-        'Rahul and his friends planted flowers in the school garden on Friday.',
-        'Which answer best fits the details given?',
-        ['the first workday of the week','the weekend','the last weekday'],
-        'the last weekday'
-      ],
-      [
-        'A man named Ajay reads the newspaper every morning while drinking tea.',
-        'What can we understand from the paragraph?',
-        ['Coffee','a dairy drink','a hot beverage'],
-        'a hot beverage'
-      ],
-      [
-        'The students cleaned their classroom before the teacher arrived.',
-        'Which statement is best supported by the paragraph?',
-        ['the outdoor sports area','The library','the room where they study'],
-        'the room where they study'
-      ],
-      [
-        'Maya wants to travel to London someday because she wants to see famous places there.',
-        'Which option best matches the situation described?',
-        ['Paris','New York','the British capital'],
-        'the British capital'
-      ],
-      [
-        'A boy named Rohan studies hard because he wants to get good marks in his exams.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['to have fun with games','To watch movies','to achieve high exam scores'],
-        'to achieve high exam scores'
-      ],
-      [
-        'The family ate dinner together and talked about their day.',
-        'Which answer best fits the details given?',
-        ['They watched a movie','They played cricket','they discussed what happened during the day'],
-        'they discussed what happened during the day'
-      ],
-      [
-        'A woman named Priya works at a bank. She helps customers with their accounts.',
-        'What can we understand from the paragraph?',
-        ['At a school','at a place where patients receive medical care','at a financial institution'],
-        'at a financial institution'
-      ],
-      [
-        'The boy opened his English book and started reading the lesson.',
-        'Which statement is best supported by the paragraph?',
-        ['A newspaper','A letter','the lesson in the English book'],
-        'the lesson in the English book'
-      ],
-      [
-        'Anita likes visiting new places. She travels with her family during holidays.',
-        'Which option best matches the situation described?',
-        ['each morning','Every weekend','while on vacation'],
-        'while on vacation'
-      ],
-      [
-        'A student named Harish made a daily plan to practice English, read books, and exercise.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['A shopping list','A school bag','a schedule for the day'],
-        'a schedule for the day'
-      ],
-      [
-        'The little girl was tired after playing in the park for two hours.',
-        'Which answer best fits the details given?',
-        ['She studied all day','She walked to school','two hours of outdoor play caused her tiredness'],
-        'two hours of outdoor play caused her tiredness'
-      ],
-      [
-        'A family bought a new television because their old television stopped working.',
-        'What can we understand from the paragraph?',
-        ['They wanted a bigger room','They moved house','their previous device no longer functioned'],
-        'their previous device no longer functioned'
-      ],
-      [
-        'Kiran wakes up at six, exercises for thirty minutes, and then takes a shower.',
-        'Which statement is best supported by the paragraph?',
-        ['He eats dinner','He goes to bed','he washes himself after exercise'],
-        'he washes himself after exercise'
-      ],
-      [
-        'A teacher told the students to speak English for five minutes every day.',
-        'Which option best matches the situation described?',
-        ['a brief period of time','half an hour','a brief five-minute period'],
-        'a brief five-minute period'
-      ],
-      [
-        'Ravi bought a notebook to write down new words while learning English.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['To draw pictures','To write stories','to record new vocabulary'],
-        'to record new vocabulary'
-      ],
-      [
-        'The children were excited because their school was going on a picnic the next day.',
-        'Which answer best fits the details given?',
-        ['Because of an exam','Because school was closed','because a school outing was planned'],
-        'because a school outing was planned'
-      ],
-      [
-        'A woman named Meera makes tea every morning for her family.',
-        'What can we understand from the paragraph?',
-        ['Coffee','a fruit-based drink','a hot beverage'],
-        'a hot beverage'
-      ],
-      [
-        'A boy named Dev practices writing English sentences in his notebook every evening.',
-        'Which statement is best supported by the paragraph?',
-        ['Playing cricket','Reading newspapers','writing sentences in the English language'],
-        'writing sentences in the English language'
-      ],
-      [
-        'The family went to the park after dinner and walked for thirty minutes.',
-        'Which option best matches the situation described?',
-        ['earlier than the morning meal','At noon','later in the evening'],
-        'later in the evening'
-      ],
-      [
-        'A student named Pooja wants to improve her vocabulary, so she learns five new words every day.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['a total of ten','a group of three','a total of five'],
-        'a total of five'
-      ],
-      [
-        'The shopkeeper closed the shop at nine o’clock because there were no customers left.',
-        'Which answer best fits the details given?',
-        ['It was raining','He was going to school','the shop had no remaining customers'],
-        'the shop had no remaining customers'
-      ],
-      [
-        'A family visited their grandparents during the weekend and stayed there for two days.',
-        'What can we understand from the paragraph?',
-        ['One day','One week','a forty-eight-hour stay'],
-        'a forty-eight-hour stay'
-      ],
-      [
-        'A boy named Aman helps his younger sister with her homework every evening.',
-        'Which statement is best supported by the paragraph?',
-        ['His brother','His friend','his younger female sibling'],
-        'his younger female sibling'
-      ],
-      [
-        'Rina drinks a glass of milk before going to school every morning.',
-        'Which option best matches the situation described?',
-        ['later in the evening','Before sleeping','before the school day begins'],
-        'before the school day begins'
-      ],
-      [
-        'The students were happy because they won the school cricket match.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['They finished homework','They got new books','their team was victorious in cricket'],
-        'their team was victorious in cricket'
-      ],
-      [
-        'A man named Suresh reads English news online every morning to improve his vocabulary.',
-        'Which answer best fits the details given?',
-        ['To watch cricket','To learn cooking','to build a larger word bank'],
-        'to build a larger word bank'
-      ],
-      [
-        'A girl named Riya keeps her school books in a large blue bag.',
-        'What can we understand from the paragraph?',
-        ['On the table','In the cupboard','inside a big school bag of a cool color'],
-        'inside a big school bag of a cool color'
-      ],
-      [
-        'The family prepared a special meal because guests were coming for dinner.',
-        'Which statement is best supported by the paragraph?',
-        ['It was Sunday','They were going shopping','visitors were expected'],
-        'visitors were expected'
-      ],
-      [
-        'A student named Amit practices listening to English every day using short audio lessons.',
-        'Which option best matches the situation described?',
-        ['Writing stories','Playing music','practising understanding spoken English'],
-        'practising understanding spoken English'
-      ],
-      [
-        'The teacher praised Neha because she completed all her homework on time.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['She won a race','She cleaned the classroom','she finished her assigned work before the deadline'],
-        'she finished her assigned work before the deadline'
-      ],
-      [
-        'A boy named Rahul wants to speak English confidently, so he talks to his friends in English.',
-        'Which answer best fits the details given?',
-        ['to have fun with games','To practice writing','to become more confident speaking English'],
-        'to become more confident speaking English'
-      ],
-      [
-        'The family went for a walk after breakfast because the weather was pleasant.',
-        'What can we understand from the paragraph?',
-        ['They were hungry','It was raining','the conditions outside were comfortable'],
-        'the conditions outside were comfortable'
-      ],
-      [
-        'A woman named Kavita works from home and starts her work at nine in the morning.',
-        'Which statement is best supported by the paragraph?',
-        ['At eight in the evening','At ten at night','at nine during the morning'],
-        'at nine during the morning'
-      ],
-      [
-        'A young boy named Arjun reads one English story every night before sleeping.',
-        'Which option best matches the situation described?',
-        ['a pair','a group of three','a single story'],
-        'a single story'
-      ],
-      [
-        'The students practiced speaking English together during their lunch break.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Before school','later in the evening','during the midday school break'],
-        'during the midday school break'
-      ],
-      [
-        'A family bought fresh vegetables from the local market on Saturday morning.',
-        'Which answer best fits the details given?',
-        ['Sunday evening','Monday afternoon','the morning of the weekend'],
-        'the morning of the weekend'
-      ],
-      [
-        'A girl named Meena wants to become a teacher because she enjoys helping children learn.',
-        'What can we understand from the paragraph?',
-        ['She likes travelling','She likes cooking','she likes supporting children’s learning'],
-        'she likes supporting children’s learning'
-      ],
-      [
-        'A boy named Kunal drinks water regularly because he wants to stay healthy.',
-        'Which statement is best supported by the paragraph?',
-        ['To become taller','To sleep better','to maintain good health'],
-        'to maintain good health'
-      ],
-      [
-        'The school organized a speaking competition, and many students participated.',
-        'Which option best matches the situation described?',
-        ['A drawing competition','A running competition','a contest involving spoken English'],
-        'a contest involving spoken English'
-      ],
-      [
-        'A student named Rohan won the speaking competition because he spoke English clearly.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['He ran quickly','He drew a picture','his spoken English was easy to understand'],
-        'his spoken English was easy to understand'
-      ],
-      [
-        'The teacher gave the students ten minutes to complete the reading activity.',
-        'Which answer best fits the details given?',
-        ['a brief five-minute period','one third of an hour','a brief period of time'],
-        'a brief period of time'
-      ],
-      [
-        'A family went to the beach early in the morning to watch the sunrise.',
-        'What can we understand from the paragraph?',
-        ['To swim at night','To eat lunch','to see the sun appear in the morning'],
-        'to see the sun appear in the morning'
-      ],
-      [
-        'A boy named Jay keeps practicing English even when he makes mistakes.',
-        'Which statement is best supported by the paragraph?',
-        ['He stops learning','He gets angry','he continues trying instead of stopping'],
-        'he continues trying instead of stopping'
-      ],
-      [
-        'A girl named Nisha writes five English sentences every day in her notebook.',
-        'Which option best matches the situation described?',
-        ['a total of ten','a group of three','a total of five'],
-        'a total of five'
-      ],
-      [
-        'The students learned new vocabulary words and used them in sentences.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['New games','New songs','new words and their meanings'],
-        'new words and their meanings'
-      ],
-      [
-        'A man named Ravi listens to English podcasts while traveling to work.',
-        'Which answer best fits the details given?',
-        ['While sleeping','While cooking dinner','during the journey to his workplace'],
-        'during the journey to his workplace'
-      ],
-      [
-        'A family has breakfast together every Sunday morning.',
-        'What can we understand from the paragraph?',
-        ['Every Saturday night','Every Monday morning','on Sunday mornings'],
-        'on Sunday mornings'
-      ],
-      [
-        'A teacher named Priya encourages her students to speak English without fear.',
-        'Which statement is best supported by the paragraph?',
-        ['Play games','Write exams','use English confidently without being afraid'],
-        'use English confidently without being afraid'
-      ],
-      [
-        'A student named Aman learned ten new English words this week.',
-        'Which option best matches the situation described?',
-        ['a total of five','Twenty','a total of ten'],
-        'a total of ten'
-      ],
-      [
-        'The children cleaned the playground before their sports activity.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['The classroom','The library','the outdoor sports area'],
-        'the outdoor sports area'
-      ],
-      [
-        'A girl named Riya practices English pronunciation every morning.',
-        'Which answer best fits the details given?',
-        ['Maths','making pictures by hand','the way English words are spoken'],
-        'the way English words are spoken'
-      ],
-      [
-        'A boy named Arjun helps his mother in the kitchen every evening.',
-        'What can we understand from the paragraph?',
-        ['In the garden','In the classroom','in the room used for cooking'],
-        'in the room used for cooking'
-      ],
-      [
-        'The family watched an English movie together to practice listening.',
-        'Which statement is best supported by the paragraph?',
-        ['To learn cooking','to have fun with games','to improve understanding of spoken language'],
-        'to improve understanding of spoken language'
-      ],
-      [
-        'A student named Neha reads a short English article every morning.',
-        'Which option best matches the situation described?',
-        ['A comic book','A newspaper in Gujarati','a brief article written in English'],
-        'a brief article written in English'
-      ],
-      [
-        'A man named Vijay practices speaking English with his colleague during lunch.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['His brother','His teacher','a person he works with'],
-        'a person he works with'
-      ],
-      [
-        'A girl named Pooja wants to improve her grammar, so she studies grammar rules every evening.',
-        'Which answer best fits the details given?',
-        ['To learn drawing','To play cricket','to become better at English grammar'],
-        'to become better at English grammar'
-      ],
-      [
-        'The students completed their reading challenge and received a small reward.',
-        'What can we understand from the paragraph?',
-        ['A new book','A certificate','a modest prize'],
-        'a modest prize'
-      ],
-      [
-        'A boy named Ravi practices English for thirty minutes every day before going to bed.',
-        'Which statement is best supported by the paragraph?',
-        ['one third of an hour','sixty minutes','half an hour'],
-        'half an hour'
-      ],
-      [
-        'The teacher asked everyone to read the passage carefully before answering the questions.',
-        'Which option best matches the situation described?',
-        ['Close the books','Go outside','study the passage closely'],
-        'study the passage closely'
-      ],
-      [
-        'A student named Mehul enjoys reading because books help him learn new things.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['Books are expensive','He wants to sleep','reading gives him new knowledge'],
-        'reading gives him new knowledge'
-      ],
-      [
-        'A family spends one hour together every evening talking about their day.',
-        'Which answer best fits the details given?',
-        ['half an hour','a two-hour period','sixty minutes'],
-        'sixty minutes'
-      ],
-      [
-        'A girl named Tara practices English every day and feels more confident now.',
-        'What can we understand from the paragraph?',
-        ['More tired','More nervous','more sure of herself'],
-        'more sure of herself'
-      ],
-      [
-        'A boy named Karan never gives up when he finds a difficult English word.',
-        'Which statement is best supported by the paragraph?',
-        ['He stops reading','He ignores them','he does not give up'],
-        'he does not give up'
-      ],
-      [
-        'The teacher told the students that regular practice is the key to improving English.',
-        'Which option best matches the situation described?',
-        ['Watching television','Sleeping more','practising consistently'],
-        'practising consistently'
-      ],
-      [
-        'A student named Riya wants to speak English fluently, so she practices every day.',
-        'What is the most reasonable conclusion from the paragraph?',
-        ['To learn dancing','To play sports','to become fluent in spoken English'],
-        'to become fluent in spoken English'
-      ]
+      ['Riya wakes up at 6 o’clock every morning. She brushes her teeth and goes for a walk.',
+     'When does Riya wake up?',
+     ['At 6 o’clock','At 8 o’clock','At 10 o’clock'],
+     'At 6 o’clock'],
+
+    ['Amit likes reading books. He reads for thirty minutes every evening.',
+     'What does Amit like?',
+     ['Reading books','Playing football','Watching movies'],
+     'Reading books'],
+
+    ['John has a small dog named Bruno. Bruno likes to play in the garden.',
+     'What is the dog’s name?',
+     ['Bruno','John','Tom'],
+     'Bruno'],
+
+    ['Meena goes to the market on Sunday. She buys vegetables and fruit.',
+     'When does Meena go to the market?',
+     ['Sunday','Monday','Friday'],
+     'Sunday'],
+
+    ['Raj studies English every day because he wants to speak confidently.',
+     'Why does Raj study English?',
+     ['To speak confidently','To play games','To sleep'],
+     'To speak confidently'],
+
+    ['Neha has a blue bicycle. She rides it to school every morning.',
+     'What color is Neha’s bicycle?',
+     ['Blue','Red','Green'],
+     'Blue'],
+
+    ['Rahul lives in Ahmedabad with his parents. He works in a small office.',
+     'Where does Rahul live?',
+     ['Ahmedabad','Mumbai','Delhi'],
+     'Ahmedabad'],
+
+    ['Maya likes flowers. Her favorite flower is the rose.',
+     'What is Maya’s favorite flower?',
+     ['Rose','Lotus','Sunflower'],
+     'Rose'],
+
+    ['Arjun plays cricket every evening with his friends in the park.',
+     'When does Arjun play cricket?',
+     ['Every evening','Every morning','Every night'],
+     'Every evening'],
+
+    ['Sara has two brothers and one sister. They all live together.',
+     'How many brothers does Sara have?',
+     ['Two','One','Three'],
+     'Two'],
+
+    ['Karan drinks milk every morning before going to school.',
+     'What does Karan drink in the morning?',
+     ['Milk','Tea','Juice'],
+     'Milk'],
+
+    ['Priya is a teacher. She teaches English to young students.',
+     'What does Priya teach?',
+     ['English','Maths','Science'],
+     'English'],
+
+    ['Vijay bought a new phone yesterday. The phone is black.',
+     'What color is Vijay’s new phone?',
+     ['Black','White','Blue'],
+     'Black'],
+
+    ['Anita goes for a walk every morning. She usually walks for thirty minutes.',
+     'How long does Anita walk?',
+     ['Thirty minutes','One hour','Ten minutes'],
+     'Thirty minutes'],
+
+    ['Rohan likes football. He watches football matches on television every weekend.',
+     'What sport does Rohan like?',
+     ['Football','Cricket','Tennis'],
+     'Football'],
+
+    ['Pooja has a cat named Kitty. Kitty likes sleeping on the sofa.',
+     'What is the cat’s name?',
+     ['Kitty','Pooja','Mimi'],
+     'Kitty'],
+
+    ['Dev wakes up early because he has to catch the school bus at seven o’clock.',
+     'Why does Dev wake up early?',
+     ['To catch the school bus','To play cricket','To watch TV'],
+     'To catch the school bus'],
+
+    ['Nisha loves cooking. She makes delicious food for her family every Sunday.',
+     'What does Nisha love?',
+     ['Cooking','Dancing','Singing'],
+     'Cooking'],
+
+    ['Aman has a small garden behind his house. He grows tomatoes and flowers there.',
+     'What does Aman grow?',
+     ['Tomatoes and flowers','Rice and wheat','Apples and mangoes'],
+     'Tomatoes and flowers'],
+
+    ['Mehul goes to the library every Saturday. He borrows two books each time.',
+     'When does Mehul go to the library?',
+     ['Saturday','Sunday','Monday'],
+     'Saturday'],
+
+    ['Ravi is very hardworking. He studies for two hours every evening.',
+     'How long does Ravi study every evening?',
+     ['Two hours','One hour','Three hours'],
+     'Two hours'],
+
+    ['Kavya likes music. She listens to English songs before going to bed.',
+     'What does Kavya listen to?',
+     ['English songs','News','Stories'],
+     'English songs'],
+
+    ['Harsh has a red school bag. He keeps his books and notebooks inside it.',
+     'What color is Harsh’s school bag?',
+     ['Red','Blue','Black'],
+     'Red'],
+
+    ['Isha visits her grandmother every weekend. Her grandmother lives in a nearby village.',
+     'Who does Isha visit every weekend?',
+     ['Her grandmother','Her teacher','Her friend'],
+     'Her grandmother'],
+
+    ['Manav loves animals. He wants to become a veterinarian when he grows up.',
+     'What does Manav want to become?',
+     ['A veterinarian','A teacher','A driver'],
+     'A veterinarian'],
+
+    ['Sonal wakes up at seven and has breakfast before going to work.',
+     'When does Sonal have breakfast?',
+     ['Before going to work','After going to work','At night'],
+     'Before going to work'],
+
+    ['Yash bought three apples and two bananas from the market.',
+     'How many apples did Yash buy?',
+     ['Three','Two','Five'],
+     'Three'],
+
+    ['Komal is learning English because she wants to work in another country.',
+     'Why is Komal learning English?',
+     ['To work in another country','To play games','To watch movies'],
+     'To work in another country'],
+
+    ['A school bus arrives at eight o’clock every morning. The students wait near the gate.',
+     'When does the school bus arrive?',
+     ['At eight o’clock','At seven o’clock','At nine o’clock'],
+     'At eight o’clock'],
+
+    ['Milan has a pet parrot named Mithu. Mithu can say a few words.',
+     'What is the parrot’s name?',
+     ['Mithu','Milan','Raju'],
+     'Mithu'],
+
+    ['Rina likes painting. She paints pictures of flowers, trees, and mountains.',
+     'What does Rina like?',
+     ['Painting','Dancing','Cooking'],
+     'Painting'],
+
+    ['Jay works at a hospital. He helps doctors and takes care of patients.',
+     'Where does Jay work?',
+     ['At a hospital','At a school','At a bank'],
+     'At a hospital'],
+
+    ['Tina drinks a glass of water after waking up every morning.',
+     'What does Tina drink after waking up?',
+     ['Water','Milk','Juice'],
+     'Water'],
+
+    ['Nitin has a blue car. He drives it to work every day.',
+     'What color is Nitin’s car?',
+     ['Blue','Black','White'],
+     'Blue'],
+
+    ['Asha enjoys gardening. She plants new flowers in her garden every month.',
+     'What does Asha enjoy?',
+     ['Gardening','Reading','Swimming'],
+     'Gardening'],
+
+    ['Rakesh went to the beach with his family last Sunday. They played in the sand.',
+     'Where did Rakesh go?',
+     ['To the beach','To the park','To the market'],
+     'To the beach'],
+
+    ['Divya studies at night because her house is quiet after dinner.',
+     'Why does Divya study at night?',
+     ['Because her house is quiet','Because she likes sleeping','Because school is closed'],
+     'Because her house is quiet'],
+
+    ['A small bird built a nest in the tree near Ravi’s house.',
+     'Where did the bird build its nest?',
+     ['In a tree','On a roof','In a box'],
+     'In a tree'],
+
+    ['Sahil bought a new pair of shoes because his old shoes were damaged.',
+     'Why did Sahil buy new shoes?',
+     ['His old shoes were damaged','He lost his bag','He wanted a bicycle'],
+     'His old shoes were damaged'],
+
+    ['Mira goes to the gym three times a week. She exercises for one hour each time.',
+     'How often does Mira go to the gym?',
+     ['Three times a week','Every day','Once a month'],
+     'Three times a week'],
+
+    ['Vishal loves mangoes. During summer, he eats them almost every day.',
+     'What fruit does Vishal love?',
+     ['Mangoes','Apples','Oranges'],
+     'Mangoes'],
+
+    ['Reema has a beautiful dress for her sister’s wedding. The dress is pink.',
+     'What color is Reema’s dress?',
+     ['Pink','Yellow','Green'],
+     'Pink'],
+
+    ['A boy named Sam helps his mother clean the house every Saturday.',
+     'When does Sam help his mother?',
+     ['Every Saturday','Every Monday','Every Sunday'],
+     'Every Saturday'],
+
+    ['Lalit is learning to drive. He practices with his father every evening.',
+     'Who practices driving with Lalit?',
+     ['His father','His brother','His friend'],
+     'His father'],
+
+    ['The train leaves the station at nine in the morning. Many passengers are waiting.',
+     'When does the train leave?',
+     ['At nine in the morning','At ten at night','At eight in the evening'],
+     'At nine in the morning'],
+
+    ['A family went to the zoo on Sunday. They saw lions, elephants, and monkeys.',
+     'Where did the family go?',
+     ['To the zoo','To the museum','To the beach'],
+     'To the zoo'],
+
+    ['Ritu likes chocolate ice cream. She usually eats it after dinner.',
+     'What flavor of ice cream does Ritu like?',
+     ['Chocolate','Vanilla','Mango'],
+     'Chocolate'],
+
+    ['Mohan has a small shop near the bus station. He sells books and stationery.',
+     'What does Mohan sell?',
+     ['Books and stationery','Clothes and shoes','Vegetables and fruit'],
+     'Books and stationery'],
+
+    ['Aarti is preparing for her English exam. She studies grammar and vocabulary every day.',
+     'What is Aarti preparing for?',
+     ['An English exam','A music exam','A driving test'],
+     'An English exam'],
+
+    ['The children went to the park after school. They played on the swings.',
+     'Where did the children go?',
+     ['To the park','To the library','To the hospital'],
+     'To the park'],
+
+    ['Vivek likes swimming. He goes to the swimming pool every Wednesday.',
+     'When does Vivek go swimming?',
+     ['Wednesday','Friday','Sunday'],
+     'Wednesday'],
+
+    ['Sita keeps her important documents in a drawer in her bedroom.',
+     'Where does Sita keep her documents?',
+     ['In a drawer','In a bag','Under the bed'],
+     'In a drawer'],
+
+    ['A farmer works in his field from early morning until afternoon.',
+     'Where does the farmer work?',
+     ['In his field','In an office','In a shop'],
+     'In his field'],
+
+    ['Neeraj bought a birthday gift for his best friend. He bought a watch.',
+     'What did Neeraj buy?',
+     ['A watch','A phone','A book'],
+     'A watch'],
+
+    ['The teacher gave the students homework on Monday. They had to finish it by Friday.',
+     'When did the teacher give the homework?',
+     ['Monday','Friday','Sunday'],
+     'Monday'],
+
+    ['Mansi enjoys watching movies with her family on Saturday nights.',
+     'When does Mansi watch movies?',
+     ['Saturday nights','Sunday mornings','Monday afternoons'],
+     'Saturday nights'],
+
+    ['A young boy found a lost wallet near the school gate. He gave it to his teacher.',
+     'Where did the boy find the wallet?',
+     ['Near the school gate','In the classroom','At home'],
+     'Near the school gate'],
+
+    ['Kishan goes jogging every morning before breakfast.',
+     'When does Kishan go jogging?',
+     ['Before breakfast','After dinner','At midnight'],
+     'Before breakfast'],
+
+    ['The shop opens at ten in the morning and closes at eight in the evening.',
+     'When does the shop open?',
+     ['At ten in the morning','At eight in the morning','At nine at night'],
+     'At ten in the morning'],
+
+    ['Pinal has a small notebook. She writes new English words in it every day.',
+     'What does Pinal write in her notebook?',
+     ['New English words','Stories','Phone numbers'],
+     'New English words'],
+
+    ['Amit’s favorite subject at school is science. He wants to become a scientist.',
+     'What is Amit’s favorite subject?',
+     ['Science','English','History'],
+     'Science'],
+
+    ['Rupal went shopping with her mother and bought a new pair of shoes.',
+     'Who went shopping with Rupal?',
+     ['Her mother','Her sister','Her friend'],
+     'Her mother'],
+
+    ['The family had dinner together at seven o’clock in the evening.',
+     'When did the family have dinner?',
+     ['At seven o’clock','At six o’clock','At nine o’clock'],
+     'At seven o’clock'],
+
+    ['A boy named Rohit loves drawing. He draws pictures in his notebook after school.',
+     'What does Rohit love?',
+     ['Drawing','Swimming','Reading'],
+     'Drawing'],
+
+    ['Sneha has an English class every Tuesday and Thursday.',
+     'On which days does Sneha have English class?',
+     ['Tuesday and Thursday','Monday and Friday','Wednesday and Saturday'],
+     'Tuesday and Thursday'],
+
+    ['A man was waiting for a bus when he saw his old friend across the street.',
+     'What was the man waiting for?',
+     ['A bus','A train','A taxi'],
+     'A bus'],
+
+    ['Pooja cleaned her room because her friends were coming to visit her.',
+     'Why did Pooja clean her room?',
+     ['Her friends were coming','She was going to school','She wanted to sleep'],
+     'Her friends were coming'],
+
+    ['The library is closed on Sunday, so Rahul visits it on Saturday.',
+     'Why does Rahul visit the library on Saturday?',
+     ['The library is closed on Sunday','He has school on Sunday','He works there'],
+     'The library is closed on Sunday'],
+
+    ['A farmer has ten cows and five goats on his farm.',
+     'How many cows does the farmer have?',
+     ['Ten','Five','Fifteen'],
+     'Ten'],
+
+    ['Meena bought vegetables, fruits, and milk from the supermarket.',
+     'Where did Meena buy the food?',
+     ['Supermarket','School','Hospital'],
+     'Supermarket'],
+
+    ['A young girl named Tara loves reading storybooks before going to bed.',
+     'When does Tara read storybooks?',
+     ['Before going to bed','Before breakfast','At school'],
+     'Before going to bed'],
+
+    ['Rajesh works from Monday to Friday and rests on Saturday and Sunday.',
+     'When does Rajesh rest?',
+     ['Saturday and Sunday','Monday and Tuesday','Wednesday and Thursday'],
+     'Saturday and Sunday'],
+
+    ['Kiran has a small computer on his desk. He uses it for studying English.',
+     'Why does Kiran use the computer?',
+     ['For studying English','For playing cricket','For cooking'],
+     'For studying English'],
+
+    ['A woman named Lata grows vegetables in her backyard. She grows tomatoes and potatoes.',
+     'What vegetables does Lata grow?',
+     ['Tomatoes and potatoes','Carrots and onions','Beans and peas'],
+     'Tomatoes and potatoes'],
+
+    ['The students listened carefully while the teacher explained the lesson.',
+     'Who explained the lesson?',
+     ['The teacher','The students','The principal'],
+     'The teacher'],
+
+    ['Arun forgot his umbrella, so he got wet while walking home in the rain.',
+     'Why did Arun get wet?',
+     ['He forgot his umbrella','He went swimming','He washed his clothes'],
+     'He forgot his umbrella'],
+
+    ['A family has a large dog named Max. Max sleeps outside the house at night.',
+     'Where does Max sleep?',
+     ['Outside the house','In the kitchen','In the car'],
+     'Outside the house'],
+
+    ['Naina practices speaking English with her friend every evening.',
+     'Who does Naina practice English with?',
+     ['Her friend','Her teacher','Her brother'],
+     'Her friend'],
+
+    ['The bus was late because there was heavy traffic on the road.',
+     'Why was the bus late?',
+     ['Because of heavy traffic','Because of rain','Because of an accident'],
+     'Because of heavy traffic'],
+
+    ['Suresh saves some money every month because he wants to buy a new laptop.',
+     'Why does Suresh save money?',
+     ['To buy a new laptop','To buy a bicycle','To travel abroad'],
+     'To buy a new laptop'],
+
+    ['A girl named Rani has a beautiful garden. She waters the plants every morning.',
+     'When does Rani water the plants?',
+     ['Every morning','Every evening','Every Sunday'],
+     'Every morning'],
+
+    ['The students went to the museum to learn about history.',
+     'Why did the students go to the museum?',
+     ['To learn about history','To play games','To buy books'],
+     'To learn about history'],
+
+    ['A man named Deepak rides his bicycle to work because his office is close to his home.',
+     'Why does Deepak ride his bicycle to work?',
+     ['His office is close to his home','He does not have a car','He likes buses'],
+     'His office is close to his home'],
+
+    ['Kajal drinks warm milk before sleeping every night.',
+     'What does Kajal drink before sleeping?',
+     ['Warm milk','Cold water','Tea'],
+     'Warm milk'],
+
+    ['A boy named Amar wants to improve his English, so he reads English newspapers every morning.',
+     'What does Amar read?',
+     ['English newspapers','Storybooks','Magazines'],
+     'English newspapers'],
+
+    ['The family visited a hill station during their summer vacation. They enjoyed the cool weather.',
+     'When did the family visit the hill station?',
+     ['During summer vacation','During winter','During the rainy season'],
+     'During summer vacation'],
+
+    ['Ramesh keeps his bicycle in the garage when he is not using it.',
+     'Where does Ramesh keep his bicycle?',
+     ['In the garage','In the garden','In his bedroom'],
+     'In the garage'],
+
+    ['A teacher asked the students to write five sentences in English.',
+     'What did the teacher ask the students to write?',
+     ['Five English sentences','A story','A letter'],
+     'Five English sentences'],
+
+    ['Mitali goes to bed at ten o’clock because she wakes up early for school.',
+     'Why does Mitali go to bed at ten?',
+     ['She wakes up early for school','She is tired from work','She has dinner late'],
+     'She wakes up early for school'],
+
+    ['A boy named Kunal found a small puppy in the street and took it home.',
+     'What did Kunal find?',
+     ['A small puppy','A kitten','A bird'],
+     'A small puppy'],
+
+    ['Riya’s family celebrates her birthday every year with a small party at home.',
+     'How does Riya’s family celebrate her birthday?',
+     ['With a small party at home','With a trip','At a restaurant'],
+     'With a small party at home'],
+
+    ['Anil wants to become a doctor because he likes helping sick people.',
+     'Why does Anil want to become a doctor?',
+     ['He likes helping sick people','He likes teaching','He likes driving'],
+     'He likes helping sick people'],
+
+    ['The girl opened the window because the room was very hot.',
+     'Why did the girl open the window?',
+     ['The room was very hot','It was raining','She wanted to sleep'],
+     'The room was very hot'],
+
+    ['Mohan visits his uncle every month. His uncle lives in another city.',
+     'How often does Mohan visit his uncle?',
+     ['Every month','Every week','Every day'],
+     'Every month'],
+
+    ['A student named Ravi studies for his exams every evening and takes short breaks.',
+     'When does Ravi study?',
+     ['Every evening','Every morning','Only on weekends'],
+     'Every evening'],
+
+    ['The children planted five trees near their school as part of an environment project.',
+     'How many trees did the children plant?',
+     ['Five','Three','Ten'],
+     'Five'],
+
+    ['A woman named Seema goes to the market early because it is less crowded in the morning.',
+     'Why does Seema go early?',
+     ['It is less crowded','She has no time','The market closes early'],
+     'It is less crowded'],
+
+    ['Vikas enjoys cycling on weekends. He usually cycles for two hours with his friends.',
+     'How long does Vikas cycle?',
+     ['Two hours','One hour','Three hours'],
+     'Two hours'],
+
+    ['The English teacher gave the class a simple story to read and discuss.',
+     'What did the teacher give the class?',
+     ['A simple story','A difficult test','A poem'],
+     'A simple story'],
+
+    ['A family went to a restaurant to celebrate their father’s birthday.',
+     'Why did the family go to the restaurant?',
+     ['To celebrate their father’s birthday','To study','To buy clothes'],
+     'To celebrate their father’s birthday'],
+
+    ['Nikhil drinks fresh fruit juice after his morning exercise.',
+     'What does Nikhil drink after exercise?',
+     ['Fresh fruit juice','Tea','Coffee'],
+     'Fresh fruit juice'],
+
+    ['Priti keeps a diary and writes about her day every night before sleeping.',
+     'When does Priti write in her diary?',
+     ['Every night','Every morning','Every Sunday'],
+     'Every night'],
+
+    ['A boy named Jay loves helping his father in the garden during the weekend.',
+     'Who does Jay help?',
+     ['His father','His mother','His teacher'],
+     'His father'],
+
+    ['The train arrived late because of heavy rain.',
+     'Why did the train arrive late?',
+     ['Because of heavy rain','Because of traffic','Because of a broken road'],
+     'Because of heavy rain'],
+
+    ['Rohini bought a dictionary because she wanted to learn new English words.',
+     'Why did Rohini buy a dictionary?',
+     ['To learn new English words','To read stories','To write letters'],
+     'To learn new English words'],
+
+    ['A family lives in a small house near a river. They enjoy walking beside the river in the evening.',
+     'Where does the family live?',
+     ['Near a river','Near a mountain','Near a school'],
+     'Near a river'],
+
+    ['A student named Varun practices English speaking for twenty minutes every morning.',
+     'How long does Varun practice speaking English?',
+     ['Twenty minutes','Thirty minutes','One hour'],
+     'Twenty minutes'],
+
+    ['The shopkeeper arranged all the books neatly on the shelf before opening the shop.',
+     'What did the shopkeeper arrange?',
+     ['Books','Shoes','Vegetables'],
+     'Books'],
+
+    ['A girl named Nisha saved her pocket money for three months to buy a school bag.',
+     'Why did Nisha save money?',
+     ['To buy a school bag','To buy a phone','To buy a bicycle'],
+     'To buy a school bag'],
+
+    ['Rahul and his friends planted flowers in the school garden on Friday.',
+     'When did they plant the flowers?',
+     ['Friday','Monday','Sunday'],
+     'Friday'],
+
+    ['A man named Ajay reads the newspaper every morning while drinking tea.',
+     'What does Ajay drink while reading the newspaper?',
+     ['Tea','Coffee','Milk'],
+     'Tea'],
+
+    ['The students cleaned their classroom before the teacher arrived.',
+     'What did the students clean?',
+     ['Their classroom','The playground','The library'],
+     'Their classroom'],
+
+    ['Maya wants to travel to London someday because she wants to see famous places there.',
+     'Where does Maya want to travel?',
+     ['London','Paris','New York'],
+     'London'],
+
+    ['A boy named Rohan studies hard because he wants to get good marks in his exams.',
+     'Why does Rohan study hard?',
+     ['To get good marks','To play games','To watch movies'],
+     'To get good marks'],
+
+    ['The family ate dinner together and talked about their day.',
+     'What did the family do during dinner?',
+     ['They talked about their day','They watched a movie','They played cricket'],
+     'They talked about their day'],
+
+    ['A woman named Priya works at a bank. She helps customers with their accounts.',
+     'Where does Priya work?',
+     ['At a bank','At a school','At a hospital'],
+     'At a bank'],
+
+    ['The boy opened his English book and started reading the lesson.',
+     'What did the boy start reading?',
+     ['The English lesson','A newspaper','A letter'],
+     'The English lesson'],
+
+    ['Anita likes visiting new places. She travels with her family during holidays.',
+     'When does Anita travel with her family?',
+     ['During holidays','Every morning','Every weekend'],
+     'During holidays'],
+
+    ['A student named Harish made a daily plan to practice English, read books, and exercise.',
+     'What did Harish make?',
+     ['A daily plan','A shopping list','A school bag'],
+     'A daily plan'],
+
+    ['The little girl was tired after playing in the park for two hours.',
+     'Why was the girl tired?',
+     ['She played in the park for two hours','She studied all day','She walked to school'],
+     'She played in the park for two hours'],
+
+    ['A family bought a new television because their old television stopped working.',
+     'Why did the family buy a new television?',
+     ['The old one stopped working','They wanted a bigger room','They moved house'],
+     'The old one stopped working'],
+
+    ['Kiran wakes up at six, exercises for thirty minutes, and then takes a shower.',
+     'What does Kiran do after exercising?',
+     ['He takes a shower','He eats dinner','He goes to bed'],
+     'He takes a shower'],
+
+    ['A teacher told the students to speak English for five minutes every day.',
+     'How long should the students speak English?',
+     ['Five minutes','Ten minutes','Thirty minutes'],
+     'Five minutes'],
+
+    ['Ravi bought a notebook to write down new words while learning English.',
+     'Why did Ravi buy a notebook?',
+     ['To write new words','To draw pictures','To write stories'],
+     'To write new words'],
+
+    ['The children were excited because their school was going on a picnic the next day.',
+     'Why were the children excited?',
+     ['Because of the school picnic','Because of an exam','Because school was closed'],
+     'Because of the school picnic'],
+
+    ['A woman named Meera makes tea every morning for her family.',
+     'What does Meera make every morning?',
+     ['Tea','Coffee','Juice'],
+     'Tea'],
+
+    ['A boy named Dev practices writing English sentences in his notebook every evening.',
+     'What does Dev practice?',
+     ['Writing English sentences','Playing cricket','Reading newspapers'],
+     'Writing English sentences'],
+
+    ['The family went to the park after dinner and walked for thirty minutes.',
+     'When did the family go to the park?',
+     ['After dinner','Before breakfast','At noon'],
+     'After dinner'],
+
+    ['A student named Pooja wants to improve her vocabulary, so she learns five new words every day.',
+     'How many new words does Pooja learn every day?',
+     ['Five','Ten','Three'],
+     'Five'],
+
+    ['The shopkeeper closed the shop at nine o’clock because there were no customers left.',
+     'Why did the shopkeeper close the shop?',
+     ['There were no customers left','It was raining','He was going to school'],
+     'There were no customers left'],
+
+    ['A family visited their grandparents during the weekend and stayed there for two days.',
+     'How long did the family stay?',
+     ['Two days','One day','One week'],
+     'Two days'],
+
+    ['A boy named Aman helps his younger sister with her homework every evening.',
+     'Who does Aman help?',
+     ['His younger sister','His brother','His friend'],
+     'His younger sister'],
+
+    ['Rina drinks a glass of milk before going to school every morning.',
+     'When does Rina drink milk?',
+     ['Before going to school','After dinner','Before sleeping'],
+     'Before going to school'],
+
+    ['The students were happy because they won the school cricket match.',
+     'Why were the students happy?',
+     ['They won the cricket match','They finished homework','They got new books'],
+     'They won the cricket match'],
+
+    ['A man named Suresh reads English news online every morning to improve his vocabulary.',
+     'Why does Suresh read English news?',
+     ['To improve his vocabulary','To watch cricket','To learn cooking'],
+     'To improve his vocabulary'],
+
+    ['A girl named Riya keeps her school books in a large blue bag.',
+     'Where does Riya keep her school books?',
+     ['In a large blue bag','On the table','In the cupboard'],
+     'In a large blue bag'],
+
+    ['The family prepared a special meal because guests were coming for dinner.',
+     'Why did the family prepare a special meal?',
+     ['Guests were coming','It was Sunday','They were going shopping'],
+     'Guests were coming'],
+
+    ['A student named Amit practices listening to English every day using short audio lessons.',
+     'What does Amit practice?',
+     ['Listening to English','Writing stories','Playing music'],
+     'Listening to English'],
+
+    ['The teacher praised Neha because she completed all her homework on time.',
+     'Why did the teacher praise Neha?',
+     ['She completed her homework on time','She won a race','She cleaned the classroom'],
+     'She completed her homework on time'],
+
+    ['A boy named Rahul wants to speak English confidently, so he talks to his friends in English.',
+     'Why does Rahul talk to his friends in English?',
+     ['To speak English confidently','To play games','To practice writing'],
+     'To speak English confidently'],
+
+    ['The family went for a walk after breakfast because the weather was pleasant.',
+     'Why did the family go for a walk?',
+     ['The weather was pleasant','They were hungry','It was raining'],
+     'The weather was pleasant'],
+
+    ['A woman named Kavita works from home and starts her work at nine in the morning.',
+     'When does Kavita start work?',
+     ['At nine in the morning','At eight in the evening','At ten at night'],
+     'At nine in the morning'],
+
+    ['A young boy named Arjun reads one English story every night before sleeping.',
+     'How many English stories does Arjun read every night?',
+     ['One','Two','Three'],
+     'One'],
+
+    ['The students practiced speaking English together during their lunch break.',
+     'When did the students practice English?',
+     ['During lunch break','Before school','After dinner'],
+     'During lunch break'],
+
+    ['A family bought fresh vegetables from the local market on Saturday morning.',
+     'When did the family buy vegetables?',
+     ['Saturday morning','Sunday evening','Monday afternoon'],
+     'Saturday morning'],
+
+    ['A girl named Meena wants to become a teacher because she enjoys helping children learn.',
+     'Why does Meena want to become a teacher?',
+     ['She enjoys helping children learn','She likes travelling','She likes cooking'],
+     'She enjoys helping children learn'],
+
+    ['A boy named Kunal drinks water regularly because he wants to stay healthy.',
+     'Why does Kunal drink water regularly?',
+     ['To stay healthy','To become taller','To sleep better'],
+     'To stay healthy'],
+
+    ['The school organized a speaking competition, and many students participated.',
+     'What competition did the school organize?',
+     ['A speaking competition','A drawing competition','A running competition'],
+     'A speaking competition'],
+
+    ['A student named Rohan won the speaking competition because he spoke English clearly.',
+     'Why did Rohan win the competition?',
+     ['He spoke English clearly','He ran quickly','He drew a picture'],
+     'He spoke English clearly'],
+
+    ['The teacher gave the students ten minutes to complete the reading activity.',
+     'How much time did the students get?',
+     ['Ten minutes','Five minutes','Twenty minutes'],
+     'Ten minutes'],
+
+    ['A family went to the beach early in the morning to watch the sunrise.',
+     'Why did the family go to the beach early?',
+     ['To watch the sunrise','To swim at night','To eat lunch'],
+     'To watch the sunrise'],
+
+    ['A boy named Jay keeps practicing English even when he makes mistakes.',
+     'What does Jay do when he makes mistakes?',
+     ['He keeps practicing','He stops learning','He gets angry'],
+     'He keeps practicing'],
+
+    ['A girl named Nisha writes five English sentences every day in her notebook.',
+     'How many sentences does Nisha write every day?',
+     ['Five','Ten','Three'],
+     'Five'],
+
+    ['The students learned new vocabulary words and used them in sentences.',
+     'What did the students learn?',
+     ['New vocabulary words','New games','New songs'],
+     'New vocabulary words'],
+
+    ['A man named Ravi listens to English podcasts while traveling to work.',
+     'When does Ravi listen to English podcasts?',
+     ['While traveling to work','While sleeping','While cooking dinner'],
+     'While traveling to work'],
+
+    ['A family has breakfast together every Sunday morning.',
+     'When does the family have breakfast together?',
+     ['Every Sunday morning','Every Saturday night','Every Monday morning'],
+     'Every Sunday morning'],
+
+    ['A teacher named Priya encourages her students to speak English without fear.',
+     'What does Priya encourage her students to do?',
+     ['Speak English without fear','Play games','Write exams'],
+     'Speak English without fear'],
+
+    ['A student named Aman learned ten new English words this week.',
+     'How many new words did Aman learn?',
+     ['Ten','Five','Twenty'],
+     'Ten'],
+
+    ['The children cleaned the playground before their sports activity.',
+     'What did the children clean?',
+     ['The playground','The classroom','The library'],
+     'The playground'],
+
+    ['A girl named Riya practices English pronunciation every morning.',
+     'What does Riya practice?',
+     ['English pronunciation','Maths','Drawing'],
+     'English pronunciation'],
+
+    ['A boy named Arjun helps his mother in the kitchen every evening.',
+     'Where does Arjun help his mother?',
+     ['In the kitchen','In the garden','In the classroom'],
+     'In the kitchen'],
+
+    ['The family watched an English movie together to practice listening.',
+     'Why did the family watch an English movie?',
+     ['To practice listening','To learn cooking','To play games'],
+     'To practice listening'],
+
+    ['A student named Neha reads a short English article every morning.',
+     'What does Neha read?',
+     ['A short English article','A comic book','A newspaper in Gujarati'],
+     'A short English article'],
+
+    ['A man named Vijay practices speaking English with his colleague during lunch.',
+     'Who does Vijay practice English with?',
+     ['His colleague','His brother','His teacher'],
+     'His colleague'],
+
+    ['A girl named Pooja wants to improve her grammar, so she studies grammar rules every evening.',
+     'Why does Pooja study grammar rules?',
+     ['To improve her grammar','To learn drawing','To play cricket'],
+     'To improve her grammar'],
+
+    ['The students completed their reading challenge and received a small reward.',
+     'What did the students receive?',
+     ['A small reward','A new book','A certificate'],
+     'A small reward'],
+
+    ['A boy named Ravi practices English for thirty minutes every day before going to bed.',
+     'How long does Ravi practice English?',
+     ['Thirty minutes','Twenty minutes','One hour'],
+     'Thirty minutes'],
+
+    ['The teacher asked everyone to read the passage carefully before answering the questions.',
+     'What did the teacher ask the students to do?',
+     ['Read the passage carefully','Close the books','Go outside'],
+     'Read the passage carefully'],
+
+    ['A student named Mehul enjoys reading because books help him learn new things.',
+     'Why does Mehul enjoy reading?',
+     ['Books help him learn new things','Books are expensive','He wants to sleep'],
+     'Books help him learn new things'],
+
+    ['A family spends one hour together every evening talking about their day.',
+     'How much time does the family spend together?',
+     ['One hour','Thirty minutes','Two hours'],
+     'One hour'],
+
+    ['A girl named Tara practices English every day and feels more confident now.',
+     'How does Tara feel now?',
+     ['More confident','More tired','More nervous'],
+     'More confident'],
+
+    ['A boy named Karan never gives up when he finds a difficult English word.',
+     'What does Karan do with difficult words?',
+     ['He keeps trying','He stops reading','He ignores them'],
+     'He keeps trying'],
+
+    ['The teacher told the students that regular practice is the key to improving English.',
+     'What is the key to improving English?',
+     ['Regular practice','Watching television','Sleeping more'],
+     'Regular practice'],
+
+    ['A student named Riya wants to speak English fluently, so she practices every day.',
+     'Why does Riya practice every day?',
+     ['To speak English fluently','To learn dancing','To play sports'],
+     'To speak English fluently']
     ]
-  },  speaking: {
+  },
+  speaking: {
     title: 'Speak & Earn', reward: 0.20, dailyLimit: 5,
     questions: ['Introduce yourself in English.','Describe your daily routine.','Talk about your family.','What did you do yesterday?','What is your favorite hobby?','Describe your best friend.','Talk about your school or work.','What do you want to learn?']
   }
@@ -1849,29 +1675,6 @@ router.post('/:type/submit', auth, async (req,res)=>{
       mapSet(user.activityWrong,type,wrongCount+1);
       mapSet(user.activityDeduct,type,deducted+deduction);
     }
-    // Mystery Bonus: correct answers in any English Learning activity also count.
-    const bonusToday = todayKey();
-    if (user.bonusDate !== bonusToday) {
-      user.bonusDate = bonusToday;
-      user.bonusTarget = 70 + Math.floor(Math.random() * 31);
-      user.bonusProgress = 0; user.bonusQuizProgress = 0; user.bonusLearningProgress = 0;
-      user.bonusUnlocked = false; user.bonusClaimed = false; user.bonusSource = "";
-      user.bonusReward = 0; user.bonusUnlockedAt = null; user.bonusClaimedAt = null;
-      user.bonusLastQuestionText = ""; user.bonusLastQuestionType = "";
-    }
-    if (correct && !user.bonusUnlocked && !user.bonusClaimed) {
-      user.bonusProgress = Number(user.bonusProgress || 0) + 1;
-      user.bonusLearningProgress = Number(user.bonusLearningProgress || 0) + 1;
-      user.bonusSource = "learning";
-      user.bonusLastQuestionText = String(q[0] || q.prompt || q.passage || "");
-      user.bonusLastQuestionType = type;
-      if (user.bonusProgress >= Number(user.bonusTarget || 70)) {
-        user.bonusProgress = Number(user.bonusTarget || 70);
-        user.bonusUnlocked = true;
-        user.bonusUnlockedAt = new Date();
-      }
-    }
-
     await user.save();
     res.json({
       success:true,
@@ -1885,16 +1688,7 @@ router.post('/:type/submit', auth, async (req,res)=>{
       wrongCount:correct?wrongCount:wrongCount+1,
       activityEarn:correct?earned+activity.reward:earned,
       activityDeduct:correct?deducted:deducted+Math.min(Number(user.wallet||0)+activity.reward,activity.reward),
-      correctAnswer:expected,
-      bonus: {
-        target: Number(user.bonusTarget || 0),
-        progress: Number(user.bonusProgress || 0),
-        quizProgress: Number(user.bonusQuizProgress || 0),
-        learningProgress: Number(user.bonusLearningProgress || 0),
-        unlocked: !!user.bonusUnlocked,
-        claimed: !!user.bonusClaimed,
-        source: user.bonusSource || ""
-      }
+      correctAnswer:expected
     });
   }catch(e){console.error(e);res.status(500).json({success:false,message:e.message});}
 });

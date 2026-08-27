@@ -47,21 +47,7 @@ function walletResponse(user) {
         spinCycleQuestionsAnswered: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0),
         spinQuestionsRemaining: Math.max(0, 100 - Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0)),
         canSpinAfterQuestions: Number(user.spinCycleQuestionsAnswered ?? user.dailyQuestionsAnswered ?? 0) >= 100,
-        withdrawRequests: user.withdrawRequests || [],
-        bonus: {
-            date: user.bonusDate || "",
-            target: Number(user.bonusTarget || 0),
-            progress: Number(user.bonusProgress || 0),
-            quizProgress: Number(user.bonusQuizProgress || 0),
-            learningProgress: Number(user.bonusLearningProgress || 0),
-            unlocked: !!user.bonusUnlocked,
-            claimed: !!user.bonusClaimed,
-            source: user.bonusSource || "",
-            reward: Number(user.bonusReward || 0),
-            unlockedAt: user.bonusUnlockedAt || null,
-            lastQuestionText: user.bonusLastQuestionText || "",
-            lastQuestionType: user.bonusLastQuestionType || ""
-        }
+        withdrawRequests: user.withdrawRequests || []
     };
 }
 
@@ -194,36 +180,6 @@ router.post("/quiz", auth, async (req, res) => {
                 skipQuestion: true
             };
             user.lifelineCycle = Math.floor(user.totalQuestionsAnswered / 500);
-        }
-
-        // Mystery Bonus: only correct Quiz answers count toward the hidden daily target.
-        const bonusToday = todayKey();
-        if (user.bonusDate !== bonusToday) {
-            user.bonusDate = bonusToday;
-            user.bonusTarget = 70 + Math.floor(Math.random() * 31); // 70-100 hidden correct answers
-            user.bonusProgress = 0;
-            user.bonusQuizProgress = 0;
-            user.bonusLearningProgress = 0;
-            user.bonusUnlocked = false;
-            user.bonusClaimed = false;
-            user.bonusSource = "";
-            user.bonusReward = 0;
-            user.bonusUnlockedAt = null;
-            user.bonusClaimedAt = null;
-            user.bonusLastQuestionText = "";
-            user.bonusLastQuestionType = "";
-        }
-        if (correct && !user.bonusUnlocked && !user.bonusClaimed) {
-            user.bonusProgress = Number(user.bonusProgress || 0) + 1;
-            user.bonusQuizProgress = Number(user.bonusQuizProgress || 0) + 1;
-            user.bonusSource = "quiz";
-            user.bonusLastQuestionText = question.q || "";
-            user.bonusLastQuestionType = "quiz";
-            if (user.bonusProgress >= Number(user.bonusTarget || 70)) {
-                user.bonusProgress = Number(user.bonusTarget || 70);
-                user.bonusUnlocked = true;
-                user.bonusUnlockedAt = new Date();
-            }
         }
 
         user.wallet = Number(user.wallet || 0) + amount;

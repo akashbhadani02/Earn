@@ -189,8 +189,12 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
-        // Hidden daily Mystery Bonus progress. Progress is based on correct answers
-        // from either Quiz or English Learning activities.
+        lastSpin: {
+            type: String,
+            default: ""
+        },
+
+        // Daily bonus progress and claim state.
         bonusDate: { type: String, default: "" },
         bonusTarget: { type: Number, default: 0 },
         bonusProgress: { type: Number, default: 0 },
@@ -205,10 +209,6 @@ const userSchema = new mongoose.Schema(
         bonusLastQuestionText: { type: String, default: "" },
         bonusLastQuestionType: { type: String, default: "" },
 
-        lastSpin: {
-            type: String,
-            default: ""
-        },
 
         // Push notification subscriptions for all devices used by this student.
         // One student can have multiple phones/browsers.

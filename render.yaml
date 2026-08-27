@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: english-app
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true

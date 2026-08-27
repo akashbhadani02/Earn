@@ -1,4 +1,3 @@
-const crypto = require("crypto");
 const express = require("express");
 const router = express.Router();
 
@@ -13,50 +12,6 @@ const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
-const BookPurchase = require("../models/BookPurchase");
-const Branding = require("../models/Branding");
-
-// ===========================
-// Global Branding / Logo
-// ===========================
-router.get("/branding", adminAuth, async (req, res) => {
-    try {
-        const branding = await Branding.findOne({ key: "global" }).lean();
-        res.json({ success: true, logoData: branding?.logoData || "", version: branding?.version || 1, updatedAt: branding?.updatedAt || null });
-    } catch (err) {
-        res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-router.post("/branding/logo", adminAuth, async (req, res) => {
-    try {
-        const { logoData } = req.body || {};
-        if (!logoData || typeof logoData !== "string") return res.status(400).json({ success:false, message:"Logo image is required" });
-        if (!/^data:image\/(png|jpeg|jpg|webp);base64,/i.test(logoData)) return res.status(400).json({ success:false, message:"Use PNG, JPG or WEBP image" });
-        if (logoData.length > 2_500_000) return res.status(413).json({ success:false, message:"Logo is too large. Please use an image under about 1.8 MB." });
-        const branding = await Branding.findOneAndUpdate(
-            { key:"global" },
-            { $set:{ logoData, updatedAt:new Date() }, $inc:{ version:1 } },
-            { new:true, upsert:true, setDefaultsOnInsert:true }
-        );
-        res.json({ success:true, logoData:branding.logoData, version:branding.version, updatedAt:branding.updatedAt });
-    } catch (err) {
-        res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-router.delete("/branding/logo", adminAuth, async (req, res) => {
-    try {
-        const branding = await Branding.findOneAndUpdate(
-            { key:"global" },
-            { $set:{ logoData:"", updatedAt:new Date() }, $inc:{ version:1 } },
-            { new:true, upsert:true, setDefaultsOnInsert:true }
-        );
-        res.json({ success:true, logoData:"", version:branding.version });
-    } catch (err) {
-        res.status(500).json({ success:false, message:err.message });
-    }
-});
 
 // ===========================
 // Admin Login
@@ -172,108 +127,6 @@ router.post("/enable-all-users", adminAuth, async (req, res) => {
     } catch (err) {
         return res.status(500).json({ success: false, message: err.message });
     }
-});
-
-
-// ===========================
-// Book Access / Payment Summary
-// ===========================
-router.get("/book-summary", adminAuth, async (req, res) => {
-    try {
-        const purchases = await BookPurchase.find({}).sort({ createdAt: -1 }).lean();
-        const latest = new Map();
-        for (const p of purchases) if (!latest.has(String(p.user))) latest.set(String(p.user), p);
-        const all = Array.from(latest.values());
-        res.json({
-            success: true,
-            totalPurchases: all.length,
-            pending: all.filter(p => p.status === "student_confirmed").length,
-            verified: all.filter(p => p.status === "admin_verified").length,
-            activeAccess: all.filter(p => p.status === "admin_verified" && p.accessGranted).length,
-            revenueVerified: all.filter(p => p.status === "admin_verified").reduce((n,p) => n + Number(p.amount || 0), 0),
-            purchases: all
-        });
-    } catch (err) { res.status(500).json({ success:false, message:err.message }); }
-});
-
-// ===========================
-// Credential Management (Admin only)
-// ===========================
-router.get("/users/:id/credentials", adminAuth, async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id).select("name mobile isDeleted").lean();
-        if (!user || user.isDeleted) return res.status(404).json({ success:false, message:"Student not found" });
-        return res.json({ success:true, user:{ id:String(user._id), name:user.name || "Student", loginId:user.mobile || "", password:null } });
-    } catch (err) {
-        return res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-router.put("/users/:id/password", adminAuth, async (req, res) => {
-    try {
-        const password = String(req.body?.password || "");
-        if (password.length < 4 || password.length > 128) {
-            return res.status(400).json({ success:false, message:"Password must be 4 to 128 characters." });
-        }
-        const user = await User.findById(req.params.id);
-        if (!user || user.isDeleted) return res.status(404).json({ success:false, message:"Student not found" });
-        user.password = await bcrypt.hash(password, 12);
-        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
-        user.activeSessionId = "";
-        user.isOnline = false;
-        user.lastSeen = new Date(0);
-        await user.save();
-        return res.json({ success:true, message:"Student password changed successfully", user:{id:String(user._id), name:user.name, loginId:user.mobile}, password });
-    } catch (err) {
-        return res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-router.get("/admins", adminAuth, async (req, res) => {
-    try {
-        const admins = await Admin.find({}).select("username").sort({ username:1 }).lean();
-        return res.json({ success:true, admins:admins.map(a=>({id:String(a._id), username:a.username})) });
-    } catch (err) {
-        return res.status(500).json({ success:false, message:err.message });
-    }
-});
-
-router.post("/admins", adminAuth, async (req, res) => {
-    try {
-        const username = String(req.body?.username || "").trim();
-        const password = String(req.body?.password || "");
-        if (!/^[A-Za-z0-9._-]{3,50}$/.test(username)) return res.status(400).json({success:false,message:"Admin ID must be 3-50 characters and use letters, numbers, dot, underscore or hyphen."});
-        if (password.length < 6 || password.length > 128) return res.status(400).json({success:false,message:"Admin password must be 6-128 characters."});
-        const exists = await Admin.findOne({username}).lean();
-        if (exists) return res.status(409).json({success:false,message:"Admin ID already exists."});
-        const admin = await Admin.create({username, password:await bcrypt.hash(password,12)});
-        return res.status(201).json({success:true,message:"Admin created successfully",admin:{id:String(admin._id),username:admin.username},password});
-    } catch (err) {
-        return res.status(500).json({success:false,message:err.message});
-    }
-});
-
-router.put("/admins/:id/password", adminAuth, async (req,res)=>{
-    try {
-        const password=String(req.body?.password||"");
-        if(password.length<6||password.length>128) return res.status(400).json({success:false,message:"Admin password must be 6-128 characters."});
-        const admin=await Admin.findById(req.params.id);
-        if(!admin) return res.status(404).json({success:false,message:"Admin not found"});
-        admin.password=await bcrypt.hash(password,12);
-        await admin.save();
-        return res.json({success:true,message:"Admin password changed successfully",admin:{id:String(admin._id),username:admin.username},password});
-    }catch(err){ return res.status(500).json({success:false,message:err.message}); }
-});
-
-router.delete("/admins/:id", adminAuth, async (req,res)=>{
-    try {
-        if(String(req.admin.id)===String(req.params.id)) return res.status(400).json({success:false,message:"You cannot delete your own admin account."});
-        const count=await Admin.countDocuments();
-        if(count<=1) return res.status(400).json({success:false,message:"At least one admin account must remain."});
-        const deleted=await Admin.findByIdAndDelete(req.params.id);
-        if(!deleted) return res.status(404).json({success:false,message:"Admin not found"});
-        return res.json({success:true,message:"Admin deleted successfully"});
-    }catch(err){ return res.status(500).json({success:false,message:err.message}); }
 });
 
 // ===========================
@@ -450,22 +303,6 @@ router.get("/users", adminAuth, async (req, res) => {
                 dailyQuestionsAnswered,
 
                 dailyQuestionsDate: today,
-                bonus: {
-                    date: userData.bonusDate || "",
-                    target: Number(userData.bonusTarget || 0),
-                    progress: Number(userData.bonusProgress || 0),
-                    quizProgress: Number(userData.bonusQuizProgress || 0),
-                    learningProgress: Number(userData.bonusLearningProgress || 0),
-                    unlocked: !!userData.bonusUnlocked,
-                    claimed: !!userData.bonusClaimed,
-                    source: userData.bonusSource || "",
-                    reward: Number(userData.bonusReward || 0),
-                    unlockedAt: userData.bonusUnlockedAt || null,
-                    claimedAt: userData.bonusClaimedAt || null,
-                    lastQuestionText: userData.bonusLastQuestionText || "",
-                    lastQuestionType: userData.bonusLastQuestionType || ""
-                },
-
                 activityStats: {
                     counts: Object.fromEntries(userData.activityCounts ? (userData.activityCounts instanceof Map ? userData.activityCounts : Object.entries(userData.activityCounts)) : []),
                     correct: Object.fromEntries(userData.activityCorrect ? (userData.activityCorrect instanceof Map ? userData.activityCorrect : Object.entries(userData.activityCorrect)) : []),
@@ -478,9 +315,6 @@ router.get("/users", adminAuth, async (req, res) => {
             };
 
         });
-
-        // Highest wallet balance first, lowest wallet balance last.
-        updatedUsers.sort((a, b) => Number(b.wallet || 0) - Number(a.wallet || 0));
 
         res.json({
 
@@ -1159,7 +993,6 @@ router.post("/notification/send/:userId", adminAuth, async (req, res) => {
             icon: "/icon-192.png",
             badge: "/icon-192.png",
             tag: "admin-notification",
-            id: crypto.randomUUID(),
             requireInteraction: false
         });
 
@@ -1247,7 +1080,6 @@ router.post("/notification/send-all", adminAuth, async (req, res) => {
             icon: "/icon-192.png",
             badge: "/icon-192.png",
             tag: "admin-notification-all",
-            id: crypto.randomUUID(),
             requireInteraction: false
         });
 

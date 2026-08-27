@@ -2,14 +2,6 @@
 <html>
 
 <head>
-    <link rel="icon" href="/api/branding/icon?v=1&size=32" sizes="any">
-    <link rel="icon" type="image/png" sizes="192x192" href="/api/branding/icon?v=1&size=192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/api/branding/icon?v=1&size=180">
-    <link rel="manifest" href="/manifest.webmanifest?v=aducate20260822">
-    <meta name="theme-color" content="#667eea">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
 
     <title>Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -42,7 +34,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:1300px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.ap2-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.admin-user-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:800px){body{padding:12px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.ap2-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-user-cards,.admin-question-cards{grid-template-columns:1fr}.admin-main-menu{overflow-x:auto;flex-wrap:nowrap}.admin-main-menu button{white-space:nowrap}.table-wrap{border-radius:12px}body>div:first-child{align-items:flex-start;flex-direction:column}}
 @media(max-width:520px){.cards,.ap2-grid{grid-template-columns:1fr}.admin-user-actions button{flex:1 1 calc(50% - 8px)}body>div:first-child>div{width:100%;flex-wrap:wrap}body>div:first-child>div button{flex:1 1 auto}}
-@media(max-width:700px){#bookAdminStats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
 
 
@@ -401,44 +392,12 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 @media(max-width:700px){#ap2Modal .student-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}#ap2Modal .student-data-cards{grid-template-columns:1fr!important}}
 @media(max-width:430px){#ap2Modal .student-summary-grid{grid-template-columns:1fr!important}.student-view-header{align-items:flex-start!important}}
 </style>
-
-<style id="admin-book-access-style">
-.admin-book-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.admin-book-actions button{border:0;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.admin-book-show{background:#dcfce7;color:#166534}.admin-book-close{background:#fee2e2;color:#991b1b}.admin-book-decline{background:#f3e8ff;color:#7e22ce}.admin-book-status{font-size:11px;font-weight:900;margin-top:6px}.admin-book-pending{color:#9a3412}.admin-book-verified{color:#166534}.admin-book-none{color:#64748b}@media(max-width:600px){.admin-book-actions{display:grid;grid-template-columns:1fr 1fr}.admin-book-actions button{width:100%}}
-</style>
-
-<style id="premium-admin-book-ui">
-/* Premium All Users + Book controls */
-.admin-user-card{border:1px solid rgba(148,163,184,.22)!important;border-radius:22px!important;box-shadow:0 12px 30px rgba(15,23,42,.08)!important;overflow:hidden;transition:transform .18s,box-shadow .18s,border-color .18s}
-.admin-user-card:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(15,23,42,.12)!important}
-.admin-user-actions{gap:8px!important}
-.admin-user-actions>button,.admin-book-actions button{border:0!important;border-radius:12px!important;min-height:38px!important;padding:9px 12px!important;font-weight:900!important;font-size:11px!important;box-shadow:0 5px 12px rgba(15,23,42,.08);transition:transform .16s,filter .16s}
-.admin-user-actions>button:hover,.admin-book-actions button:hover{transform:translateY(-1px);filter:brightness(1.04)}
-.admin-book-actions{display:grid!important;grid-template-columns:1fr 1fr 1fr;gap:8px!important;width:100%;margin-top:4px;padding:10px;border-radius:16px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e2e8f0;box-sizing:border-box}
-.admin-book-actions .admin-book-show{background:linear-gradient(135deg,#16a34a,#059669)!important;color:#fff!important}
-.admin-book-actions .admin-book-close{background:linear-gradient(135deg,#64748b,#475569)!important;color:#fff!important}
-.admin-book-actions .admin-book-decline{background:linear-gradient(135deg,#ef4444,#dc2626)!important;color:#fff!important}
-.admin-book-status{width:100%;box-sizing:border-box;margin-top:2px!important;padding:9px 11px!important;border-radius:12px!important;font-size:10px!important;font-weight:900!important;text-align:center!important;letter-spacing:.2px}
-.admin-book-pending{background:#fff7ed!important;color:#c2410c!important;border:1px solid #fed7aa!important}.admin-book-verified{background:#ecfdf5!important;color:#166534!important;border:1px solid #86efac!important}.admin-book-none{background:#f8fafc!important;color:#64748b!important;border:1px solid #e2e8f0!important}
-@media(max-width:600px){.admin-book-actions{grid-template-columns:1fr 1fr}.admin-book-actions .admin-book-decline{grid-column:1/-1}.admin-user-actions>button{flex:1 1 calc(50% - 8px)}}
-</style>
-
-<style>.admin-live-logo{transition:transform .2s,box-shadow .2s}.admin-live-logo:hover{transform:scale(1.03);box-shadow:0 12px 28px rgba(37,99,235,.18)!important}@media(max-width:600px){#adminSectionBranding>div{padding:16px!important}.admin-live-logo{width:46px!important;height:46px!important}}</style>
-
-<style id="credentials-admin-ui">
-.credentials-btn{background:linear-gradient(135deg,#7c3aed,#4f46e5)!important;color:#fff!important}.admin-management-btn{background:linear-gradient(135deg,#0f766e,#059669)!important;color:#fff!important}.cred-overlay{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:100000}.cred-modal{width:min(520px,100%);max-height:90vh;overflow:auto;background:var(--surface,#fff);color:var(--text,#0f172a);border-radius:20px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.3)}.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cred-grid label{font-size:11px;font-weight:900;color:var(--muted,#64748b);display:block;margin-bottom:4px}.cred-grid input{width:100%;box-sizing:border-box;padding:11px;border:1px solid var(--border,#cbd5e1);border-radius:10px;background:var(--surface,#fff);color:var(--text,#0f172a)}.cred-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.cred-actions button{border:0;border-radius:10px;padding:10px 14px;font-weight:900;cursor:pointer}.cred-result{margin-top:12px;padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac;color:#166534;font-weight:800;display:none;overflow-wrap:anywhere}.admin-list{display:grid;gap:8px;margin-top:12px}.admin-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border:1px solid var(--border,#e2e8f0);border-radius:12px}.admin-row-actions{display:flex;gap:6px;flex-wrap:wrap}.admin-row-actions button{border:0;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.admin-create{display:grid;grid-template-columns:1fr 1fr;gap:8px}.admin-create input{padding:10px;border:1px solid var(--border,#cbd5e1);border-radius:9px;background:var(--surface,#fff);color:var(--text,#0f172a);min-width:0}.admin-create button{grid-column:1/-1;border:0;border-radius:10px;padding:11px;font-weight:900;background:#059669;color:#fff;cursor:pointer}@media(max-width:600px){.cred-grid,.admin-create{grid-template-columns:1fr}.admin-row{align-items:flex-start;flex-direction:column}.admin-row-actions{width:100%}.admin-row-actions button{flex:1}}
-</style>
 </head>
 
 <body>
-<div id="studentCredOverlay" class="cred-overlay" onclick="if(event.target===this)closeCredentialModal()"><div class="cred-modal"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">🔐 Student Login Details</h2><button onclick="closeCredentialModal()" style="border:0;background:#fee2e2;color:#991b1b;border-radius:9px;padding:8px 11px;font-weight:900;cursor:pointer">✕</button></div><div id="studentCredInfo" style="margin-top:14px"></div><div class="cred-grid" style="margin-top:12px"><div><label>Login ID</label><input id="studentCredLoginId" readonly></div><div><label>New Password</label><input id="studentCredPassword" type="text" autocomplete="new-password" placeholder="Enter new password"></div></div><div class="cred-actions"><button style="background:#4f46e5;color:#fff" onclick="saveStudentPassword()">🔑 Change Password</button><button style="background:#e2e8f0;color:#0f172a" onclick="generateStudentPassword()">🎲 Generate</button><button style="background:#e2e8f0;color:#0f172a" onclick="copyStudentCredentials()">📋 Copy</button></div><div id="studentCredResult" class="cred-result"></div></div></div>
-<div id="adminManageOverlay" class="cred-overlay" onclick="if(event.target===this)closeAdminManagement()"><div class="cred-modal"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">👨‍💼 Admin Management</h2><button onclick="closeAdminManagement()" style="border:0;background:#fee2e2;color:#991b1b;border-radius:9px;padding:8px 11px;font-weight:900;cursor:pointer">✕</button></div><p style="font-size:12px;color:var(--muted,#64748b);font-weight:700">Create another admin account or change an existing admin password.</p><div class="admin-create"><input id="newAdminUsername" placeholder="New Admin ID"><input id="newAdminPassword" type="text" placeholder="New Admin Password"><button onclick="createNewAdmin()">➕ Create Admin</button></div><div id="adminList" class="admin-list"></div></div></div>
 
-
-    <div class="admin-brand-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:12px;min-width:0;">
-            <img data-brand-logo src="/aducate.png" alt="Aducate Logo" class="admin-live-logo" style="width:52px;height:52px;border-radius:15px;object-fit:contain;background:#fff;border:1px solid #e2e8f0;padding:5px;box-shadow:0 8px 20px rgba(15,23,42,.10);">
-            <div><h2 style="margin:0">Admin Dashboard</h2><div style="font-size:11px;color:#64748b;font-weight:800">Global branding control</div></div>
-        </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Admin Dashboard</h2>
 
         <div style="display:flex;gap:8px;align-items:center;">
             <button id="logoutAllUsersBtn" onclick="forceLogoutAllUsers()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
@@ -456,12 +415,10 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 <div class="admin-main-menu">
   <button class="admin-users-btn active" data-admin-section="users" onclick="showAdminSection('users')">👥 Users</button>
-  <button data-admin-section="adminManagement" class="admin-management-btn" onclick="openAdminManagement()">👨‍💼 Admin Management</button>
   <button data-admin-section="dashboard" onclick="showAdminSection('dashboard')">🏠 Dashboard</button>
   <button data-admin-section="withdrawals" onclick="showAdminSection('withdrawals')">💸 Withdrawals</button>
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
-  <button data-admin-section="branding" onclick="showAdminSection('dashboard');setTimeout(()=>document.getElementById('dashboardBrandingCard')?.scrollIntoView({behavior:'smooth',block:'center'}),50)">🎨 Logo & Branding</button>
 <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
 </div>
 
@@ -504,36 +461,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         </div>
 
     </div>
-
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:8px 0 10px;">
-      <h2 style="margin:0;font-size:18px;">📚 Book Sales Overview</h2>
-      <span style="font-size:11px;font-weight:800;color:#64748b;">₹499 Book</span>
-    </div>
-        <div id="bookAdminStats" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 16px">
-  <div style="padding:12px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa"><b>📚 Book Purchases</b><div id="bookStatPurchases" style="font-size:22px;font-weight:900">0</div></div>
-  <div style="padding:12px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a"><b>⏳ Pending</b><div id="bookStatPending" style="font-size:22px;font-weight:900">0</div></div>
-  <div style="padding:12px;border-radius:12px;background:#ecfdf5;border:1px solid #86efac"><b>✅ Verified</b><div id="bookStatVerified" style="font-size:22px;font-weight:900">0</div></div>
-  <div style="padding:12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe"><b>💰 Verified Revenue</b><div id="bookStatRevenue" style="font-size:22px;font-weight:900">₹0</div></div>
-</div>
-
-
-    <section id="dashboardBrandingCard" style="margin-top:18px;">
-      <div style="background:var(--surface,#fff);border:1px solid #e2e8f0;border-radius:22px;padding:18px;box-shadow:0 12px 30px rgba(15,23,42,.08);">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <img id="dashboardBrandPreview" data-brand-logo src="/aducate.png" alt="Current Logo" style="width:54px;height:54px;border-radius:15px;object-fit:contain;background:#fff;border:1px solid #e2e8f0;padding:5px;">
-            <div><h2 style="margin:0;font-size:18px;">🎨 App Logo & Branding</h2><div style="font-size:11px;color:#64748b;font-weight:700;margin-top:3px;">Change the app logo from the Admin Dashboard.</div></div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-            <input id="brandingLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="display:none">
-            <button type="button" onclick="document.getElementById('brandingLogoInput').click()" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;">📤 Upload New Logo</button>
-            <button type="button" onclick="removeGlobalLogo()" style="background:#fee2e2;color:#991b1b;border:0;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer;">↩️ Reset Logo</button>
-          </div>
-        </div>
-        <div style="margin-top:12px;padding:10px 12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:11px;font-weight:800;color:#475569;">🌐 Website • 🔐 Login • 👨‍🎓 Student • 👨‍💼 Admin • 📱 PWA / Mobile branding</div>
-        <div id="brandingUploadStatus" style="font-size:12px;font-weight:900;color:#64748b;margin-top:9px;">Ready to upload a new logo</div>
-      </div>
-    </section>
     </section>
 
     <section id="adminSectionWithdrawals">
@@ -568,7 +495,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     </div>
     </section>
 
-<section id="adminSectionUsers">
+    <section id="adminSectionUsers">
     <div class="users-online-top">
         <div class="users-online-top-head">
             <h3>🟢 Online Students <span id="onlineUsersCount">0</span></h3>
@@ -614,9 +541,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 
     <!-- ========================= ADMIN COMMAND CENTER ========================= -->
-    
-
-<section id="adminSectionCommand" class="adminProV2">
+    <section id="adminSectionCommand" class="adminProV2">
         <div class="ap2-head">
             <div>
                 <h2>🛡️ Admin Command Center</h2>
@@ -987,15 +912,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             }
         }
 
-        async function loadBookAdminSummary(){
-            try{
-                const res=await fetch("/api/admin/book-summary?_="+Date.now(),{cache:"no-store",headers:{Authorization:"Bearer "+token}});
-                const d=await res.json(); if(!res.ok||!d.success) return;
-                const set=(id,v)=>{const e=document.getElementById(id); if(e)e.textContent=v;};
-                set("bookStatPurchases",d.totalPurchases||0); set("bookStatPending",d.pending||0); set("bookStatVerified",d.verified||0); set("bookStatRevenue","₹"+Number(d.revenueVerified||0).toFixed(0));
-            }catch(e){console.warn("Book summary",e)}
-        }
-
         //==========================
         // Load Users
         //==========================
@@ -1023,16 +939,9 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             }
 
             allUsers = data.users || [];
-            try {
-                const br = await fetch("/api/book-purchases/admin/users?_=" + Date.now(), { cache:"no-store", headers:{ Authorization:"Bearer " + token } });
-                const bd = await br.json();
-                const bm = new Map((bd.users || []).map(x => [String(x.userId), x.purchase]));
-                allUsers.forEach(u => { u.bookPurchase = bm.get(String(u._id)) || null; });
-            } catch(e) { console.warn("Book access data load failed", e); }
 
             showUsers(allUsers);
             updateOnlineUsersCount();
-            loadBookAdminSummary();
 
         }
 
@@ -1077,14 +986,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
         //==========================
 
         function showUsers(users) {
-            // Show students with the highest wallet balance first.
-            // Use a copy so filtering/searching does not mutate allUsers.
-            users = [...(users || [])].sort((a, b) => {
-                const walletA = Number(a?.wallet || 0);
-                const walletB = Number(b?.wallet || 0);
-                return walletB - walletA;
-            });
-
             const container = document.getElementById("userCards");
             if (!container) return;
             if (!users.length) {
@@ -1120,7 +1021,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <div class="admin-stat"><span>Spin Left</span><strong>${spinRemaining}</strong></div>
                         <div class="admin-stat"><span>Warnings</span><strong class="${warnings >= 4 ? 'danger' : 'warning'}">⚠️ ${warnings}/4</strong></div>
                         <div class="admin-stat"><span>Total Earn</span><strong>₹${Number(user.totalEarn || 0).toFixed(2)}</strong></div>
-                        <div class="admin-stat"><span>🎁 Bonus</span><strong>${user.bonus?.unlocked ? '🔓 UNLOCKED' : (Number(user.bonus?.progress || 0) + '/' + Number(user.bonus?.target || 0))}</strong></div>
                     </div>
 
                     <div class="admin-user-actions" onclick="event.stopPropagation()">
@@ -1128,47 +1028,11 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
-                        <button onclick="openStudentCredentials('${user._id}')" class="credentials-btn" title="Student Login ID & Password">🔐 ID / Password</button>
-                        <button onclick="showBonusDetails('${user._id}')" class="gold" title="Mystery Bonus Details">🎁 Bonus</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
                         ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
-                        <div class="admin-book-actions">
-                          <button class="admin-book-show" onclick="adminShowBook('${user._id}')">📖 Show Book</button>
-                          <button class="admin-book-close" onclick="adminCloseBook('${user._id}')">📕 Close Book</button>
-                          ${user.bookPurchase?.status==='student_confirmed' ? `<button class="admin-book-decline" onclick="adminDeclineBook('${user._id}')">🚫 Decline</button>` : ''}
-                        </div>
-                        <div class="admin-book-status ${user.bookPurchase?.status==='student_confirmed'?'admin-book-pending':user.bookPurchase?.status==='admin_verified'?'admin-book-verified':'admin-book-none'}">${user.bookPurchase ? (user.bookPurchase.status==='admin_verified' ? (user.bookPurchase.accessGranted ? '📖 BOOK ACCESS: ACTIVE' : '🔒 BOOK ACCESS: CLOSED') : (user.bookPurchase.status==='rejected' ? '🚫 PAYMENT REQUEST: DECLINED' : '⏳ PAYMENT: PENDING VERIFY')) : '📚 BOOK: NOT PURCHASED'}</div>
                     </div>
                 </article>`;
             }).join('');
-        }
-
-        //==========================
-        // Mystery Bonus Details
-        //==========================
-        function showBonusDetails(id) {
-            const user = allUsers.find(u => String(u._id) === String(id));
-            if (!user) return;
-            const b = user.bonus || {};
-            const sourceLabel = b.source === 'quiz' ? '📚 Quiz' : b.source === 'learning' ? '🎮 Learning' : '—';
-            const typeLabel = b.lastQuestionType || '—';
-            const safe = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-            const modal=document.createElement('div');
-            modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;display:flex;align-items:center;justify-content:center;padding:16px;';
-            modal.innerHTML=`<div style="width:min(620px,100%);max-height:90vh;overflow:auto;background:var(--surface,#fff);color:var(--text,#111);border-radius:18px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-              <div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h2 style="margin:0">🎁 Mystery Bonus</h2><button type="button" onclick="this.closest('div[style*=fixed]').remove()" style="border:0;background:#ef4444;color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer">✕</button></div>
-              <p><b>Student:</b> ${safe(user.name)} &nbsp; <b>Mobile:</b> ${safe(user.mobile)}</p>
-              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
-                <div style="padding:12px;border-radius:12px;background:#eef2ff"><b>Progress</b><div style="font-size:22px;font-weight:900">${Number(b.progress||0)} / ${Number(b.target||0)}</div></div>
-                <div style="padding:12px;border-radius:12px;background:#ecfdf5"><b>Status</b><div style="font-size:18px;font-weight:900">${b.claimed ? '💰 CLAIMED' : b.unlocked ? '🔓 UNLOCKED' : '🔒 LOCKED'}</div></div>
-                <div style="padding:12px;border-radius:12px;background:#fef3c7"><b>Quiz Correct</b><div style="font-size:20px;font-weight:900">${Number(b.quizProgress||0)}</div></div>
-                <div style="padding:12px;border-radius:12px;background:#fce7f3"><b>Learning Correct</b><div style="font-size:20px;font-weight:900">${Number(b.learningProgress||0)}</div></div>
-              </div>
-              <div style="margin-top:12px;padding:13px;border-radius:12px;background:#f8fafc"><b>Bonus Trigger Source:</b> ${sourceLabel}<br><b>Learning Type:</b> ${safe(typeLabel)}<br><b>Reward:</b> ₹${Number(b.reward||0).toFixed(2)}</div>
-              <div style="margin-top:12px;padding:13px;border-radius:12px;background:#f8fafc"><b>Last Correct Answer That Advanced Bonus:</b><div style="margin-top:7px;line-height:1.5">${safe(b.lastQuestionText || 'No correct answer recorded yet.')}</div></div>
-              <p style="margin:12px 0 0;color:#64748b;font-size:12px">Admin can see whether the hidden bonus progress came from Quiz or English Learning. The hidden target is never shown to the student.</p>
-            </div>`;
-            document.body.appendChild(modal);
         }
 
         //==========================
@@ -1879,46 +1743,6 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 if (!res.ok || !data.success) { alert(data.message || "Question reset failed"); return; }
                 alert("✅ " + data.message);
             } catch (err) { alert("Question reset failed: " + err.message); }
-        }
-
-        //==========================
-        // Book Access Controls
-        //==========================
-        async function adminShowBook(id){
-            const u = allUsers.find(x => String(x._id) === String(id));
-            if (!u) return;
-            if (!confirm(`Verify payment and SHOW BOOK for ${u.name || 'this student'}?\n\nOnly do this after checking the ₹499 UPI transaction/UTR.`)) return;
-            try{
-                const res = await fetch(`/api/book-purchases/admin/${id}/show`, { method:"PUT", headers:{ Authorization:"Bearer " + token, "Content-Type":"application/json" } });
-                const data = await res.json();
-                if(!res.ok || !data.success){ alert(data.message || "Book access update failed"); return; }
-                alert("✅ Payment verified. Book access is now ACTIVE for this student.");
-                await loadUsers();
-            }catch(e){ alert(e.message); }
-        }
-        async function adminDeclineBook(id){
-            const u = allUsers.find(x => String(x._id) === String(id));
-            if (!u) return;
-            if (!confirm(`Decline the pending book payment request for ${u.name || 'this student'}?\n\nThe pending request will disappear from the student's dashboard.`)) return;
-            try{
-                const res = await fetch(`/api/book-purchases/admin/${id}/decline`, { method:"PUT", headers:{ Authorization:"Bearer " + token, "Content-Type":"application/json" } });
-                const data = await res.json();
-                if(!res.ok || !data.success){ alert(data.message || "Decline failed"); return; }
-                alert("🚫 Payment request declined. The student will no longer see it as pending.");
-                await loadUsers();
-            }catch(e){ alert(e.message); }
-        }
-        async function adminCloseBook(id){
-            const u = allUsers.find(x => String(x._id) === String(id));
-            if (!u) return;
-            if (!confirm(`Close book access for ${u.name || 'this student'}?`)) return;
-            try{
-                const res = await fetch(`/api/book-purchases/admin/${id}/close`, { method:"PUT", headers:{ Authorization:"Bearer " + token } });
-                const data = await res.json();
-                if(!res.ok || !data.success){ alert(data.message || "Book access close failed"); return; }
-                alert("🔒 Book access closed.");
-                await loadUsers();
-            }catch(e){ alert(e.message); }
         }
 
         //==========================
@@ -2645,42 +2469,25 @@ ${w.status === "Approved" ? `
         //==========================
         // LIVE ADMIN REFRESH
         //==========================
-        // Keep the complete admin command center close to real-time.
-        // Presence already refreshes every 1 second; all other admin data is
-        // refreshed in parallel every 1 second as well, so bonus/wallet/earnings,
-        // students, withdrawals and dashboard counters appear without manually
-        // refreshing the admin page.
+        // Presence is lightweight and runs every 1 second. Full admin data is
+        // refreshed every 5 seconds so MongoDB/API load cannot delay student
+        // heartbeats. The Online/Offline status itself never waits for this loop.
         let adminDataRefreshBusy = false;
-        let adminLiveTick = 0;
         async function refreshAdminDataLive() {
             if (adminDataRefreshBusy || document.hidden) return;
             adminDataRefreshBusy = true;
-            const tick = ++adminLiveTick;
             try {
-                await Promise.allSettled([
-                    loadDashboard(),
-                    loadUsers(),
-                    loadWithdraws(),
-                    (typeof ap2Refresh === "function" ? ap2Refresh() : Promise.resolve())
-                ]);
-
-                // Less-frequent/heavier sections are still kept live, but only
-                // once every 3 ticks to avoid unnecessary MongoDB/API pressure.
-                if (tick % 3 === 0) {
-                    await Promise.allSettled([
-                        loadDeletedUsers(),
-                        loadQuestions()
-                    ]);
-                }
+                await loadDashboard();
+                await loadUsers();
+                await loadWithdraws();
+                if (typeof ap2Refresh === "function") await ap2Refresh();
             } catch (err) {
                 console.warn("Admin live data refresh error:", err.message);
             } finally {
                 adminDataRefreshBusy = false;
             }
         }
-        // 1 second live sync: any student-side change should reach the admin
-        // command center almost immediately.
-        setInterval(refreshAdminDataLive, 1000);
+        setInterval(refreshAdminDataLive, 5000);
 
         async function permanentlyDeleteAllQuestions() {
             const firstConfirm = confirm(
@@ -2823,54 +2630,7 @@ ${w.status === "Approved" ? `
             }
         }
     </script>
-    <script id="brandingAdminJS">
-(function(){
-  const input=document.getElementById('brandingLogoInput');
-  if(!input) return;
-  input.addEventListener('change', async function(){
-    const file=this.files?.[0]; if(!file) return;
-    if(file.size>1800000){ alert('Please choose a logo under about 1.8 MB.'); this.value=''; return; }
-    const status=document.getElementById('brandingUploadStatus'); status.textContent='⏳ Uploading logo...';
-    // Always normalize the selected logo to a real 512x512 PNG.
-    // This is important for Android/iOS PWA icons: the manifest declares PNG sizes,
-    // so storing a JPEG/WebP or a small source image can make the launcher keep the old icon.
-    const reader=new FileReader();
-    reader.onload=async ()=>{
-      try{
-        const img=new Image();
-        img.onload=async ()=>{
-          const canvas=document.createElement('canvas');
-          canvas.width=512; canvas.height=512;
-          const ctx=canvas.getContext('2d');
-          ctx.clearRect(0,0,512,512);
-          const scale=Math.min(512/img.naturalWidth,512/img.naturalHeight);
-          const w=Math.max(1,Math.round(img.naturalWidth*scale));
-          const h=Math.max(1,Math.round(img.naturalHeight*scale));
-          ctx.drawImage(img,Math.round((512-w)/2),Math.round((512-h)/2),w,h);
-          const normalizedLogo=canvas.toDataURL('image/png');
-
-          const token=localStorage.getItem('adminToken')||'';
-          const r=await fetch('/api/admin/branding/logo',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({logoData:normalizedLogo})});
-        const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Upload failed');
-        document.querySelectorAll('[data-brand-logo]').forEach(x=>x.src=d.logoData);
-        status.textContent='✅ Logo updated. Syncing all devices...';
-        if(window.refreshGlobalBranding) window.refreshGlobalBranding();
-        setTimeout(()=>status.textContent='✅ Logo is live globally.',1200);
-        };
-        img.onerror=()=>{ status.textContent='❌ Could not read logo image'; alert('Could not read logo image'); };
-        img.src=reader.result;
-      }catch(e){ status.textContent='❌ '+e.message; alert(e.message); }
-    };
-    reader.readAsDataURL(file);
-  });
-  window.removeGlobalLogo=async function(){
-    if(!confirm('Reset the app logo to the default Aducate logo?')) return;
-    const token=localStorage.getItem('adminToken')||''; const status=document.getElementById('brandingUploadStatus'); status.textContent='⏳ Resetting...';
-    try{ const r=await fetch('/api/admin/branding/logo',{method:'DELETE',headers:{Authorization:'Bearer '+token}}); const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Reset failed'); if(window.refreshGlobalBranding) window.refreshGlobalBranding(); status.textContent='✅ Default logo restored.'; }catch(e){status.textContent='❌ '+e.message;}
-  };
-})();
-</script>
-<script id="adminProV2JS">
+    <script id="adminProV2JS">
         (function () {
             let D = { users: [], withdrawals: [], stats: {} };
             const token = () => localStorage.getItem("adminToken") || "";
@@ -3295,78 +3055,6 @@ ${w.status === "Approved" ? `
 })();
 </script>
 
-<script id="globalBrandingClient">
-(function(){
-  const FALLBACK='/aducate.png';
-  let currentVersion=null;
-  function setLink(rel, href, sizes){
-    let el=document.querySelector(`link[rel="${rel}"]${sizes?`[sizes="${sizes}"]`:''}`);
-    if(!el){ el=document.createElement('link'); el.rel=rel; if(sizes) el.sizes=sizes; document.head.appendChild(el); }
-    el.href=href;
-  }
-  function applyBranding(data){
-    const version=Number(data?.version||0);
-    if(currentVersion===version && document.documentElement.dataset.brandingReady==='1') return;
-    currentVersion=version;
-    document.documentElement.dataset.brandingReady='1';
-    const src=`/api/branding/icon?v=${version}&size=512&t=${Date.now()}`;
-    document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
-    setLink('icon', src, '192x192');
-    setLink('apple-touch-icon', src, '180x180');
-    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
-    // Broadcast the new branding to every open tab/window immediately.
-    try { localStorage.setItem('aducate-branding-version', String(version)); } catch(e) {}
-    try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = window.__aducateBrandChannel || new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.postMessage({type:'BRANDING_UPDATED',version}); } } catch(e) {}
-    if (navigator.serviceWorker) navigator.serviceWorker.getRegistration('/').then(reg=>reg?.active?.postMessage({type:'BRANDING_UPDATED',version})).catch(()=>{});
-  }
-  async function refresh(){
-    try{ const r=await fetch('/api/branding?_='+Date.now(),{cache:'no-store'}); const d=await r.json(); if(d.success) applyBranding(d); }catch(e){}
-  }
-  window.refreshGlobalBranding=refresh;
-
-  // Also force the installed PWA service worker/manifest to revalidate after a branding change.
-  if(navigator.serviceWorker){ navigator.serviceWorker.getRegistration('/').then(reg=>{ reg?.update(); reg?.active?.postMessage({type:'CHECK_BRANDING'}); }).catch(()=>{}); }
-  try { window.addEventListener('storage', e=>{ if(e.key==='aducate-branding-version') refresh(); }); } catch(e) {}
-  try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.onmessage=e=>{ if(e.data?.type==='BRANDING_UPDATED') refresh(); }; } } catch(e) {}
-  refresh();
-  setInterval(refresh,3000);
-})();
-</script>
-
-<script src="/mobile-branding.js" defer></script><script id="credentialsAdminJS">
-(function(){
- const auth=()=>localStorage.getItem('adminToken')||'';
- const headers=()=>({Authorization:'Bearer '+auth(),'Content-Type':'application/json'});
- window.closeCredentialModal=function(){document.getElementById('studentCredOverlay').style.display='none';};
- window.openStudentCredentials=async function(id){
-   window.__credUserId=String(id);
-   const o=document.getElementById('studentCredOverlay'); o.style.display='flex';
-   document.getElementById('studentCredResult').style.display='none';
-   document.getElementById('studentCredPassword').value='';
-   const r=await fetch('/api/admin/users/'+encodeURIComponent(id)+'/credentials',{headers:headers(),cache:'no-store'}); const d=await r.json();
-   if(!r.ok||!d.success){alert(d.message||'Could not load credentials'); return;}
-   document.getElementById('studentCredLoginId').value=d.user.loginId||'';
-   document.getElementById('studentCredInfo').textContent=(d.user.name||'Student')+' — current password is protected. Set a new password below.';
- };
- window.generateStudentPassword=function(){document.getElementById('studentCredPassword').value=Math.random().toString(36).slice(-8)+'A1!';};
- window.saveStudentPassword=async function(){
-   const p=document.getElementById('studentCredPassword').value; if(p.length<4){alert('Password must be at least 4 characters.');return;}
-   const r=await fetch('/api/admin/users/'+encodeURIComponent(window.__credUserId)+'/password',{method:'PUT',headers:headers(),body:JSON.stringify({password:p})}); const d=await r.json();
-   if(!r.ok||!d.success){alert(d.message||'Password change failed');return;}
-   const box=document.getElementById('studentCredResult'); box.style.display='block'; box.textContent='✅ Login ID: '+d.user.loginId+' | New Password: '+d.password; window.__lastCred={loginId:d.user.loginId,password:d.password};
- };
- window.copyStudentCredentials=async function(){if(!window.__lastCred){alert('First change/set a password.');return;} await navigator.clipboard.writeText('Login ID: '+window.__lastCred.loginId+'\nPassword: '+window.__lastCred.password);alert('Copied');};
- window.closeAdminManagement=function(){document.getElementById('adminManageOverlay').style.display='none';};
- window.openAdminManagement=async function(){document.getElementById('adminManageOverlay').style.display='flex'; await loadAdmins();};
- async function loadAdmins(){const r=await fetch('/api/admin/admins',{headers:headers(),cache:'no-store'}); const d=await r.json(); if(!r.ok||!d.success){alert(d.message||'Could not load admins');return;} document.getElementById('adminList').innerHTML=(d.admins||[]).map(a=>`<div class="admin-row"><div><b>👨‍💼 ${escSafe(a.username)}</b><div style="font-size:10px;color:var(--muted,#64748b)">${a.id}</div></div><div class="admin-row-actions"><button style="background:#e0e7ff;color:#3730a3" onclick="changeAdminPassword('${a.id}','${escAttr(a.username)}')">🔑 Password</button><button style="background:#fee2e2;color:#991b1b" onclick="deleteAdminAccount('${a.id}','${escAttr(a.username)}')">🗑️ Delete</button></div></div>`).join('')||'<div style="padding:10px">No admins found.</div>';}
- function escSafe(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
- function escAttr(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
- window.createNewAdmin=async function(){const username=document.getElementById('newAdminUsername').value.trim();const password=document.getElementById('newAdminPassword').value;if(!username||password.length<6){alert('Enter Admin ID and a password of at least 6 characters.');return;}const r=await fetch('/api/admin/admins',{method:'POST',headers:headers(),body:JSON.stringify({username,password})});const d=await r.json();if(!r.ok||!d.success){alert(d.message||'Create admin failed');return;}alert('Admin created.\nID: '+d.admin.username+'\nPassword: '+d.password);document.getElementById('newAdminUsername').value='';document.getElementById('newAdminPassword').value='';await loadAdmins();};
- window.changeAdminPassword=async function(id,username){const p=prompt('New password for '+username+' (minimum 6 characters):');if(!p||p.length<6)return;const r=await fetch('/api/admin/admins/'+encodeURIComponent(id)+'/password',{method:'PUT',headers:headers(),body:JSON.stringify({password:p})});const d=await r.json();if(!r.ok||!d.success){alert(d.message||'Password change failed');return;}alert('Password changed.\nAdmin ID: '+username+'\nNew Password: '+d.password);};
- window.deleteAdminAccount=async function(id,username){if(!confirm('Delete admin '+username+'?'))return;const r=await fetch('/api/admin/admins/'+encodeURIComponent(id),{method:'DELETE',headers:headers()});const d=await r.json();if(!r.ok||!d.success){alert(d.message||'Delete failed');return;}await loadAdmins();};
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCredentialModal();closeAdminManagement();}});
-})();
-</script>
 </body>
 
 </html><style id="command-center-mobile-card-fix">

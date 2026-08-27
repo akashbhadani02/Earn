@@ -2,17 +2,9 @@
 <html lang="gu">
 
 <head>
-    <link rel="icon" href="/api/branding/icon?v=1&size=32" sizes="any">
-    <link rel="icon" type="image/png" sizes="192x192" href="/api/branding/icon?v=1&size=192">
-    <link rel="apple-touch-icon" sizes="180x180" href="/api/branding/icon?v=1&size=180">
-    <link rel="manifest" href="/manifest.webmanifest?v=aducate20260822">
-    <meta name="theme-color" content="#667eea">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aducate English</title>
+    <title>English Mastery Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         /* =====================================
@@ -1238,31 +1230,9 @@ body.kbc-fullscreen-active #quiz.kbc-quiz-screen{border-radius:0!important}
 }
 
 </style>
-<style id="book-purchase-style">
-#bookPurchaseModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:99999;padding:18px}
-#bookPurchaseModal.show{display:flex}
-.book-purchase-box{width:min(420px,100%);background:#fff;border-radius:22px;padding:26px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.book-purchase-box h3{margin:0 0 10px;font-size:23px;color:#111827}
-.book-purchase-box p{margin:8px 0 18px;color:#4b5563;line-height:1.5}
-.book-price{font-size:28px;font-weight:800;margin:8px 0 18px;color:#4f46e5}
-.book-modal-btn{width:100%;border:0;border-radius:13px;padding:13px 16px;font-weight:700;font-size:15px;cursor:pointer;margin-top:9px}
-.book-download-btn{background:#16a34a;color:#fff}
-.book-close-btn{background:#eef2f7;color:#374151}
-.book-note{font-size:12px!important;color:#6b7280!important}
-</style>
 
 <style id="earn-dashboard-view-style">
 /* ===== Earn dashboard: compact reference design ===== */
-.btn-book{
-    background:linear-gradient(135deg,#7c3aed,#4f46e5);
-    color:#fff;
-    box-shadow:0 8px 18px rgba(79,70,229,.22);
-}
-.btn-book:hover{
-    transform:translateY(-1px);
-    filter:brightness(1.05);
-}
-
 body{
     min-height:100vh;
     padding:28px 18px;
@@ -1289,14 +1259,6 @@ body{
     align-items:center;
     justify-content:space-between;
     margin-bottom:12px;
-}
-
-.dashboard-topbar > .student-live-brand-logo{
-    width:52px;
-    height:52px;
-    flex:0 0 52px;
-    border-radius:16px;
-    padding:4px;
 }
 
 .topbar-right{
@@ -1510,7 +1472,7 @@ body.dark #dashboard h2{
     position:fixed;
     inset:0;
     z-index:999999;
-    display:none;
+    display:flex;
     align-items:center;
     justify-content:center;
     padding:20px;
@@ -1602,280 +1564,6 @@ body.notification-locked #notificationRequiredOverlay button{
 }
 </style>
 
-
-<style id="premium-book-ui">
-/* Premium book purchase + access UI */
-.student-live-brand-logo{width:52px;height:52px;display:grid;place-items:center;border-radius:16px;background:#fff;border:1px solid rgba(226,232,240,.95);padding:4px;box-sizing:border-box;box-shadow:0 7px 18px rgba(15,23,42,.10);overflow:hidden;flex:0 0 52px}
-.student-live-brand-logo img{width:100%;height:100%;display:block;object-fit:contain;border-radius:11px;transition:opacity .18s,transform .18s}
-.student-live-brand-logo img.branding-refreshing{opacity:.45;transform:scale(.94)}
-body.dark .student-live-brand-logo{background:#111827;border-color:rgba(148,163,184,.3);box-shadow:0 7px 18px rgba(0,0,0,.28)}
-@media(max-width:560px){.dashboard-topbar > .student-live-brand-logo,.student-live-brand-logo{width:48px;height:48px;flex-basis:48px;border-radius:14px;padding:3px}.student-live-brand-logo img{border-radius:10px}}
-.book-purchase-box{width:min(440px,100%);padding:28px 22px 20px;border:1px solid rgba(99,102,241,.14);background:linear-gradient(180deg,#ffffff 0%,#f8faff 100%);border-radius:28px;box-shadow:0 28px 80px rgba(15,23,42,.28);overflow:hidden;position:relative}
-.book-purchase-box:before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,#7c3aed,#2563eb,#06b6d4)}
-.book-modal-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:#eef2ff;color:#4f46e5;font-size:10px;font-weight:900;letter-spacing:.7px;margin-bottom:10px}
-.book-price{font-size:36px;margin:4px 0 10px;background:linear-gradient(135deg,#7c3aed,#2563eb);-webkit-background-clip:text;background-clip:text;color:transparent}
-.book-purchase-box p{font-size:13px;margin:8px auto 14px;max-width:360px}
-.book-modal-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}
-.book-modal-steps span{padding:8px 4px;border-radius:10px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:800}
-.book-modal-btn{min-height:48px;border-radius:15px;margin-top:8px;transition:transform .18s,box-shadow .18s}
-.book-modal-btn:hover{transform:translateY(-1px);box-shadow:0 10px 20px rgba(15,23,42,.12)}
-.book-pay-btn{background:linear-gradient(135deg,#16a34a,#059669);color:#fff}
-.book-paid-btn{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff}
-.book-close-btn{background:#eef2f7;color:#334155}
-.student-book-access{grid-column:1/-1;width:100%;margin-top:2px}
-.book-access-card{display:flex;align-items:center;gap:12px;width:100%;padding:13px;border-radius:18px;border:1px solid;box-sizing:border-box;text-align:left;box-shadow:0 8px 20px rgba(15,23,42,.07)}
-.book-access-card.active{background:linear-gradient(135deg,#ecfdf5,#f0fdf4);border-color:#86efac}
-.book-access-card.pending{background:linear-gradient(135deg,#fff7ed,#fffbeb);border-color:#fed7aa}
-.book-access-card.closed{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-color:#cbd5e1}
-.book-access-card.declined{background:linear-gradient(135deg,#fff1f2,#fef2f2);border-color:#fecaca}
-.book-access-icon{width:42px;height:42px;display:grid;place-items:center;flex:0 0 42px;border-radius:13px;background:#fff;box-shadow:0 4px 12px rgba(15,23,42,.08);font-size:21px}
-.book-access-main{min-width:0;flex:1}.book-access-title{font-size:14px;font-weight:900;color:#0f172a}.book-access-sub{font-size:11px;color:#64748b;margin-top:3px;line-height:1.35}
-.book-access-download{border:0;border-radius:12px;padding:11px 13px;background:linear-gradient(135deg,#16a34a,#059669);color:#fff;font-weight:900;font-size:12px;cursor:pointer;white-space:nowrap;box-shadow:0 7px 14px rgba(22,163,74,.2)}
-.book-access-pill{padding:7px 9px;border-radius:999px;background:rgba(255,255,255,.8);color:#475569;font-size:9px;font-weight:900;white-space:nowrap}
-.book-access-empty{display:flex;align-items:center;gap:12px;width:100%;padding:13px;border-radius:18px;background:linear-gradient(135deg,#f8fafc,#eef2ff);border:1px solid #e2e8f0;box-sizing:border-box;text-align:left}
-.book-access-empty>span{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#fff;font-size:21px;box-shadow:0 4px 12px rgba(15,23,42,.07)}
-.book-access-empty strong{display:block;font-size:14px;color:#0f172a}.book-access-empty small{display:block;margin-top:3px;font-size:11px;color:#64748b}
-@media(max-width:560px){.book-access-card{align-items:flex-start;flex-wrap:wrap}.book-access-main{padding-top:2px}.book-access-download{width:100%;margin-left:54px;margin-top:-2px}.book-access-pill{margin-left:auto}.book-modal-steps span{font-size:9px;padding:7px 2px}.book-purchase-box{padding:26px 16px 18px;border-radius:24px}}
-</style>
-
-
-<style id="earn-reference-dashboard-style">
-/* ===== Premium dark earn.html dashboard — reference image layout ===== */
-:root{--bg:#03051f;--panel:#080a2c;--muted:#aeb4d4;--white:#f8f9ff;--purple:#9c3cff;--cyan:#16d9ff;--pink:#ff1c9b;}
-body{padding:0!important;display:block!important;min-height:100vh;background:radial-gradient(circle at 70% 25%,rgba(62,31,151,.28),transparent 30%),radial-gradient(circle at 15% 80%,rgba(0,86,255,.18),transparent 30%),linear-gradient(135deg,#02031a,#05072c 55%,#02051d)!important;color:var(--white)!important;overflow-x:hidden;}
-#dashboard.earn-dashboard{display:block!important;visibility:visible!important;width:100%;max-width:none;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#fff;overflow:visible;}
-.earn-header{height:106px;padding:18px 32px;display:flex;align-items:center;gap:28px;border-bottom:1px solid rgba(130,75,255,.22);background:rgba(2,3,22,.86);backdrop-filter:blur(14px);position:relative;z-index:50;}
-.hamburger-btn{width:42px;height:42px;background:transparent;border:0;display:flex;flex-direction:column;justify-content:center;gap:6px;cursor:pointer;flex:0 0 auto}.hamburger-btn span{display:block;width:32px;height:4px;border-radius:9px;background:#fff}
-.earn-brand{display:flex;align-items:center;gap:14px;min-width:300px}.earn-brand-logo{width:66px;height:66px;border-radius:18px;padding:5px;background:#fff;box-shadow:0 0 24px rgba(174,73,255,.65);overflow:hidden}.earn-brand-logo img{width:100%;height:100%;object-fit:contain;border-radius:13px}.earn-brand-name{font-size:29px;font-weight:800;line-height:1.05}.earn-brand-tag{color:#ffd800;font-size:15px;font-weight:600;margin-top:3px}.earn-brand-tag b{color:#b46cff;margin:0 3px}
-.earn-stats{margin-left:auto;display:flex;align-items:center;gap:18px}.stat-pill{min-width:130px;height:68px;padding:8px 15px;border-radius:20px;border:1px solid rgba(130,75,255,.34);background:linear-gradient(180deg,rgba(14,11,54,.86),rgba(7,7,33,.86));display:flex;align-items:center;gap:10px;color:#fff}.stat-pill>span:last-child{display:flex;flex-direction:column;line-height:1}.stat-pill small{font-size:11px;color:#b9b8d0}.stat-pill strong{font-size:17px;margin-top:4px}.stat-pill em{font-style:normal;font-size:10px;color:#999ab9;margin-top:3px}.stat-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;font-weight:900;font-size:20px;flex:0 0 38px}.stat-icon.fire{font-size:27px}.stat-icon.xp{background:#0d7d2e;border:2px solid #63ff8a;color:#fff;font-size:14px}.stat-icon.level{background:linear-gradient(145deg,#4d1ba8,#9d3cff);clip-path:polygon(50% 0,92% 25%,92% 75%,50% 100%,8% 75%,8% 25%);font-size:17px}.stat-icon.coin{background:#ffbe12;color:#5d3400;border:2px solid #ffe37b}.wallet-pill{min-width:220px;cursor:pointer;position:relative}.wallet-pill .plus-btn{margin-left:auto;width:32px;height:32px;display:grid;place-items:center;background:#ffd11a;color:#241600;border-radius:7px;font-size:25px;line-height:1}.header-icon-btn{width:66px;height:66px;border-radius:50%;border:1px solid rgba(126,91,255,.4);background:#080a2b;color:#fff;font-size:30px;position:relative;cursor:pointer}.header-icon-btn i{position:absolute;right:-1px;top:-1px;width:22px;height:22px;border-radius:50%;background:#ff3d52;color:#fff;font-size:12px;font-style:normal;display:grid;place-items:center}.profile-avatar{width:74px;height:74px;border-radius:50%;border:2px solid #bd4cff;background:radial-gradient(circle at 50% 35%,#ffd7b4 0 18%,#f09d5b 19% 27%,#572f21 28% 43%,#15203d 44%);font-size:42px;display:grid;place-items:center;box-shadow:0 0 24px rgba(211,73,255,.7);cursor:pointer}
-.earn-menu{position:absolute;top:88px;left:72px;z-index:100;background:#0c0d36;border:1px solid #3c2d7f;border-radius:16px;padding:8px;box-shadow:0 18px 45px rgba(0,0,0,.45)}.earn-menu button{display:block;width:150px;text-align:left;padding:11px 13px;background:transparent;border:0;color:#fff;border-radius:10px;cursor:pointer;font-weight:700}.earn-menu button:hover{background:#171858}
-.earn-main{padding:20px 24px 0}.hero-grid{display:grid;grid-template-columns:1fr 2.15fr 1.35fr;gap:24px;max-width:1490px;margin:0 auto}.hero-grid>article{min-height:235px;border-radius:24px;position:relative;overflow:hidden}.balance-card{padding:30px 34px;background:radial-gradient(circle at 50% 85%,rgba(251,0,255,.36),transparent 38%),linear-gradient(145deg,#1738bf,#6c0fc7 70%,#a500de);border:1px solid #3d80ff;box-shadow:0 0 30px rgba(103,38,255,.45)}.balance-label{text-align:center;font-size:16px;font-weight:800;letter-spacing:.4px}.balance-amount{text-align:center;font-size:47px;font-weight:800;margin-top:10px}.coin-stack{height:62px;display:flex;align-items:flex-end;justify-content:center;margin-top:15px;position:relative}.coin-stack span{font-size:43px;filter:drop-shadow(0 4px 7px rgba(0,0,0,.4));margin-left:-8px}.coin-stack span:nth-child(2){transform:translateY(9px)}.coin-stack span:nth-child(3){transform:translateY(-1px)}.hero-withdraw{position:absolute;right:16px;bottom:18px;border:1px solid rgba(255,255,255,.45);background:rgba(68,20,157,.65);color:#fff;padding:10px 16px;border-radius:13px;font-weight:800;font-size:14px;cursor:pointer}.hero-withdraw b{font-size:21px}.hero-withdraw:disabled{opacity:1}
-.journey-card{padding:20px 30px;background:radial-gradient(circle at 60% 25%,rgba(55,43,130,.22),transparent 45%),linear-gradient(180deg,#07081f,#060721);border:1px solid rgba(104,64,190,.45)}.journey-title{font-size:23px;font-weight:800}.journey-title span{margin-right:8px}.journey-progress{height:13px;border-radius:20px;background:#2b2257;margin:17px 0 14px;overflow:hidden}.journey-progress span{display:block;width:32%;height:100%;border-radius:20px;background:linear-gradient(90deg,#2d73ff,#bf21ff,#ff5bca);box-shadow:0 0 12px #be31ff}.journey-meta{display:flex;justify-content:space-between;font-size:14px;color:#e2e2f3}.journey-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:17px}.journey-stats>div{border-radius:16px;background:rgba(19,17,64,.82);padding:16px;text-align:center;border:1px solid rgba(67,61,133,.38)}.journey-stats strong{font-size:24px;display:block}.journey-stats small{display:block;margin-top:8px;font-size:13px;font-weight:800}
-.mission-card{padding:28px;background:radial-gradient(circle at 75% 48%,rgba(255,126,0,.25),transparent 35%),linear-gradient(145deg,#8d2208,#2d0717);border:1px solid #ffac00;box-shadow:0 0 28px rgba(255,103,0,.2)}.mission-head{display:flex;align-items:center;gap:10px;font-size:22px}.mission-head span{font-size:30px}.mission-card p{font-size:17px;line-height:1.55;margin:16px 0 15px}.mission-progress{height:12px;border-radius:20px;background:#442338;overflow:hidden}.mission-progress span{display:block;height:100%;background:linear-gradient(90deg,#1478ff,#fa37d8);border-radius:20px}.mission-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:12px}.mission-bottom>b{font-size:19px;color:#fff000}.mission-bottom button{border:1px solid #5aff69;background:linear-gradient(180deg,#25b735,#117d28);color:#fff;border-radius:22px;padding:9px 18px;font-weight:900;font-size:16px;cursor:pointer}.gift{position:absolute;right:15px;top:65px;font-size:77px;filter:drop-shadow(0 0 12px rgba(255,186,0,.5))}
-.feature-row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;max-width:1490px;margin:32px auto 24px}.feature-card{min-height:190px;border-radius:22px;padding:20px 15px;display:flex;align-items:center;gap:14px;border:1px solid;background:linear-gradient(145deg,rgba(21,9,62,.98),rgba(4,7,31,.98));box-shadow:0 10px 28px rgba(0,0,0,.25)}.feature-card.purple{border-color:#8d23ff}.feature-card.green{border-color:#20be4c}.feature-card.orange{border-color:#e86a0a}.feature-card.blue{border-color:#0b87ff}.feature-card.pink{border-color:#db1d99}.feature-icon{font-size:70px;line-height:1;flex:0 0 88px;text-align:center;filter:drop-shadow(0 0 10px rgba(255,255,255,.18))}.feature-card h3{font-size:20px;margin-bottom:9px}.feature-card p{font-size:14px;line-height:1.55;color:#e1e0ed}.feature-card button{border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:8px 20px;margin-top:11px;color:#fff;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#6421c6,#9d1cd8)}.feature-card.green button{background:#095e28}.feature-card.orange button{background:#5e2016}.feature-card.blue button{background:#173b88}.feature-card.pink button{background:#94126d}.mini-progress{display:flex;align-items:center;gap:8px;margin-top:10px}.mini-progress span{display:block;width:82px;height:7px;background:linear-gradient(90deg,#ffac00 60%,#41344e 60%);border-radius:10px}.mini-progress b{font-size:10px;color:#aaa}
-.activity-panel{max-width:1490px;margin:0 auto 18px;padding:10px 10px 16px;border-radius:25px;background:linear-gradient(180deg,rgba(10,10,53,.9),rgba(5,10,43,.82));border:1px solid rgba(64,67,153,.3)}.activity-heading{display:flex;justify-content:center;align-items:center;gap:12px;margin:0 0 16px}.activity-heading h2{font-size:26px;margin:0}.activity-heading span{color:#ffbc00;font-size:20px}.activity-home-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.home-activity{height:100px;border-radius:20px;padding:14px 18px;display:flex;align-items:center;gap:16px;text-align:left;color:#fff;background:linear-gradient(135deg,#0a173f,#09122c);border:1px solid;cursor:pointer;position:relative;overflow:hidden}.home-activity span{font-size:46px;line-height:1}.home-activity b{font-size:19px;display:flex;flex-direction:column}.home-activity small{font-size:14px;color:#d4d4e4;font-weight:500;margin-top:5px}.home-activity i{margin-left:auto;width:45px;height:45px;border-radius:50%;display:grid;place-items:center;font-size:36px;font-style:normal;border:1px solid currentColor}.home-activity.yellow{border-color:#ffc800}.home-activity.cyan,.home-activity.cyan2{border-color:#00a9ff}.home-activity.pink2{border-color:#ff1687}.home-activity.violet{border-color:#b42dff}.home-activity.green2{border-color:#00e86a}.home-activity.blue2{border-color:#00bde8}.home-activity.orange2{border-color:#ff9200}.home-activity:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(44,92,255,.18)}
-.earn-bottom-nav{max-width:1290px;height:84px;margin:10px auto 18px;padding:8px 18px;border-radius:45px;border:1px solid rgba(74,52,185,.5);background:rgba(7,8,47,.93);display:flex;align-items:center;justify-content:space-around;gap:8px;box-shadow:0 0 35px rgba(19,22,116,.25)}.earn-bottom-nav button{height:66px;min-width:120px;padding:7px 17px;border:0;background:transparent;color:#a6a6c8;border-radius:34px;display:flex;align-items:center;justify-content:center;gap:7px;flex-direction:column;font-family:Poppins,sans-serif;cursor:pointer}.earn-bottom-nav button span{font-size:28px;line-height:1}.earn-bottom-nav button b{font-size:13px}.earn-bottom-nav button.active{min-width:180px;background:linear-gradient(90deg,#7220e8,#8c2cff);color:#fff;box-shadow:0 0 22px rgba(154,50,255,.55)}.earn-bottom-nav .theme-switch{margin-left:auto;min-width:100px;width:100px;flex-direction:row;background:linear-gradient(90deg,#101d65,#101452);border:1px solid #2379ff;color:#fff;font-size:30px}.earn-bottom-nav .theme-switch b{display:none}
-#dashboard .notification-card-hidden,#dashboard .legacy-admin-btn,#dashboard .btn-spin,#dashboard .btn-reward,#dashboard .btn-bonus,#dashboard .telegram-btn,#dashboard .btn-book,#dashboard .tc-note{display:none!important}
-body.dark .earn-dashboard{color:#fff}.hidden{display:none!important}
-@media(max-width:1200px){.earn-stats{gap:8px}.stat-pill{min-width:100px}.wallet-pill{min-width:170px}.earn-brand{min-width:260px}.feature-row{grid-template-columns:repeat(3,1fr)}.hero-grid{grid-template-columns:1fr 1.5fr}.mission-card{grid-column:1/-1}.activity-home-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:820px){.earn-header{height:auto;min-height:84px;padding:12px 16px;gap:12px;flex-wrap:wrap}.earn-brand{min-width:0;flex:1}.earn-brand-logo{width:50px;height:50px}.earn-brand-name{font-size:20px}.earn-brand-tag{font-size:11px}.earn-stats{order:3;width:100%;overflow-x:auto;padding-bottom:2px;justify-content:flex-start}.stat-pill{height:55px;min-width:108px}.wallet-pill{min-width:160px}.header-icon-btn,.profile-avatar{display:none}.hero-grid{grid-template-columns:1fr}.mission-card{grid-column:auto}.feature-row{grid-template-columns:1fr 1fr}.activity-home-grid{grid-template-columns:1fr 1fr}.earn-main{padding:12px}.earn-bottom-nav{margin:8px 8px 12px;height:72px;padding:5px}.earn-bottom-nav button{min-width:55px;height:60px;padding:4px}.earn-bottom-nav button.active{min-width:82px}.earn-bottom-nav .theme-switch{min-width:62px;width:62px}.earn-bottom-nav button b{font-size:10px}.earn-bottom-nav button span{font-size:22px}}
-@media(max-width:560px){.earn-header{padding:10px 12px}.hamburger-btn{width:32px}.hamburger-btn span{width:27px;height:3px}.earn-brand{gap:8px}.earn-brand-name{font-size:17px}.earn-brand-tag{font-size:9px}.earn-brand-logo{width:44px;height:44px;border-radius:13px}.earn-stats{gap:6px}.stat-pill{min-width:92px;height:51px;padding:6px 8px;border-radius:14px}.stat-icon{width:30px;height:30px;flex-basis:30px;font-size:16px}.stat-pill small{font-size:8px}.stat-pill strong{font-size:13px}.stat-pill em{font-size:8px}.wallet-pill{min-width:145px}.earn-main{padding:10px 8px}.hero-grid{gap:10px}.hero-grid>article{min-height:205px}.balance-card{padding:22px 18px}.balance-amount{font-size:39px}.journey-card{padding:18px 16px}.journey-title{font-size:19px}.journey-meta{font-size:11px}.journey-stats{gap:7px}.journey-stats>div{padding:12px 4px}.journey-stats strong{font-size:18px}.journey-stats small{font-size:9px}.mission-card{padding:20px}.mission-head{font-size:19px}.mission-card p{font-size:14px}.gift{font-size:55px;top:55px}.feature-row{gap:8px;margin:14px 0}.feature-card{min-height:155px;padding:13px 9px;gap:6px;flex-direction:column;text-align:center}.feature-icon{font-size:50px;flex-basis:auto}.feature-card h3{font-size:14px}.feature-card p{font-size:10px}.feature-card button{font-size:10px;padding:7px 12px}.activity-panel{padding:10px 7px;border-radius:18px}.activity-heading h2{font-size:19px}.home-activity{height:85px;padding:10px 8px;gap:8px;border-radius:15px}.home-activity span{font-size:29px}.home-activity b{font-size:12px}.home-activity small{font-size:9px}.home-activity i{width:30px;height:30px;font-size:25px}.earn-bottom-nav button b{font-size:8px}.earn-bottom-nav button.active{min-width:68px}.earn-bottom-nav{overflow:hidden}}
-<style id="earn-final-responsive-fix">
-/* Final full-screen + responsive layout fix */
-html,body{width:100%;max-width:100%;overflow-x:hidden}
-body{margin:0!important;padding:0!important;min-width:0!important}
-#dashboard.earn-dashboard{min-height:100svh!important;width:100%!important;max-width:none!important}
-.earn-header{width:100%;max-width:none;min-width:0}
-.earn-main{width:100%;max-width:none;margin:0 auto;padding:20px 24px 8px}
-.hero-grid,.feature-row,.activity-panel{width:100%;max-width:1490px}
-.hero-grid{grid-template-columns:minmax(280px,1fr) minmax(430px,2.15fr) minmax(300px,1.35fr);align-items:stretch}
-.hero-grid>article{min-width:0}
-.feature-row{grid-template-columns:repeat(5,minmax(0,1fr))}
-.feature-card{min-width:0}
-.feature-card>div:last-child{min-width:0}
-.activity-home-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-.home-activity{min-width:0}
-.earn-bottom-nav{position:sticky;bottom:10px;z-index:40;margin:10px auto 18px;width:calc(100% - 48px);max-width:1290px}
-
-@media (max-width:1350px){
-  .earn-header{padding-left:22px;padding-right:22px;gap:16px}
-  .earn-brand{min-width:250px}
-  .earn-stats{gap:8px}
-  .stat-pill{min-width:105px;padding-left:10px;padding-right:10px}
-  .wallet-pill{min-width:180px}
-  .hero-grid{grid-template-columns:minmax(250px,1fr) minmax(390px,1.8fr) minmax(270px,1.2fr);gap:16px}
-  .feature-row{gap:12px}
-  .feature-card{padding:17px 12px;gap:8px}
-  .feature-icon{font-size:58px;flex-basis:68px}
-  .feature-card h3{font-size:17px}
-  .feature-card p{font-size:12px}
-}
-
-@media (max-width:1100px){
-  .earn-header{flex-wrap:wrap;height:auto;min-height:86px}
-  .earn-brand{flex:1;min-width:0}
-  .earn-stats{order:3;width:100%;margin-left:0;overflow-x:auto;justify-content:flex-start;padding:2px 2px 5px;scrollbar-width:none}
-  .earn-stats::-webkit-scrollbar{display:none}
-  .hero-grid{grid-template-columns:1fr 1.5fr;gap:14px}
-  .mission-card{grid-column:1/-1}
-  .feature-row{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .activity-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-
-@media (max-width:820px){
-  .earn-header{padding:10px 14px;gap:10px}
-  .earn-brand-logo{width:50px;height:50px}
-  .earn-brand-name{font-size:20px}
-  .earn-brand-tag{font-size:10px}
-  .header-icon-btn,.profile-avatar{display:none}
-  .earn-main{padding:12px 12px 6px}
-  .hero-grid{grid-template-columns:1fr;gap:12px}
-  .hero-grid>article{min-height:205px}
-  .mission-card{grid-column:auto}
-  .feature-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px auto 16px}
-  .feature-card{min-height:165px;padding:14px 10px;flex-direction:column;text-align:center;justify-content:center}
-  .feature-icon{font-size:52px;flex-basis:auto}
-  .feature-card h3{font-size:15px}
-  .feature-card p{font-size:11px}
-  .feature-card button{font-size:11px;padding:7px 13px}
-  .activity-panel{padding:10px 8px 14px;border-radius:20px}
-  .activity-heading h2{font-size:20px}
-  .home-activity{height:92px;padding:10px 9px;gap:9px}
-  .home-activity span{font-size:34px}
-  .home-activity b{font-size:13px}
-  .home-activity small{font-size:9px}
-  .home-activity i{width:34px;height:34px;font-size:27px;flex:0 0 34px}
-  .earn-bottom-nav{width:calc(100% - 20px);margin:8px auto 10px;height:70px;padding:4px 5px;border-radius:28px;gap:2px;bottom:6px}
-  .earn-bottom-nav button{min-width:0!important;flex:1;height:60px;padding:3px 4px;gap:3px}
-  .earn-bottom-nav button span{font-size:21px}
-  .earn-bottom-nav button b{font-size:9px}
-  .earn-bottom-nav button.active{flex:1;background:linear-gradient(90deg,#7220e8,#8c2cff)}
-  .earn-bottom-nav .theme-switch{flex:0 0 58px;width:58px;min-width:58px!important}
-}
-
-@media (max-width:560px){
-  .earn-header{padding:9px 10px}
-  .hamburger-btn{width:30px}
-  .hamburger-btn span{width:25px;height:3px}
-  .earn-brand{gap:7px}
-  .earn-brand-logo{width:43px;height:43px;border-radius:12px;padding:3px}
-  .earn-brand-name{font-size:16px;white-space:nowrap}
-  .earn-brand-tag{font-size:8px;white-space:nowrap}
-  .stat-pill{height:49px;min-width:88px;border-radius:13px;padding:5px 7px;gap:6px}
-  .wallet-pill{min-width:137px}
-  .stat-icon{width:28px;height:28px;flex-basis:28px;font-size:14px}
-  .stat-icon.fire{font-size:21px}
-  .stat-pill small{font-size:7px}
-  .stat-pill strong{font-size:12px}
-  .stat-pill em{font-size:7px}
-  .earn-main{padding:9px 8px 4px}
-  .hero-grid>article{min-height:190px}
-  .balance-card{padding:20px 15px}
-  .balance-amount{font-size:36px}
-  .journey-card{padding:17px 14px}
-  .journey-title{font-size:18px}
-  .journey-progress{height:10px;margin:13px 0 11px}
-  .journey-meta{font-size:10px}
-  .journey-stats{gap:5px;margin-top:13px}
-  .journey-stats>div{padding:10px 3px;border-radius:12px}
-  .journey-stats strong{font-size:17px}
-  .journey-stats small{font-size:8px;margin-top:5px}
-  .mission-card{padding:18px}
-  .mission-head{font-size:18px}
-  .mission-head span{font-size:25px}
-  .mission-card p{font-size:13px;margin:12px 0}
-  .gift{font-size:52px;right:5px;top:48px}
-  .mission-bottom button{font-size:13px;padding:8px 13px}
-  .feature-row{gap:8px}
-  .feature-card{min-height:150px;padding:11px 7px;border-radius:17px}
-  .feature-icon{font-size:43px}
-  .feature-card h3{font-size:13px;margin-bottom:5px}
-  .feature-card p{font-size:9px;line-height:1.35}
-  .feature-card button{font-size:9px;padding:6px 10px;margin-top:7px}
-  .mini-progress span{width:55px;height:6px}
-  .mini-progress b{font-size:8px}
-  .activity-heading{margin-bottom:10px;gap:7px}
-  .activity-heading h2{font-size:17px}
-  .activity-heading span{font-size:14px}
-  .activity-home-grid{gap:7px}
-  .home-activity{height:78px;padding:8px 6px;gap:6px;border-radius:13px}
-  .home-activity span{font-size:27px}
-  .home-activity b{font-size:10px}
-  .home-activity small{font-size:7px;margin-top:2px}
-  .home-activity i{width:27px;height:27px;font-size:22px;flex-basis:27px}
-  .earn-bottom-nav{width:calc(100% - 12px);margin-bottom:6px;height:64px;border-radius:24px}
-  .earn-bottom-nav button{height:56px}
-  .earn-bottom-nav button span{font-size:19px}
-  .earn-bottom-nav button b{font-size:8px}
-  .earn-bottom-nav .theme-switch{flex-basis:50px;width:50px}
-}
-
-@media (max-width:380px){
-  .earn-brand-name{font-size:14px}
-  .earn-brand-tag{font-size:7px}
-  .earn-brand-logo{width:39px;height:39px}
-  .feature-card{min-height:142px}
-  .feature-icon{font-size:38px}
-  .feature-card h3{font-size:12px}
-  .home-activity span{font-size:24px}
-  .home-activity b{font-size:9px}
-  .home-activity small{font-size:6.5px}
-  .home-activity i{width:24px;height:24px;font-size:19px;flex-basis:24px}
-  .earn-bottom-nav button b{font-size:7px}
-}
-
-/* All real English activities are also visible on the dashboard. */
-.earn-all-activities{margin:16px auto 0;max-width:1490px;padding:16px 18px 18px;border:1px solid rgba(73,91,255,.32);border-radius:22px;background:linear-gradient(180deg,rgba(10,12,47,.92),rgba(5,8,32,.86));box-shadow:0 16px 35px rgba(0,0,0,.22)}
-.earn-all-title{display:flex;align-items:center;gap:9px;margin-bottom:12px;color:#fff}.earn-all-title strong{font-size:18px}.earn-all-title button{margin-left:auto;border:1px solid rgba(83,217,255,.4);background:rgba(20,50,90,.7);color:#fff;border-radius:999px;padding:7px 12px;font-weight:800;cursor:pointer}.earn-all-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.earn-all-grid button{min-width:0;display:flex;align-items:center;gap:10px;text-align:left;padding:12px;border-radius:15px;border:1px solid rgba(90,115,255,.28);background:linear-gradient(135deg,rgba(20,24,71,.95),rgba(8,12,44,.95));color:#fff;cursor:pointer;transition:.18s transform,.18s border-color,.18s box-shadow}.earn-all-grid button:hover{transform:translateY(-2px);border-color:#6f5cff;box-shadow:0 8px 20px rgba(78,62,255,.25)}.earn-all-grid button>span{font-size:28px;flex:0 0 auto}.earn-all-grid b{font-size:12px;display:flex;flex-direction:column}.earn-all-grid small{font-size:9px;color:#aeb4d4;margin-top:3px;font-weight:600}
-.earn-info-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:18px;background:rgba(0,0,0,.72);backdrop-filter:blur(8px)}.earn-info-modal[hidden]{display:none}.earn-info-box{position:relative;width:min(560px,100%);max-height:82vh;overflow:auto;border:1px solid rgba(141,83,255,.55);border-radius:24px;background:linear-gradient(160deg,#10134a,#070923);color:#fff;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.6)}.earn-info-close{position:absolute;right:12px;top:10px;width:36px;height:36px;border:0;border-radius:50%;background:#1b1f5c;color:#fff;font-size:25px;cursor:pointer}.info-title{font-size:22px;font-weight:800;margin-bottom:15px}.leader-row,.history-row{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.08)}.leader-row:last-child,.history-row:last-child{border-bottom:0}.leader-rank{font-weight:900;color:#ffd84a}.leader-name{font-weight:700}.leader-score,.history-result{font-weight:800}.history-row{grid-template-columns:1fr auto}.history-q{font-size:12px;color:#d9dcf5;line-height:1.35}.history-result.ok{color:#45f09b}.history-result.bad{color:#ff6b7d}
-@media(max-width:820px){.earn-all-activities{margin-top:10px;padding:12px 10px}.earn-all-title strong{font-size:15px}.earn-all-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.earn-all-grid button{padding:9px}.earn-all-grid button>span{font-size:24px}.earn-all-grid b{font-size:10px}.earn-all-grid small{font-size:8px}.earn-info-box{padding:20px 14px;border-radius:20px}.info-title{font-size:19px}}
-</style>
-<script>
-function toggleEarnMenu(){const m=document.getElementById('earnMenu');if(m)m.hidden=!m.hidden;}
-document.addEventListener('click',e=>{const m=document.getElementById('earnMenu');const b=document.querySelector('.hamburger-btn');if(m&&!m.hidden&&!m.contains(e.target)&&!b?.contains(e.target))m.hidden=true;});
-</script>
-
-
-<style id="earn-dashboard-final-layout">
-/* Final dashboard layout: one viewport on desktop, natural scroll on phones */
-html,body{width:100%;max-width:100%;overflow-x:hidden}
-body{margin:0;padding:0;min-width:0}
-#dashboard.earn-dashboard{width:100%;min-height:100svh}
-@media (min-width:1201px){
-  .earn-main{padding:14px 24px 4px}
-  .hero-grid{gap:16px}
-  .hero-grid>article{min-height:205px}
-  .balance-card{padding:22px 28px}
-  .balance-amount{font-size:42px;margin-top:6px}
-  .coin-stack{height:50px;margin-top:8px}
-  .coin-stack span{font-size:36px}
-  .journey-card{padding:18px 24px}
-  .journey-title{font-size:21px}
-  .journey-progress{height:11px;margin:12px 0 10px}
-  .journey-stats{margin-top:12px}
-  .journey-stats>div{padding:12px}
-  .mission-card{padding:20px 24px}
-  .mission-card p{margin:10px 0 11px}
-  .gift{font-size:62px;top:48px}
-  .feature-row{gap:12px;margin:16px auto 14px}
-  .feature-card{min-height:145px;padding:14px 11px;gap:9px}
-  .feature-icon{font-size:52px;flex-basis:64px}
-  .feature-card h3{font-size:16px;margin-bottom:6px}
-  .feature-card p{font-size:11px;line-height:1.35}
-  .feature-card button{font-size:11px;padding:7px 14px;margin-top:7px}
-  .activity-panel{margin-bottom:8px;padding:8px 10px 10px}
-  .activity-heading{margin-bottom:8px}
-  .activity-heading h2{font-size:22px}
-  .activity-home-grid{gap:10px}
-  .home-activity{height:76px;padding:8px 11px;gap:9px;border-radius:17px}
-  .home-activity span{font-size:34px}
-  .home-activity b{font-size:14px}
-  .home-activity small{font-size:9px;margin-top:2px}
-  .home-activity i{width:32px;height:32px;font-size:25px;flex-basis:32px}
-  .earn-bottom-nav{height:72px;margin:6px auto 10px;padding:6px 14px}
-  .earn-bottom-nav button{height:58px}
-}
-/* At shorter laptop/desktop heights, compact the dashboard further so the activity grid stays visible. */
-@media (min-width:821px) and (max-height:850px){
-  .earn-header{height:82px;padding:10px 22px}
-  .earn-brand-logo{width:52px;height:52px}.earn-brand-name{font-size:23px}.earn-brand-tag{font-size:12px}
-  .stat-pill{height:54px;min-width:110px}.wallet-pill{min-width:175px}.profile-avatar{width:58px;height:58px}.header-icon-btn{width:54px;height:54px}
-  .earn-main{padding:9px 18px 2px}
-  .hero-grid{gap:10px}.hero-grid>article{min-height:170px}
-  .balance-card{padding:16px 20px}.balance-amount{font-size:36px}.coin-stack{height:36px;margin-top:5px}.coin-stack span{font-size:29px}
-  .journey-card{padding:14px 18px}.journey-title{font-size:18px}.journey-progress{margin:9px 0;height:9px}.journey-stats{margin-top:9px;gap:7px}.journey-stats>div{padding:9px}.journey-stats strong{font-size:19px}.journey-stats small{font-size:10px;margin-top:4px}
-  .mission-card{padding:15px 18px}.mission-head{font-size:18px}.mission-card p{font-size:13px;margin:7px 0}.gift{font-size:48px;top:36px}.mission-progress{height:9px}.mission-bottom{margin-top:8px}.mission-bottom button{font-size:12px;padding:7px 12px}
-  .feature-row{gap:8px;margin:10px auto}.feature-card{min-height:112px;padding:10px 8px;gap:5px}.feature-icon{font-size:40px;flex-basis:48px}.feature-card h3{font-size:13px;margin-bottom:4px}.feature-card p{font-size:9px}.feature-card button{font-size:9px;padding:5px 9px;margin-top:5px}
-  .activity-panel{padding:6px 8px 8px;margin-bottom:5px}.activity-heading{margin-bottom:5px}.activity-heading h2{font-size:18px}.activity-home-grid{gap:7px}.home-activity{height:58px;padding:6px 8px;gap:6px;border-radius:13px}.home-activity span{font-size:26px}.home-activity b{font-size:10px}.home-activity small{font-size:7px}.home-activity i{width:25px;height:25px;font-size:20px;flex-basis:25px}
-  .earn-bottom-nav{height:60px;margin:4px auto 6px}.earn-bottom-nav button{height:50px}.earn-bottom-nav button span{font-size:22px}.earn-bottom-nav button b{font-size:10px}
-}
-/* Phones: keep it responsive and readable; vertical scrolling is intentional on small screens. */
-@media (max-width:820px){
-  .earn-main{width:100%;box-sizing:border-box}.hero-grid,.feature-row,.activity-panel{max-width:none;width:100%;box-sizing:border-box}
-  .activity-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .home-activity{min-width:0}.home-activity b,.home-activity small{min-width:0;overflow:hidden;text-overflow:ellipsis}
-}
-</style>
 </head>
 
 <body>
@@ -1898,109 +1586,66 @@ body{margin:0;padding:0;min-width:0}
 
 
 
-    <div id="dashboard" class="earn-dashboard" aria-hidden="true" style="visibility:hidden;">
-        <header class="earn-header">
-            <button class="hamburger-btn" type="button" aria-label="Menu" onclick="toggleEarnMenu()"><span></span><span></span><span></span></button>
-            <div class="earn-brand">
-                <div class="earn-brand-logo"><img data-brand-logo src="/api/branding/icon?v=1&size=512" alt="Aducate Logo"></div>
-                <div class="earn-brand-copy">
-                    <div class="earn-brand-name">Aducate English</div>
-                    <div class="earn-brand-tag">★ Learn <b>•</b> Play <b>•</b> Earn ★</div>
-                </div>
-            </div>
-            <div class="earn-stats">
-                <div class="stat-pill"><span class="stat-icon fire">🔥</span><span><small>Streak</small><strong>4</strong><em>Days</em></span></div>
-                <div class="stat-pill"><span class="stat-icon xp">XP</span><span><small>XP</small><strong id="topXp">85</strong><em>Total XP</em></span></div>
-                <div class="stat-pill"><span class="stat-icon level">3</span><span><small>Level</small><strong>3</strong><em>Rising Star</em></span></div>
-                <button class="stat-pill wallet-pill" type="button" onclick="openWithdrawPopup()"><span class="stat-icon coin">₹</span><span><small>Wallet</small><strong>₹<span id="topWallet">0.00</span></strong></span><b class="plus-btn">+</b></button>
-                <button class="header-icon-btn" type="button" aria-label="Notifications">♧<i>3</i></button>
-                <button class="profile-avatar" type="button" onclick="location.href='profile.html'" aria-label="Profile">👨🏻‍💼</button>
-            </div>
-        </header>
-
-        <div id="earnMenu" class="earn-menu" hidden>
-            <button type="button" onclick="location.href='profile.html'">👤 Profile</button>
-            <button type="button" onclick="location.href='admin.html'">⚙️ Admin</button>
-            <button type="button" onclick="toggleTheme()">🌙 Theme</button>
-        </div>
-
-        <main class="earn-main">
-            <section class="hero-grid">
-                <article class="balance-card">
-                    <div class="balance-label">TOTAL BALANCE</div>
-                    <div class="balance-amount">₹<span id="wallet">0.00</span></div>
-                    <div class="coin-stack" aria-hidden="true"><span>🪙</span><span>🪙</span><span>🪙</span><span>🪙</span></div>
-                    <button class="hero-withdraw" id="withdrawBtn" type="button" onclick="openWithdrawPopup()" disabled>Withdraw <b>➜</b></button>
-                </article>
-
-                <article class="journey-card">
-                    <div class="journey-title"><span>🚀</span> Your Quiz Journey</div>
-                    <div class="journey-progress"><span></span></div>
-                    <div class="journey-meta"><span>15 / 100 XP&nbsp; ✦</span><span>85 XP to next level</span></div>
-                    <div class="journey-stats">
-                        <div><strong>4 🔥</strong><small>STREAK</small></div>
-                        <div><strong>12 / 20</strong><small>DAILY MISSION</small></div>
-                        <div><strong>4 ⭐</strong><small>BEST STREAK</small></div>
-                    </div>
-                </article>
-
-                <article class="mission-card">
-                    <div class="mission-head"><span>🎯</span><strong>Daily Mission</strong></div>
-                    <p>Answer 20 questions<br>correctly</p>
-                    <div class="mission-progress"><span style="width:82%"></span></div>
-                    <div class="mission-bottom"><b>18 / 20</b><button type="button" onclick="showScreen('quiz')">+25 XP</button></div>
-                    <span class="gift">🎁</span>
-                </article>
-            </section>
-
-            <section class="feature-row">
-                <article class="feature-card purple"><div class="feature-icon">🧰</div><div><h3>Mystery Chest</h3><p>Open and win<br>exciting rewards!</p><button type="button" onclick="claimBonus()">Open Now</button></div></article>
-                <article class="feature-card green"><div class="feature-icon">🍀</div><div><h3>Lucky Round</h3><p>Try your luck and<br>win big!</p><button type="button" onclick="spinWheel()">Play Now</button></div></article>
-                <article class="feature-card orange"><div class="feature-icon">🎨</div><div><h3>Themes</h3><p>Change your theme,<br>show your style!</p><button type="button" onclick="toggleTheme()">Explore</button></div></article>
-                <article class="feature-card blue"><div class="feature-icon">🏆</div><div><h3>Weekly Challenge</h3><p>Compete and win<br>amazing rewards!</p><div class="mini-progress"><span></span><b>60%</b></div><button type="button" onclick="showScreen('quiz')">View Challenge</button></div></article>
-                <article class="feature-card pink"><div class="feature-icon">🛡️</div><div><h3>Achievements</h3><p>Unlock achievements<br>and earn glory!</p><button type="button" onclick="showScreen('activities')">View All</button></div></article>
-            </section>
-
-            <section class="activity-panel">
-                <div class="activity-heading"><span>✦</span><h2>Choose Your Activity</h2><span>✦</span></div>
-                <div class="activity-home-grid">
-                    <button class="home-activity yellow" type="button" onclick="showScreen('quiz')"><span>🏆</span><b>Quiz<small>Play Quiz &amp; Earn</small></b><i>›</i></button>
-                    <button class="home-activity cyan" type="button" onclick="showLeaderboard()"><span>🏅</span><b>Leaderboard<small>See Top Players</small></b><i>›</i></button>
-                    <button class="home-activity pink2" type="button" onclick="showScreen('quiz')"><span>🗓️</span><b>Daily Quiz<small>Play &amp; Earn Daily</small></b><i>›</i></button>
-                    <button class="home-activity violet" type="button" onclick="spinWheel()"><span>🎡</span><b>Spin &amp; Win<small>Spin &amp; Win Rewards</small></b><i>›</i></button>
-                    <button class="home-activity green2" type="button" onclick="showScreen('activities')"><span>🎟️</span><b>Scratch Card<small>Scratch &amp; Win</small></b><i>›</i></button>
-                    <button class="home-activity blue2" type="button" onclick="showScreen('activities')"><span>▶️</span><b>Watch &amp; Earn<small>Watch &amp; Earn Coins</small></b><i>›</i></button>
-                    <button class="home-activity orange2" type="button" onclick="location.href='profile.html'"><span>🧑‍🤝‍🧑</span><b>Refer &amp; Earn<small>Invite &amp; Earn More</small></b><i>›</i></button>
-                    <button class="home-activity cyan2" type="button" onclick="showQuizHistory()"><span>📄</span><b>Quiz History<small>Check Your History</small></b><i>›</i></button>
-                </div>
-
-            </section>
-        </main>
-
-        <nav class="earn-bottom-nav" aria-label="Main navigation">
-            <button class="active" type="button" onclick="showScreen('dashboard')"><span>🏠</span><b>Home</b></button>
-            <button type="button" onclick="showScreen('quiz')"><span>❓</span><b>Quiz</b></button>
-            <button type="button" onclick="showScreen('activities')"><span>🎯</span><b>Missions</b></button>
-            <button type="button" onclick="openWithdrawPopup()"><span>▣</span><b>Wallet</b></button>
-            <button type="button" onclick="location.href='profile.html'"><span>♙</span><b>Profile</b></button>
-            <button class="theme-switch" id="themeBtn" type="button" onclick="toggleTheme()" aria-label="Toggle theme">☾</button>
-        </nav>
-
-        <div id="studentNotificationCard" class="notification-card-hidden"></div>
-
-        <div id="infoModal" class="earn-info-modal" hidden>
-            <div class="earn-info-box">
-                <button type="button" class="earn-info-close" onclick="closeInfoModal()">×</button>
-                <div id="infoModalContent"></div>
+    <div id="dashboard" class="card" aria-hidden="true" style="visibility:hidden;">
+        <div class="dashboard-topbar">
+            <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+            <div class="topbar-right">
+                <button class="icon-btn" onclick="location.href='profile.html'" aria-label="Profile" title="Profile">👤</button>
+                <button class="icon-btn" onclick="location.href='admin.html'" aria-label="Admin" title="Admin">⚙️</button>
             </div>
         </div>
-        <button class="btn btn-spin" id="spinBtn" type="button" onclick="spinWheel()" disabled hidden>Spin</button>
-        <button class="btn btn-reward" type="button" onclick="claimDailyReward()" hidden>Reward</button>
-        <button class="btn btn-bonus" id="bonusBtn" type="button" onclick="claimBonus()" hidden>Mystery Bonus</button>
-        <a class="telegram-btn" href="https://t.me/+blPfoyArs0U1NmI1" target="_blank" rel="noopener noreferrer" hidden>Telegram</a>
-        <button class="btn btn-book" type="button" onclick="buyBook()" hidden>Buy Book</button>
-        <div class="tc-note" hidden><strong>Note:</strong> This app is only for educational purposes.</div>
+
+        <h2>Student Dashboard</h2>
+
+        <div class="wallet-box">
+            <small>Total Balance</small>
+            <span class="wallet-val">₹<span id="wallet">0.00</span></span>
+        </div>
+
+        <div class="dashboard-actions">
+            <button class="btn btn-quiz" onclick="showScreen('quiz')">📚 Quiz</button>
+            <button class="btn btn-learning" type="button" onclick="showScreen('activities')">🎮 Learning</button>
+
+            <button id="spinBtn" class="btn btn-spin" onclick="spinWheel()" disabled>🔒 Spin Wheel — Complete 100 Questions</button>
+
+            <button class="btn btn-reward" onclick="claimDailyReward()">🎁 Reward</button>
+            <button class="btn btn-bonus" onclick="claimBonus()">⚡ ₹500 Bonus</button>
+
+            <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw<span>(Min ₹500)</span></button>
+
+            <a href="https://t.me/+blPfoyArs0U1NmI1" target="_blank" rel="noopener noreferrer" class="telegram-btn">
+                <svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21.5 3.5L18.3 20c-.24 1.17-.88 1.46-1.79.91l-4.91-3.62-2.37 2.28c-.26.26-.48.48-.99.48l.35-5.01 9.12-8.24c.4-.35-.09-.55-.62-.2L6.04 13.72l-4.82-1.51c-1.05-.33-1.07-1.05.22-1.55L20.27 3.02c.89-.33 1.67.21 1.23.48z"/>
+                </svg>
+                Join Telegram
+            </a>
+
+            <!-- Small T&C Note -->
+            
+            
+            <a href="https://englishlabsurat.vercel.app/"
+            style="display:inline-block;width:5px;height:5px;color:transparent;text-decoration:none;">
+            •
+        </a>
+    </span>
+    
+    <!-- Kept in the DOM so existing notification functionality continues to work. -->
+    <div id="studentNotificationCard" class="notification-card-hidden">
+        <div id="studentNotificationText">Admin તરફથી આવતા important messages તમને મળી શકે તે માટે Notifications ચાલુ કરો.</div>
+        <button id="studentEnableNotificationBtn" type="button" onclick="enableStudentNotifications()">🔔 Enable App Notifications</button>
     </div>
+    
+    <!-- Existing admin/profile functionality is now available from the top-right icons. -->
+    <button class="btn btn-Admin legacy-admin-btn" onclick="location.href='admin.html'">👤 Admin</button>
+</div>
+<div class="tc-note">
+    <strong>Note:</strong>
+    This app is only for educational purposes. All rights reserved to the respective owners.
+</div>
+
+    </div>
+
+
     <div id="activities" class="card hidden" aria-hidden="true" style="visibility:hidden;">
 <div id="activityWalletBar" class="activity-wallet-bar">
     <span>💰 Wallet Balance</span>
@@ -2285,10 +1930,11 @@ body{margin:0;padding:0;min-width:0}
             }
         }
 
-        // Check first. The mandatory gate is hidden by default so it never
-        // flashes on refresh when the student has already granted permission.
-        // If permission/subscription is missing, checkNotificationStatus()
-        // will show the gate and lock the dashboard.
+        // Student must enable notifications before using the dashboard.
+        window.addEventListener("DOMContentLoaded", function () {
+            showNotificationRequired();
+        });
+
         window.addEventListener("load", function () {
             checkNotificationStatus();
         });
@@ -2854,8 +2500,6 @@ body{margin:0;padding:0;min-width:0}
                 quizWallet.innerText = wallet.toFixed(2);
             }
 
-            const topWallet = document.getElementById("topWallet");
-            if (topWallet) topWallet.textContent = wallet.toFixed(2);
             document.querySelectorAll("#activityWalletBalance").forEach(el => {
                 el.innerText = "₹" + wallet.toFixed(2);
             });
@@ -3500,30 +3144,6 @@ body{margin:0;padding:0;min-width:0}
         }
         function submitSpeaking(){if(!spokenText){setFeedback(false,'પહેલા Englishમાં બોલો.');return}submitActivity(spokenText);spokenText='';}
         function speakCurrent(){const q=activityQuestions[activityIndex];const u=new SpeechSynthesisUtterance(q.answer);u.lang='en-US';u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
-        async function showLeaderboard(){
-            const modal=document.getElementById('infoModal'), box=document.getElementById('infoModalContent');
-            if(!modal||!box)return; modal.hidden=false; box.innerHTML='<div class="info-title">🏆 Leaderboard</div><p style="color:#aeb4d4">Loading top players...</p>';
-            try{
-                const token=localStorage.getItem('token')||'';
-                const r=await fetch('/api/student/leaderboard',{headers:token?{Authorization:'Bearer '+token}:{}});
-                const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'Leaderboard unavailable');
-                box.innerHTML='<div class="info-title">🏆 Leaderboard</div>'+d.players.map((u,i)=>`<div class="leader-row"><span class="leader-rank">#${i+1}</span><span class="leader-name">${escapeHtml(u.name||'Student')}</span><span class="leader-score">${Number(u.quizScore||0)} XP</span></div>`).join('')||'<p>No players yet.</p>';
-            }catch(e){box.innerHTML='<div class="info-title">🏆 Leaderboard</div><p style="color:#ff8b9a">'+escapeHtml(e.message||'Unable to load leaderboard')+'</p>';}
-        }
-        async function showQuizHistory(){
-            const modal=document.getElementById('infoModal'), box=document.getElementById('infoModalContent');
-            if(!modal||!box)return; modal.hidden=false; box.innerHTML='<div class="info-title">📄 Quiz History</div><p style="color:#aeb4d4">Loading history...</p>';
-            try{
-                const token=localStorage.getItem('token')||'';
-                const r=await fetch('/api/student/quiz-history?limit=50',{headers:token?{Authorization:'Bearer '+token}:{}});
-                const d=await r.json(); if(!r.ok||!d.success) throw new Error(d.message||'History unavailable');
-                box.innerHTML='<div class="info-title">📄 Quiz History</div>'+(d.history.length?d.history.map(x=>`<div class="history-row"><span class="history-q">${escapeHtml(x.questionText||'Question')}</span><span class="history-result ${x.isCorrect?'ok':'bad'}">${x.isCorrect?'✓ Correct':'✕ Wrong'}</span></div>`).join(''):'<p style="color:#aeb4d4">No quiz history yet.</p>');
-            }catch(e){box.innerHTML='<div class="info-title">📄 Quiz History</div><p style="color:#ff8b9a">'+escapeHtml(e.message||'Unable to load history')+'</p>';}
-        }
-        function closeInfoModal(){const m=document.getElementById('infoModal');if(m)m.hidden=true;}
-        function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-        document.addEventListener('keydown',e=>{if(e.key==='Escape')closeInfoModal();});
-
         loadQuestionBank();
         // Wallet is fetched from the server; do not overwrite it with the initial 0.
         loadWallet();
@@ -3592,10 +3212,12 @@ body{margin:0;padding:0;min-width:0}
 
         async function claimBonus() {
     try {
-        const token = localStorage.getItem("studentToken") || localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-        // Guest click: do nothing. Never show “Please login first.” for the bonus button.
-        if (!token) return;
+        if (!token) {
+            alert("❌ Please login first.");
+            return;
+        }
 
         const response = await fetch("/api/bonus/claim", {
             method: "POST",
@@ -3605,77 +3227,30 @@ body{margin:0;padding:0;min-width:0}
             }
         });
 
-        // Read the response only once. The previous code tried to read
-        // response.clone() after response.json(), which throws when the
-        // server returns a normal 400/401 error and caused the misleading
-        // "Something went wrong" message.
-        const contentType = response.headers.get("content-type") || "";
-        let data = {};
-        if (contentType.includes("application/json")) {
-            data = await response.json();
-        } else {
-            const text = await response.text();
-            data = { message: text || "Server returned an unexpected response." };
-        }
+        const data = await response.json();
 
-        if (!response.ok || data.success === false) {
-            // Keep the real server message visible instead of falling into
-            // the generic catch block.
-            if (data.forceLogout) {
-                localStorage.removeItem("studentToken");
-                localStorage.removeItem("token");
-            }
-
-            alert(data.message || "🎁 Bonus is not unlocked yet.");
+        if (!response.ok) {
+            alert("🎁 Bonus is not available right now.");
             return;
         }
 
-        if (typeof applyWalletData === "function") {
-            applyWalletData(data);
-        } else if (data.wallet != null) {
-            const walletEl = document.getElementById("wallet");
-            if (walletEl) walletEl.textContent = "₹" + Number(data.wallet).toFixed(2);
-        }
-
-        // Immediately update the bonus button so it cannot be claimed twice.
-        const bonusBtn = document.getElementById("bonusBtn");
-        if (bonusBtn) {
-            bonusBtn.disabled = true;
-            bonusBtn.textContent = "✅ Bonus Claimed";
-        }
-
         alert(
-            "🎉 Mystery Bonus Claimed!\n\n" +
-            "🎁 Reward: ₹" + Number(data.reward || 0).toFixed(2) + "\n" +
-            "📌 Bonus Source: " + (data.source === "quiz" ? "Quiz" : "Learning") + "\n\n" +
-            "💰 Reward તમારા Wallet માં add થઈ ગયો છે."
+            "🎉 Bonus Claim Successful!\n\n" +
+            "📸 આ screen નો screenshot લો.\n\n" +
+            "📤 લીધેલો screenshot Admin ને મોકલવાનો છે.\n\n" +
+            "⏳ Admin screenshot verify કર્યા પછી જ Bonus તમારા Wallet માં add કરશે.\n\n" +
+            "💰 Bonus હાલમાં Wallet માં add થયો નથી."
         );
 
     } catch (error) {
         console.error("Bonus Error:", error);
+
         alert(
-            "❌ Bonus claim failed.\n\n" +
-            (error && error.message ? error.message : "Please try again later.")
+            "❌ Something went wrong.\n\n" +
+            "Please try again later."
         );
     }
 }
-        async function loadBonusStatus(){
-            const token = localStorage.getItem("studentToken") || localStorage.getItem("token");
-            if(!token) return;
-            try{
-                const r=await fetch("/api/bonus/status",{headers:{Authorization:"Bearer "+token},cache:"no-store"});
-                if(!r.ok)return;
-                const d=await r.json(); const b=d.bonus||{};
-                const btn=document.getElementById("bonusBtn");
-                if(btn){
-                    btn.textContent=b.unlocked ? "🎉 Claim Mystery Bonus" : "🎁 Mystery Bonus";
-                    btn.disabled=!!b.claimed;
-                    btn.title=b.unlocked?"Mystery Bonus unlocked!":"Keep answering correctly in Quiz or Learning.";
-                }
-            }catch(e){}
-        }
-        loadBonusStatus();
-
         function toggleTheme() {
             document.body.classList.toggle("dark");
 
@@ -3872,122 +3447,6 @@ document.addEventListener('click', function(e){
         if (document.body.contains(btn)) btn.disabled = false;
     });
 }, true);
-</script>
-<div id="bookPurchaseModal" role="dialog" aria-modal="true" aria-labelledby="bookPurchaseTitle">
-  <div class="book-purchase-box">
-    <h3 id="bookPurchaseTitle">📖 Book Purchase</h3>
-    <div class="book-modal-badge">ADUCATE • DIGITAL BOOK</div>
-    <div class="book-price">₹499</div>
-    <p id="bookPurchaseStatus">Google Pay / UPI થી ₹499 payment કરો. Payment પછી અહીં પાછા આવીને verification request મોકલો.</p>
-    <div class="book-modal-steps"><span>1. Pay</span><span>2. Submit</span><span>3. Admin Verify</span></div>
-    <button type="button" class="book-modal-btn book-pay-btn" onclick="startBookPayment()">💳 Pay ₹499 with Google Pay</button>
-    <button type="button" class="book-modal-btn book-paid-btn" id="bookPaidBtn" onclick="confirmBookPayment()" style="display:none">✅ I Have Paid — Send for Verification</button>
-    <button type="button" class="book-modal-btn book-close-btn" onclick="closeBookModal()">Not Now</button>
-  </div>
-</div>
-
-<script id="book-purchase-upi">
-const BOOK_UPI_ID = "baa836610@okaxis";
-const BOOK_STATUS_API = "/api/book-purchases/status";
-function authHeaders(){
-  const t = localStorage.getItem("token") || localStorage.getItem("authToken");
-  return t ? { Authorization: "Bearer " + t } : {};
-}
-function startBookPayment(){
-  const upiUrl = "upi://pay?pa=" + encodeURIComponent(BOOK_UPI_ID)
-    + "&pn=" + encodeURIComponent("Aducate Book")
-    + "&tn=" + encodeURIComponent("Book Purchase - Rs 499")
-    + "&am=499&cu=INR";
-  document.getElementById("bookPurchaseStatus").textContent = "Google Pay માં ₹499 payment કરો. Payment થયા પછી પાછા આવીને ‘I Have Paid’ દબાવો.";
-  document.getElementById("bookPaidBtn").style.display = "block";
-  window.location.href = upiUrl;
-}
-function buyBook(){
-  const modal = document.getElementById("bookPurchaseModal");
-  if (modal) modal.classList.add("show");
-  loadBookStatus();
-}
-function closeBookModal(){
-  const modal = document.getElementById("bookPurchaseModal");
-  if (modal) modal.classList.remove("show");
-}
-async function confirmBookPayment(){
-  try{
-    const res = await fetch("/api/book-purchases/confirm", { method:"POST", headers:{...authHeaders(), "Content-Type":"application/json"} });
-    const data = await res.json();
-    if(!res.ok || !data.success) throw new Error(data.message || "Payment confirmation failed");
-    document.getElementById("bookPurchaseStatus").textContent = "⏳ Payment submitted. Admin verification pending. Book will appear after approval.";
-    document.getElementById("bookPaidBtn").style.display = "none";
-    closeBookModal();
-    loadBookStatus();
-  }catch(e){ alert(e.message || "Please login again."); }
-}
-async function loadBookStatus(){
-  try{
-    const res = await fetch(BOOK_STATUS_API + "?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
-    if(!res.ok) return;
-    const data = await res.json();
-    let host = document.getElementById("studentBookAccessBox");
-    if(!host){
-      const btn = document.querySelector(".btn-book");
-      if(!btn) return;
-      host = document.createElement("div"); host.id="studentBookAccessBox"; btn.parentElement.appendChild(host);
-    }
-    host.className = "student-book-access";
-    host.innerHTML = data.canDownload ? `<div class="book-access-card active"><div class="book-access-icon">📖</div><div class="book-access-main"><div class="book-access-title">Book Access Active</div><div class="book-access-sub">Your book is ready to download.</div></div><button type="button" class="book-access-download" onclick="downloadBookSecure()">📥 Download Book</button></div>` : (data.purchase && data.purchase.status === 'admin_verified' ? `<div class="book-access-card closed"><div class="book-access-icon">🔒</div><div class="book-access-main"><div class="book-access-title">Book Access Closed</div><div class="book-access-sub">Admin has temporarily closed book access.</div></div><span class="book-access-pill">CLOSED</span></div>` : (data.purchase && data.purchase.status === 'rejected' ? `<div class="book-access-card declined"><div class="book-access-icon">🚫</div><div class="book-access-main"><div class="book-access-title">Payment Request Declined</div><div class="book-access-sub">You can submit a new payment confirmation.</div></div><span class="book-access-pill">DECLINED</span></div>` : (data.purchase && data.purchase.status === 'student_confirmed' ? `<div class="book-access-card pending"><div class="book-access-icon">⏳</div><div class="book-access-main"><div class="book-access-title">Verification Pending</div><div class="book-access-sub">Admin is checking your ₹499 payment.</div></div><span class="book-access-pill">PENDING</span></div>` : `<div class="book-access-empty"><span>📚</span><div><strong>Book Access</strong><small>Purchase the book to unlock access.</small></div></div>`)));
-  }catch(e){ console.warn("Book status",e); }
-}
-async function downloadBookSecure(){
-  try{
-    const res = await fetch("/api/book-purchases/download?_=" + Date.now(), { headers: authHeaders(), cache:"no-store" });
-    if(!res.ok){ const d=await res.json().catch(()=>({})); throw new Error(d.message || "Book access is not active"); }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="book.pdf"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  }catch(e){ alert(e.message); }
-}
-window.buyBook=buyBook; window.closeBookModal=closeBookModal; window.startBookPayment=startBookPayment; window.confirmBookPayment=confirmBookPayment; window.downloadBookSecure=downloadBookSecure;
-document.addEventListener("DOMContentLoaded", loadBookStatus);
-setInterval(loadBookStatus, 8000);
-</script>
-
-<script id="globalBrandingClient">
-(function(){
-  const FALLBACK='/aducate.png';
-  let currentVersion=null;
-  function setLink(rel, href, sizes){
-    let el=document.querySelector(`link[rel="${rel}"]${sizes?`[sizes="${sizes}"]`:''}`);
-    if(!el){ el=document.createElement('link'); el.rel=rel; if(sizes) el.sizes=sizes; document.head.appendChild(el); }
-    el.href=href;
-  }
-  function applyBranding(data){
-    const version=Number(data?.version||0);
-    if(currentVersion===version && document.documentElement.dataset.brandingReady==='1') return;
-    currentVersion=version;
-    document.documentElement.dataset.brandingReady='1';
-    const src=`/api/branding/icon?v=${version}&size=512&t=${Date.now()}`;
-    document.querySelectorAll('[data-brand-logo]').forEach(img=>{ img.src=src; img.alt='Aducate Logo'; });
-    setLink('icon', src, '192x192');
-    setLink('apple-touch-icon', src, '180x180');
-    const manifest=document.querySelector('link[rel="manifest"]'); if(manifest) manifest.href=`/manifest.webmanifest?v=${version}&t=${Date.now()}`;
-    // Broadcast the new branding to every open tab/window immediately.
-    try { localStorage.setItem('aducate-branding-version', String(version)); } catch(e) {}
-    try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = window.__aducateBrandChannel || new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.postMessage({type:'BRANDING_UPDATED',version}); } } catch(e) {}
-    if (navigator.serviceWorker) navigator.serviceWorker.getRegistration('/').then(reg=>reg?.active?.postMessage({type:'BRANDING_UPDATED',version})).catch(()=>{});
-  }
-  async function refresh(){
-    try{ const r=await fetch('/api/branding?_='+Date.now(),{cache:'no-store'}); const d=await r.json(); if(d.success) applyBranding(d); }catch(e){}
-  }
-  window.refreshGlobalBranding=refresh;
-
-  // Also force the installed PWA service worker/manifest to revalidate after a branding change.
-  if(navigator.serviceWorker){ navigator.serviceWorker.getRegistration('/').then(reg=>{ reg?.update(); reg?.active?.postMessage({type:'CHECK_BRANDING'}); }).catch(()=>{}); }
-  try { window.addEventListener('storage', e=>{ if(e.key==='aducate-branding-version') refresh(); }); } catch(e) {}
-  try { if ('BroadcastChannel' in window) { window.__aducateBrandChannel = new BroadcastChannel('aducate-branding'); window.__aducateBrandChannel.onmessage=e=>{ if(e.data?.type==='BRANDING_UPDATED') refresh(); }; } } catch(e) {}
-  refresh();
-  setInterval(refresh,3000);
-})();
-</script>
-
-<script src="/mobile-branding.js" defer></script></body>
+</script></body>
 
 </html>
