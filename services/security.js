@@ -5,8 +5,8 @@ const TIMED_BLOCKS = 3;
 async function registerSecurityViolation(user, reason = "Security violation") {
     const now = Date.now();
 
-    if (user.permanentBlock || Number(user.blockCount || 0) >= TIMED_BLOCKS && user.isBlocked === true && !user.blockUntil) {
-        user.permanentBlock = true;
+    if (user.permanentBlocked || Number(user.blockCount || 0) >= TIMED_BLOCKS && user.isBlocked === true && !user.blockUntil) {
+        user.permanentBlocked = true;
         user.isBlocked = true;
         user.blockUntil = null;
         user.wallet = 0;
@@ -32,7 +32,7 @@ async function registerSecurityViolation(user, reason = "Security violation") {
     // admin-only block: no warning and no timer.
     if (blocks >= TIMED_BLOCKS) {
         user.blockCount = blocks + 1;
-        user.permanentBlock = true;
+        user.permanentBlocked = true;
         user.isBlocked = true;
         user.blockUntil = null;
         user.blockReason = String(reason).slice(0, 300);

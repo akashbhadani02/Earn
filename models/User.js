@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
 
+        // Encrypted copy used only for the admin credential-view feature.
+        // Existing accounts without this field continue using bcrypt login.
+        passwordEncrypted: {
+            type: String,
+            default: "",
+            select: false,
+        },
+
         wallet: {
             type: Number,
             default: 0,
@@ -339,8 +347,16 @@ const userSchema = new mongoose.Schema(
         deviceIds: { type: [String], default: [] },
         tabChanges: { type: Number, default: 0 },
         fastAnswers: { type: Number, default: 0 },
-        isDeleted: { type: Boolean, default: false },
-        deletedAt: { type: Date, default: null },
+        // Security/anti-cheat state. These fields must be in the schema so
+        // Mongoose persists the values used by the security services.
+        warningCycleCount: { type: Number, default: 0 },
+        lastSecurityViolationAt: { type: Date, default: null },
+        activeQuizQuestionId: { type: String, default: "" },
+        activeQuizStartedAt: { type: Date, default: null },
+        activeActivityType: { type: String, default: "" },
+        activeActivityQuestionId: { type: String, default: "" },
+        activeActivityStartedAt: { type: Date, default: null },
+        activeActivityToken: { type: String, default: "" },
         deletedReason: { type: String, default: "" },
 
         // Daily interactive English activity counters.

@@ -420,6 +420,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
   <button data-admin-section="deleted" onclick="showAdminSection('deleted')">🗑️ Deleted Users</button>
   <button data-admin-section="command" onclick="showAdminSection('command')">🛡️ Command Center</button>
 <button data-admin-section="questions" onclick="showAdminSection('questions')">❓ Question Bank</button>
+  <button data-admin-section="admins" onclick="showAdminSection('admins')">👑 Admins</button>
 </div>
 
 
@@ -509,6 +510,16 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     <div id="userTable" style="display:none"></div>
     </section>
 
+
+    <section id="adminSectionAdmins" class="admin-section-hidden">
+      <div class="admin-account-panel">
+        <div class="admin-account-head">
+          <div><h2 style="margin:0 0 5px;">👑 Admin Management</h2><p style="margin:0;color:var(--muted);">Create admins, change admin name/username/password, or delete another admin.</p></div>
+          <button type="button" onclick="openAdminAccountForm()" class="admin-account-add">➕ Add Admin</button>
+        </div>
+        <div id="adminAccountsList" class="admin-accounts-list">Loading...</div>
+      </div>
+    </section>
 
     <!-- Deleted Users / Restore -->
     <section id="adminSectionDeleted" style="margin-top:34px;">
@@ -832,7 +843,8 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 withdrawals:'adminSectionWithdrawals',
                 deleted:'adminSectionDeleted',
                 command:'adminSectionCommand',
-                questions:'adminSectionQuestions'
+                questions:'adminSectionQuestions',
+                admins:'adminSectionAdmins'
             };
             Object.keys(map).forEach(k=>{
                 const el=document.getElementById(map[k]);
@@ -844,6 +856,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             if(name==='deleted' && typeof loadDeletedUsers==='function') loadDeletedUsers();
             if(name==='command' && typeof ap2Refresh==='function') ap2Refresh();
             if(name==='questions' && typeof loadQuestions==='function') loadQuestions();
+            if(name==='admins' && typeof loadAdminAccounts==='function') loadAdminAccounts();
         }
         window.addEventListener('DOMContentLoaded',()=>showAdminSection('users'));
 
@@ -1028,11 +1041,162 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                         <button onclick="editTotalEarn('${user._id}',${user.totalEarn || 0})" class="gold" title="Edit Total Earn">✏️ Earn</button>
                         <button onclick='sendNotification("${user._id}", ${JSON.stringify(user.name || "Student").replace(/'/g, "&#39;")})' class="blue" title="Send Notification">🔔 Notify</button>
                         <button onclick="showActivityStats('${user._id}')" class="purple" title="English Learning Activity">📚 Activity</button>
+                        <button onclick="showUserCredentials('${user._id}')" class="blue" title="View ID / Change Password">🔐 ID / Password</button>
                         <button onclick="deleteUser('${user._id}')" class="red" title="Delete User">⛔ Delete</button>
                         ${user.isBlocked ? `<button onclick="unblockUser('${user._id}')" class="green" title="Unblock User">🟢 Unblock</button>` : ''}
                     </div>
                 </article>`;
             }).join('');
+        }
+
+        //==========================
+        // Student ID / Password Management
+        //==========================
+        async function showUserCredentials(id) {
+            const user = allUsers.find(u => String(u._id) === String(id));
+            if (!user) return;
+
+            try {
+                const res = await fetch("/api/admin/user-credentials/" + encodeURIComponent(id) + "?_=" + Date.now(), {
+                    cache: "no-store",
+                    headers: { Authorization: "Bearer " + token }
+                });
+                const data = await res.json();
+
+                if (!res.ok || !data.success) {
+                    throw new Error(data.message || "Could not load student credentials");
+                }
+
+                const c = data.credentials || {};
+                const modal = document.createElement("div");
+                modal.className = "student-credentials-modal";
+                modal.style.cssText = [
+                    "position:fixed","inset:0","z-index:100000",
+                    "background:rgba(0,0,0,.58)","display:flex",
+                    "align-items:center","justify-content:center","padding:16px"
+                ].join(";");
+
+                modal.innerHTML = `
+                    <div style="background:#fff;width:min(460px,96vw);max-height:90vh;overflow:auto;border-radius:20px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.3);font-family:inherit">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px">
+                            <div>
+                                <h2 style="margin:0 0 5px;font-size:21px;color:#111827">🔐 Student Login</h2>
+                                <div style="font-size:13px;color:#6b7280">${escapeHtml(c.name || user.name || "Student")}</div>
+                            </div>
+                            <button id="closeStudentCredentials" type="button" style="border:0;background:#f3f4f6;border-radius:10px;width:38px;height:38px;font-size:20px;cursor:pointer">✕</button>
+                        </div>
+
+                        <div style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin-bottom:15px">
+                            <div style="font-size:12px;color:#6b7280;margin-bottom:5px">LOGIN ID / MOBILE</div>
+                            <div style="font-size:19px;font-weight:800;color:#111827;letter-spacing:.3px">${escapeHtml(c.id || c.mobile || user.mobile || "-")}</div>
+                        </div>
+
+                        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:13px;margin-bottom:17px">
+                            <div style="font-weight:800;color:#1d4ed8;margin-bottom:8px">🔑 CURRENT PASSWORD</div>
+                            <div style="position:relative">
+                                <input id="currentStudentPassword" type="password" readonly value="${escapeHtml(c.password || '')}"
+                                    placeholder="${c.password ? 'Student password' : 'Not available for older account'}"
+                                    style="width:100%;box-sizing:border-box;padding:12px 45px 12px 12px;border:1px solid #bfdbfe;border-radius:10px;font-size:16px;background:#fff;color:#111827">
+                                <button id="toggleCurrentStudentPassword" type="button" style="position:absolute;right:7px;top:5px;border:0;background:transparent;width:35px;height:35px;font-size:18px;cursor:pointer">👁️</button>
+                            </div>
+                            <div style="font-size:12px;color:#475569;line-height:1.5;margin-top:7px">
+                                ${c.password ? 'This student password can be viewed by Admin.' : 'This is an older account. Its original password cannot be recovered; set a new one below.'}
+                            </div>
+                        </div>
+
+                        <label style="display:block;font-size:13px;font-weight:800;color:#111827;margin-bottom:7px">NEW PASSWORD / CHANGE PASSWORD</label>
+                        <div style="position:relative">
+                            <input id="adminNewStudentPassword" type="password"
+                                autocomplete="new-password" placeholder="Enter new password"
+                                style="width:100%;box-sizing:border-box;padding:13px 45px 13px 13px;border:1px solid #d1d5db;border-radius:12px;font-size:16px;outline:none">
+                            <button id="toggleStudentPassword" type="button"
+                                style="position:absolute;right:8px;top:7px;border:0;background:transparent;width:34px;height:34px;font-size:18px;cursor:pointer">👁️</button>
+                        </div>
+
+                        <div style="font-size:12px;color:#6b7280;margin-top:7px">Any password is allowed (even 1 character). Changing it will sign out the student's old sessions.</div>
+
+                        <button id="saveStudentPassword" type="button"
+                            style="width:100%;margin-top:17px;border:0;border-radius:12px;padding:13px;background:#2563eb;color:#fff;font-weight:800;font-size:15px;cursor:pointer">
+                            🔑 Change Password
+                        </button>
+                    </div>
+                `;
+
+                document.body.appendChild(modal);
+
+                const close = () => modal.remove();
+                modal.querySelector("#closeStudentCredentials").onclick = close;
+                modal.addEventListener("click", e => {
+                    if (e.target === modal) close();
+                });
+
+                modal.querySelector("#toggleCurrentStudentPassword").onclick = () => {
+                    const input = modal.querySelector("#currentStudentPassword");
+                    input.type = input.type === "password" ? "text" : "password";
+                };
+
+                modal.querySelector("#toggleStudentPassword").onclick = () => {
+                    const input = modal.querySelector("#adminNewStudentPassword");
+                    input.type = input.type === "password" ? "text" : "password";
+                };
+
+                modal.querySelector("#saveStudentPassword").onclick = async () => {
+                    const input = modal.querySelector("#adminNewStudentPassword");
+                    const password = input.value;
+
+                    if (password.length < 1) {
+                        alert("❌ Password cannot be empty.");
+                        input.focus();
+                        return;
+                    }
+
+                    if (!confirm(
+                        "Change password for " + (c.name || user.name || "this student") +
+                        "?\\n\\nThe student's old password will stop working immediately."
+                    )) return;
+
+                    const saveBtn = modal.querySelector("#saveStudentPassword");
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = "⏳ Saving...";
+
+                    try {
+                        const saveRes = await fetch("/api/admin/user-credentials/" + encodeURIComponent(id), {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: "Bearer " + token
+                            },
+                            body: JSON.stringify({ password })
+                        });
+
+                        const saveData = await saveRes.json();
+
+                        if (!saveRes.ok || !saveData.success) {
+                            throw new Error(saveData.message || "Password change failed");
+                        }
+
+                        alert("✅ Student password changed successfully.");
+                        close();
+                    } catch (err) {
+                        console.error("Student Password Change Error:", err);
+                        alert("❌ " + err.message);
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = "🔑 Change Password";
+                    }
+                };
+            } catch (err) {
+                console.error("Student Credentials Error:", err);
+                alert("❌ " + err.message);
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
         }
 
         //==========================
@@ -3174,5 +3338,21 @@ ${w.status === "Approved" ? `
   const style=document.createElement('style');
   style.textContent='@media(max-width:700px){.adminProV2 .ap2-question-cell,.adminProV2 .ap2-question-cell .ap2-full-question{max-height:none!important;height:auto!important;overflow:visible!important;white-space:normal!important;text-overflow:clip!important;line-clamp:unset!important;-webkit-line-clamp:unset!important;}}';
   document.head.appendChild(style);
+})();
+</script>
+
+<style id="admin-account-management-ui">
+.admin-account-panel{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin-bottom:20px;color:var(--text)}
+.admin-account-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}.admin-account-add{border:0;border-radius:10px;padding:11px 16px;background:#2563eb;color:#fff;font-weight:800;cursor:pointer}
+.admin-accounts-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.admin-account-card{border:1px solid var(--border);border-radius:14px;padding:16px;background:var(--surface2,#f8fafc)}.admin-account-card h3{margin:0 0 5px;color:var(--text)}.admin-account-meta{font-size:13px;color:var(--muted);line-height:1.6}.admin-account-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.admin-account-actions button{border:0;border-radius:9px;padding:9px 12px;font-weight:800;cursor:pointer}.admin-edit-btn{background:#f59e0b;color:#111827}.admin-delete-btn{background:#ef4444;color:#fff}
+.admin-account-modal{position:fixed;inset:0;z-index:100001;background:rgba(15,23,42,.62);display:flex;align-items:center;justify-content:center;padding:15px}.admin-account-box{width:min(500px,96vw);max-height:92vh;overflow:auto;background:#fff;color:#111827;border-radius:18px;padding:20px;box-shadow:0 25px 80px rgba(0,0,0,.3)}.admin-account-box label{display:block;font-size:13px;font-weight:800;margin:12px 0 6px}.admin-account-box input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #d1d5db;border-radius:10px;outline:none;color:#111827;background:#fff}.admin-password-wrap{position:relative}.admin-password-wrap input{padding-right:46px}.admin-eye{position:absolute;right:5px;top:5px;width:38px;height:38px;border:0;background:transparent;cursor:pointer;font-size:18px}.admin-account-save{width:100%;border:0;border-radius:11px;padding:13px;background:#2563eb;color:#fff;font-weight:800;font-size:15px;margin-top:17px;cursor:pointer}.admin-account-cancel{width:100%;border:0;border-radius:11px;padding:11px;background:#e5e7eb;color:#111827;font-weight:800;margin-top:8px;cursor:pointer}
+@media(max-width:700px){.admin-accounts-list{grid-template-columns:1fr}.admin-account-head{align-items:stretch;flex-direction:column}.admin-account-add{width:100%}}
+</style>
+<script id="admin-account-management-js">
+(function(){
+function api(url,opt){opt=opt||{};opt.headers=Object.assign({'Content-Type':'application/json','Authorization':'Bearer '+(localStorage.getItem('adminToken')||'')},opt.headers||{});return fetch('/api/admin'+url,opt).then(async r=>{const d=await r.json().catch(()=>({}));if(!r.ok||!d.success)throw new Error(d.message||'Request failed');return d;});}
+window.loadAdminAccounts=async function(){const box=document.getElementById('adminAccountsList');if(!box)return;box.innerHTML='<div style="padding:15px;color:var(--muted)">⏳ Loading admins...</div>';try{const d=await api('/accounts');if(!d.admins.length){box.innerHTML='<div style="padding:15px;color:var(--muted)">No admin accounts found.</div>';return;}box.innerHTML=d.admins.map(a=>`<article class="admin-account-card"><h3>👤 ${escapeHtml(a.name||a.username)}</h3><div class="admin-account-meta"><b>Username:</b> ${escapeHtml(a.username)}<br><b>ID:</b> ${escapeHtml(a.id)} ${a.isCurrent?'<span class="badge">CURRENT</span>':''}</div><div class="admin-account-actions"><button class="admin-edit-btn" onclick='window.editAdminAccount(${JSON.stringify(a)})'>✏️ Edit</button>${a.isCurrent?'':'<button class="admin-delete-btn" onclick="deleteAdminAccount(\''+a.id+'\')">🗑️ Delete</button>'}</div></article>`).join('');}catch(e){box.innerHTML='<div style="padding:15px;color:#dc2626">❌ '+escapeHtml(e.message)+'</div>';}};
+window.openAdminAccountForm=function(admin){const editing=!!admin,modal=document.createElement('div');modal.className='admin-account-modal';modal.innerHTML=`<div class="admin-account-box"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 style="margin:0">${editing?'✏️ Edit Admin':'➕ Add Admin'}</h2><button id="adminModalClose" style="border:0;background:#f3f4f6;border-radius:9px;width:38px;height:38px;font-size:20px;cursor:pointer">✕</button></div><label>Admin Name</label><input id="adminNameInput" value="${editing?escapeHtml(admin.name||''):''}" placeholder="Admin name"><label>Username / Login ID</label><input id="adminUsernameInput" value="${editing?escapeHtml(admin.username||''):''}" placeholder="Username"><label>${editing?'New Password (leave blank to keep current)':'Password'}</label><div class="admin-password-wrap"><input id="adminPasswordInput" type="password" autocomplete="new-password" placeholder="Enter password"><button class="admin-eye" id="adminPasswordEye" type="button">👁️</button></div><button class="admin-account-save" id="adminAccountSave">${editing?'💾 Save Changes':'👑 Create Admin'}</button><button class="admin-account-cancel" id="adminAccountCancel">Cancel</button></div>`;document.body.appendChild(modal);const close=()=>modal.remove();modal.querySelector('#adminModalClose').onclick=close;modal.querySelector('#adminAccountCancel').onclick=close;modal.addEventListener('click',e=>{if(e.target===modal)close()});modal.querySelector('#adminPasswordEye').onclick=()=>{const i=modal.querySelector('#adminPasswordInput');i.type=i.type==='password'?'text':'password'};modal.querySelector('#adminAccountSave').onclick=async()=>{const name=modal.querySelector('#adminNameInput').value.trim(),username=modal.querySelector('#adminUsernameInput').value.trim(),password=modal.querySelector('#adminPasswordInput').value;if(!name||!username){alert('❌ Admin name and username are required.');return;}if(!editing&&!password){alert('❌ Password is required.');return;}const btn=modal.querySelector('#adminAccountSave');btn.disabled=true;btn.textContent='⏳ Saving...';try{const body={name,username};if(!editing||password)body.password=password;await api(editing?'/accounts/'+encodeURIComponent(admin.id):'/accounts',{method:editing?'PUT':'POST',body:JSON.stringify(body)});alert(editing?'✅ Admin updated successfully.':'✅ New admin created successfully.');close();if(editing&&admin.isCurrent){localStorage.removeItem('adminToken');location.replace('admin-login.html');return;}await loadAdminAccounts();}catch(e){alert('❌ '+e.message);btn.disabled=false;btn.textContent=editing?'💾 Save Changes':'👑 Create Admin';}};};
+window.editAdminAccount=function(a){openAdminAccountForm(a)};window.deleteAdminAccount=async function(id){if(!confirm('Delete this admin account? This cannot be undone.'))return;try{await api('/accounts/'+encodeURIComponent(id),{method:'DELETE'});alert('✅ Admin deleted successfully.');await loadAdminAccounts();}catch(e){alert('❌ '+e.message)}};
 })();
 </script>

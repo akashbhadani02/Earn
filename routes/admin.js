@@ -1,13 +1,39 @@
 const express = require("express");
-const router = express.Router();
-
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Question = require("../models/Question");
 const LifelineUsage = require("../models/LifelineUsage");
+
+const CREDENTIAL_ALGO = "aes-256-gcm";
+const CREDENTIAL_KEY = crypto.createHash("sha256")
+    .update(String(process.env.CREDENTIAL_ENCRYPTION_KEY || process.env.JWT_SECRET || "change-this-secret"))
+    .digest();
+
+function encryptStudentPassword(password) {
+    const iv = crypto.randomBytes(12);
+    const cipher = crypto.createCipheriv(CREDENTIAL_ALGO, CREDENTIAL_KEY, iv);
+    const encrypted = Buffer.concat([cipher.update(String(password), "utf8"), cipher.final()]);
+    const tag = cipher.getAuthTag();
+    return [iv.toString("base64url"), tag.toString("base64url"), encrypted.toString("base64url")].join(".");
+}
+
+function decryptStudentPassword(payload) {
+    if (!payload || typeof payload !== "string") return null;
+    try {
+        const [ivB64, tagB64, dataB64] = payload.split(".");
+        if (!ivB64 || !tagB64 || !dataB64) return null;
+        const decipher = crypto.createDecipheriv(CREDENTIAL_ALGO, CREDENTIAL_KEY, Buffer.from(ivB64, "base64url"));
+        decipher.setAuthTag(Buffer.from(tagB64, "base64url"));
+        return Buffer.concat([decipher.update(Buffer.from(dataB64, "base64url")), decipher.final()]).toString("utf8");
+    } catch { return null; }
+}
+
+const router = express.Router();
+
 const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
@@ -42,19 +68,15 @@ router.post("/login", async (req, res) => {
         }
 
         const token = jwt.sign(
-            {
-                id: admin._id,
-                role: "admin"
-            },
+            { id: admin._id, role: "admin", tokenVersion: Number(admin.tokenVersion || 0) },
             process.env.JWT_SECRET,
-            {
-                expiresIn: "7d"
-            }
+            { expiresIn: "7d" }
         );
 
         res.json({
             success: true,
-            token
+            token,
+            admin: { id:String(admin._id), name:admin.name || admin.username, username:admin.username }
         });
 
     } catch (err) {
@@ -67,6 +89,68 @@ router.post("/login", async (req, res) => {
     }
 
 });
+
+// ===========================
+// Admin Account Management
+// ===========================
+
+router.get("/accounts", adminAuth, async (req, res) => {
+    try {
+        const admins = await Admin.find({}).select("name username createdAt updatedAt").sort({createdAt:1}).lean();
+        res.json({success:true, admins:admins.map(a => ({
+            id:String(a._id), name:a.name || a.username, username:a.username,
+            createdAt:a.createdAt || null, updatedAt:a.updatedAt || null,
+            isCurrent:String(a._id) === String(req.admin.id)
+        }))});
+    } catch (err) { res.status(500).json({success:false,message:err.message}); }
+});
+
+router.post("/accounts", adminAuth, async (req, res) => {
+    try {
+        const name=String(req.body.name || "").trim();
+        const username=String(req.body.username || "").trim();
+        const password=String(req.body.password ?? "");
+        if(!name || !username || !password) return res.status(400).json({success:false,message:"Name, username and password are required."});
+        if(await Admin.findOne({username}).select("_id").lean()) return res.status(409).json({success:false,message:"This admin username already exists."});
+        const hash=await bcrypt.hash(password,10);
+        const admin=await Admin.create({name,username,password:hash,tokenVersion:0});
+        res.json({success:true,message:"Admin created successfully.",admin:{id:String(admin._id),name,username}});
+    } catch(err) { res.status(500).json({success:false,message:err.message}); }
+});
+
+router.put("/accounts/:id", adminAuth, async (req, res) => {
+    try {
+        const admin=await Admin.findById(req.params.id);
+        if(!admin) return res.status(404).json({success:false,message:"Admin not found."});
+        const name=String(req.body.name ?? admin.name ?? admin.username).trim();
+        const username=String(req.body.username ?? admin.username).trim();
+        const hasPassword=Object.prototype.hasOwnProperty.call(req.body,"password");
+        const password=hasPassword ? String(req.body.password ?? "") : "";
+        if(!name || !username) return res.status(400).json({success:false,message:"Name and username are required."});
+        if(hasPassword && !password) return res.status(400).json({success:false,message:"Password cannot be empty."});
+        const duplicate=await Admin.findOne({username,_id:{$ne:admin._id}}).select("_id").lean();
+        if(duplicate) return res.status(409).json({success:false,message:"This admin username already exists."});
+        admin.name=name; admin.username=username;
+        if(hasPassword) admin.password=await bcrypt.hash(password,10);
+        admin.tokenVersion=Number(admin.tokenVersion || 0)+1;
+        await admin.save();
+        res.json({success:true,message:"Admin updated successfully."});
+    } catch(err) { res.status(500).json({success:false,message:err.message}); }
+});
+
+router.delete("/accounts/:id", adminAuth, async (req, res) => {
+    try {
+        const id=String(req.params.id);
+        const admin=await Admin.findById(id);
+        if(!admin) return res.status(404).json({success:false,message:"Admin not found."});
+        if(id===String(req.admin.id)) return res.status(400).json({success:false,message:"You cannot delete the admin account currently being used."});
+        if(await Admin.countDocuments()<=1) return res.status(400).json({success:false,message:"At least one admin account must remain."});
+        await Admin.deleteOne({_id:id});
+        res.json({success:true,message:"Admin deleted successfully."});
+    } catch(err) { res.status(500).json({success:false,message:err.message}); }
+});
+
+router.get("/me", adminAuth, async (req,res)=>res.json({success:true,admin:req.admin}));
 
 // ===========================
 // Force logout all students + keep student login locked
@@ -339,6 +423,82 @@ router.get("/users", adminAuth, async (req, res) => {
     }
 
 });
+
+// ===========================
+// Student Login Credentials
+// ===========================
+// Passwords are stored as bcrypt hashes, so an existing password cannot be
+// safely recovered/displayed. Admin can view the login ID (mobile) and set a
+// new password. The new password is also immediately invalidated on all old
+// sessions.
+router.get("/user-credentials/:id", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id).select("name mobile passwordEncrypted").lean();
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Student not found" });
+        }
+
+        return res.json({
+            success: true,
+            credentials: {
+                id: String(user.mobile || ""),
+                mobile: String(user.mobile || ""),
+                name: String(user.name || "Student"),
+                password: decryptStudentPassword(user.passwordEncrypted),
+                passwordRecoverable: Boolean(user.passwordEncrypted),
+                message: user.passwordEncrypted
+                    ? "Password is available because this account was registered after credential viewing was enabled."
+                    : "This older account has no recoverable encrypted password. Set a new password below."
+            }
+        });
+    } catch (err) {
+        console.error("User credentials API Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/user-credentials/:id", adminAuth, async (req, res) => {
+    try {
+        const password = String(req.body.password || "");
+
+        if (password.length < 1) {
+            return res.status(400).json({
+                success: false,
+                message: "Password cannot be empty."
+            });
+        }
+
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Student not found" });
+        }
+
+        user.password = await bcrypt.hash(password, 10);
+        user.passwordEncrypted = encryptStudentPassword(password);
+
+        // Invalidate every existing student session after a password change.
+        user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+        user.activeSessionId = "";
+        user.activeDeviceId = "";
+
+        await user.save();
+
+        return res.json({
+            success: true,
+            message: "Student password changed successfully.",
+            credentials: {
+                id: String(user.mobile || ""),
+                mobile: String(user.mobile || ""),
+                name: String(user.name || "Student"),
+                passwordChanged: true
+            }
+        });
+    } catch (err) {
+        console.error("Change student password API Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // ===========================
 // Update Wallet
 // ===========================
@@ -895,16 +1055,9 @@ router.put("/unblock/:id", adminAuth, async (req, res) => {
 
         await user.save();
 
-        res.json({
+        return res.json({
             success: true,
             message: "Student Unblocked Successfully. Warning count has been reset."
-        });
-
-        await user.save();
-
-        res.json({
-            success: true,
-            message: "Student Unblocked Successfully"
         });
 
     } catch (err) {

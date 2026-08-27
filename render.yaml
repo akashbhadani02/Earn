@@ -1,7 +1,15 @@
-services:
-  - type: web
-    name: english-app
-    env: node
-    buildCommand: npm install
-    startCommand: npm start
-    autoDeploy: true
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.js"
+    }
+  ]
+}

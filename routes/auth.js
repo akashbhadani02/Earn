@@ -8,6 +8,35 @@ const User = require("../models/User");
 const Admin = require("../models/Admin");
 
 const router = express.Router();
+
+// Reversible encryption is used only for the optional admin credential-view feature.
+// The encrypted value is never sent to students and is decrypted only after adminAuth.
+const CREDENTIAL_ALGO = "aes-256-gcm";
+const CREDENTIAL_KEY = crypto.createHash("sha256")
+    .update(String(process.env.CREDENTIAL_ENCRYPTION_KEY || process.env.JWT_SECRET || "change-this-secret"))
+    .digest();
+
+function encryptStudentPassword(password) {
+    const iv = crypto.randomBytes(12);
+    const cipher = crypto.createCipheriv(CREDENTIAL_ALGO, CREDENTIAL_KEY, iv);
+    const encrypted = Buffer.concat([cipher.update(String(password), "utf8"), cipher.final()]);
+    const tag = cipher.getAuthTag();
+    return [iv.toString("base64url"), tag.toString("base64url"), encrypted.toString("base64url")].join(".");
+}
+
+function decryptStudentPassword(payload) {
+    if (!payload || typeof payload !== "string") return null;
+    try {
+        const [ivB64, tagB64, dataB64] = payload.split(".");
+        if (!ivB64 || !tagB64 || !dataB64) return null;
+        const decipher = crypto.createDecipheriv(CREDENTIAL_ALGO, CREDENTIAL_KEY, Buffer.from(ivB64, "base64url"));
+        decipher.setAuthTag(Buffer.from(tagB64, "base64url"));
+        return Buffer.concat([decipher.update(Buffer.from(dataB64, "base64url")), decipher.final()]).toString("utf8");
+    } catch {
+        return null;
+    }
+}
+
 const { registerViolation, getBlockRemainingMs, BLOCK_DURATION_MS, WARNINGS_PER_BLOCK } = require("../services/antiCheat");
 
 
@@ -35,7 +64,8 @@ router.post("/signup", async (req, res) => {
         const newUser = new User({
             name,
             mobile,
-            password: hash
+            password: hash,
+            passwordEncrypted: encryptStudentPassword(password)
         });
 
         await newUser.save();
@@ -91,7 +121,13 @@ router.post("/login", async (req, res) => {
             });
         }
 
-        const match = await bcrypt.compare(password, user.password);
+        let match = false;
+        const storedPlainPassword = decryptStudentPassword(user.passwordEncrypted);
+        if (storedPlainPassword !== null) {
+            match = String(password) === storedPlainPassword;
+        } else {
+            match = await bcrypt.compare(password, user.password);
+        }
 
         if (!match) {
 

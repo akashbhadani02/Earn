@@ -19,19 +19,17 @@ const app = express();
 app.disable("x-powered-by");
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
+
+// Lightweight deployment/health check. It intentionally does not require
+// MongoDB so Vercel can confirm the function is alive even during a DB outage.
+app.get("/api/health", (req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.json({ success: true, status: "ok", service: "english-app" });
+});
 
 // Always wait for MongoDB before any API route runs.
 // This prevents Mongoose "users.findOne() buffering timed out" errors.
-app.get("/api/health", async (req, res) => {
-    try {
-        await connectDB();
-        res.json({ success: true, status: "ok", database: "connected" });
-    } catch (err) {
-        res.status(503).json({ success: false, status: "error", database: "disconnected" });
-    }
-});
-
 app.use("/api", async (req, res, next) => {
     try {
         await connectDB();
