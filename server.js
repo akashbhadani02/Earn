@@ -14,6 +14,7 @@ const questionRoutes = require("./routes/questions");
 const notificationRoutes = require("./routes/notifications");
 const activityRoutes = require("./routes/activities");
 const bonusRoutes = require("./routes/bonus");
+const addonRoutes = require("./routes/addons");
 
 const app = express();
 app.disable("x-powered-by");
@@ -52,6 +53,7 @@ app.use("/api/questions", questionRoutes.router || questionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/bonus", bonusRoutes);
+app.use("/api/addons", addonRoutes);
 
 
 app.use(express.static(path.join(__dirname, "public")));

@@ -28,6 +28,25 @@ const userSchema = new mongoose.Schema(
             select: false,
         },
 
+
+        // Engagement add-ons
+        referralCode: { type: String, unique: true, sparse: true, default: "" },
+        referredBy: { type: String, default: "" },
+        referralCount: { type: Number, default: 0 },
+        referralReward: { type: Number, default: 0 },
+        streak: { type: Number, default: 0 },
+        longestStreak: { type: Number, default: 0 },
+        lastActivityDate: { type: String, default: "" },
+        level: { type: Number, default: 1 },
+        experience: { type: Number, default: 0 },
+        badges: { type: [String], default: [] },
+        couponsUsed: { type: [String], default: [] },
+        dailyChallengeDate: { type: String, default: "" },
+        dailyChallengeProgress: { type: Number, default: 0 },
+        dailyChallengeClaimed: { type: Boolean, default: false },
+        loginHistory: [{ at: { type: Date, default: Date.now }, device: { type: String, default: "" } }],
+        supportTickets: [{ subject: String, message: String, category: { type: String, default: "Other" }, status: { type: String, default: "Pending" }, adminReply: { type: String, default: "" }, createdAt: { type: Date, default: Date.now }, updatedAt: { type: Date, default: Date.now } }],
+
         wallet: {
             type: Number,
             default: 0,
