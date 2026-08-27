@@ -20,11 +20,6 @@ const userSchema = new mongoose.Schema(
             required: true,
         },
 
-        passwordChangedAt: {
-            type: Date,
-            default: null,
-        },
-
         wallet: {
             type: Number,
             default: 0,
