@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
 
 
         // Engagement add-ons
-        referralCode: { type: String, unique: true, sparse: true, default: "" },
+        referralCode: { type: String, unique: true, sparse: true, default: undefined },
         referredBy: { type: String, default: "" },
         referralCount: { type: Number, default: 0 },
         referralReward: { type: Number, default: 0 },
