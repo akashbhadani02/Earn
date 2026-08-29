@@ -1851,4 +1851,105 @@ router.get("/pro/reports", adminAuth, async(req,res)=>{
     }catch(e){res.status(500).json({success:false,message:e.message});}
 });
 
+
+// ================= BOOK GLOBAL OPEN/CLOSE CONTROL =================
+router.get("/book-global-status", adminAuth, async (req, res) => {
+    try {
+        const admin = await Admin.findOne().select("bookGloballyClosed").lean();
+        res.json({ success: true, bookGloballyClosed: !!admin?.bookGloballyClosed });
+    } catch (err) { res.status(500).json({ success:false, message:err.message }); }
+});
+
+router.put("/book-global-status", adminAuth, async (req, res) => {
+    try {
+        const closed = !!req.body?.bookGloballyClosed;
+        const admin = await Admin.findOneAndUpdate({}, { $set: { bookGloballyClosed: closed } }, { new:true });
+        if (!admin) return res.status(404).json({ success:false, message:"Admin account not found" });
+        res.json({ success:true, bookGloballyClosed: !!admin.bookGloballyClosed, message: closed ? "Book closed for all students." : "Book opened for approved students." });
+    } catch (err) { res.status(500).json({ success:false, message:err.message }); }
+});
+
+// ================= BOOK PURCHASE MANAGEMENT =================
+router.get("/book-purchases", adminAuth, async (req, res) => {
+    try {
+        const users = await User.find({
+            isDeleted: { $ne: true },
+            "bookPurchase.status": { $in: ["pending", "approved", "rejected"] }
+        }).select("name mobile bookPurchase").sort({ "bookPurchase.requestedAt": -1 }).lean();
+        res.set("Cache-Control", "no-store");
+        res.json({ success: true, users });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/book-purchase/:id/approve", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: "Student not found" });
+        user.bookPurchase = user.bookPurchase || {};
+        user.bookPurchase.status = "approved";
+        user.bookPurchase.price = 499;
+        user.bookPurchase.approvedAt = new Date();
+        user.bookPurchase.adminNote = String(req.body?.adminNote || "Payment verified").trim();
+        user.bookPurchase.access = true;
+        await user.save();
+        res.json({ success: true, message: "Book access approved." });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/book-purchase/:id/reject", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success: false, message: "Student not found" });
+        user.bookPurchase = user.bookPurchase || {};
+        user.bookPurchase.status = "rejected";
+        user.bookPurchase.adminNote = String(req.body?.adminNote || "Payment could not be verified").trim();
+        user.bookPurchase.access = false;
+        await user.save();
+        res.json({ success: true, message: "Book request rejected." });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// Admin: per-student book access control
+router.put("/book-purchase/:id/access", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success:false, message:"Student not found" });
+        if (!user.bookPurchase || !["pending","approved","rejected"].includes(user.bookPurchase.status)) {
+            return res.status(400).json({ success:false, message:"This student has not purchased/requested the book." });
+        }
+        const access = !!req.body?.access;
+        user.bookPurchase.access = access;
+        if (access) {
+            user.bookPurchase.status = "approved";
+            user.bookPurchase.approvedAt = new Date();
+            user.bookPurchase.adminNote = "Book access granted by admin.";
+        } else {
+            user.bookPurchase.adminNote = "Book access disabled by admin.";
+        }
+        await user.save();
+        res.json({ success:true, access, message: access ? "Book access granted." : "Book access removed." });
+    } catch (err) { res.status(500).json({ success:false, message:err.message }); }
+});
+
+
+// Admin: delete a student's book purchase/request record
+router.delete("/book-purchase/:id", adminAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({ success:false, message:"Student not found" });
+        if (!user.bookPurchase || !["pending","approved","rejected"].includes(user.bookPurchase.status)) {
+            return res.status(400).json({ success:false, message:"No book request found for this student." });
+        }
+        user.bookPurchase = { status:"none", price:499, paymentReference:"", requestedAt:null, approvedAt:null, adminNote:"", access:false };
+        await user.save();
+        res.json({ success:true, message:"Student book request deleted successfully." });
+    } catch (err) { res.status(500).json({ success:false, message:err.message }); }
+});
+
 module.exports = router;

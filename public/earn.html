@@ -1229,6 +1229,10 @@ body.kbc-fullscreen-active #quiz.kbc-quiz-screen{border-radius:0!important}
     .kbc-progress{font-size:10px}
 }
 
+
+/* ₹499 Book purchase */
+.book-btn{background:linear-gradient(135deg,#7c3aed,#2563eb)!important}.book-modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:18px;z-index:99999}.book-modal.show{display:flex}.book-box{width:min(440px,100%);background:#fff;color:#172033;border-radius:22px;padding:24px;box-shadow:0 25px 70px rgba(0,0,0,.4);text-align:center}.book-box h3{margin:0 0 8px}.book-price{font-size:28px;font-weight:900;color:#6d28d9;margin:12px 0}.book-box input{width:100%;box-sizing:border-box;padding:13px;border:2px solid #ddd;border-radius:12px;margin:10px 0;font:inherit}.book-row{display:flex;gap:10px;margin-top:10px}.book-row button{flex:1;padding:12px;border:0;border-radius:12px;font-weight:800;cursor:pointer}.book-primary{background:#6d28d9;color:#fff}.book-secondary{background:#e5e7eb}.book-status{margin-top:12px;font-weight:700}.book-reader{width:min(1000px,100%);max-width:1000px;text-align:left;max-height:92vh;overflow:hidden;padding:18px;position:relative}.book-close-x{position:absolute;top:12px;right:12px;width:42px;height:42px;border:0;border-radius:50%;background:#fee2e2;color:#991b1b;font-size:24px;font-weight:900;line-height:42px;cursor:pointer;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.12)}.book-close-x:hover{background:#fecaca;transform:scale(1.04)}.book-reader-content{line-height:1.8;background:#f8fafc;padding:12px;border-radius:14px;overflow:hidden}.book-toolbar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0}.book-toolbar button{border:0;border-radius:10px;padding:9px 13px;background:#eef2ff;color:#312e81;font-weight:800;cursor:pointer}.book-toolbar button:disabled{opacity:.45;cursor:not-allowed}.book-page-info{font-weight:800;min-width:110px;text-align:center}.book-page-jump{display:flex;align-items:center;gap:5px}.book-page-jump input{width:72px;box-sizing:border-box;padding:9px 7px;border:1px solid #cbd5e1;border-radius:10px;text-align:center;font-weight:800;font:inherit;background:#fff;color:#172033}.book-page-jump button{padding:9px 12px}.book-page-jump input::-webkit-inner-spin-button,.book-page-jump input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.book-page-jump input[type=number]{-moz-appearance:textfield}.book-canvas-wrap{height:calc(92vh - 155px);min-height:420px;overflow:auto;background:#dfe4ea;border-radius:12px;padding:14px;text-align:center;overscroll-behavior:contain}.book-canvas-wrap canvas{display:block;margin:0 auto;background:#fff;box-shadow:0 5px 18px rgba(0,0,0,.18);user-select:none;-webkit-user-select:none;max-width:none}.book-protection-note{font-size:12px;color:#64748b;text-align:center;margin:7px 0 0}.book-reader *{user-select:none;-webkit-user-select:none}
+
 </style>
 
 <style id="earn-dashboard-view-style">
@@ -1612,6 +1616,8 @@ body.notification-locked #notificationRequiredOverlay button{
             <button class="btn btn-bonus" onclick="claimBonus()">⚡ ₹500 Bonus</button>
 
             <button id="withdrawBtn" class="btn btn-withdraw" onclick="openWithdrawPopup()" disabled>💰 Withdraw<span>(Min ₹500)</span></button>
+
+            
 
             <a href="https://t.me/+blPfoyArs0U1NmI1" target="_blank" rel="noopener noreferrer" class="telegram-btn">
                 <svg class="telegram-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -3451,13 +3457,13 @@ document.addEventListener('click', function(e){
 </script>
 <!-- ADDONS CENTER -->
 <style>
-#addonsFab{position:fixed;right:18px;bottom:18px;z-index:9999;border:0;border-radius:999px;padding:14px 19px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer}
+#quickActionBar{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:10px;align-items:center}#addonsFab,#bookFab{position:static;z-index:9999;border:0;border-radius:999px;padding:14px 19px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer}
 #addonsModal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(2,6,23,.70);padding:18px;overflow:auto;backdrop-filter:blur(4px)}
 .addons-box{width:min(980px,100%);margin:20px auto;background:#fff;border-radius:24px;padding:22px;color:#172033;box-shadow:0 24px 70px rgba(0,0,0,.28)}
 .addons-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:1px solid #e5e7eb;padding-bottom:14px}.addons-head h2{margin:0;font-size:25px}.addons-close{border:0;background:#f1f5f9;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}.addons-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.addon-card{border:1px solid #e5e7eb;border-radius:18px;padding:16px;background:linear-gradient(180deg,#fff,#f8fafc);box-shadow:0 5px 16px rgba(15,23,42,.05)}.addon-card h3{margin:0 0 9px;font-size:17px}.addon-card button,.addon-card input,.addon-card textarea,.addon-card select{width:100%;box-sizing:border-box;margin-top:9px;padding:11px;border-radius:10px;border:1px solid #d7dde7;font:inherit}.addon-card button{background:#6d28d9;color:#fff;border:0;font-weight:800;cursor:pointer}.addon-card button.secondary{background:#e2e8f0;color:#172033}.addon-card button:disabled{opacity:.55;cursor:not-allowed}.addon-help{font-size:12px;color:#64748b;line-height:1.45;margin-top:7px}.addon-success{color:#15803d;font-weight:700}.addon-error{color:#dc2626;font-weight:700}.leader-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #edf0f4;font-size:13px}.badge{display:inline-block;padding:6px 9px;margin:3px;border-radius:999px;background:#ede9fe;color:#5b21b6;font-size:12px;font-weight:800}.ticket-item{padding:10px;border:1px solid #e5e7eb;border-radius:12px;margin-top:8px;background:#fff}.ticket-item small{color:#64748b}.addon-copy{display:flex;gap:8px;align-items:center}.addon-copy input{margin-top:0;flex:1;background:#f8fafc}.addon-copy button{width:auto;margin-top:0;white-space:nowrap}.ref-link{word-break:break-all;font-size:12px;color:#475569;margin-top:7px}
-@media(max-width:700px){#addonsModal{padding:8px}.addons-box{margin:0 auto;border-radius:18px;padding:14px}.addons-head h2{font-size:20px}.addons-grid{grid-template-columns:1fr;gap:10px}.addon-card{padding:13px}.addon-copy{align-items:stretch;flex-direction:column}.addon-copy button{width:100%}#addonsFab{right:12px;bottom:12px;padding:12px 16px}}
+@media(max-width:700px){#quickActionBar{right:10px;bottom:12px;gap:7px}#quickActionBar button{padding:11px 12px;font-size:13px}#addonsModal{padding:8px}.addons-box{margin:0 auto;border-radius:18px;padding:14px}.addons-head h2{font-size:20px}.addons-grid{grid-template-columns:1fr;gap:10px}.addon-card{padding:13px}.addon-copy{align-items:stretch;flex-direction:column}.addon-copy button{width:100%}#addonsFab{right:12px;bottom:12px;padding:12px 16px}}
 </style>
-<button id="addonsFab" type="button" onclick="openAddonsCenter()">🚀 Add-ons</button>
+<div id="quickActionBar"><button id="bookFab" type="button" onclick="openBookPurchase()">📖 Book ₹499</button><button id="addonsFab" type="button" onclick="openAddonsCenter()">🚀 Add-ons</button></div>
 <div id="addonsModal" aria-hidden="true"><div class="addons-box"><div class="addons-head"><div><h2>🚀 Earn Add-ons Center</h2><small>Learn • Earn • Grow</small></div><button class="addons-close" type="button" onclick="closeAddonsCenter()">✕ Close</button></div><div id="addonsContent">Loading...</div></div></div>
 <script>
 let addonsData=null;
@@ -3484,6 +3490,174 @@ async function createTicket(){const subject=document.getElementById('ticketSubje
 async function loadTickets(){try{const j=await addonFetch('/tickets');const box=document.getElementById('ticketsList');if(!box)return;box.innerHTML=j.tickets.map(t=>`<div class="ticket-item"><b>${esc(t.subject)}</b><br><small>${esc(t.category||'Other')} • ${esc(t.status||'Pending')}</small><p>${esc(t.message)}</p>${t.adminReply?'<div class="addon-success">Admin reply: '+esc(t.adminReply)+'</div>':''}</div>`).join('')||'<div class="addon-help">No tickets yet.</div>'}catch(e){alert('❌ '+e.message)}}
 window.openAddonsCenter=openAddonsCenter;window.closeAddonsCenter=closeAddonsCenter;
 </script>
+
+<div id="bookPurchaseModal" class="book-modal" role="dialog" aria-modal="true">
+  <div class="book-box">
+    <h3>📖 Aducate English Book</h3>
+    <div class="book-price">₹499</div>
+    <p id="bookPurchaseInfo">તમારા Wallet માં ₹499 અથવા વધુ balance હોય તો સીધું Wallet થી ખરીદી શકો છો. નહિતર external payment કર્યા પછી UTR submit કરીને Admin approval લઈ શકો છો.</p>
+    <input id="bookPaymentReference" placeholder="Payment Reference / UTR Number" autocomplete="off">
+    <div class="book-row"><button class="book-secondary" onclick="closeBookPurchase()">Close</button><button class="book-primary" id="bookWalletBtn" onclick="purchaseBookWithWallet()">💰 Buy with Wallet ₹499</button><button class="book-primary" id="bookRequestBtn" onclick="submitBookPurchase()">Send UTR for Admin Approval</button></div>
+    <div id="bookPurchaseStatus" class="book-status"></div>
+  </div>
+</div>
+<div id="bookReaderModal" class="book-modal" role="dialog" aria-modal="true">
+  <div class="book-box book-reader" id="bookReaderBox">
+    <button type="button" class="book-close-x" onclick="closeBookReader()" aria-label="Close book" title="Close Book">×</button>
+    <h3>📖 Aducate English Book</h3>
+    <div class="book-toolbar">
+      <button type="button" id="bookPrevBtn" onclick="bookPrevPage()">◀ Previous</button>
+      <span class="book-page-info" id="bookPageInfo">Page 1 / —</span>
+      <button type="button" id="bookNextBtn" onclick="bookNextPage()">Next ▶</button>
+      <div class="book-page-jump">
+        <input id="bookPageInput" type="number" min="1" inputmode="numeric" placeholder="Page" aria-label="Page number">
+        <button type="button" onclick="bookGoToPage()">Go</button>
+      </div>
+      <button type="button" onclick="bookZoomOut()">− Zoom</button>
+      <button type="button" onclick="bookZoomIn()">＋ Zoom</button>
+    </div>
+    <div id="bookReaderContent" class="book-reader-content">
+      <div id="bookCanvasWrap" class="book-canvas-wrap"><p>Loading book...</p></div>
+      <div class="book-protection-note">🔒 Online reading only • Download / Print controls disabled</div>
+    </div>
+    <div class="book-row"><button class="book-primary" onclick="closeBookReader()">Close Book</button></div>
+  </div>
+</div>
+
+
+<script>
+async function bookApi(path, options={}){
+  const token=localStorage.getItem("token");
+  const res=await fetch("/api/book"+path,{...options,headers:{"Content-Type":"application/json","Authorization":"Bearer "+token,...(options.headers||{})}});
+  const data=await res.json().catch(()=>({success:false,message:"Server error"}));
+  if(!res.ok||data.success===false) throw new Error(data.message||"Something went wrong");
+  return data;
+}
+async function openBookPurchase(){
+  const modal=document.getElementById("bookPurchaseModal"), status=document.getElementById("bookPurchaseStatus"), btn=document.getElementById("bookRequestBtn"), input=document.getElementById("bookPaymentReference"), walletBtn=document.getElementById("bookWalletBtn");
+  modal.classList.add("show"); status.textContent="Checking access..."; input.style.display="block"; btn.style.display="block"; walletBtn.style.display="block";
+  try{
+    const d=await bookApi("/status"); const b=d.bookPurchase||{};
+    if(b.status==="approved"){ modal.classList.remove("show"); openBookReader(); return; }
+    if(b.status==="pending"){status.textContent="⏳ Payment verification pending. Admin permission મળ્યા પછી book open થશે."; input.style.display="none"; btn.style.display="none"; walletBtn.style.display="none";}
+    else if(b.status==="rejected"){status.textContent="❌ Previous request rejected. Correct payment reference enter કરીને ફરી request મોકલો.";}
+    else status.textContent="₹499 payment કર્યા પછી તમારો UTR / Payment Reference enter કરો.";
+  }catch(err){status.textContent="❌ "+err.message;}
+}
+function closeBookPurchase(){document.getElementById("bookPurchaseModal").classList.remove("show")}
+async function openBookReader(){
+  const modal=document.getElementById("bookReaderModal"), wrap=document.getElementById("bookCanvasWrap");
+  modal.classList.add("show");
+  wrap.innerHTML="<p>Loading your approved book...</p>";
+  try{
+    const token=localStorage.getItem("token");
+    if(!token) throw new Error("Please login first.");
+    if(!window.__bookPdfJsPromise){
+      window.__bookPdfJsPromise=import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
+    }
+    const pdfjsLib=await window.__bookPdfJsPromise;
+    pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+    window.__bookPdfDoc=await pdfjsLib.getDocument({
+      url:"/api/book/content",
+      httpHeaders:{Authorization:"Bearer "+token},
+      withCredentials:false,
+      disableAutoFetch:false,
+      disableStream:false
+    }).promise;
+    window.__bookPage=1;
+    window.__bookScale=1.15;
+    await renderBookPage();
+  }catch(err){
+    console.error("Book viewer error:",err);
+    wrap.innerHTML="<p>❌ "+(err.message||"Unable to open book.")+"</p>";
+  }
+}
+
+async function renderBookPage(){
+  const pdf=window.__bookPdfDoc, wrap=document.getElementById("bookCanvasWrap");
+  if(!pdf||!wrap)return;
+  const pageNo=Math.max(1,Math.min(window.__bookPage||1,pdf.numPages));
+  window.__bookPage=pageNo;
+  const page=await pdf.getPage(pageNo);
+  const viewport=page.getViewport({scale:window.__bookScale||1.15});
+  const canvas=document.createElement("canvas");
+  const ctx=canvas.getContext("2d",{alpha:false});
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=Math.floor(viewport.width*dpr);
+  canvas.height=Math.floor(viewport.height*dpr);
+  canvas.style.width=Math.floor(viewport.width)+"px";
+  canvas.style.height=Math.floor(viewport.height)+"px";
+  canvas.setAttribute("aria-label","Book page "+pageNo);
+  canvas.oncontextmenu=e=>e.preventDefault();
+  wrap.replaceChildren(canvas);
+  await page.render({canvasContext:ctx,viewport,transform:dpr!==1?[dpr,0,0,dpr,0,0]:null}).promise;
+  document.getElementById("bookPageInfo").textContent=`Page ${pageNo} / ${pdf.numPages}`;
+  const pageInput=document.getElementById("bookPageInput");
+  if(pageInput){pageInput.max=pdf.numPages;pageInput.value=pageNo;}
+  document.getElementById("bookPrevBtn").disabled=pageNo<=1;
+  document.getElementById("bookNextBtn").disabled=pageNo>=pdf.numPages;
+  wrap.scrollTop=0;
+}
+function bookPrevPage(){if(window.__bookPage>1){window.__bookPage--;renderBookPage();}}
+function bookNextPage(){if(window.__bookPdfDoc&&window.__bookPage<window.__bookPdfDoc.numPages){window.__bookPage++;renderBookPage();}}
+function bookGoToPage(){
+  const input=document.getElementById("bookPageInput"), pdf=window.__bookPdfDoc;
+  if(!input||!pdf)return;
+  const requested=parseInt(input.value,10);
+  if(!Number.isFinite(requested)||requested<1||requested>pdf.numPages){
+    input.value=window.__bookPage||1;
+    input.focus();
+    return;
+  }
+  window.__bookPage=requested;
+  renderBookPage();
+  input.blur();
+}
+function bookZoomIn(){window.__bookScale=Math.min(2.5,(window.__bookScale||1.15)+0.15);renderBookPage();}
+function bookZoomOut(){window.__bookScale=Math.max(.7,(window.__bookScale||1.15)-0.15);renderBookPage();}
+function closeBookReader(){
+  document.getElementById("bookReaderModal").classList.remove("show");
+  const wrap=document.getElementById("bookCanvasWrap");
+  if(wrap)wrap.innerHTML="<p>Book closed.</p>";
+  if(window.__bookPdfDoc){try{window.__bookPdfDoc.destroy();}catch(e){}}
+  window.__bookPdfDoc=null;window.__bookPage=1;
+  const pageInput=document.getElementById("bookPageInput");
+  if(pageInput){pageInput.value="";pageInput.removeAttribute("max");}
+}
+
+// Student-facing protection: no save/print/context-menu shortcuts while the reader is open.
+document.addEventListener("keydown",e=>{
+  const input=e.target.closest?.("#bookPageInput");
+  if(input&&e.key==="Enter"){e.preventDefault();bookGoToPage();}
+});
+
+document.addEventListener("contextmenu",e=>{if(e.target.closest("#bookReaderModal"))e.preventDefault();});
+document.addEventListener("keydown",e=>{
+  if(!document.getElementById("bookReaderModal")?.classList.contains("show"))return;
+  if((e.ctrlKey||e.metaKey)&&["s","p","u"].includes(e.key.toLowerCase())){e.preventDefault();e.stopPropagation();}
+  if(e.key==="PrintScreen")e.preventDefault();
+});
+async function purchaseBookWithWallet(){
+  const status=document.getElementById("bookPurchaseStatus"), btn=document.getElementById("bookWalletBtn");
+  if(!confirm("તમારા Wallet માંથી ₹499 deduct કરીને Book ખરીદવી છે?")) return;
+  btn.disabled=true; btn.textContent="Processing...";
+  try{
+    const d=await bookApi("/wallet-purchase",{method:"POST",body:"{}"});
+    status.textContent="✅ "+d.message;
+    const wallet=document.getElementById("wallet"); if(wallet && d.wallet!==undefined) wallet.textContent=Number(d.wallet).toFixed(2);
+    setTimeout(()=>{closeBookPurchase();openBookReader();},700);
+  }catch(err){status.textContent="❌ "+err.message;btn.disabled=false;btn.textContent="💰 Buy with Wallet ₹499";}
+}
+
+async function submitBookPurchase(){
+  const ref=document.getElementById("bookPaymentReference").value.trim(), status=document.getElementById("bookPurchaseStatus"), btn=document.getElementById("bookRequestBtn");
+  if(ref.length<3){status.textContent="⚠️ Payment Reference / UTR enter કરો.";return}
+  btn.disabled=true; btn.textContent="Sending...";
+  try{const d=await bookApi("/request",{method:"POST",body:JSON.stringify({paymentReference:ref})});status.textContent="✅ "+d.message;document.getElementById("bookPaymentReference").style.display="none";btn.style.display="none";}
+  catch(err){status.textContent="❌ "+err.message;btn.disabled=false;btn.textContent="Send for Admin Approval";}
+}
+</script>
+
 </body>
 
 </html>

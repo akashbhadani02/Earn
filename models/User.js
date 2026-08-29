@@ -52,6 +52,17 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        // ₹499 Book purchase and admin approval
+        bookPurchase: {
+            status: { type: String, enum: ["none", "pending", "approved", "rejected"], default: "none" },
+            price: { type: Number, default: 499 },
+            paymentReference: { type: String, default: "" },
+            requestedAt: { type: Date, default: null },
+            approvedAt: { type: Date, default: null },
+            adminNote: { type: String, default: "" },
+            access: { type: Boolean, default: false }
+        },
+
         quizScore: {
             type: Number,
             default: 0,
