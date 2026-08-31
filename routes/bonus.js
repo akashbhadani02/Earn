@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/subscriptionAuth");
 
 function todayKey() {
   return new Intl.DateTimeFormat("en-CA", {

@@ -3270,6 +3270,77 @@ async function setBookAccess(id,access){if(!confirm(access?"Give this student bo
 async function deleteBookRequest(id){if(!confirm("Delete this student book request? This will remove the request and book access."))return;try{await bookAdminApi("/book-purchase/"+id,{method:"DELETE"});await updateBookPaymentBadge();openBookAdmin()}catch(e){alert(e.message)}}
 </script>
 
+
+<style id="subscription-admin-style">
+#subscriptionAdminFab{position:fixed;right:18px;bottom:142px;z-index:9998;border:0;border-radius:16px;padding:13px 16px;background:linear-gradient(135deg,#16a34a,#2563eb);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+#subscriptionAdminModal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.68);display:none;padding:20px;overflow:auto}
+#subscriptionAdminModal.show{display:block}.subscription-admin-box{max-width:1050px;margin:5vh auto;background:#fff;color:#172033;border-radius:20px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.subscription-admin-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.subscription-admin-head h2{margin:0}.subscription-admin-list{display:grid;gap:12px;margin-top:16px}
+.subscription-admin-item{border:1px solid #e2e8f0;border-radius:16px;padding:15px;background:linear-gradient(180deg,#fff,#f8fafc)}
+.subscription-admin-status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:900}.subscription-admin-status.pending{background:#fef3c7;color:#92400e}.subscription-admin-status.confirmed{background:#dcfce7;color:#166534}.subscription-admin-status.rejected{background:#fee2e2;color:#991b1b}
+.subscription-admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.subscription-admin-actions button{border:0;border-radius:10px;padding:10px 13px;font-weight:900;cursor:pointer}.sub-confirm{background:#16a34a;color:#fff}.sub-reject{background:#dc2626;color:#fff}.sub-access{background:#2563eb;color:#fff}.sub-noaccess{background:#475569;color:#fff}.sub-close{background:#e5e7eb;color:#172033}
+.subscription-admin-muted{color:#64748b;font-size:13px}.subscription-admin-ref{display:inline-block;margin-top:7px;padding:7px 9px;background:#f1f5f9;border-radius:9px;word-break:break-all}
+@media(max-width:700px){#subscriptionAdminFab{right:10px;bottom:142px;padding:11px 13px;font-size:12px}.subscription-admin-box{margin:0 auto;padding:14px;border-radius:16px}.subscription-admin-head h2{font-size:19px}.subscription-admin-actions button{flex:1 1 calc(50% - 8px)}}
+</style>
+<button id="subscriptionAdminFab" type="button" onclick="openSubscriptionAdmin()">💳 ₹200 Subscriptions <span id="subscriptionPendingBadge" style="display:none;background:#dc2626;color:#fff;border-radius:999px;padding:2px 7px;margin-left:5px;font-size:12px">0</span></button>
+<div id="subscriptionAdminModal">
+  <div class="subscription-admin-box">
+    <div class="subscription-admin-head"><div><h2>💳 Student Subscription — ₹200</h2><div class="subscription-admin-muted">Verify payment manually, then give app access.</div></div><button class="sub-close" onclick="closeSubscriptionAdmin()">✕ Close</button></div>
+    <div id="subscriptionAdminList" class="subscription-admin-list">Loading...</div>
+  </div>
+</div>
+<script id="subscription-admin-script">
+async function subscriptionAdminApi(path, options={}){
+  const token=localStorage.getItem('adminToken');
+  const r=await fetch('/api/subscription'+path,{...options,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,...(options.headers||{})}});
+  const d=await r.json().catch(()=>({success:false,message:'Server error'}));
+  if(!r.ok||d.success===false)throw new Error(d.message||'Request failed');
+  return d;
+}
+function escSub(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function openSubscriptionAdmin(){
+  const modal=document.getElementById('subscriptionAdminModal'); modal.classList.add('show');
+  const box=document.getElementById('subscriptionAdminList'); box.textContent='Loading...';
+  try{
+    const d=await subscriptionAdminApi('/admin/requests');
+    const requests=d.requests||[];
+    if(!requests.length){box.innerHTML='<div class="subscription-admin-item">No subscription requests yet.</div>';return;}
+    box.innerHTML=requests.map(r=>{
+      const u=r.userId||{}; const status=String(r.status||'pending'); const access=u.subscriptionAccess===true;
+      return `<div class="subscription-admin-item">
+        <div><b>${escSub(r.studentName||u.name||'Student')}</b> — ${escSub(r.studentMobile||u.mobile||'-')}</div>
+        <div style="margin-top:6px">Amount: <b>₹${Number(r.amount||200).toFixed(0)}</b> &nbsp; <span class="subscription-admin-status ${escSub(status)}">${escSub(status.toUpperCase())}</span> &nbsp; App Access: <b>${access?'🟢 ACTIVE':'🔒 LOCKED'}</b></div>
+        <div class="subscription-admin-muted">Submitted: ${r.submittedAt?new Date(r.submittedAt).toLocaleString():'-'}</div>
+        <div class="subscription-admin-ref"><b>UTR / Transaction ID:</b> ${escSub(r.paymentReference||'-')}</div>
+        ${r.adminNote?`<div class="subscription-admin-muted" style="margin-top:7px">Note: ${escSub(r.adminNote)}</div>`:''}
+        <div class="subscription-admin-actions">
+          ${status==='pending'?`<button class="sub-confirm" onclick="confirmSubscription('${r._id}')">✅ Payment Received — Confirm & Give Access</button><button class="sub-reject" onclick="rejectSubscription('${r._id}')">❌ Reject</button>`:''}
+          ${access?`<button class="sub-noaccess" onclick="setSubscriptionAccess('${u._id}',false)">🔒 Remove App Access</button>`:`<button class="sub-access" onclick="setSubscriptionAccess('${u._id}',true)">🔓 Give App Access</button>`}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){box.textContent='❌ '+e.message;}
+}
+async function updateSubscriptionPendingBadge(){try{const d=await subscriptionAdminApi('/admin/requests');const n=(d.requests||[]).filter(r=>r.status==='pending').length;const b=document.getElementById('subscriptionPendingBadge');if(b){b.textContent=n;b.style.display=n?'inline-block':'none';}}catch(e){}}
+function closeSubscriptionAdmin(){document.getElementById('subscriptionAdminModal').classList.remove('show')}
+async function confirmSubscription(id){
+  if(!confirm('₹200 payment ખરેખર મળ્યું છે અને verify કર્યું છે? Confirm કર્યા પછી studentને app access મળશે.'))return;
+  try{await subscriptionAdminApi('/admin/'+id+'/confirm',{method:'PUT',body:JSON.stringify({adminNote:'₹200 payment verified by admin.'})});alert('✅ Payment confirmed. Student app access is active.');await updateSubscriptionPendingBadge();openSubscriptionAdmin();}
+  catch(e){alert('❌ '+e.message)}
+}
+async function rejectSubscription(id){
+  const note=prompt('Reject reason:', 'Payment could not be verified.'); if(note===null)return;
+  try{await subscriptionAdminApi('/admin/'+id+'/reject',{method:'PUT',body:JSON.stringify({adminNote:note})});await updateSubscriptionPendingBadge();openSubscriptionAdmin();}
+  catch(e){alert('❌ '+e.message)}
+}
+async function setSubscriptionAccess(userId,access){
+  if(!confirm(access?'Give this student app access?':'Remove this student app access?'))return;
+  try{await subscriptionAdminApi('/admin/user/'+userId+'/access',{method:'PUT',body:JSON.stringify({access})});await updateSubscriptionPendingBadge();openSubscriptionAdmin();}
+  catch(e){alert('❌ '+e.message)}
+}
+updateSubscriptionPendingBadge();setInterval(updateSubscriptionPendingBadge,10000);
+</script>
+
 </body>
 
 </html><style id="command-center-mobile-card-fix">

@@ -3,7 +3,7 @@ const router = express.Router();
 
 const Question = require("../models/Question");
 const User = require("../models/User");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/subscriptionAuth");
 const adminAuth = require("../middleware/adminAuth");
 
 // questions.json is NOT auto-seeded. It can only be imported explicitly by the admin

@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const router = express.Router();
 
-const auth = require("../middleware/auth");
+const auth = require("../middleware/subscriptionAuth");
 const User = require("../models/User");
 
 // Same encryption format used by signup/admin credential management.

@@ -16,6 +16,7 @@ const activityRoutes = require("./routes/activities");
 const bonusRoutes = require("./routes/bonus");
 const addonRoutes = require("./routes/addons");
 const bookRoutes = require("./routes/book");
+const subscriptionRoutes = require("./routes/subscription");
 
 const app = express();
 app.disable("x-powered-by");
@@ -46,6 +47,7 @@ app.use("/api", async (req, res, next) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/wallet", walletRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/admin",adminRoutes);

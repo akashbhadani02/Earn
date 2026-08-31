@@ -5,7 +5,7 @@ const User = require("../models/User");
 const Question = require("../models/Question");
 const LifelineUsage = require("../models/LifelineUsage");
 const QuizAnswerHistory = require("../models/QuizAnswerHistory");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/subscriptionAuth");
 
 const DAILY_REWARD_AMOUNT = 5;
 const QUIZ_CORRECT_REWARD = 0.20;

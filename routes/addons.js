@@ -1,7 +1,7 @@
 const express=require('express');
 const crypto=require('crypto');
 const router=express.Router();
-const auth=require('../middleware/auth');
+const auth=require('../middleware/subscriptionAuth');
 const User=require('../models/User');
 const Admin=require('../models/Admin');
 const adminAuth=require('../middleware/adminAuth');

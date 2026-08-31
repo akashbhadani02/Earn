@@ -52,6 +52,16 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 
+        // ₹200 app subscription payment + admin confirmation
+        subscriptionStatus: { type: String, enum: ["inactive", "pending", "active", "rejected"], default: "inactive" },
+        subscriptionAccess: { type: Boolean, default: false },
+        subscriptionAmount: { type: Number, default: 200 },
+        subscriptionPaymentReference: { type: String, default: "" },
+        subscriptionRequestedAt: { type: Date, default: null },
+        subscriptionConfirmedAt: { type: Date, default: null },
+        subscriptionConfirmedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", default: null },
+        subscriptionAdminNote: { type: String, default: "" },
+
         // ₹499 Book purchase and admin approval
         bookPurchase: {
             status: { type: String, enum: ["none", "pending", "approved", "rejected"], default: "none" },
