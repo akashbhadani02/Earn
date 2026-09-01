@@ -3484,20 +3484,47 @@ document.addEventListener('click', function(e){
 </script>
 <!-- ADDONS CENTER -->
 <style>
-#quickActionBar{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:10px;align-items:center;max-width:calc(100vw - 36px);transition:transform .28s ease,opacity .28s ease,visibility .28s ease;will-change:transform,opacity}#quickActionBar.autohide{transform:translateY(calc(100% + 28px));opacity:0;visibility:hidden;pointer-events:none}#addonsFab,#bookFab{position:static;z-index:9999;border:0;border-radius:999px;padding:14px 19px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;white-space:nowrap;flex:0 0 auto}
+#quickActionBar{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:10px;align-items:center;transition:transform .28s ease,opacity .28s ease;will-change:transform,opacity}#quickActionBar.floating-hidden{transform:translateX(calc(100% + 28px));opacity:.12;pointer-events:none}#addonsFab,#bookFab{position:static;z-index:9999;border:0;border-radius:999px;padding:14px 19px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer}
 #addonsModal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(2,6,23,.70);padding:18px;overflow:auto;backdrop-filter:blur(4px)}
 .addons-box{width:min(980px,100%);margin:20px auto;background:#fff;border-radius:24px;padding:22px;color:#172033;box-shadow:0 24px 70px rgba(0,0,0,.28)}
 .addons-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:1px solid #e5e7eb;padding-bottom:14px}.addons-head h2{margin:0;font-size:25px}.addons-close{border:0;background:#f1f5f9;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}.addons-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.addon-card{border:1px solid #e5e7eb;border-radius:18px;padding:16px;background:linear-gradient(180deg,#fff,#f8fafc);box-shadow:0 5px 16px rgba(15,23,42,.05)}.addon-card h3{margin:0 0 9px;font-size:17px}.addon-card button,.addon-card input,.addon-card textarea,.addon-card select{width:100%;box-sizing:border-box;margin-top:9px;padding:11px;border-radius:10px;border:1px solid #d7dde7;font:inherit}.addon-card button{background:#6d28d9;color:#fff;border:0;font-weight:800;cursor:pointer}.addon-card button.secondary{background:#e2e8f0;color:#172033}.addon-card button:disabled{opacity:.55;cursor:not-allowed}.addon-help{font-size:12px;color:#64748b;line-height:1.45;margin-top:7px}.addon-success{color:#15803d;font-weight:700}.addon-error{color:#dc2626;font-weight:700}.leader-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #edf0f4;font-size:13px}.badge{display:inline-block;padding:6px 9px;margin:3px;border-radius:999px;background:#ede9fe;color:#5b21b6;font-size:12px;font-weight:800}.ticket-item{padding:10px;border:1px solid #e5e7eb;border-radius:12px;margin-top:8px;background:#fff}.ticket-item small{color:#64748b}.addon-copy{display:flex;gap:8px;align-items:center}.addon-copy input{margin-top:0;flex:1;background:#f8fafc}.addon-copy button{width:auto;margin-top:0;white-space:nowrap}.ref-link{word-break:break-all;font-size:12px;color:#475569;margin-top:7px}
-@media(max-width:700px){#quickActionBar{right:10px;bottom:12px;gap:7px;max-width:calc(100vw - 20px)}#quickActionBar button{padding:11px 12px;font-size:13px}#addonsModal{padding:8px}.addons-box{margin:0 auto;border-radius:18px;padding:14px}.addons-head h2{font-size:20px}.addons-grid{grid-template-columns:1fr;gap:10px}.addon-card{padding:13px}.addon-copy{align-items:stretch;flex-direction:column}.addon-copy button{width:100%}#addonsFab{right:12px;bottom:12px;padding:12px 16px}}
+@media(max-width:700px){#quickActionBar{right:10px;bottom:12px;gap:7px}#quickActionBar button{padding:11px 12px;font-size:13px}#addonsModal{padding:8px}.addons-box{margin:0 auto;border-radius:18px;padding:14px}.addons-head h2{font-size:20px}.addons-grid{grid-template-columns:1fr;gap:10px}.addon-card{padding:13px}.addon-copy{align-items:stretch;flex-direction:column}.addon-copy button{width:100%}#addonsFab{right:12px;bottom:12px;padding:12px 16px}}
+
+/* Auto-hide floating actions while scrolling so they never cover app content. */
+@media(max-width:700px){
+  #quickActionBar{right:8px;bottom:calc(10px + env(safe-area-inset-bottom));gap:7px;max-width:calc(100vw - 16px);}
+  #quickActionBar.floating-hidden{transform:translateX(calc(100% + 18px));}
+  #quickActionBar button{max-width:46vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+}
 </style>
 <div id="quickActionBar"><button id="bookFab" type="button" onclick="openBookPurchase()">📖 Book ₹499</button><button id="addonsFab" type="button" onclick="openAddonsCenter()">🚀 Add-ons</button></div>
 <div id="addonsModal" aria-hidden="true"><div class="addons-box"><div class="addons-head"><div><h2>🚀 Earn Add-ons Center</h2><small>Learn • Earn • Grow</small></div><button class="addons-close" type="button" onclick="closeAddonsCenter()">✕ Close</button></div><div id="addonsContent">Loading...</div></div></div>
 <script>
+(function(){
+  const bar=document.getElementById('quickActionBar');
+  if(!bar) return;
+  let lastY=window.scrollY||0, timer=null;
+  const modalOpen=()=>!!document.querySelector('.book-modal.show,#addonsModal[aria-hidden="false"]');
+  const show=()=>{bar.classList.remove('floating-hidden');};
+  const hide=()=>{if(!modalOpen()) bar.classList.add('floating-hidden');};
+  const onScroll=()=>{
+    const y=window.scrollY||0;
+    if(y<lastY-2) show();
+    else if(y>lastY+2) hide();
+    lastY=y;
+    clearTimeout(timer);
+    timer=setTimeout(()=>{ if(!modalOpen() && y>8) hide(); },1400);
+  };
+  window.addEventListener('scroll',onScroll,{passive:true});
+  ['touchstart','pointerdown','mouseenter'].forEach(ev=>bar.addEventListener(ev,show,{passive:true}));
+  window.addEventListener('resize',show,{passive:true});
+  window.showStudentFloatingActions=show;
+})();
 let addonsData=null;
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function studentAddonToken(){return localStorage.getItem('token')||localStorage.getItem('studentToken')||''}
 async function addonFetch(url,opt={}){const token=studentAddonToken();const headers=Object.assign({'Content-Type':'application/json'},opt.headers||{});if(token)headers.Authorization='Bearer '+token;const r=await fetch('/api/addons'+url,Object.assign({},opt,{credentials:'same-origin',headers}));const j=await r.json().catch(()=>({success:false,message:'Server error'}));if(!r.ok||!j.success)throw Error(j.message||'Something went wrong');return j}
-async function openAddonsCenter(){document.getElementById('addonsModal').style.display='block';document.getElementById('addonsModal').setAttribute('aria-hidden','false');await loadAddons()}
+async function openAddonsCenter(){window.showStudentFloatingActions?.();document.getElementById('addonsModal').style.display='block';document.getElementById('addonsModal').setAttribute('aria-hidden','false');await loadAddons()}
 function closeAddonsCenter(){document.getElementById('addonsModal').style.display='none';document.getElementById('addonsModal').setAttribute('aria-hidden','true')}
 async function loadAddons(){const box=document.getElementById('addonsContent');box.innerHTML='<p>⏳ Loading your add-ons...</p>';try{if(!studentAddonToken())throw Error('Login session મળી નથી. Please login again.');const d=await addonFetch('/dashboard');addonsData=d;const p=d.profile;const claimDisabled=p.dailyChallenge.claimed||p.dailyChallenge.progress<10;const referralLink=location.origin+location.pathname+'?ref='+encodeURIComponent(p.referralCode||'');box.innerHTML=`<div class="addons-grid">
 <div class="addon-card"><h3>🔥 Daily Streak</h3><b>${p.streak||0} days</b><div class="addon-help">Longest streak: ${p.longestStreak||0} days<br>Level ${p.level||1} • ${p.experience||0} XP</div></div>
@@ -3880,28 +3907,6 @@ async function submitBookPurchase(){
 })();
 </script>
 
-<script>
-(function(){
-  const bar=document.getElementById('quickActionBar');
-  if(!bar) return;
-  let hideTimer=null, lastY=window.scrollY||0;
-  const show=()=>{bar.classList.remove('autohide');};
-  const hide=()=>{bar.classList.add('autohide');};
-  const onScroll=()=>{
-    const y=window.scrollY||0;
-    if(Math.abs(y-lastY)>2) hide();
-    lastY=y;
-    clearTimeout(hideTimer);
-    hideTimer=setTimeout(show,850);
-  };
-  window.addEventListener('scroll',onScroll,{passive:true});
-  ['touchstart','pointerdown','mousemove'].forEach(ev=>window.addEventListener(ev,e=>{
-    if(ev==='mousemove' && e.clientX < window.innerWidth-180) return;
-    show();
-  },{passive:true}));
-  window.addEventListener('resize',show,{passive:true});
-})();
-</script>
 </body>
 
 </html>
