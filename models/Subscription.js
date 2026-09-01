@@ -6,6 +6,8 @@ const subscriptionSchema = new mongoose.Schema({
     studentMobile: { type: String, default: '' },
     amount: { type: Number, default: 200 },
     paymentReference: { type: String, default: '' },
+    paymentScreenshot: { type: String, default: '' },
+    paymentScreenshotName: { type: String, default: '' },
     status: { type: String, enum: ['pending', 'confirmed', 'rejected'], default: 'pending', index: true },
     submittedAt: { type: Date, default: Date.now },
     confirmedAt: { type: Date, default: null },

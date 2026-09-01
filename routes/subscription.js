@@ -15,6 +15,7 @@ function statusPayload(user, request = null) {
             access: user?.subscriptionAccess === true,
             amount: SUBSCRIPTION_PRICE,
             paymentReference: user?.subscriptionPaymentReference || request?.paymentReference || '',
+            paymentScreenshot: request?.paymentScreenshot || '',
             requestedAt: user?.subscriptionRequestedAt || request?.submittedAt || null,
             confirmedAt: user?.subscriptionConfirmedAt || request?.confirmedAt || null,
             adminNote: user?.subscriptionAdminNote || request?.adminNote || ''
@@ -41,6 +42,14 @@ router.get('/status', auth, async (req, res) => {
 router.post('/request', auth, async (req, res) => {
     try {
         const paymentReference = String(req.body?.paymentReference || '').trim().slice(0, 100);
+        const paymentScreenshot = String(req.body?.paymentScreenshot || '').trim();
+        const paymentScreenshotName = String(req.body?.paymentScreenshotName || '').trim().slice(0, 120);
+        if (!paymentScreenshot || !/^data:image\/(jpeg|jpg|png|webp);base64,/i.test(paymentScreenshot)) {
+            return res.status(400).json({ success: false, message: 'Please upload your payment screenshot.' });
+        }
+        if (paymentScreenshot.length > 2500000) {
+            return res.status(400).json({ success: false, message: 'Screenshot is too large. Please upload a smaller image.' });
+        }
         if (paymentReference.length < 3) {
             return res.status(400).json({ success: false, message: 'Please enter your UTR / payment reference.' });
         }
@@ -55,6 +64,8 @@ router.post('/request', auth, async (req, res) => {
         const existingPending = await Subscription.findOne({ userId: user._id, status: 'pending' }).sort({ submittedAt: -1 });
         if (existingPending) {
             existingPending.paymentReference = paymentReference;
+            existingPending.paymentScreenshot = paymentScreenshot;
+            existingPending.paymentScreenshotName = paymentScreenshotName;
             existingPending.amount = SUBSCRIPTION_PRICE;
             existingPending.studentName = user.name || '';
             existingPending.studentMobile = user.mobile || '';
@@ -68,6 +79,8 @@ router.post('/request', auth, async (req, res) => {
                 studentMobile: user.mobile || '',
                 amount: SUBSCRIPTION_PRICE,
                 paymentReference,
+                paymentScreenshot,
+                paymentScreenshotName,
                 status: 'pending',
                 submittedAt: new Date()
             });
@@ -165,6 +178,45 @@ router.put('/admin/:id/reject', adminAuth, async (req, res) => {
         }
         return res.json({ success: true, message: 'Payment request rejected.' });
     } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// Admin: permanently delete a subscription request that is not being granted access.
+router.delete('/admin/:id', adminAuth, async (req, res) => {
+    try {
+        const request = await Subscription.findById(req.params.id);
+        if (!request) return res.status(404).json({ success: false, message: 'Subscription request not found.' });
+
+        const user = await User.findById(request.userId);
+
+        // Admin can delete ANY subscription request, including confirmed/active ones.
+        // If the deleted request was the student's active subscription, remove the
+        // student's app access automatically so there is no need for a separate
+        // "Remove Access" step.
+        await Subscription.deleteOne({ _id: request._id });
+
+        if (user) {
+            const remainingConfirmed = await Subscription.exists({
+                userId: user._id,
+                status: 'confirmed'
+            });
+
+            if (!remainingConfirmed) {
+                user.subscriptionStatus = 'inactive';
+                user.subscriptionAccess = false;
+                user.subscriptionPaymentReference = '';
+                user.subscriptionRequestedAt = null;
+                user.subscriptionConfirmedAt = null;
+                user.subscriptionConfirmedBy = null;
+                user.subscriptionAdminNote = 'Subscription request deleted by admin.';
+                await user.save();
+            }
+        }
+
+        return res.json({ success: true, message: 'Subscription request deleted successfully.' });
+    } catch (err) {
+        console.error('Subscription delete error:', err);
         return res.status(500).json({ success: false, message: err.message });
     }
 });

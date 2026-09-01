@@ -3705,12 +3705,12 @@ async function submitBookPurchase(){
 #subscriptionGate.show{display:flex}
 .subscription-box{width:min(560px,100%);max-height:94vh;overflow:auto;background:#fff;color:#172033;border-radius:26px;padding:22px;box-shadow:0 30px 90px rgba(0,0,0,.38);text-align:center}
 .subscription-box h2{margin:0 0 7px;font-size:25px}.subscription-box p{margin:7px 0;color:#64748b;line-height:1.5}
-.subscription-price{font-size:34px;font-weight:900;color:#6d28d9;margin:8px 0 2px}.subscription-qr{width:min(330px,82vw);height:auto;display:block;margin:14px auto;border-radius:16px;border:8px solid #fff;box-shadow:0 8px 30px rgba(0,0,0,.16);image-rendering:auto}
+.subscription-price{font-size:34px;font-weight:900;color:#6d28d9;margin:8px 0 2px}.subscription-qr{width:min(210px,58vw);height:auto;display:block;margin:14px auto;border-radius:16px;border:8px solid #fff;box-shadow:0 8px 30px rgba(0,0,0,.16);image-rendering:auto}
 .subscription-pay-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;border:0;border-radius:13px;background:#16a34a;color:#fff;font-weight:900;font-size:16px;cursor:pointer;text-decoration:none;margin:4px 0 10px}
 .subscription-input{width:100%;box-sizing:border-box;padding:13px 14px;border:2px solid #e2e8f0;border-radius:13px;font:inherit;outline:none}.subscription-input:focus{border-color:#7c3aed}
 .subscription-submit{width:100%;padding:13px 16px;border:0;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-weight:900;font-size:16px;cursor:pointer;margin-top:10px}.subscription-submit:disabled{opacity:.6;cursor:not-allowed}
 .subscription-status{margin-top:12px;padding:11px 12px;border-radius:12px;font-weight:800;background:#f1f5f9;color:#334155}.subscription-status.pending{background:#fef3c7;color:#92400e}.subscription-status.rejected{background:#fee2e2;color:#991b1b}.subscription-note{font-size:12px;color:#64748b!important;margin-top:12px!important}
-@media(max-width:520px){.subscription-box{padding:17px;border-radius:20px}.subscription-box h2{font-size:21px}.subscription-price{font-size:30px}.subscription-qr{width:min(290px,82vw)}}
+@media(max-width:520px){.subscription-box{padding:17px;border-radius:20px}.subscription-box h2{font-size:21px}.subscription-price{font-size:30px}.subscription-qr{width:min(200px,58vw)}}
 </style>
 
 <div id="subscriptionGate" aria-hidden="true">
@@ -3720,9 +3720,13 @@ async function submitBookPurchase(){
     <div class="subscription-price">₹200</div>
     <p><b>Step 1:</b> નીચેનો QR scan કરીને ₹200 pay કરો.</p>
     <img class="subscription-qr" src="/payment-qr.jpg" alt="₹200 payment QR code">
-    <a class="subscription-pay-btn" href="upi://pay?pa=baa836610@okaxis&pn=A%20Ba&am=200&cu=INR">📲 Open UPI Payment</a>
-    <p><b>Step 2:</b> Payment થયા પછી UTR / Transaction ID અહીં નાખો.</p>
+    <a id="subscriptionUpiBtn" class="subscription-pay-btn" href="upi://pay?pa=baa836610%40okaxis&pn=A%20Ba&am=200.00&cu=INR&tn=English%20App%20Subscription">📲 Pay ₹200 via UPI</a>
+    <div style="font-size:13px;color:#475569;margin:2px 0 10px">UPI ID: <b>baa836610@okaxis</b> · Amount: <b>₹200</b></div>
+    <p><b>Step 2:</b> Payment કર્યા પછી UTR / Transaction ID અને payment screenshot upload કરો.</p>
     <input id="subscriptionPaymentReference" class="subscription-input" type="text" maxlength="100" autocomplete="off" placeholder="Enter UTR / Transaction ID">
+    <label for="subscriptionPaymentScreenshot" style="display:block;text-align:left;margin-top:10px;font-weight:900;color:#334155">📸 Payment Screenshot</label>
+    <input id="subscriptionPaymentScreenshot" class="subscription-input" type="file" accept="image/jpeg,image/png,image/webp" style="padding:10px">
+    <div id="subscriptionScreenshotPreview" style="display:none;margin-top:10px"></div>
     <button id="subscriptionSubmitBtn" class="subscription-submit" type="button" onclick="submitSubscriptionPayment()">✅ I Have Paid — Send for Verification</button>
     <div id="subscriptionStatusBox" class="subscription-status">Checking subscription status...</div>
     <p class="subscription-note">⚠️ Payment actual receive થયો છે કે નહીં તે Admin manually verify કરશે. Confirmation પછી જ app APIs unlock થશે.</p>
@@ -3736,6 +3740,8 @@ async function submitBookPurchase(){
   const statusBox = document.getElementById('subscriptionStatusBox');
   const input = document.getElementById('subscriptionPaymentReference');
   const submitBtn = document.getElementById('subscriptionSubmitBtn');
+  const screenshotInput = document.getElementById('subscriptionPaymentScreenshot');
+  const screenshotPreview = document.getElementById('subscriptionScreenshotPreview');
 
   function showGate(status, note){
     window.__subscriptionActive = false;
@@ -3782,6 +3788,56 @@ async function submitBookPurchase(){
       return false;
     }
   };
+  const upiBtn = document.getElementById('subscriptionUpiBtn');
+  if(upiBtn){
+    upiBtn.addEventListener('click', function(){
+      // Standard UPI deep-link: on supported Android/mobile browsers this opens
+      // the installed UPI app/chooser with the payee and ₹200 pre-filled.
+      upiBtn.textContent='📲 Opening UPI App...';
+      setTimeout(()=>{upiBtn.textContent='📲 Pay ₹200 via UPI';},2500);
+    });
+  }
+
+  function setScreenshotPreview(dataUrl){
+    if(!screenshotPreview) return;
+    if(!dataUrl){ screenshotPreview.style.display='none'; screenshotPreview.innerHTML=''; return; }
+    screenshotPreview.style.display='block';
+    screenshotPreview.innerHTML='<img src="'+dataUrl+'" alt="Payment screenshot preview" style="max-width:180px;max-height:220px;border-radius:12px;border:1px solid #e2e8f0;box-shadow:0 6px 20px rgba(0,0,0,.12)"><div style="font-size:12px;color:#64748b;margin-top:5px">Screenshot selected</div>';
+  }
+  function compressScreenshot(file){
+    return new Promise((resolve,reject)=>{
+      if(!file) return reject(new Error('Please upload your payment screenshot.'));
+      if(!/^image\/(jpeg|png|webp)$/i.test(file.type)) return reject(new Error('Please upload JPG, PNG or WEBP screenshot.'));
+      const reader=new FileReader();
+      reader.onload=()=>{
+        const img=new Image();
+        img.onload=()=>{
+          const max=1200;
+          const scale=Math.min(1,max/Math.max(img.width,img.height));
+          const canvas=document.createElement('canvas');
+          canvas.width=Math.max(1,Math.round(img.width*scale));
+          canvas.height=Math.max(1,Math.round(img.height*scale));
+          const ctx=canvas.getContext('2d');
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          let quality=.78, data=canvas.toDataURL('image/jpeg',quality);
+          while(data.length>1800000 && quality>.45){ quality-=.08; data=canvas.toDataURL('image/jpeg',quality); }
+          if(data.length>2200000) return reject(new Error('Screenshot is too large. Please choose a smaller image.'));
+          resolve(data);
+        };
+        img.onerror=()=>reject(new Error('Could not read screenshot.'));
+        img.src=reader.result;
+      };
+      reader.onerror=()=>reject(new Error('Could not read screenshot.'));
+      reader.readAsDataURL(file);
+    });
+  }
+  if(screenshotInput){
+    screenshotInput.addEventListener('change', async function(){
+      try{ const data=await compressScreenshot(this.files?.[0]); setScreenshotPreview(data); this.dataset.compressed=data; }
+      catch(e){ this.value=''; delete this.dataset.compressed; setScreenshotPreview(''); if(statusBox){statusBox.className='subscription-status rejected';statusBox.textContent='❌ '+e.message;} }
+    });
+  }
+
   window.submitSubscriptionPayment = async function(){
     const token = localStorage.getItem('token');
     const ref = String(input?.value || '').trim();
@@ -3790,15 +3846,20 @@ async function submitBookPurchase(){
       if(statusBox){statusBox.className='subscription-status rejected';statusBox.textContent='❌ Please enter a valid UTR / Transaction ID.';}
       input?.focus(); return;
     }
+    const screenshot = screenshotInput?.dataset?.compressed || '';
+    if(!screenshot){
+      if(statusBox){statusBox.className='subscription-status rejected';statusBox.textContent='❌ Please upload the payment screenshot.';}
+      screenshotInput?.focus(); return;
+    }
     if(submitBtn) { submitBtn.disabled=true; submitBtn.textContent='Submitting...'; }
     try{
       const res=await fetch('/api/subscription/request',{
         method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},
-        body:JSON.stringify({paymentReference:ref})
+        body:JSON.stringify({paymentReference:ref,paymentScreenshot:screenshot,paymentScreenshotName:screenshotInput?.files?.[0]?.name||'payment-screenshot.jpg'})
       });
       const data=await res.json().catch(()=>({}));
       if(!res.ok || !data.success) throw new Error(data.message || 'Payment request failed.');
-      showGate('pending','⏳ UTR submitted successfully. Admin will verify the ₹200 payment and activate your access.');
+      showGate('pending','⏳ Payment details + screenshot submitted. Admin will verify the ₹200 payment and activate your access.');
     }catch(e){
       if(statusBox){statusBox.className='subscription-status rejected';statusBox.textContent='❌ '+e.message;}
     }finally{

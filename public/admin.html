@@ -3279,7 +3279,7 @@ async function deleteBookRequest(id){if(!confirm("Delete this student book reque
 .subscription-admin-item{border:1px solid #e2e8f0;border-radius:16px;padding:15px;background:linear-gradient(180deg,#fff,#f8fafc)}
 .subscription-admin-status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:900}.subscription-admin-status.pending{background:#fef3c7;color:#92400e}.subscription-admin-status.confirmed{background:#dcfce7;color:#166534}.subscription-admin-status.rejected{background:#fee2e2;color:#991b1b}
 .subscription-admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.subscription-admin-actions button{border:0;border-radius:10px;padding:10px 13px;font-weight:900;cursor:pointer}.sub-confirm{background:#16a34a;color:#fff}.sub-reject{background:#dc2626;color:#fff}.sub-access{background:#2563eb;color:#fff}.sub-noaccess{background:#475569;color:#fff}.sub-close{background:#e5e7eb;color:#172033}
-.subscription-admin-muted{color:#64748b;font-size:13px}.subscription-admin-ref{display:inline-block;margin-top:7px;padding:7px 9px;background:#f1f5f9;border-radius:9px;word-break:break-all}
+.subscription-admin-muted{color:#64748b;font-size:13px}.subscription-admin-ref{display:inline-block;margin-top:7px;padding:7px 9px;background:#f1f5f9;border-radius:9px;word-break:break-all}.subscription-screenshot{display:block;max-width:220px;max-height:280px;width:auto;height:auto;margin-top:10px;border-radius:12px;border:1px solid #cbd5e1;box-shadow:0 8px 24px rgba(0,0,0,.14);cursor:zoom-in}.sub-delete{background:#991b1b;color:#fff}.sub-view{background:#0f766e;color:#fff}
 @media(max-width:700px){#subscriptionAdminFab{right:10px;bottom:142px;padding:11px 13px;font-size:12px}.subscription-admin-box{margin:0 auto;padding:14px;border-radius:16px}.subscription-admin-head h2{font-size:19px}.subscription-admin-actions button{flex:1 1 calc(50% - 8px)}}
 </style>
 <button id="subscriptionAdminFab" type="button" onclick="openSubscriptionAdmin()">💳 ₹200 Subscriptions <span id="subscriptionPendingBadge" style="display:none;background:#dc2626;color:#fff;border-radius:999px;padding:2px 7px;margin-left:5px;font-size:12px">0</span></button>
@@ -3313,9 +3313,11 @@ async function openSubscriptionAdmin(){
         <div class="subscription-admin-muted">Submitted: ${r.submittedAt?new Date(r.submittedAt).toLocaleString():'-'}</div>
         <div class="subscription-admin-ref"><b>UTR / Transaction ID:</b> ${escSub(r.paymentReference||'-')}</div>
         ${r.adminNote?`<div class="subscription-admin-muted" style="margin-top:7px">Note: ${escSub(r.adminNote)}</div>`:''}
+        ${r.paymentScreenshot?`<div style="margin-top:10px"><b>📸 Payment Screenshot</b><br><img class="subscription-screenshot" src="${escSub(r.paymentScreenshot)}" alt="Payment screenshot" onclick="viewSubscriptionScreenshot('${r._id}')"></div>`:`<div class="subscription-admin-muted" style="margin-top:9px">⚠️ No payment screenshot uploaded.</div>`}
         <div class="subscription-admin-actions">
           ${status==='pending'?`<button class="sub-confirm" onclick="confirmSubscription('${r._id}')">✅ Payment Received — Confirm & Give Access</button><button class="sub-reject" onclick="rejectSubscription('${r._id}')">❌ Reject</button>`:''}
           ${access?`<button class="sub-noaccess" onclick="setSubscriptionAccess('${u._id}',false)">🔒 Remove App Access</button>`:`<button class="sub-access" onclick="setSubscriptionAccess('${u._id}',true)">🔓 Give App Access</button>`}
+          <button class="sub-delete" onclick="deleteSubscriptionRequest('${r._id}')">🗑️ Delete Request</button>
         </div>
       </div>`;
     }).join('');
@@ -3331,6 +3333,22 @@ async function confirmSubscription(id){
 async function rejectSubscription(id){
   const note=prompt('Reject reason:', 'Payment could not be verified.'); if(note===null)return;
   try{await subscriptionAdminApi('/admin/'+id+'/reject',{method:'PUT',body:JSON.stringify({adminNote:note})});await updateSubscriptionPendingBadge();openSubscriptionAdmin();}
+  catch(e){alert('❌ '+e.message)}
+}
+async function viewSubscriptionScreenshot(id){
+  try{
+    const d=await subscriptionAdminApi('/admin/requests');
+    const r=(d.requests||[]).find(x=>x._id===id);
+    if(!r?.paymentScreenshot){alert('Screenshot not available.');return;}
+    const w=window.open('','_blank','width=800,height=900');
+    if(!w){alert('Please allow popups to view the screenshot.');return;}
+    w.document.write('<title>Payment Screenshot</title><body style=\"margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh\"><img src=\"'+r.paymentScreenshot+'\" style=\"max-width:96vw;max-height:96vh;object-fit:contain\"></body>');
+    w.document.close();
+  }catch(e){alert('❌ '+e.message)}
+}
+async function deleteSubscriptionRequest(id){
+  if(!confirm('Delete this subscription request? Student will remain without app access and the request/screenshot will be removed.'))return;
+  try{await subscriptionAdminApi('/admin/'+id,{method:'DELETE'});alert('🗑️ Subscription request deleted.');await updateSubscriptionPendingBadge();openSubscriptionAdmin();}
   catch(e){alert('❌ '+e.message)}
 }
 async function setSubscriptionAccess(userId,access){
