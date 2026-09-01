@@ -3223,7 +3223,12 @@ ${w.status === "Approved" ? `
 #addonAdminBtn{position:fixed;right:18px;bottom:78px;z-index:9999;background:linear-gradient(135deg,#6c5ce7,#06b6d4);color:#fff;border:0;border-radius:999px;padding:14px 19px;font-weight:800;cursor:pointer;box-shadow:0 10px 30px #0004}
 .addonAdminModal{position:fixed;inset:0;background:#0009;z-index:10000;display:none;overflow:auto;padding:12px;backdrop-filter:blur(4px)}
 .addonAdminBox{width:min(1150px,100%);box-sizing:border-box;margin:18px auto;background:#fff;color:#172033;border-radius:24px;padding:20px;box-shadow:0 24px 70px #0004}.addonAdminTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px solid #e5e7eb;padding-bottom:14px}.addonAdminTop h2{margin:0}.addonClose{border:0;background:#f1f5f9;border-radius:12px;padding:10px 13px;font-size:16px;cursor:pointer}.addonGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}.addonCard{border:1px solid #e2e8f0;border-radius:16px;padding:14px;background:linear-gradient(180deg,#fff,#f8fafc);box-shadow:0 4px 14px #0f172a0b}.addonCard h3{margin:0 0 7px}.addonSection{margin-top:20px}.addonForm{display:grid;grid-template-columns:1fr 180px 150px;gap:9px}.addonForm input,.addonForm button,.addonCard input,.addonCard textarea{box-sizing:border-box;padding:11px;border:1px solid #d7dde7;border-radius:10px;font:inherit}.addonForm button,.addonAction{background:#6d28d9;color:#fff;border:0;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}.addonAction.secondary{background:#e2e8f0;color:#172033}.addonAction.danger{background:#dc2626}.addonList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.addonTicket{border:1px solid #e2e8f0;border-radius:14px;padding:12px}.addonTicket textarea{width:100%;margin-top:8px;min-height:70px}.addonStudentGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.addonStudent{border:1px solid #e2e8f0;border-radius:14px;padding:12px}.addonMuted{color:#64748b;font-size:12px}.addonPill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:11px;font-weight:800;margin:2px}.addonRowActions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.addonEmpty{padding:14px;color:#64748b;border:1px dashed #cbd5e1;border-radius:12px}@media(max-width:800px){.addonGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.addonForm{grid-template-columns:1fr}.addonList,.addonStudentGrid{grid-template-columns:1fr}.addonAdminBox{margin:0 auto;padding:14px;border-radius:18px}.addonAdminTop h2{font-size:20px}}@media(max-width:420px){.addonGrid{grid-template-columns:1fr}.addonAdminModal{padding:6px}}
-@media(max-width:700px){#addonAdminBtn{right:10px;bottom:72px;padding:11px 13px;font-size:12px}#bookAdminFab{right:10px;bottom:12px;padding:11px 13px;font-size:12px}}</style>
+@media(max-width:700px){#addonAdminBtn{right:10px;bottom:72px;padding:11px 13px;font-size:12px}#bookAdminFab{right:10px;bottom:12px;padding:11px 13px;font-size:12px}#subscriptionAdminFab{right:10px;bottom:142px;padding:11px 13px;font-size:12px}}
+
+/* Floating Book / Add-ons / Subscription controls: stay visible when idle, auto-hide while scrolling to prevent overlap. */
+#addonAdminBtn,#bookAdminFab,#subscriptionAdminFab{transition:transform .28s ease,opacity .28s ease,visibility .28s ease;will-change:transform,opacity;}
+#addonAdminBtn.admin-autohide,#bookAdminFab.admin-autohide,#subscriptionAdminFab.admin-autohide{transform:translateX(calc(100% + 28px));opacity:0;visibility:hidden;pointer-events:none;}
+</style>
 <button id="addonAdminBtn" type="button">🚀 Add-ons Admin</button>
 <div id="addonAdminModal" class="addonAdminModal" aria-hidden="true"><div class="addonAdminBox"><div class="addonAdminTop"><div><h2>🚀 Add-ons Management Center</h2><div class="addonMuted">Coupons • Tickets • Referrals • Challenges • Analytics</div></div><button id="addonAdminClose" class="addonClose" type="button">✕ Close</button></div><div id="addonAdminStats" class="addonGrid"></div>
 <div class="addonSection"><h3>🎟️ Coupon Management</h3><div class="addonForm"><input id="couponCode" placeholder="Coupon code e.g. WELCOME10" maxlength="30"><input id="couponReward" type="number" min="0.01" step="0.01" placeholder="Reward ₹"><button onclick="addonSaveCoupon()">➕ Add / Update</button></div><div class="addonMuted" style="margin-top:7px">Coupons are single-use. After a student successfully redeems one, it is automatically deleted and will no longer appear here.</div><div id="addonCoupons"></div></div>
@@ -3273,6 +3278,10 @@ async function deleteBookRequest(id){if(!confirm("Delete this student book reque
 
 <style id="subscription-admin-style">
 #subscriptionAdminFab{position:fixed;right:18px;bottom:142px;z-index:9998;border:0;border-radius:16px;padding:13px 16px;background:linear-gradient(135deg,#16a34a,#2563eb);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+/* Floating Book / Add-ons / Subscription controls: stay visible when idle, auto-hide while scrolling to prevent overlap. */
+#addonAdminBtn,#bookAdminFab,#subscriptionAdminFab{transition:transform .28s ease,opacity .28s ease,visibility .28s ease;will-change:transform,opacity;}
+#addonAdminBtn.admin-autohide,#bookAdminFab.admin-autohide,#subscriptionAdminFab.admin-autohide{transform:translateX(calc(100% + 28px));opacity:0;visibility:hidden;pointer-events:none;}
+
 #subscriptionAdminModal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.68);display:none;padding:20px;overflow:auto}
 #subscriptionAdminModal.show{display:block}.subscription-admin-box{max-width:1050px;margin:5vh auto;background:#fff;color:#172033;border-radius:20px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 .subscription-admin-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.subscription-admin-head h2{margin:0}.subscription-admin-list{display:grid;gap:12px;margin-top:16px}
@@ -3342,7 +3351,30 @@ async function viewSubscriptionScreenshot(id){
     if(!r?.paymentScreenshot){alert('Screenshot not available.');return;}
     const w=window.open('','_blank','width=800,height=900');
     if(!w){alert('Please allow popups to view the screenshot.');return;}
-    w.document.write('<title>Payment Screenshot</title><body style=\"margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh\"><img src=\"'+r.paymentScreenshot+'\" style=\"max-width:96vw;max-height:96vh;object-fit:contain\"></body>');
+    w.document.write('<title>Payment Screenshot</title><body style=\"margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh\"><img src=\"'+r.paymentScreenshot+'\" style=\"max-width:96vw;max-height:96vh;object-fit:contain\"><script>
+(function(){
+  const ids=['addonAdminBtn','bookAdminFab','subscriptionAdminFab'];
+  const els=ids.map(id=>document.getElementById(id)).filter(Boolean);
+  if(!els.length) return;
+  let timer=null,lastY=window.scrollY||0;
+  const show=()=>els.forEach(el=>el.classList.remove('admin-autohide'));
+  const hide=()=>els.forEach(el=>el.classList.add('admin-autohide'));
+  const onScroll=()=>{
+    const y=window.scrollY||0;
+    if(Math.abs(y-lastY)>2) hide();
+    lastY=y;
+    clearTimeout(timer);
+    timer=setTimeout(show,850);
+  };
+  window.addEventListener('scroll',onScroll,{passive:true});
+  ['touchstart','pointerdown','mousemove'].forEach(ev=>window.addEventListener(ev,e=>{
+    if(ev==='mousemove' && e.clientX < window.innerWidth-180) return;
+    show();
+  },{passive:true}));
+  window.addEventListener('resize',show,{passive:true});
+})();
+</script>
+</body>');
     w.document.close();
   }catch(e){alert('❌ '+e.message)}
 }
