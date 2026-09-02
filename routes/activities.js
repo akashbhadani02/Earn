@@ -1687,7 +1687,7 @@ router.post('/:type/submit', auth, async (req,res)=>{
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
     const startedAt = Number(req.body.startedAt || 0);
-    const minSeconds = type === 'reading' ? 8 : 2.5;
+    const minSeconds = 2;
     const elapsedSeconds = startedAt ? (Date.now() - startedAt) / 1000 : 0;
     if (elapsedSeconds < minSeconds) {
       const security = await registerViolation(await User.findById(req.user.id), `Activity (${type}) answer submitted before reading the question`);

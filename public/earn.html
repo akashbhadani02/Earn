@@ -3222,15 +3222,8 @@ body.notification-locked #notificationRequiredOverlay button{
         function renderActivity(){
             const q=activityQuestions[activityIndex], box=document.getElementById('activityContent'), fb=document.getElementById('activityFeedback'); fb.textContent='';
             activityQuestionStartTime = Date.now();
-            activityAnswerLocked = true;
+            activityAnswerLocked = false;
             clearInterval(activityUnlockTimer);
-            const minSeconds = activityType === 'reading' ? 8 : 2.5;
-            activityUnlockTimer = setInterval(()=>{
-                const left = Math.max(0, minSeconds - ((Date.now()-activityQuestionStartTime)/1000));
-                const lock = document.getElementById('activityReadLock');
-                if(lock) lock.textContent = left > 0 ? '🔒 Please read the question carefully • Answer unlocks in '+left.toFixed(1)+'s' : '✅ You can answer now';
-                if(left <= 0){ activityAnswerLocked=false; clearInterval(activityUnlockTimer); const buttons=document.querySelectorAll('#activityContent .activity-option, #activityContent .activity-action, #activityContent .word-chip, #activityContent .activity-input'); buttons.forEach(x=>{ if(x.dataset.activityLocked==='1') { x.disabled=false; x.dataset.activityLocked='0'; }}); }
-            },100);
             if(activityType==='arrange'){
                 const words=q.prompt.split('/').map(x=>x.trim()).sort(()=>Math.random()-.5); arrangeWords=[];
                 box.innerHTML='<div class="activity-question">Arrange these words:</div><div class="word-bank" id="wordBank"></div><div class="answer-box" id="arranged">Tap words in the correct order</div><button class="activity-action" onclick="submitArrange()">✅ Check Sentence</button><button class="activity-action" style="background:#64748b" onclick="renderActivity()">↻ Reset</button>';
@@ -3246,25 +3239,18 @@ body.notification-locked #notificationRequiredOverlay button{
             } else if(activityType==='reading'){
                 box.innerHTML='<div class="passage">'+q.passage+'</div><div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}" disabled data-activity-locked="1">${o}</button>`).join('');
             }
-            const lock=document.createElement('div');
-            lock.id='activityReadLock';
-            lock.style='padding:10px;margin:10px 0;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:800;text-align:center;';
-            lock.textContent='🔒 Please read the question carefully';
-            box.prepend(lock);
-            if(activityType!=='reading'){
-                box.querySelectorAll('.activity-option,.activity-action,.word-chip,.activity-input').forEach(x=>{ if(x.id!=='activityReadLock'){ x.disabled=true; x.dataset.activityLocked='1'; }});
-            }
+            // No answer lock: Activity behaves like Quiz. Answers submitted within 2 seconds are treated as a violation.
         }
         function setFeedback(ok,msg){const e=document.getElementById('activityFeedback');e.textContent=msg;e.style.color=ok?'#16a34a':'#dc2626';}
         async function submitArrange(){submitActivity(arrangeWords.join(' '));}
         async function submitTypedActivity(){const e=document.getElementById('activityAnswer');if(!e||!e.value.trim()){setFeedback(false,'Answer લખો.');return}submitActivity(e.value.trim());}
         async function submitActivity(answer){
             const q=activityQuestions[activityIndex];
-            const minSeconds = activityType === 'reading' ? 8 : 2.5;
+            const minSeconds = 2;
             const elapsed = (Date.now() - activityQuestionStartTime) / 1000;
             if(activityAnswerLocked || elapsed < minSeconds){
-                await blockStudent('Activity answer submitted before reading the question');
-                setFeedback(false,'⚠️ પહેલા પ્રશ્ન ધ્યાનથી વાંચો.');
+                await blockStudent('Activity answer submitted within 2 seconds');
+                setFeedback(false,'⚠️ Answer આપતા પહેલા ઓછામાં ઓછા 2 seconds રાહ જુઓ.');
                 return;
             }
             try{
