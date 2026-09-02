@@ -206,6 +206,12 @@ const userSchema = new mongoose.Schema(
             default: ""
         },
 
+        // Exact time the student was blocked; used for instant Admin alerts.
+        blockAt: {
+            type: Date,
+            default: null
+        },
+
         // Temporary anti-cheating block expiry time. Each automatic block lasts 3 hours.
         blockUntil: {
             type: Date,

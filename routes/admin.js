@@ -1059,51 +1059,6 @@ router.delete("/withdraw/delete/:userId/:requestId", adminAuth, async (req, res)
 });
 
 // ===========================
-// Admin Alerts — Permanent Student Blocks
-// ===========================
-router.get("/alerts", adminAuth, async (req, res) => {
-    try {
-        const admin = await Admin.findById(req.admin?.id || req.admin?._id).lean();
-        const alerts = Array.isArray(admin?.alerts) ? admin.alerts.slice(-50).reverse() : [];
-        return res.json({ success: true, alerts, unread: alerts.filter(a => !a.read).length });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-router.put("/alerts/read-all", adminAuth, async (req, res) => {
-    try {
-        const admin = await Admin.findById(req.admin?.id || req.admin?._id);
-        if (!admin) return res.status(404).json({ success: false, message: "Admin not found" });
-        if (Array.isArray(admin.alerts)) admin.alerts.forEach(a => { a.read = true; });
-        await admin.save();
-        return res.json({ success: true });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-});
-
-async function addPermanentBlockAdminAlert(user, reason) {
-    try {
-        const admin = await Admin.findOne({});
-        if (!admin) return;
-        admin.alerts = Array.isArray(admin.alerts) ? admin.alerts : [];
-        admin.alerts.push({
-            type: "permanent-block",
-            title: "🚫 Student Permanently Blocked",
-            message: `${user.name || "Student"} (${user.mobile || user._id}) was permanently blocked. App access was removed and ₹200 payment is required before access can be restored. Reason: ${String(reason || user.blockReason || "Permanent block").slice(0, 500)}`,
-            userId: user._id,
-            createdAt: new Date(),
-            read: false
-        });
-        if (admin.alerts.length > 100) admin.alerts = admin.alerts.slice(-100);
-        await admin.save();
-    } catch (err) {
-        console.error("Permanent block admin alert error:", err);
-    }
-}
-
-// ===========================
 // Unblock Student
 // ===========================
 router.put("/unblock/:id", adminAuth, async (req, res) => {
@@ -1489,6 +1444,7 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
         if(user.warningCount >= 4){
             user.warningCount = 0;
             user.blockCount = Number(user.blockCount || 0) + 1;
+            user.blockAt = new Date();
             user.wallet = 0;
             user.isBlocked = true;
             // A final anti-cheat block ends the current subscription.
@@ -1739,6 +1695,7 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
         if(u.warningCount>=4){
             u.warningCount=0;
             u.blockCount=Number(u.blockCount||0)+1;
+            u.blockAt=new Date();
             u.isBlocked=true;
             u.sessionVersion=Number(u.sessionVersion||0)+1;
             u.wallet=0;
@@ -1778,6 +1735,7 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
         const u=await User.findById(req.params.id); if(!u)return res.status(404).json({success:false,message:"Student not found"});
         u.isBlocked=req.body.blocked!==false;
         u.blockReason=String(req.body.reason||"Admin action");
+        u.blockAt = u.isBlocked ? new Date() : null;
         u.permanentBlocked=false;
         u.blockUntil=u.isBlocked ? new Date(Date.now() + 3 * 60 * 60 * 1000) : null;
         if (u.isBlocked) {
@@ -1884,6 +1842,24 @@ router.put("/pro/permanent-user/:id", adminAuth, async (req, res) => {
     }
 });
 
+router.get("/pro/block-alerts", adminAuth, async(req,res)=>{
+    try {
+        const sinceMs = Math.max(0, Number(req.query.since || (Date.now() - 24 * 60 * 60 * 1000)));
+        const users = await User.find({
+            isDeleted: { $ne: true },
+            isBlocked: true,
+            blockAt: { $gte: new Date(sinceMs) }
+        }).select("name mobile blockReason blockAt permanentBlocked subscriptionAccess").sort({ blockAt: -1 }).limit(50).lean();
+        return res.json({ success:true, alerts: users.map(u => ({
+            id: String(u._id), name: nmPro(u), mobile: u.mobile || "",
+            reason: u.blockReason || "Student blocked", blockAt: u.blockAt,
+            permanentBlocked: !!u.permanentBlocked, accessRemoved: u.subscriptionAccess !== true
+        })) });
+    } catch (e) {
+        return res.status(500).json({ success:false, message:e.message });
+    }
+});
+
 router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
     try{
         const now = new Date();
@@ -1896,17 +1872,32 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
         const expiredIds = [];
 
         for (const u of users) {
+            const isPermanent = !!u.permanentBlocked;
             let until = u.blockUntil ? new Date(u.blockUntil) : null;
 
-            // Older blocked records may not have blockUntil. Treat them as 12 hours
-            // from updatedAt so the admin timer still has a real end time.
+            // Permanent blocks NEVER get a timer. They stay visible until Admin
+            // explicitly unblocks the student.
+            if (isPermanent) {
+                active.push({
+                    id: String(u._id),
+                    name: nmPro(u),
+                    mobile: u.mobile || "",
+                    blockReason: u.blockReason || "",
+                    permanentBlocked: true,
+                    blockAt: u.blockAt || u.updatedAt || null,
+                    blockUntil: null,
+                    blockUntilMs: 0
+                });
+                continue;
+            }
+
+            // Older temporary blocked records may not have blockUntil. Give only
+            // those temporary records the normal 3-hour expiry.
             if (!until || Number.isNaN(until.getTime())) {
-                const started = u.updatedAt ? new Date(u.updatedAt) : now;
+                const started = u.blockAt ? new Date(u.blockAt) : (u.updatedAt ? new Date(u.updatedAt) : now);
                 until = new Date(started.getTime() + 3 * 60 * 60 * 1000);
-                // Persist the canonical expiry so Student and Admin always
-                // calculate from the exact same blockUntil value.
                 await User.updateOne(
-                    { _id: u._id, isBlocked: true },
+                    { _id: u._id, isBlocked: true, permanentBlocked: { $ne: true } },
                     { $set: { blockUntil: until } }
                 );
             }
@@ -1921,6 +1912,8 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
                 name: nmPro(u),
                 mobile: u.mobile || "",
                 blockReason: u.blockReason || "",
+                permanentBlocked: false,
+                blockAt: u.blockAt || u.updatedAt || null,
                 blockUntil: until.toISOString(),
                 blockUntilMs: until.getTime()
             });
