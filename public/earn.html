@@ -3920,7 +3920,6 @@ async function submitBookPurchase(){
 (function(){
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;showInstallButton();});
-function showInstallButton(){if(document.getElementById('aducate-install-app'))return;var b=document.createElement('button');b.id='aducate-install-app';b.type='button';b.textContent='📲 Install App';b.style.cssText='position:fixed;right:18px;bottom:18px;z-index:2147483647;padding:12px 18px;border:0;border-radius:999px;background:#506ef0;color:#fff;font-weight:700;font-size:15px;box-shadow:0 8px 25px rgba(0,0,0,.3);cursor:pointer';b.onclick=async function(){if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;b.remove();}else{alert('Install option: Chrome/Edge menu (⋮) માંથી “Install Aducate English App” પસંદ કરો. મોબાઇલમાં Chrome menu માં “Install app” અથવા “Add to Home screen” પસંદ કરો.');}};document.body.appendChild(b);}
 window.addEventListener('appinstalled',()=>{deferredPrompt=null;document.getElementById('aducate-install-app')?.remove();});
 window.addEventListener('load',()=>{if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(console.error);if(!window.matchMedia('(display-mode: standalone)').matches)setTimeout(showInstallButton,1200);});
 })();
