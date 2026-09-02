@@ -617,7 +617,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
             <button class="ap2-btn" onclick="ap2Tab('recycle')">🗑️ Recycle Bin</button>
             <button class="ap2-btn" onclick="ap2Tab('reports')">📊 Reports</button>
             <button class="ap2-btn" onclick="ap2Tab('lifelines')">🛟 Lifelines</button>
-            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">⏳ Blocked Time</button>
+            <button class="ap2-btn" onclick="ap2ShowBlockedTime()">🚫 Blocked Students</button>
             <!-- <button class="ap2-btn" style="background:#7c3aed;border-color:#7c3aed" onclick="ap2ResetAllLifelines()">🔄 Reset All Lifelines</button> -->
         </div>
 
@@ -770,7 +770,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
     <div class="ap2-modal" id="ap2BlockedTimeModal" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="ap2-box">
             <div class="ap2-head">
-                <h2>⏳ Blocked Students — Remaining Time</h2>
+                <h2>🚫 Permanently Blocked Students</h2>
                 <button class="ap2-btn" onclick="ap2CloseBlockedTime()">✕</button>
             </div>
             <div id="ap2BlockedTimeBody"></div>
@@ -2974,11 +2974,7 @@ ${w.status === "Approved" ? `
                 const body = document.getElementById("ap2BlockedTimeBody");
                 if (!body) return;
 
-                const now = Date.now();
-                const active = ap2BlockedUsers
-                    .map(u => ({ ...u, remainingMs: Math.max(0, Number(u.blockUntilMs || 0) - now) }))
-                    .filter(u => u.remainingMs > 0);
-
+                const active = ap2BlockedUsers.filter(u => u.permanentBlocked || u.isBlocked);
                 if (!active.length) {
                     body.innerHTML = '<div style="padding:35px 20px;text-align:center;color:#94a3b8;font-weight:800;">No blocked student found</div>';
                     return;
@@ -2988,7 +2984,8 @@ ${w.status === "Approved" ? `
                     <div class="blocked-time-card">
                         <div class="student-name">🚫 ${esc(u.name || "Unknown")}</div>
                         <div class="student-meta">ID: ${esc(u.id || "-")} &nbsp; | &nbsp; Mobile: ${esc(u.mobile || "-")}</div>
-                        <div class="remaining">⏱ Remaining: ${ap2FormatRemaining(u.remainingMs)}</div>
+                        <div class="remaining">🔒 Permanent Block — ₹200 payment required</div>
+                        <div class="student-meta">Access removed. Admin approval is required after payment.</div>
                     </div>
                 `).join("");
             }
@@ -3005,9 +3002,7 @@ ${w.status === "Approved" ? `
                     const d = await api("/pro/blocked-students");
                     ap2BlockedUsers = Array.isArray(d.users) ? d.users : [];
                     ap2RenderBlockedTime();
-
                     clearInterval(ap2BlockedTimer);
-                    ap2BlockedTimer = setInterval(ap2RenderBlockedTime, 1000);
                 } catch (e) {
                     body.innerHTML = `<div style="padding:35px 20px;text-align:center;color:#fca5a5;font-weight:800;">⚠️ ${esc(e.message || "Failed to load blocked students.")}</div>`;
                 }

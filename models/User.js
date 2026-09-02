@@ -212,7 +212,7 @@ const userSchema = new mongoose.Schema(
             default: null
         },
 
-        // Temporary anti-cheating block expiry time. Each automatic block lasts 3 hours.
+        // Legacy block expiry field. New blocks are permanent and always keep this null.
         blockUntil: {
             type: Date,
             default: null
@@ -225,7 +225,7 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
 
-        // Number of automatic 3-hour blocks already completed.
+        // Legacy block counter; new blocks are permanent.
         // Blocks 1-3 are temporary; block 4 is permanent/admin-only.
         blockCount: {
             type: Number,

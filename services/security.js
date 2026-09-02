@@ -1,4 +1,4 @@
-const BLOCK_HOURS = 12;
+const BLOCK_HOURS = 0;
 const WARNINGS_PER_BLOCK = 3;
 const TIMED_BLOCKS = 3;
 
@@ -63,19 +63,23 @@ async function registerSecurityViolation(user, reason = "Security violation") {
         return { warning:true, blocked:false, permanent:false, warningCount:user.warningCount, cycleWarningCount:user.warningCycleCount, remainingWarnings:WARNINGS_PER_BLOCK-user.warningCycleCount, blockCount:blocks, remainingMs:0 };
     }
 
-    // Third warning => timed block. Wallet is immediately reset to zero.
-    user.blockCount = blocks + 1;
+    // Warning threshold reached => permanent block. No 3-hour timer.
+    user.blockCount = Number(user.blockCount || 0) + 1;
     user.isBlocked = true;
-    user.blockUntil = new Date(now + BLOCK_HOURS * 60 * 60 * 1000);
+    user.permanentBlocked = true;
+    user.blockUntil = null;
     user.wallet = 0;
     user.activeQuizQuestionId = null;
     user.activeQuizStartedAt = null;
     user.activeActivityType = "";
     user.activeActivityQuestionId = "";
     user.activeActivityStartedAt = null;
+    user.blockAt = new Date();
+    user.warningHistory = Array.isArray(user.warningHistory) ? user.warningHistory : [];
+    user.warningHistory.push({time:new Date(), reason:`PERMANENT BLOCK: ${user.blockReason}`});
     await user.save();
 
-    return { warning:false, blocked:true, permanent:false, warningCount:user.warningCount, cycleWarningCount:user.warningCycleCount, blockCount:user.blockCount, blockUntil:user.blockUntil.toISOString(), remainingMs:BLOCK_HOURS*60*60*1000 };
+    return {warning:false, blocked:true, permanent:true, permanentBlocked:true, warningCount:user.warningCount, cycleWarningCount:user.warningCycleCount, blockCount:user.blockCount, remainingMs:0};
 }
 
 module.exports = { registerSecurityViolation, BLOCK_HOURS, WARNINGS_PER_BLOCK, TIMED_BLOCKS };

@@ -139,13 +139,21 @@ router.post("/login", async (req, res) => {
 
         }
 
-        // Temporary 3-hour block. Admin and Student use the SAME expiry.
+        // All blocks are now permanent. There is no 3-hour timer.
         if (user.isBlocked) {
             const now = Date.now();
+            if (!user.permanentBlocked) {
+                user.permanentBlocked = true;
+                user.blockUntil = null;
+                user.blockAt = user.blockAt || new Date();
+                await revokeStudentSubscription(user, "Subscription deleted because account was blocked permanently.");
+                user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+                await user.save();
+            }
 
             // Permanent block: never auto-expire or clear it. Only Admin
             // unblock is allowed to reset this state.
-            if (user.permanentBlocked || Number(user.blockCount || 0) >= 4) {
+            if (user.permanentBlocked || user.isBlocked) {
                 // Permanent block has no countdown. Remove the old subscription so
                 // the ₹200 subscription gate becomes available again.
                 user.isBlocked = true;
@@ -197,7 +205,7 @@ router.post("/login", async (req, res) => {
                 user.subscriptionRequestedAt = null;
                 user.subscriptionConfirmedAt = null;
                 user.subscriptionConfirmedBy = null;
-                user.subscriptionAdminNote = "3-hour block expired. New subscription required.";
+                user.subscriptionAdminNote = "Legacy timed block state migrated to permanent block.";
                 // blockCount is intentionally preserved so the next block
                 // becomes 2/3, 3/3, and then the 4th permanent block.
                 await user.save();
@@ -212,7 +220,7 @@ router.post("/login", async (req, res) => {
                 return res.status(403).json({
                     success: false,
                     blocked: true,
-                    message: user.permanentBlocked ? "Your account is permanently blocked. Admin must unblock it." : "Your account is blocked for 3 hours.",
+                    message: user.permanentBlocked ? "Your account is permanently blocked. Pay ₹200 and wait for Admin approval." : "Your account is blocked.",
                     reason: user.blockReason,
                     blockUntil: new Date(blockTime.untilMs).toISOString(),
                     remainingMs: blockTime.remainingMs
@@ -378,7 +386,7 @@ router.post("/offline", async (req, res) => {
 
 // ==========================
 // Student Warning / Block System
-// 4 warnings -> one 3-hour block.
+// 4 warnings -> permanent block.
 // First 3 blocks are temporary; the 4th block is permanent and admin-only.
 router.post("/block-me", auth, async (req, res) => {
     try {

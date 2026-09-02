@@ -1397,8 +1397,9 @@ router.put("/control-center/block/:id", adminAuth, async (req,res) => {
         const user = await User.findById(req.params.id);
         if(!user) return res.status(404).json({success:false,message:"User Not Found"});
         user.isBlocked = true;
-        user.permanentBlocked = false;
-        user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
+        user.permanentBlocked = true;
+        user.blockUntil = null;
+        user.blockAt = new Date();
         user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
         user.wallet = 0;
         // Manual blocking also revokes the current subscription. A new
@@ -1459,26 +1460,18 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
             user.subscriptionAdminNote = "Subscription revoked because of anti-cheat block.";
             user.sessionVersion = Number(user.sessionVersion || 0) + 1;
 
-            if(user.blockCount >= 4){
-                user.permanentBlocked = true;
-                user.blockUntil = null;
-                user.blockReason = "Automatic block after 4 warnings — 4th block requires admin unblock";
-                await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
-            } else {
-                user.permanentBlocked = false;
-                user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
-                user.blockReason = `Automatic 3-hour block (${user.blockCount}/3 temporary blocks)`;
-            }
+            user.permanentBlocked = true;
+            user.blockUntil = null;
+            user.blockReason = "Automatic permanent block after warnings — ₹200 payment required";
+            await revokeStudentSubscription(user, "Subscription deleted because account was blocked permanently.");
         }
 
         await user.save();
         return res.json({
             success:true,
             message:user.permanentBlocked
-              ? "4th block reached: admin unblock required"
-              : user.isBlocked
-                ? `4 warnings reached: student blocked for 3 hours (${user.blockCount}/3)`
-                : `Warning ${user.warningCount}/4 added`,
+              ? "Student permanently blocked: ₹200 payment required before access can be restored"
+              : `Warning ${user.warningCount}/4 added`,
             warningCount:user.warningCount,
             blockCount:Number(user.blockCount||0),
             isBlocked:user.isBlocked,
@@ -1708,7 +1701,9 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
             }else{
                 u.permanentBlocked=false;
                 u.blockUntil=new Date(Date.now()+3*60*60*1000);
-                u.blockReason=`Automatic 3-hour block (${u.blockCount}/3 temporary blocks)`;
+                u.permanentBlocked=true;
+                u.blockUntil=null;
+                u.blockReason=`Automatic permanent block (${u.blockCount}) — ₹200 payment required`;
             }
         }
 
@@ -1719,7 +1714,7 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
             message:u.permanentBlocked
               ? "4th block reached — admin unblock required"
               : u.isBlocked
-                ? `4 warnings reached — student blocked for 3 hours (${u.blockCount}/3)`
+                ? `Student permanently blocked — ₹200 payment required`
                 : `Warning ${u.warningCount}/4 added`,
             warningCount:u.warningCount,
             blockCount:Number(u.blockCount||0),
@@ -1737,10 +1732,19 @@ router.put("/pro/block/:id", adminAuth, async(req,res)=>{
         u.blockReason=String(req.body.reason||"Admin action");
         u.blockAt = u.isBlocked ? new Date() : null;
         u.permanentBlocked=false;
-        u.blockUntil=u.isBlocked ? new Date(Date.now() + 3 * 60 * 60 * 1000) : null;
+        u.blockUntil=null;
+        u.permanentBlocked=!!u.isBlocked;
         if (u.isBlocked) {
             u.wallet = 0;
+            u.subscriptionStatus = "inactive";
+            u.subscriptionAccess = false;
+            u.subscriptionPaymentReference = "";
+            u.subscriptionRequestedAt = null;
+            u.subscriptionConfirmedAt = null;
+            u.subscriptionConfirmedBy = null;
+            u.subscriptionAdminNote = "Subscription revoked because account was blocked permanently.";
             u.sessionVersion = Number(u.sessionVersion || 0) + 1;
+            await revokeStudentSubscription(u, "Subscription deleted because account was blocked permanently.");
         }
         await proAdminLog(u,u.isBlocked?"BLOCK":"UNBLOCK",u.blockReason);
         await u.save();
@@ -1891,52 +1895,25 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
                 continue;
             }
 
-            // Older temporary blocked records may not have blockUntil. Give only
-            // those temporary records the normal 3-hour expiry.
-            if (!until || Number.isNaN(until.getTime())) {
-                const started = u.blockAt ? new Date(u.blockAt) : (u.updatedAt ? new Date(u.updatedAt) : now);
-                until = new Date(started.getTime() + 3 * 60 * 60 * 1000);
-                await User.updateOne(
-                    { _id: u._id, isBlocked: true, permanentBlocked: { $ne: true } },
-                    { $set: { blockUntil: until } }
-                );
-            }
-
-            if (until <= now) {
-                expiredIds.push(u._id);
-                continue;
-            }
-
+            // Legacy non-permanent blocked records are upgraded to permanent blocks.
+            await User.updateOne(
+                { _id: u._id, isBlocked: true },
+                { $set: { permanentBlocked: true, blockUntil: null } }
+            );
             active.push({
                 id: String(u._id),
                 name: nmPro(u),
                 mobile: u.mobile || "",
                 blockReason: u.blockReason || "",
-                permanentBlocked: false,
+                permanentBlocked: true,
                 blockAt: u.blockAt || u.updatedAt || null,
-                blockUntil: until.toISOString(),
-                blockUntilMs: until.getTime()
+                blockUntil: null,
+                blockUntilMs: 0
             });
         }
 
-        if (expiredIds.length) {
-            await User.updateMany(
-                { _id: { $in: expiredIds } },
-                { $set: {
-                    isBlocked: false,
-                    blockUntil: null,
-                    blockReason: "",
-                    warningCount: 0,
-                    subscriptionStatus: "inactive",
-                    subscriptionAccess: false,
-                    subscriptionPaymentReference: "",
-                    subscriptionRequestedAt: null,
-                    subscriptionConfirmedAt: null,
-                    subscriptionConfirmedBy: null,
-                    subscriptionAdminNote: "3-hour block expired. New subscription required."
-                } }
-            );
-        }
+        // No timed-block expiry cleanup: blocked students remain blocked until payment approval/admin action.
+
 
         res.json({ success:true, users:active });
     }catch(e){

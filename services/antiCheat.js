@@ -1,8 +1,8 @@
 const { revokeStudentSubscription } = require("./subscriptionLifecycle");
 
-const BLOCK_DURATION_MS = 3 * 60 * 60 * 1000;
+const BLOCK_DURATION_MS = 0;
 const WARNINGS_PER_BLOCK = 4;
-const MAX_TEMP_BLOCKS = 3;
+const MAX_TEMP_BLOCKS = 0;
 
 function getBlockRemainingMs(user, nowMs = Date.now()) {
   let untilMs = user.blockUntil ? new Date(user.blockUntil).getTime() : 0;
@@ -53,27 +53,14 @@ async function registerViolation(user, reason) {
     };
   }
 
-  // Existing temporary block: return its canonical remaining time.
+  // Legacy timed-block records are converted to permanent blocks; no timer is used.
   if (user.isBlocked) {
-    const t = getBlockRemainingMs(user);
-    if (t.remainingMs > 0) {
-      return {
-        blocked: true,
-        permanentBlocked: false,
-        warning: false,
-        warningCount: Number(user.warningCount || 0),
-        blockCount: Number(user.blockCount || 0),
-        remainingMs: t.remainingMs,
-        blockUntil: new Date(t.untilMs).toISOString(),
-        wallet: Number(user.wallet || 0)
-      };
-    }
-
-    // Temporary block expired. Start a fresh warning cycle.
-    user.isBlocked = false;
+    user.isBlocked = true;
+    user.permanentBlocked = true;
     user.blockUntil = null;
-    user.blockReason = "";
-    user.warningCount = 0;
+    await revokeStudentSubscription(user, "Subscription deleted because account was blocked permanently.");
+    await user.save();
+    return { blocked:true, permanentBlocked:true, warning:false, warningCount:0, blockCount:Number(user.blockCount||0), wallet:0, remainingMs:0, message:"Permanent block — ₹200 payment required before access can be restored." };
   }
 
   // Every confirmed violation gives one warning.
@@ -97,56 +84,24 @@ async function registerViolation(user, reason) {
     };
   }
 
-  // 4th warning -> one block. The 4th block overall is permanent.
-  user.blockCount = Number(user.blockCount || 0) + 1;
+  // 4th warning -> permanent block. There is no timed/3-hour block anymore.
   user.blockAt = new Date();
-  user.warningCount = 0;
-  user.wallet = 0;
-  user.isOnline = false;
-  user.activeQuizQuestionId = null;
-  user.activeQuizStartedAt = null;
-  user.activeActivityType = "";
-  user.activeActivityQuestionId = null;
-  user.activeActivityStartedAt = null;
-  user.activeActivityToken = "";
-  user.sessionVersion = Number(user.sessionVersion || 0) + 1;
-
-  if (user.blockCount >= 4) {
-    user.isBlocked = true;
-    user.permanentBlocked = true;
-    user.blockUntil = null;
-    user.blockReason = cleanReason + " — Permanent block (4th block)";
-    await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
-    await user.save();
-
-    return {
-      blocked: true,
-      permanentBlocked: true,
-      warning: false,
-      warningCount: 0,
-      blockCount: user.blockCount,
-      wallet: 0,
-      message: "Permanent block — Admin must unblock this student."
-    };
-  }
-
   user.isBlocked = true;
-  user.permanentBlocked = false;
-  user.blockUntil = new Date(Date.now() + BLOCK_DURATION_MS);
-  user.blockReason = cleanReason + ` — ${user.blockCount}/3 temporary block`;
-
+  user.permanentBlocked = true;
+  user.blockUntil = null;
+  user.blockReason = cleanReason + " — Permanent block";
+  await revokeStudentSubscription(user, "Subscription deleted because account was blocked permanently.");
   await user.save();
 
   return {
     blocked: true,
-    permanentBlocked: false,
+    permanentBlocked: true,
     warning: false,
     warningCount: 0,
-    blockCount: user.blockCount,
-    blockUntil: user.blockUntil.toISOString(),
-    remainingMs: BLOCK_DURATION_MS,
+    blockCount: Number(user.blockCount || 0),
     wallet: 0,
-    message: `Student blocked for 3 hours (${user.blockCount}/3 temporary blocks).`
+    remainingMs: 0,
+    message: "Permanent block — ₹200 payment required before access can be restored."
   };
 }
 
