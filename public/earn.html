@@ -2017,6 +2017,9 @@ body.notification-locked #notificationRequiredOverlay button{
         let spaceCount = 0;
         let questionStartTime = 0;
         let warningTimer = null;
+        let quizAnswerTimings = [];
+        let lastQuizAnswerAt = 0;
+        let quizTabHidden = false;
 
         function startWarningMonitor() {
 
@@ -2062,6 +2065,35 @@ body.notification-locked #notificationRequiredOverlay button{
 
             }
 
+        });
+
+        // Pasting into a quiz answer is treated as a security violation.
+        document.addEventListener("paste", (e) => {
+            const quizVisible = !document.getElementById("quiz")?.classList.contains("hidden");
+            if (!quizVisible || alreadyBlocked) return;
+            e.preventDefault();
+            recordSecurityEvent("paste_attempt");
+            blockStudent("Copy/paste is not allowed during the quiz");
+        });
+
+        // Leaving the quiz tab/window is logged and warned immediately.
+        document.addEventListener("visibilitychange", () => {
+            const quizVisible = !document.getElementById("quiz")?.classList.contains("hidden");
+            if (!quizVisible || alreadyBlocked) return;
+            if (document.hidden) {
+                quizTabHidden = true;
+                recordSecurityEvent("tab_change");
+                blockStudent("Quiz tab was switched or hidden");
+            } else if (quizTabHidden) {
+                quizTabHidden = false;
+            }
+        });
+
+        window.addEventListener("blur", () => {
+            const quizVisible = !document.getElementById("quiz")?.classList.contains("hidden");
+            if (quizVisible && !alreadyBlocked) {
+                recordSecurityEvent("window_blur");
+            }
         });
 
         let alreadyBlocked = false;
@@ -2955,6 +2987,20 @@ body.notification-locked #notificationRequiredOverlay button{
                 }
 
                 currentQuizQuestion = q;
+                quizAnswerTimings = [];
+                lastQuizAnswerAt = 0;
+                try {
+                    await fetch("/api/questions/start", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: "Bearer " + localStorage.getItem("token")
+                        },
+                        body: JSON.stringify({ questionId: q._id })
+                    });
+                } catch (e) {
+                    console.warn("Server quiz timer could not start:", e);
+                }
                 updateQuestionProgress();
                 const oldPoll = document.querySelector('.kbc-poll');
                 if (oldPoll) oldPoll.remove();
@@ -2978,8 +3024,23 @@ body.notification-locked #notificationRequiredOverlay button{
                         });
 
                         const timeTaken = (Date.now() - questionStartTime) / 1000;
+                        quizAnswerTimings.push(timeTaken);
+                        if (quizAnswerTimings.length > 6) quizAnswerTimings.shift();
+                        lastQuizAnswerAt = Date.now();
 
-                        if (timeTaken < 1.5) {
+                        // Detect repeated, unnaturally identical answer timing.
+                        if (quizAnswerTimings.length >= 4) {
+                            const recent = quizAnswerTimings.slice(-4);
+                            const spread = Math.max(...recent) - Math.min(...recent);
+                            const allNormal = recent.every(t => t >= 1.5 && t <= 12);
+                            if (allNormal && spread <= 0.25) {
+                                recordSecurityEvent("suspicious_timing");
+                                await blockStudent("Repeatedly identical answer timing detected");
+                                return;
+                            }
+                        }
+
+                        if (timeTaken < 2.5) {
                             await recordSecurityEvent("fast_answer");
                             await blockStudent("વાંચી ને જવાબ આપવાનો છે ઓછા સમય માં જવાબ આપ્યો છે.");
                             return;

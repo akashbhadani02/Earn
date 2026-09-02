@@ -81,6 +81,31 @@ router.get("/random", auth, async (req, res) => {
     }
 });
 
+// Start a quiz question timer on the server. This makes answer timing
+// authoritative instead of relying only on the browser clock.
+router.post("/start", auth, async (req, res) => {
+    try {
+        const questionId = String(req.body?.questionId || "").trim();
+        if (!questionId) return res.status(400).json({ success: false, message: "Question ID required" });
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+        const question = await Question.findOne({ _id: questionId, isDeleted: { $ne: true } })
+            .select("_id").lean();
+        if (!question) return res.status(404).json({ success: false, message: "Question not found" });
+
+        user.activeQuizQuestionId = String(question._id);
+        user.activeQuizStartedAt = new Date();
+        await user.save();
+
+        return res.json({ success: true, startedAt: user.activeQuizStartedAt.toISOString() });
+    } catch (err) {
+        console.error("Quiz Start Error:", err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // Student quiz question bank.
 router.get("/", auth, async (req, res) => {
     noStore(res);

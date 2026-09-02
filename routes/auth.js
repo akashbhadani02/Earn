@@ -387,6 +387,12 @@ router.post("/security-event", auth, async (req, res) => {
             user.tabChanges = Number(user.tabChanges || 0) + 1;
         } else if (type === "fast_answer") {
             user.fastAnswers = Number(user.fastAnswers || 0) + 1;
+        } else if (type === "paste_attempt") {
+            user.pasteAttempts = Number(user.pasteAttempts || 0) + 1;
+        } else if (type === "suspicious_timing") {
+            user.suspiciousTimingEvents = Number(user.suspiciousTimingEvents || 0) + 1;
+        } else if (type === "window_blur") {
+            user.tabChanges = Number(user.tabChanges || 0) + 1;
         } else if (type === "device") {
             const id = String(deviceId || "").trim().slice(0, 200);
             if (!id) return res.status(400).json({ success: false, message: "Device ID required" });
@@ -405,6 +411,8 @@ router.post("/security-event", auth, async (req, res) => {
             success: true,
             fastAnswers: Number(user.fastAnswers || 0),
             tabChanges: Number(user.tabChanges || 0),
+            pasteAttempts: Number(user.pasteAttempts || 0),
+            suspiciousTimingEvents: Number(user.suspiciousTimingEvents || 0),
             deviceCount: Number(user.deviceCount || 0),
             warningCount: Number(user.warningCount || 0),
             loginCount: Array.isArray(user.loginHistory) ? user.loginHistory.length : 0

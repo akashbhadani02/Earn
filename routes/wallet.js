@@ -6,6 +6,7 @@ const Question = require("../models/Question");
 const LifelineUsage = require("../models/LifelineUsage");
 const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const auth = require("../middleware/subscriptionAuth");
+const { registerViolation } = require("../services/antiCheat");
 
 const DAILY_REWARD_AMOUNT = 5;
 const QUIZ_CORRECT_REWARD = 0.20;
@@ -109,6 +110,22 @@ router.post("/quiz", auth, async (req, res) => {
         if (!question) {
             return res.status(404).json({ success: false, message: "Question is no longer available" });
         }
+
+        // Server-authoritative answer timing. The browser starts this timer via
+        // POST /api/questions/start immediately before rendering the options.
+        // This prevents a client-side clock from being the only anti-cheat signal.
+        const activeQuestionId = String(user.activeQuizQuestionId || "");
+        const startedAtMs = user.activeQuizStartedAt ? new Date(user.activeQuizStartedAt).getTime() : 0;
+        const elapsedMs = startedAtMs ? Date.now() - startedAtMs : null;
+        if (activeQuestionId === String(question._id) && Number.isFinite(elapsedMs) && elapsedMs >= 0 && elapsedMs < 1500) {
+            user.activeQuizQuestionId = null;
+            user.activeQuizStartedAt = null;
+            const security = await registerViolation(user, "Answer submitted in less than 1.5 seconds");
+            return res.status(200).json({ success: true, antiCheat: true, ...security });
+        }
+
+        user.activeQuizQuestionId = null;
+        user.activeQuizStartedAt = null;
 
         const answered = Array.isArray(user.answeredQuestionIds) ? user.answeredQuestionIds : [];
         if (answered.some(id => String(id) === String(question._id))) {

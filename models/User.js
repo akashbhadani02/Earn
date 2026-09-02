@@ -387,6 +387,9 @@ const userSchema = new mongoose.Schema(
         deviceIds: { type: [String], default: [] },
         tabChanges: { type: Number, default: 0 },
         fastAnswers: { type: Number, default: 0 },
+        pasteAttempts: { type: Number, default: 0 },
+        suspiciousTimingEvents: { type: Number, default: 0 },
+        lastAnswerTimings: { type: [Number], default: [] },
         // Security/anti-cheat state. These fields must be in the schema so
         // Mongoose persists the values used by the security services.
         warningCycleCount: { type: Number, default: 0 },
