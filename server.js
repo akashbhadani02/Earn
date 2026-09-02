@@ -60,24 +60,6 @@ app.use("/api/addons", addonRoutes);
 app.use("/api/book", bookRoutes);
 
 
-// Dynamic PWA manifest: uses the logo selected by the admin when available.
-app.get('/manifest.webmanifest', async (req, res) => {
-    try {
-        const Admin = require('./models/Admin');
-        const admin = await Admin.findOne({}).lean();
-        const icon = admin?.appLogo || '/icon-512.png';
-        res.set('Content-Type', 'application/manifest+json');
-        res.set('Cache-Control', 'no-store');
-        res.json({
-            name:'Aducate English App', short_name:'Aducate', description:'Aducate English learning and earning app',
-            start_url:'/earn.html', scope:'/', display:'standalone', background_color:'#14182d', theme_color:'#506ef0',
-            icons:[
-                { src: icon, sizes:'192x192', type:'image/png', purpose:'any' },
-                { src: icon, sizes:'512x512', type:'image/png', purpose:'any maskable' }
-            ]
-        });
-    } catch(e) { res.sendFile(path.join(__dirname,'public','manifest.webmanifest')); }
-});
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req,res)=>{

@@ -34,42 +34,6 @@ function decryptStudentPassword(payload) {
 
 const router = express.Router();
 
-// ===========================
-// Admin controlled App Logo
-// ===========================
-router.get('/app-logo', async (req, res) => {
-    try {
-        const admin = await Admin.findOne({});
-        res.json({ success:true, logo: admin?.appLogo || '' });
-    } catch (err) { res.status(500).json({ success:false, message:'Could not load app logo' }); }
-});
-
-router.put('/app-logo', adminAuth, async (req, res) => {
-    try {
-        const { logo } = req.body || {};
-        if (!logo || typeof logo !== 'string' || !logo.startsWith('data:image/')) {
-            return res.status(400).json({ success:false, message:'Please upload a valid image.' });
-        }
-        // Keep payload small enough for JSON request limits and MongoDB document safety.
-        if (logo.length > 2500000) return res.status(400).json({ success:false, message:'Logo image is too large. Please choose a smaller image.' });
-        const admin = await Admin.findById(req.admin?.id || req.admin?._id);
-        if (!admin) return res.status(404).json({ success:false, message:'Admin not found' });
-        admin.appLogo = logo;
-        await admin.save();
-        res.json({ success:true, logo });
-    } catch (err) { console.error('App logo save error:', err); res.status(500).json({ success:false, message:'Could not save app logo' }); }
-});
-
-router.delete('/app-logo', adminAuth, async (req, res) => {
-    try {
-        const admin = await Admin.findById(req.admin?.id || req.admin?._id);
-        if (!admin) return res.status(404).json({ success:false, message:'Admin not found' });
-        admin.appLogo = '';
-        await admin.save();
-        res.json({ success:true });
-    } catch (err) { res.status(500).json({ success:false, message:'Could not remove app logo' }); }
-});
-
 const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
 const adminAuth = require("../middleware/adminAuth");
