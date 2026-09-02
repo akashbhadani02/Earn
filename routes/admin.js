@@ -1059,6 +1059,51 @@ router.delete("/withdraw/delete/:userId/:requestId", adminAuth, async (req, res)
 });
 
 // ===========================
+// Admin Alerts — Permanent Student Blocks
+// ===========================
+router.get("/alerts", adminAuth, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.admin?.id || req.admin?._id).lean();
+        const alerts = Array.isArray(admin?.alerts) ? admin.alerts.slice(-50).reverse() : [];
+        return res.json({ success: true, alerts, unread: alerts.filter(a => !a.read).length });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+router.put("/alerts/read-all", adminAuth, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.admin?.id || req.admin?._id);
+        if (!admin) return res.status(404).json({ success: false, message: "Admin not found" });
+        if (Array.isArray(admin.alerts)) admin.alerts.forEach(a => { a.read = true; });
+        await admin.save();
+        return res.json({ success: true });
+    } catch (err) {
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+async function addPermanentBlockAdminAlert(user, reason) {
+    try {
+        const admin = await Admin.findOne({});
+        if (!admin) return;
+        admin.alerts = Array.isArray(admin.alerts) ? admin.alerts : [];
+        admin.alerts.push({
+            type: "permanent-block",
+            title: "🚫 Student Permanently Blocked",
+            message: `${user.name || "Student"} (${user.mobile || user._id}) was permanently blocked. App access was removed and ₹200 payment is required before access can be restored. Reason: ${String(reason || user.blockReason || "Permanent block").slice(0, 500)}`,
+            userId: user._id,
+            createdAt: new Date(),
+            read: false
+        });
+        if (admin.alerts.length > 100) admin.alerts = admin.alerts.slice(-100);
+        await admin.save();
+    } catch (err) {
+        console.error("Permanent block admin alert error:", err);
+    }
+}
+
+// ===========================
 // Unblock Student
 // ===========================
 router.put("/unblock/:id", adminAuth, async (req, res) => {

@@ -117,6 +117,16 @@ async function registerViolation(user, reason) {
     user.blockReason = cleanReason + " — Permanent block (4th block)";
     await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
     await user.save();
+    try {
+      const Admin = require("../models/Admin");
+      const admin = await Admin.findOne({});
+      if (admin) {
+        admin.alerts = Array.isArray(admin.alerts) ? admin.alerts : [];
+        admin.alerts.push({ type: "permanent-block", title: "🚫 Student Permanently Blocked", message: `${user.name || "Student"} (${user.mobile || user._id}) was permanently blocked. App access was removed and ₹200 payment is required before access can be restored. Reason: ${cleanReason}`, userId: user._id, createdAt: new Date(), read: false });
+        if (admin.alerts.length > 100) admin.alerts = admin.alerts.slice(-100);
+        await admin.save();
+      }
+    } catch (alertErr) { console.error("Permanent block admin alert error:", alertErr); }
 
     return {
       blocked: true,

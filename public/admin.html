@@ -414,6 +414,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
                 🔔 Notify All Users
             </button>
             <button id="themeToggleBtn" type="button" onclick="toggleAdminTheme()" title="Switch Day / Night Mode" aria-label="Switch Day / Night Mode">☀️ Day</button>
+            <button id="adminBlockAlertsBtn" onclick="openBlockAlerts()" style="background:#dc2626;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">🚫 Block Alerts <span id="adminBlockAlertBadge" style="display:none;background:#fff;color:#dc2626;border-radius:999px;padding:2px 7px;margin-left:5px;font-weight:900;">0</span></button>
             <button onclick="logout()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
                 Logout
             </button>
@@ -3310,6 +3311,33 @@ async function deleteBookRequest(id){if(!confirm("Delete this student book reque
 </script>
 
 
+<div id="adminBlockAlertsModal" style="position:fixed;inset:0;z-index:100001;background:rgba(0,0,0,.68);display:none;padding:20px;overflow:auto">
+  <div style="max-width:900px;margin:5vh auto;background:#fff;color:#172033;border-radius:20px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.35)">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><h2 style="margin:0">🚫 Permanent Block Alerts</h2><div style="color:#64748b;font-size:13px;margin-top:4px">Students whose access was removed and who now require ₹200 payment.</div></div><button onclick="closeBlockAlerts()" style="border:0;border-radius:10px;padding:9px 13px;font-weight:900;cursor:pointer">✕ Close</button></div>
+    <div id="adminBlockAlertsList" style="display:grid;gap:12px;margin-top:16px">Loading...</div>
+  </div>
+</div>
+<script id="admin-block-alerts-script">
+async function loadBlockAlerts(){
+  try{
+    const d=await api('/alerts');
+    const alerts=d.alerts||[];
+    const badge=document.getElementById('adminBlockAlertBadge');
+    if(badge){badge.textContent=Number(d.unread||0);badge.style.display=Number(d.unread||0)?'inline-block':'none';}
+    const box=document.getElementById('adminBlockAlertsList');
+    if(box && document.getElementById('adminBlockAlertsModal').style.display==='block'){
+      box.innerHTML=alerts.length?alerts.map(a=>`<div style="border:1px solid #fecaca;background:#fff7f7;border-radius:14px;padding:14px"><div style="font-weight:900;color:#991b1b">${esc(a.title||'Permanent Block')}</div><div style="margin-top:6px">${esc(a.message||'')}</div><div style="margin-top:7px;color:#64748b;font-size:12px">${a.createdAt?new Date(a.createdAt).toLocaleString():'-'}</div></div>`).join(''):'<div style="padding:30px;text-align:center;color:#64748b">No permanent block alerts.</div>';}
+  }catch(e){console.error('Block alert load error',e)}
+}
+async function openBlockAlerts(){
+  const m=document.getElementById('adminBlockAlertsModal'); if(m)m.style.display='block';
+  await loadBlockAlerts();
+  try{await api('/alerts/read-all',{method:'PUT'}); const b=document.getElementById('adminBlockAlertBadge'); if(b)b.style.display='none';}catch(e){}
+}
+function closeBlockAlerts(){const m=document.getElementById('adminBlockAlertsModal');if(m)m.style.display='none'}
+setInterval(loadBlockAlerts,10000);
+setTimeout(loadBlockAlerts,1000);
+</script>
 <style id="subscription-admin-style">
 #subscriptionAdminFab{position:fixed;right:18px;bottom:142px;z-index:9998;border:0;border-radius:16px;padding:13px 16px;background:linear-gradient(135deg,#16a34a,#2563eb);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.3)}
 #subscriptionAdminModal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.68);display:none;padding:20px;overflow:auto}
