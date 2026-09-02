@@ -1686,6 +1686,13 @@ router.post('/:type/submit', auth, async (req,res)=>{
     if(!activity) return res.status(404).json({success:false,message:'Activity not found'});
     const index=Number(req.body.questionId); const answer=String(req.body.answer||'').trim();
     const q=activity.questions[index]; if(!q) return res.status(400).json({success:false,message:'Invalid question'});
+    const startedAt = Number(req.body.startedAt || 0);
+    const minSeconds = type === 'reading' ? 8 : 2.5;
+    const elapsedSeconds = startedAt ? (Date.now() - startedAt) / 1000 : 0;
+    if (elapsedSeconds < minSeconds) {
+      const security = await registerViolation(await User.findById(req.user.id), `Activity (${type}) answer submitted before reading the question`);
+      return res.json({success:false, antiCheat:true, ...security, message:'⚠️ પહેલા પ્રશ્ન ધ્યાનથી વાંચો.'});
+    }
     const expected= type==='fill'?q[2] : type==='reading'?q[3] : type==='listening'?q : type==='speaking'?null : q[1];
     let correct=false;
     if(type==='speaking') correct=normalize(answer).split(' ').filter(Boolean).length>=4;

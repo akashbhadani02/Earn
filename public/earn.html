@@ -2067,6 +2067,24 @@ body.notification-locked #notificationRequiredOverlay button{
 
         });
 
+        // Activity copy/paste and early-answer protection share the same Quiz warning count.
+        document.addEventListener('paste', (e) => {
+            const activityVisible = !document.getElementById('activityPlay')?.classList.contains('hidden');
+            if (!activityVisible || alreadyBlocked) return;
+            e.preventDefault();
+            recordSecurityEvent('activity_paste_attempt');
+            blockStudent('Copy/paste is not allowed during an activity');
+        });
+
+        // Activity window/tab switch = one shared Quiz + Activity violation.
+        window.addEventListener('blur', () => {
+            const activityVisible = !document.getElementById('activityPlay')?.classList.contains('hidden');
+            if (activityVisible && !document.hidden && !alreadyBlocked) {
+                recordSecurityEvent('activity_window_blur');
+                blockStudent('Activity window was switched or lost focus');
+            }
+        });
+
         // Pasting into a quiz answer is treated as a security violation.
         document.addEventListener("paste", (e) => {
             const quizVisible = !document.getElementById("quiz")?.classList.contains("hidden");
@@ -3119,6 +3137,9 @@ body.notification-locked #notificationRequiredOverlay button{
         // INTERACTIVE ENGLISH EARNING ACTIVITIES
         // ==========================================
         let activityType='', activityQuestions=[], activityIndex=0, activityData=null, arrangeWords=[];
+        let activityQuestionStartTime = 0;
+        let activityAnswerLocked = false;
+        let activityUnlockTimer = null;
         function showActivityScreen(id){
             ['dashboard','quiz','activities','activityPlay'].forEach(x=>{const e=document.getElementById(x);if(e){e.classList.toggle('hidden',x!==id);e.style.visibility=x===id?'visible':'hidden';e.setAttribute('aria-hidden',x===id?'false':'true');}});
         }
@@ -3200,6 +3221,16 @@ body.notification-locked #notificationRequiredOverlay button{
         function nextActivityQuestion(){ if(!activityQuestions.length)return; activityIndex=(activityIndex+1)%activityQuestions.length; arrangeWords=[]; renderActivity(); }
         function renderActivity(){
             const q=activityQuestions[activityIndex], box=document.getElementById('activityContent'), fb=document.getElementById('activityFeedback'); fb.textContent='';
+            activityQuestionStartTime = Date.now();
+            activityAnswerLocked = true;
+            clearInterval(activityUnlockTimer);
+            const minSeconds = activityType === 'reading' ? 8 : 2.5;
+            activityUnlockTimer = setInterval(()=>{
+                const left = Math.max(0, minSeconds - ((Date.now()-activityQuestionStartTime)/1000));
+                const lock = document.getElementById('activityReadLock');
+                if(lock) lock.textContent = left > 0 ? '🔒 Please read the question carefully • Answer unlocks in '+left.toFixed(1)+'s' : '✅ You can answer now';
+                if(left <= 0){ activityAnswerLocked=false; clearInterval(activityUnlockTimer); const buttons=document.querySelectorAll('#activityContent .activity-option, #activityContent .activity-action, #activityContent .word-chip, #activityContent .activity-input'); buttons.forEach(x=>{ if(x.dataset.activityLocked==='1') { x.disabled=false; x.dataset.activityLocked='0'; }}); }
+            },100);
             if(activityType==='arrange'){
                 const words=q.prompt.split('/').map(x=>x.trim()).sort(()=>Math.random()-.5); arrangeWords=[];
                 box.innerHTML='<div class="activity-question">Arrange these words:</div><div class="word-bank" id="wordBank"></div><div class="answer-box" id="arranged">Tap words in the correct order</div><button class="activity-action" onclick="submitArrange()">✅ Check Sentence</button><button class="activity-action" style="background:#64748b" onclick="renderActivity()">↻ Reset</button>';
@@ -3213,7 +3244,15 @@ body.notification-locked #notificationRequiredOverlay button{
             } else if(activityType==='speaking'){
                 box.innerHTML='<div class="activity-question">🎤 '+q.prompt+'</div><button class="activity-action" onclick="startSpeaking()">🎙️ Start Speaking</button><div class="mic-status" id="micStatus">Microphone permission may be required.</div><button class="activity-action" onclick="submitSpeaking()">💰 Submit & Earn</button>';
             } else if(activityType==='reading'){
-                box.innerHTML='<div class="passage">'+q.passage+'</div><div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}">${o}</button>`).join('');
+                box.innerHTML='<div class="passage">'+q.passage+'</div><div class="activity-question">'+q.prompt+'</div>'+q.options.map((o,i)=>`<button type="button" class="activity-option" data-activity-answer="${encodeURIComponent(o)}" disabled data-activity-locked="1">${o}</button>`).join('');
+            }
+            const lock=document.createElement('div');
+            lock.id='activityReadLock';
+            lock.style='padding:10px;margin:10px 0;border-radius:12px;background:#fff7ed;color:#9a3412;font-weight:800;text-align:center;';
+            lock.textContent='🔒 Please read the question carefully';
+            box.prepend(lock);
+            if(activityType!=='reading'){
+                box.querySelectorAll('.activity-option,.activity-action,.word-chip,.activity-input').forEach(x=>{ if(x.id!=='activityReadLock'){ x.disabled=true; x.dataset.activityLocked='1'; }});
             }
         }
         function setFeedback(ok,msg){const e=document.getElementById('activityFeedback');e.textContent=msg;e.style.color=ok?'#16a34a':'#dc2626';}
@@ -3221,8 +3260,15 @@ body.notification-locked #notificationRequiredOverlay button{
         async function submitTypedActivity(){const e=document.getElementById('activityAnswer');if(!e||!e.value.trim()){setFeedback(false,'Answer લખો.');return}submitActivity(e.value.trim());}
         async function submitActivity(answer){
             const q=activityQuestions[activityIndex];
+            const minSeconds = activityType === 'reading' ? 8 : 2.5;
+            const elapsed = (Date.now() - activityQuestionStartTime) / 1000;
+            if(activityAnswerLocked || elapsed < minSeconds){
+                await blockStudent('Activity answer submitted before reading the question');
+                setFeedback(false,'⚠️ પહેલા પ્રશ્ન ધ્યાનથી વાંચો.');
+                return;
+            }
             try{
-                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer})});
+                const res=await fetch('/api/activities/'+activityType+'/submit',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+localStorage.getItem('token')},body:JSON.stringify({questionId:q.id,answer,startedAt:activityQuestionStartTime})});
                 const data=await res.json(); if(!data.success){setFeedback(false,data.message||'Try again');return}
                 applyWalletData(data);
                 if(data.correct){ try { const t=studentAddonToken(); if(t) fetch('/api/addons/activity',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({xp:10})}).catch(()=>{}); } catch(e){} }
