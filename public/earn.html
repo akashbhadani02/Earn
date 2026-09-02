@@ -2099,15 +2099,60 @@ body.notification-locked #notificationRequiredOverlay button{
         let alreadyBlocked = false;
         let warningRequestRunning = false;
 
-        async function blockStudent(reason) {
+        async function handleAntiCheatResult(data, reason) {
+            if (!data) return;
 
+            // 4th violation anywhere (Quiz OR Activity) = permanent block.
+            if (data.blocked && data.permanentBlocked) {
+                alreadyBlocked = true;
+                warningMode = false;
+
+                if (data.subscriptionToken) {
+                    localStorage.setItem("token", data.subscriptionToken);
+                    localStorage.setItem("user", JSON.stringify({
+                        permanentBlocked: true,
+                        subscriptionRequired: true
+                    }));
+                }
+
+                alert("🚫 Account permanently blocked.\n\nQuiz + Activity cheating violations are counted together.\n4 violations reached the permanent-block limit.\n\n💳 Please pay ₹200 now to submit a new subscription request.");
+
+                if (window.checkSubscriptionStatus) {
+                    await window.checkSubscriptionStatus();
+                }
+                return;
+            }
+
+            if (data.blocked) {
+                alreadyBlocked = true;
+                warningMode = false;
+                alert("🚫 Your account has been permanently blocked.\n\nReason: " + reason + "\n\nYour wallet has been reset to 0.\nNo timer. Please pay ₹200 and wait for Admin approval.");
+                localStorage.removeItem("token");
+                location.href = "login.html";
+                return;
+            }
+
+            if (data.warning) {
+                warningMode = false;
+                const n = Number(data.warningCount || 0);
+                const warningMessage =
+                    "⚠️ WARNING " + n + "/4\n\n" +
+                    (n === 1
+                        ? "આ તમારી પહેલી ચેતવણી છે."
+                        : n === 2
+                            ? "આ તમારી બીજી ચેતવણી છે."
+                            : "આ ત્રીજી ચેતવણી છે. હવે વધુ એક cheating violation થશે તો account permanently block થશે.") +
+                    "\n\nQuiz અને Activity બંનેની cheating એક જ count માં ગણાશે.\n\nReason: " + reason;
+                alert(warningMessage);
+            }
+        }
+
+        async function blockStudent(reason) {
             // Prevent duplicate requests when multiple events fire together.
             if (warningRequestRunning || alreadyBlocked) return;
-
             warningRequestRunning = true;
 
             try {
-
                 const response = await fetch("/api/auth/block-me", {
                     method: "POST",
                     headers: {
@@ -2118,87 +2163,13 @@ body.notification-locked #notificationRequiredOverlay button{
                 });
 
                 const data = await response.json();
-
-                warningRequestRunning = false;
-
-                // Permanent block: do NOT show the 3-hour timer and do NOT
-                // send the student to login. The server returns a fresh
-                // subscription-only session; open the ₹200 gate immediately.
-                if (data.blocked && data.permanentBlocked) {
-                    alreadyBlocked = true;
-                    warningMode = false;
-
-                    if (data.subscriptionToken) {
-                        localStorage.setItem("token", data.subscriptionToken);
-                        localStorage.setItem("user", JSON.stringify({
-                            permanentBlocked: true,
-                            subscriptionRequired: true
-                        }));
-                    }
-
-                    alert("🚫 Account permanently blocked.\n\n3-hour timer removed.\n\n💳 Please pay ₹200 now to submit a new subscription request.");
-
-                    if (window.checkSubscriptionStatus) {
-                        await window.checkSubscriptionStatus();
-                    }
-                    return;
-                }
-
-                if (data.blocked) {
-
-                    alreadyBlocked = true;
-                    warningMode = false;
-
-                    const blockMessage = "🚫 Your account has been permanently blocked.\n\n" +
-                           "Reason: " + reason + "\n\n" +
-                           "Your wallet has been reset to 0.\n" +
-                           "No timer. Please pay ₹200 and wait for Admin approval.";
-
-                    alert(blockMessage);
-
-                    localStorage.removeItem("token");
-                    location.href = "login.html";
-                    return;
-                }
-
-                // 1st, 2nd and 3rd violation: warning only; the 4th violation triggers a block.
-                if (data.warning) {
-
-                    warningMode = false;
-
-                    let warningMessage;
-
-                    if (data.warningCount === 1) {
-                        warningMessage =
-                            "⚠️ WARNING 1/4\n\n" +
-                            "આ તમારી પહેલી ચેતવણી છે.\n" +
-                            "મહેરબાની કરીને નિયમોનુ પાલન કરો .\n\n" +
-                            "Reason: " + reason;
-                    } else if (data.warningCount === 2) {
-                        warningMessage =
-                            "⚠️ WARNING 2/4\n\n" +
-                            "આ તમારી બીજી ચેતવણી છે.\n" +
-                            "હજુ એકવાર ચેતવણી આપીએ છીએ બ્લોક કરતાં પહેલા.\n\n" +
-                            "Reason: " + reason;
-                    } else {
-                        warningMessage =
-                            "⚠️ WARNING 3/4\n\n" +
-                            "આ ત્રીજી ચેતવણી છે. હજુ એક ચેતવણી પછી 3 કલાકનો બ્લોક લાગશે.\n" +
-                            "આગામી ચેતવણી મળતાં 3 કલાકનો બ્લોક લાગશે.\n\n" +
-                            "Reason: " + reason;
-                    }
-
-                    alert(warningMessage);
-                }
-
+                await handleAntiCheatResult(data, reason);
             } catch (e) {
-
-                warningRequestRunning = false;
                 console.error("Warning/Block Error:", e);
-
                 alert("⚠️ Unable to process the warning right now. Please try again.");
+            } finally {
+                warningRequestRunning = false;
             }
-
         }
 
         const token = localStorage.getItem("token");
@@ -2827,9 +2798,17 @@ body.notification-locked #notificationRequiredOverlay button{
                     tabChangedScreen = activityOpen ? "activity" : "quiz";
                     recordSecurityEvent("tab_change");
                     if (activityOpen && typeof activityType !== "undefined" && activityType) {
-                        fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {
-                            method:"POST", headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-                        }).catch(()=>{});
+                        if (!warningRequestRunning && !alreadyBlocked) {
+                            warningRequestRunning = true;
+                            fetch("/api/activities/"+encodeURIComponent(activityType)+"/tab-change", {
+                                method:"POST",
+                                headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+                            })
+                            .then(r => r.json())
+                            .then(data => handleAntiCheatResult(data, "Activity tab was switched or hidden"))
+                            .catch(err => console.error("Activity anti-cheat error:", err))
+                            .finally(() => { warningRequestRunning = false; });
+                        }
                     }
                 }
                 return;

@@ -1,7 +1,10 @@
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const router = express.Router();
 const auth = require('../middleware/subscriptionAuth');
 const User = require('../models/User');
+const { registerViolation } = require('../services/antiCheat');
 
 const ACTIVITIES = {
   arrange: {
@@ -1637,8 +1640,43 @@ router.post('/:type/tab-change', auth, async (req,res)=>{
     user.tabChanges=Number(user.tabChanges||0)+1;
     const current=mapGet(user.activityTabChanges,type);
     mapSet(user.activityTabChanges,type,current+1);
-    await user.save();
-    res.json({success:true,tabChanges:Number(user.tabChanges||0),activityTabChanges:current+1});
+
+    // Quiz + Activity share ONE anti-cheat warning counter.
+    // Any confirmed activity tab/window change counts toward the same
+    // 4-violation permanent-block threshold used by Quiz.
+    const security = await registerViolation(
+      user,
+      `Activity (${type}) tab was switched or hidden`
+    );
+
+    // When the 4th shared Quiz/Activity violation permanently blocks the
+    // account, issue the same subscription-only session used by /auth/block-me
+    // so the student can reach the ₹200 subscription gate immediately.
+    let subscriptionToken = null;
+    if (security.permanentBlocked) {
+      const subscriptionSessionId = crypto.randomUUID();
+      user.activeSessionId = subscriptionSessionId;
+      user.isOnline = false;
+      await user.save();
+      subscriptionToken = jwt.sign(
+        {
+          id: user._id,
+          sessionVersion: Number(user.sessionVersion || 0),
+          activeSessionId: subscriptionSessionId
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+    }
+
+    res.json({
+      success:true,
+      tabChanges:Number(user.tabChanges||0),
+      activityTabChanges:current+1,
+      antiCheat:true,
+      subscriptionToken,
+      ...security
+    });
   } catch(e){ res.status(500).json({success:false,message:e.message}); }
 });
 
