@@ -526,6 +526,25 @@ async function performLogin(mobile, password){
         const data = await res.json();
 
         if(data.blocked){
+            if(data.permanentBlocked && data.token){
+                // Permanent blocks have no 3-hour countdown. The special
+                // subscription-only session lets the student open the ₹200
+                // payment gate; normal app APIs remain blocked server-side.
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify({
+                    mobile,
+                    permanentBlocked: true,
+                    subscriptionRequired: true
+                }));
+                document.getElementById("message").innerHTML =
+                    "🚫 Account permanently blocked.<br>" +
+                    "3-hour timer removed. ₹200 subscription payment is available.";
+                setTimeout(() => {
+                    location.href = "earn.html";
+                }, 250);
+                return;
+            }
+
             document.getElementById("message").innerHTML =
                 "🚫 Account blocked.<br>" +
                 "Block is active. નીચે actual remaining time દેખાશે.";

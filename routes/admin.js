@@ -7,6 +7,7 @@ const Admin = require("../models/Admin");
 const User = require("../models/User");
 const Question = require("../models/Question");
 const LifelineUsage = require("../models/LifelineUsage");
+const { revokeStudentSubscription } = require("../services/subscriptionLifecycle");
 
 const CREDENTIAL_ALGO = "aes-256-gcm";
 const CREDENTIAL_KEY = crypto.createHash("sha256")
@@ -1461,6 +1462,7 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
                 user.permanentBlocked = true;
                 user.blockUntil = null;
                 user.blockReason = "Automatic block after 4 warnings — 4th block requires admin unblock";
+                await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
             } else {
                 user.permanentBlocked = false;
                 user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
@@ -1700,6 +1702,7 @@ router.post("/pro/warning/:id", adminAuth, async(req,res)=>{
                 u.permanentBlocked=true;
                 u.blockUntil=null;
                 u.blockReason="Automatic block after 4 warnings — 4th block requires admin unblock";
+                await revokeStudentSubscription(u, "Subscription deleted because account was permanently blocked.");
             }else{
                 u.permanentBlocked=false;
                 u.blockUntil=new Date(Date.now()+3*60*60*1000);

@@ -6,6 +6,7 @@ const auth = require("../middleware/auth");
 
 const User = require("../models/User");
 const Admin = require("../models/Admin");
+const { revokeStudentSubscription } = require("../services/subscriptionLifecycle");
 
 const router = express.Router();
 
@@ -145,13 +146,38 @@ router.post("/login", async (req, res) => {
             // Permanent block: never auto-expire or clear it. Only Admin
             // unblock is allowed to reset this state.
             if (user.permanentBlocked || Number(user.blockCount || 0) >= 4) {
-                return res.status(403).json({
-                    success: false,
+                // Permanent block has no countdown. Remove the old subscription so
+                // the ₹200 subscription gate becomes available again.
+                user.isBlocked = true;
+                user.permanentBlocked = true;
+                user.blockUntil = null;
+                await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
+                user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+                const subscriptionSessionId = crypto.randomUUID();
+                user.activeSessionId = subscriptionSessionId;
+                user.activeDeviceId = String(req.headers["x-device-id"] || "").trim().slice(0, 200);
+                user.isOnline = false;
+                await user.save();
+
+                // Keep login available only so the student can reach the ₹200
+                // subscription gate. All normal app APIs remain blocked by auth.
+                return res.status(200).json({
+                    success: true,
                     blocked: true,
                     permanentBlocked: true,
-                    message: "Your account is permanently blocked. Admin must unblock it.",
+                    subscriptionRequired: true,
+                    message: "Your account is permanently blocked. The 3-hour timer has been removed. Pay ₹200 and wait for Admin confirmation to restore app access.",
                     reason: user.blockReason || "Permanent block",
-                    remainingMs: 0
+                    remainingMs: 0,
+                    token: jwt.sign(
+                        {
+                            id: user._id,
+                            sessionVersion: Number(user.sessionVersion || 0),
+                            activeSessionId: subscriptionSessionId
+                        },
+                        process.env.JWT_SECRET,
+                        { expiresIn: "7d" }
+                    )
                 });
             }
 
@@ -360,9 +386,32 @@ router.post("/block-me", auth, async (req, res) => {
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
         const result = await registerViolation(user, req.body?.reason || "Cheating Detected");
+
+        // On permanent block, the old session was invalidated by the block
+        // logic. Issue a fresh, subscription-only session so the student is
+        // taken directly to the ₹200 payment gate without seeing the 3-hour
+        // timer or being sent back through the login page.
+        let subscriptionToken = null;
+        if (result.permanentBlocked) {
+            const subscriptionSessionId = crypto.randomUUID();
+            user.activeSessionId = subscriptionSessionId;
+            user.isOnline = false;
+            await user.save();
+            subscriptionToken = jwt.sign(
+                {
+                    id: user._id,
+                    sessionVersion: Number(user.sessionVersion || 0),
+                    activeSessionId: subscriptionSessionId
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+        }
+
         return res.json({
             success: true,
             ...result,
+            subscriptionToken,
             blockDurationMs: result.permanentBlocked ? 0 : (result.blocked ? BLOCK_DURATION_MS : 0),
             warningsPerBlock: WARNINGS_PER_BLOCK
         });

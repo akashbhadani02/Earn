@@ -15,9 +15,16 @@ module.exports = async (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await User.findById(decoded.id).select("sessionVersion activeSessionId isDeleted isBlocked");
+        const user = await User.findById(decoded.id).select("sessionVersion activeSessionId isDeleted isBlocked permanentBlocked");
 
-        if (!user || user.isDeleted || user.isBlocked) {
+        const isSubscriptionRoute = req.baseUrl === "/api/subscription";
+        const isPermanentSubscriptionOnlySession =
+            user &&
+            user.isBlocked &&
+            user.permanentBlocked === true &&
+            isSubscriptionRoute;
+
+        if (!user || user.isDeleted || (user.isBlocked && !isPermanentSubscriptionOnlySession)) {
             return res.status(401).json({
                 success: false,
                 message: "Account is not available",

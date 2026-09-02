@@ -2121,7 +2121,29 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 warningRequestRunning = false;
 
-                // 4th warning in the current cycle: account is blocked for 3 hours (or permanently on the 4th block).
+                // Permanent block: do NOT show the 3-hour timer and do NOT
+                // send the student to login. The server returns a fresh
+                // subscription-only session; open the ₹200 gate immediately.
+                if (data.blocked && data.permanentBlocked) {
+                    alreadyBlocked = true;
+                    warningMode = false;
+
+                    if (data.subscriptionToken) {
+                        localStorage.setItem("token", data.subscriptionToken);
+                        localStorage.setItem("user", JSON.stringify({
+                            permanentBlocked: true,
+                            subscriptionRequired: true
+                        }));
+                    }
+
+                    alert("🚫 Account permanently blocked.\n\n3-hour timer removed.\n\n💳 Please pay ₹200 now to submit a new subscription request.");
+
+                    if (window.checkSubscriptionStatus) {
+                        await window.checkSubscriptionStatus();
+                    }
+                    return;
+                }
+
                 if (data.blocked) {
 
                     alreadyBlocked = true;
@@ -2135,15 +2157,11 @@ body.notification-locked #notificationRequiredOverlay button{
                         return h + ":" + m + ":" + s;
                     }
 
-                    const blockMessage = data.permanentBlocked
-                        ? ("🚫 Your account is permanently blocked.\n\n" +
-                           "Reason: " + reason + "\n\n" +
-                           "Only Admin can unblock your account.")
-                        : ("🚫 Your account has been blocked for 3 hours.\n\n" +
+                    const blockMessage = "🚫 Your account has been blocked for 3 hours.\n\n" +
                            "Reason: " + reason + "\n\n" +
                            "Remaining time: " + formatBlockRemaining(data.remainingMs) + "\n\n" +
                            "Your wallet has been reset to 0.\n" +
-                           "You can login again after the timer reaches 00:00:00.");
+                           "You can login again after the timer reaches 00:00:00.";
 
                     alert(blockMessage);
 
@@ -2216,6 +2234,11 @@ body.notification-locked #notificationRequiredOverlay button{
 
         async function sendPresenceHeartbeat() {
             if (!token || document.hidden || presenceInFlight) return;
+            const cachedUser = JSON.parse(localStorage.getItem("user") || "{}");
+            // Permanent-block sessions are only for the ₹200 subscription gate.
+            // Do not heartbeat them because normal student presence APIs reject
+            // permanently blocked accounts.
+            if (cachedUser && cachedUser.permanentBlocked === true) return;
 
             presenceInFlight = true;
             presenceAbort = new AbortController();
@@ -2238,6 +2261,8 @@ body.notification-locked #notificationRequiredOverlay button{
 
                 if (res.status === 401) {
                     const data = await res.json().catch(() => ({}));
+                    const cachedUser = JSON.parse(localStorage.getItem("user") || "{}");
+                    if (cachedUser && cachedUser.permanentBlocked === true) return;
                     stopPresence();
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
@@ -2501,6 +2526,8 @@ body.notification-locked #notificationRequiredOverlay button{
                 });
 
                 if (res.status === 401) {
+                    const cachedUser = JSON.parse(localStorage.getItem("user") || "{}");
+                    if (cachedUser && cachedUser.permanentBlocked === true) return false;
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
                     window.location.replace("login.html");

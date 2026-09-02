@@ -1,3 +1,5 @@
+const { revokeStudentSubscription } = require("./subscriptionLifecycle");
+
 const BLOCK_DURATION_MS = 3 * 60 * 60 * 1000;
 const WARNINGS_PER_BLOCK = 4;
 const MAX_TEMP_BLOCKS = 3;
@@ -37,6 +39,7 @@ async function registerViolation(user, reason) {
     user.isOnline = false;
     user.blockReason = cleanReason + " — Permanent block (4th block)";
     user.sessionVersion = Number(user.sessionVersion || 0) + 1;
+    await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
     await user.save();
 
     return {
@@ -112,6 +115,7 @@ async function registerViolation(user, reason) {
     user.permanentBlocked = true;
     user.blockUntil = null;
     user.blockReason = cleanReason + " — Permanent block (4th block)";
+    await revokeStudentSubscription(user, "Subscription deleted because account was permanently blocked.");
     await user.save();
 
     return {
