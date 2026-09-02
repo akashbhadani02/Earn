@@ -146,8 +146,8 @@ router.put('/admin/:id/confirm', adminAuth, async (req, res) => {
         // A permanent block becomes a paid reactivation gate: before the ₹200
         // payment is confirmed the student has no app access. Once Admin
         // verifies the new ₹200 payment, clear the permanent block so the
-        // student can use the app again. The old subscription was already
-        // deleted when the permanent block was created.
+        // student can use the app again. Previous subscription requests are
+        // retained in Admin history and can be explicitly deleted by Admin.
         if (user.permanentBlocked === true || user.isBlocked === true) {
             user.isBlocked = false;
             user.permanentBlocked = false;
