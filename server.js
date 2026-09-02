@@ -69,8 +69,8 @@ app.get('/manifest.webmanifest', async (req, res) => {
         res.set('Content-Type', 'application/manifest+json');
         res.set('Cache-Control', 'no-store');
         res.json({
-            name:'Aducate English App', short_name:'Aducate', description:'Aducate English learning and earning app',
-            start_url:'/earn.html', scope:'/', display:'standalone', background_color:'#14182d', theme_color:'#506ef0',
+            name:'Aducate.app', short_name:'Aducate.app', description:'Aducate.app - English learning app', id:'/',
+            start_url:'/login.html', scope:'/', display:'standalone', display_override:['standalone','fullscreen'], prefer_related_applications:false, background_color:'#ffffff', theme_color:'#506ef0',
             icons:[
                 { src: icon, sizes:'192x192', type:'image/png', purpose:'any' },
                 { src: icon, sizes:'512x512', type:'image/png', purpose:'any maskable' }

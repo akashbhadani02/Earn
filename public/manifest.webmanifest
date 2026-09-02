@@ -1,15 +1,15 @@
 {
-  "name": "Aducate English App",
-  "short_name": "Aducate",
-  "description": "Aducate English learning and earning app",
-  "start_url": "/earn.html",
+  "name": "Aducate.app",
+  "short_name": "Aducate.app",
+  "description": "Aducate.app - English learning app",
+  "start_url": "/login.html",
   "scope": "/",
   "display": "standalone",
   "display_override": [
-    "window-controls-overlay",
-    "standalone"
+    "standalone",
+    "fullscreen"
   ],
-  "background_color": "#14182d",
+  "background_color": "#ffffff",
   "theme_color": "#506ef0",
   "orientation": "portrait-primary",
   "icons": [
@@ -25,5 +25,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "id": "/",
+  "prefer_related_applications": false
 }

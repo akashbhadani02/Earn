@@ -11,7 +11,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>English App Login</title>
+<title>Aducate.app - Login</title>
 
 <style>
 
@@ -173,7 +173,7 @@ color:green;
 
 <button type="button" onclick="location.href='admin-login.html'" style="margin-top:10px;background:#111827;color:#fff;">🛡️ Admin Login</button>
 
-<button id="aducate-install-app" type="button" style="margin-top:10px;background:#506ef0;color:#fff;border:0;border-radius:10px;padding:12px;width:100%;font-weight:800;cursor:pointer;">📲 Install Aducate App</button>
+<button id="aducate-install-app" type="button" style="margin-top:10px;background:#506ef0;color:#fff;border:0;border-radius:10px;padding:12px;width:100%;font-weight:800;cursor:pointer;">📲 Install Aducate.app</button>
 
 <p>
 
@@ -573,23 +573,49 @@ async function performLogin(mobile, password){
 
 <script>
 (function(){
-  let deferredPrompt=null;
-  const btn=document.getElementById('aducate-install-app');
+  let deferredPrompt = null;
+  const btn = document.getElementById('aducate-install-app');
   if(!btn) return;
-  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;});
-  btn.addEventListener('click',async function(){
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  function hideIfInstalled(){
+    if(isStandalone) btn.style.display='none';
+  }
+
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    deferredPrompt = e;
+    btn.style.display = 'block';
+  });
+
+  btn.addEventListener('click', async function(){
     if(deferredPrompt){
       deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt=null;
-    }else{
-      alert('જો Install popup ન આવે તો Chrome/Edge ના menu (⋮) માંથી “Install Aducate English App” પસંદ કરો. મોબાઇલમાં “Install app” અથવા “Add to Home screen” પસંદ કરો.');
+      try { await deferredPrompt.userChoice; } catch(e) {}
+      deferredPrompt = null;
+      return;
     }
+
+    if(isIOS){
+      alert('Aducate.app install કરવા: Safari ના Share (↑) button પર tap કરો → “Add to Home Screen” પસંદ કરો → Add કરો.');
+      return;
+    }
+
+    alert('Aducate.app install કરવા Chrome ના menu (⋮) માંથી “Install app” અથવા “Add to Home screen” પસંદ કરો.');
   });
-  window.addEventListener('appinstalled',function(){deferredPrompt=null;btn.style.display='none';});
-  window.addEventListener('load',function(){
-    if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(console.error);
-    if(window.matchMedia('(display-mode: standalone)').matches) btn.style.display='none';
+
+  window.addEventListener('appinstalled', function(){
+    deferredPrompt = null;
+    btn.style.display = 'none';
+  });
+
+  window.addEventListener('load', function(){
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/sw.js', {scope:'/'}).catch(console.error);
+    }
+    hideIfInstalled();
   });
 })();
 </script>
