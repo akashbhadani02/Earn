@@ -2,6 +2,13 @@
 <html lang="en">
 
 <head>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#506ef0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="/icon-192.png">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Login</title>
@@ -130,6 +137,30 @@ background:linear-gradient(90deg,#1d4ed8,#2563eb);
 box-shadow:0 10px 25px rgba(37,99,235,.45);
 }
 
+.login-btn{
+width:100%;
+background:linear-gradient(90deg,#2563eb,#3b82f6)!important;
+color:#fff!important;
+}
+.install-btn{
+width:100%;
+margin-top:12px;
+padding:14px 15px;
+border:1px solid rgba(34,197,94,.45)!important;
+border-radius:12px;
+background:linear-gradient(90deg,#16a34a,#22c55e)!important;
+color:#fff!important;
+font-size:16px;
+font-weight:800;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(22,163,74,.25);
+}
+.install-btn:hover{
+background:linear-gradient(90deg,#15803d,#16a34a)!important;
+box-shadow:0 10px 24px rgba(22,163,74,.4);
+}
+.install-btn:active{transform:scale(.98)}
+
 .footer{
 margin-top:20px;
 text-align:center;
@@ -170,7 +201,9 @@ font-size:55px;
 
 <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+<button class="login-btn" onclick="login()">Login</button>
+
+<button id="aducate-install-app" class="install-btn" type="button">📲 Install Aducate App</button>
 
 <div class="footer">
 Secure Admin Panel
@@ -220,6 +253,44 @@ alert(data.message);
 
 </script>
 
+
+<script>
+(function(){
+  let deferredPrompt=null;
+  const btn=document.getElementById('aducate-install-app');
+  if(!btn) return;
+
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();
+    deferredPrompt=e;
+    btn.style.display='block';
+  });
+
+  btn.addEventListener('click',async function(){
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt=null;
+    }else{
+      alert('જો Install popup ન આવે તો Chrome/Edge ના menu (⋮) માંથી “Install Aducate English App” પસંદ કરો.');
+    }
+  });
+
+  window.addEventListener('appinstalled',()=>{
+    deferredPrompt=null;
+    btn.style.display='none';
+  });
+
+  window.addEventListener('load',()=>{
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(console.error);
+    }
+    if(window.matchMedia('(display-mode: standalone)').matches){
+      btn.style.display='none';
+    }
+  });
+})();
+</script>
 </body>
 
 </html>

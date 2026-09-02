@@ -162,6 +162,16 @@ router.post("/login", async (req, res) => {
                 user.blockUntil = null;
                 user.blockReason = "";
                 user.warningCount = 0;
+                // After a 3-hour anti-cheat block expires, the old subscription
+                // must NOT automatically return. The student must submit a new
+                // ₹200 subscription request and receive Admin confirmation.
+                user.subscriptionStatus = "inactive";
+                user.subscriptionAccess = false;
+                user.subscriptionPaymentReference = "";
+                user.subscriptionRequestedAt = null;
+                user.subscriptionConfirmedAt = null;
+                user.subscriptionConfirmedBy = null;
+                user.subscriptionAdminNote = "3-hour block expired. New subscription required.";
                 // blockCount is intentionally preserved so the next block
                 // becomes 2/3, 3/3, and then the 4th permanent block.
                 await user.save();

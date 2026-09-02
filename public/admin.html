@@ -2,6 +2,13 @@
 <html>
 
 <head>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#506ef0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="/icon-192.png">
+
 
     <title>Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -397,7 +404,7 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 <body>
 
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h2>Admin Dashboard</h2>
+        <div style="display:flex;align-items:center;gap:12px"><img id="adminAppLogo" src="/icon-192.png" alt="App Logo" style="width:52px;height:52px;border-radius:14px;object-fit:cover;border:2px solid #506ef0"><h2 style="margin:0">Admin Dashboard</h2></div>
 
         <div style="display:flex;gap:8px;align-items:center;">
             <button id="logoutAllUsersBtn" onclick="forceLogoutAllUsers()" style="background:#2563eb;color:white;border:none;padding:10px 18px;border-radius:6px;cursor:pointer;">
@@ -425,6 +432,14 @@ input,select,textarea{width:100%;min-height:42px;padding:10px 12px;border:1px so
 
 
     <section id="adminSectionDashboard">
+    <div style="margin:0 0 18px;padding:16px;border:1px solid var(--border,#dbeafe);border-radius:14px;background:var(--card,#fff)">
+      <h3 style="margin:0 0 8px">📱 App Logo & Install Icon</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+        <img id="appLogoPreview" src="/icon-192.png" style="width:70px;height:70px;border-radius:18px;object-fit:cover;border:2px solid #506ef0">
+        <div><input id="appLogoInput" type="file" accept="image/*" style="display:block;margin-bottom:8px"><button onclick="saveAppLogo()" style="background:#2563eb;color:#fff;border:0;padding:10px 16px;border-radius:9px;cursor:pointer">💾 Save App Logo</button> <button onclick="removeAppLogo()" style="background:#dc2626;color:#fff;border:0;padding:10px 16px;border-radius:9px;cursor:pointer">🗑️ Reset</button><div style="font-size:12px;margin-top:7px;opacity:.75">આ logo Admin Dashboard અને નવી Install થતી App ના icon માટે વપરાશે.</div></div>
+      </div>
+    </div>
+
     <div id="presenceHint" class="admin-presence-legend">
         <span class="online">🟢 Online</span><span class="offline">🔴 Offline</span>
     </div>
@@ -3366,7 +3381,9 @@ async function viewSubscriptionScreenshot(id){
     if(!r?.paymentScreenshot){alert('Screenshot not available.');return;}
     const w=window.open('','_blank','width=800,height=900');
     if(!w){alert('Please allow popups to view the screenshot.');return;}
-    w.document.write('<title>Payment Screenshot</title><body style=\"margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh\"><img src=\"'+r.paymentScreenshot+'\" style=\"max-width:96vw;max-height:96vh;object-fit:contain\"></body>');
+    const safeSrc=String(r.paymentScreenshot).replace(/"/g,'&quot;');
+    w.document.open();
+    w.document.write(`<!doctype html><html><head><title>Payment Screenshot</title><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#111;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="${safeSrc}" style="max-width:96vw;max-height:96vh;object-fit:contain"></body></html>`);
     w.document.close();
   }catch(e){alert('❌ '+e.message)}
 }
@@ -3383,7 +3400,18 @@ async function setSubscriptionAccess(userId,access){
 updateSubscriptionPendingBadge();setInterval(updateSubscriptionPendingBadge,10000);
 </script>
 
-</body>
+<script>
+async function loadAppLogo(){
+ try{const r=await fetch('/api/admin/app-logo?_='+Date.now());const d=await r.json();const logo=d.logo||'/icon-192.png';['adminAppLogo','appLogoPreview'].forEach(id=>{const e=document.getElementById(id);if(e)e.src=logo;});}catch(e){}
+}
+async function saveAppLogo(){
+ const input=document.getElementById('appLogoInput'), file=input?.files?.[0];
+ if(!file) return alert('Please select a logo image first.');
+ const reader=new FileReader(); reader.onload=async()=>{try{const token=localStorage.getItem('adminToken');const r=await fetch('/api/admin/app-logo',{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({logo:reader.result})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Save failed');['adminAppLogo','appLogoPreview'].forEach(id=>{const e=document.getElementById(id);if(e)e.src=d.logo;});alert('✅ App logo saved! New installations will use this logo.');}catch(e){alert('❌ '+e.message)}}; reader.readAsDataURL(file);
+}
+async function removeAppLogo(){if(!confirm('Reset app logo to default?'))return;try{const token=localStorage.getItem('adminToken');const r=await fetch('/api/admin/app-logo',{method:'DELETE',headers:{'Authorization':'Bearer '+token}});if(!r.ok)throw new Error('Reset failed');loadAppLogo();alert('Logo reset successfully.');}catch(e){alert('❌ '+e.message)}}
+document.addEventListener('DOMContentLoaded',loadAppLogo);
+</script></body>
 
 </html><style id="command-center-mobile-card-fix">
 /* Command Center compact card layout */

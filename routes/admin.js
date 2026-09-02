@@ -32,11 +32,47 @@ function decryptStudentPassword(payload) {
     } catch { return null; }
 }
 
+const adminAuth = require("../middleware/adminAuth");
 const router = express.Router();
+
+// ===========================
+// Admin controlled App Logo
+// ===========================
+router.get('/app-logo', async (req, res) => {
+    try {
+        const admin = await Admin.findOne({});
+        res.json({ success:true, logo: admin?.appLogo || '' });
+    } catch (err) { res.status(500).json({ success:false, message:'Could not load app logo' }); }
+});
+
+router.put('/app-logo', adminAuth, async (req, res) => {
+    try {
+        const { logo } = req.body || {};
+        if (!logo || typeof logo !== 'string' || !logo.startsWith('data:image/')) {
+            return res.status(400).json({ success:false, message:'Please upload a valid image.' });
+        }
+        // Keep payload small enough for JSON request limits and MongoDB document safety.
+        if (logo.length > 2500000) return res.status(400).json({ success:false, message:'Logo image is too large. Please choose a smaller image.' });
+        const admin = await Admin.findById(req.admin?.id || req.admin?._id);
+        if (!admin) return res.status(404).json({ success:false, message:'Admin not found' });
+        admin.appLogo = logo;
+        await admin.save();
+        res.json({ success:true, logo });
+    } catch (err) { console.error('App logo save error:', err); res.status(500).json({ success:false, message:'Could not save app logo' }); }
+});
+
+router.delete('/app-logo', adminAuth, async (req, res) => {
+    try {
+        const admin = await Admin.findById(req.admin?.id || req.admin?._id);
+        if (!admin) return res.status(404).json({ success:false, message:'Admin not found' });
+        admin.appLogo = '';
+        await admin.save();
+        res.json({ success:true });
+    } catch (err) { res.status(500).json({ success:false, message:'Could not remove app logo' }); }
+});
 
 const QuizAnswerHistory = require("../models/QuizAnswerHistory");
 const { ensureQuestionsSeeded } = require("./questions");
-const adminAuth = require("../middleware/adminAuth");
 const { webpush, configureWebPush } = require("../services/webPush");
 
 // ===========================
@@ -1364,6 +1400,15 @@ router.put("/control-center/block/:id", adminAuth, async (req,res) => {
         user.blockUntil = new Date(Date.now() + 3 * 60 * 60 * 1000);
         user.blockReason = String(req.body.reason || "Blocked by admin").slice(0,300);
         user.wallet = 0;
+        // Manual blocking also revokes the current subscription. A new
+        // subscription must be approved after the block is over.
+        user.subscriptionStatus = "inactive";
+        user.subscriptionAccess = false;
+        user.subscriptionPaymentReference = "";
+        user.subscriptionRequestedAt = null;
+        user.subscriptionConfirmedAt = null;
+        user.subscriptionConfirmedBy = null;
+        user.subscriptionAdminNote = "Subscription revoked because account was blocked.";
         user.sessionVersion = Number(user.sessionVersion || 0) + 1;
         await user.save();
         return res.json({success:true,message:"Student blocked"});
@@ -1400,6 +1445,16 @@ router.post("/control-center/warning/:id", adminAuth, async (req,res) => {
             user.blockCount = Number(user.blockCount || 0) + 1;
             user.wallet = 0;
             user.isBlocked = true;
+            // A final anti-cheat block ends the current subscription.
+            // After the 3-hour timer, the student must purchase again and
+            // wait for Admin confirmation before app access returns.
+            user.subscriptionStatus = "inactive";
+            user.subscriptionAccess = false;
+            user.subscriptionPaymentReference = "";
+            user.subscriptionRequestedAt = null;
+            user.subscriptionConfirmedAt = null;
+            user.subscriptionConfirmedBy = null;
+            user.subscriptionAdminNote = "Subscription revoked because of anti-cheat block.";
             user.sessionVersion = Number(user.sessionVersion || 0) + 1;
 
             if(user.blockCount >= 4){
@@ -1826,7 +1881,19 @@ router.get("/pro/blocked-students", adminAuth, async(req,res)=>{
         if (expiredIds.length) {
             await User.updateMany(
                 { _id: { $in: expiredIds } },
-                { $set: { isBlocked: false, blockUntil: null, blockReason: "", warningCount: 0 } }
+                { $set: {
+                    isBlocked: false,
+                    blockUntil: null,
+                    blockReason: "",
+                    warningCount: 0,
+                    subscriptionStatus: "inactive",
+                    subscriptionAccess: false,
+                    subscriptionPaymentReference: "",
+                    subscriptionRequestedAt: null,
+                    subscriptionConfirmedAt: null,
+                    subscriptionConfirmedBy: null,
+                    subscriptionAdminNote: "3-hour block expired. New subscription required."
+                } }
             );
         }
 
