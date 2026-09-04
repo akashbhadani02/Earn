@@ -6,14 +6,47 @@ const User = require("../models/User");
 const auth = require("../middleware/subscriptionAuth");
 const adminAuth = require("../middleware/adminAuth");
 
-// questions.json is NOT auto-seeded. It can only be imported explicitly by the admin
-// through POST /api/questions/admin/import-json. This guarantees that deleting the
-// Question Bank (including permanent deletion) keeps the database empty until the
-// admin intentionally imports questions.json again.
+// Aducate ships with a 500-question English practice bank.
+// On first use, if the database contains fewer than 500 active questions,
+// add only the missing unique questions from questions.json. Existing admin
+// questions are preserved; this only fills the bank up to 500.
 async function ensureQuestionsSeeded() {
-    // IMPORTANT: Never auto-import/seed questions.json.
-    // Questions enter MongoDB only through the explicit Admin import button.
-    return;
+    const activeCount = await Question.countDocuments({ isDeleted: { $ne: true } });
+    if (activeCount >= 500) return;
+
+    const fs = require("fs");
+    const path = require("path");
+    const file = path.join(__dirname, "..", "questions.json");
+    if (!fs.existsSync(file)) return;
+
+    let bank = [];
+    try { bank = JSON.parse(fs.readFileSync(file, "utf8")); } catch (e) {
+        console.error("Question bank JSON read error:", e.message);
+        return;
+    }
+
+    const existing = await Question.find({ isDeleted: { $ne: true } }).select("q").lean();
+    const normalize = value => String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
+    const seen = new Set(existing.map(x => normalize(x.q)));
+    const needed = Math.max(0, 500 - activeCount);
+    const docs = [];
+
+    for (const item of bank) {
+        if (docs.length >= needed) break;
+        const q = String(item?.q || "").trim();
+        const options = Array.isArray(item?.options) ? item.options.map(String) : [];
+        const correct = Number(item?.correct);
+        const key = normalize(q);
+        if (!q || seen.has(key) || options.length < 4 || !Number.isInteger(correct) || correct < 0 || correct >= options.length) continue;
+        if (new Set(options).size !== options.length) continue;
+        docs.push({ q, options, correct });
+        seen.add(key);
+    }
+
+    if (docs.length) {
+        await Question.insertMany(docs, { ordered: false });
+        console.log(`📚 Aducate question bank filled with ${docs.length} questions (500 minimum).`);
+    }
 }
 
 function noStore(res) {

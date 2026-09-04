@@ -44,6 +44,8 @@ const userSchema = new mongoose.Schema(
         dailyChallengeDate: { type: String, default: "" },
         dailyChallengeProgress: { type: Number, default: 0 },
         dailyChallengeClaimed: { type: Boolean, default: false },
+        dailyActivityDate: { type: String, default: "" },
+        dailyActivityProgress: { type: Number, default: 0 },
         loginHistory: [{ at: { type: Date, default: Date.now }, device: { type: String, default: "" } }],
         supportTickets: [{ subject: String, message: String, category: { type: String, default: "Other" }, status: { type: String, default: "Pending" }, adminReply: { type: String, default: "" }, createdAt: { type: Date, default: Date.now }, updatedAt: { type: Date, default: Date.now } }],
 

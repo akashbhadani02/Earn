@@ -175,6 +175,14 @@ router.post("/quiz", auth, async (req, res) => {
         user.dailyQuestionsAnswered =
             Number(user.dailyQuestionsAnswered || 0) + 1;
 
+        // Today's English Mission counts QUIZ answers only. Activities have a separate counter.
+        if (user.dailyChallengeDate !== today) {
+            user.dailyChallengeDate = today;
+            user.dailyChallengeProgress = 0;
+            user.dailyChallengeClaimed = false;
+        }
+        user.dailyChallengeProgress = Math.min(10, Number(user.dailyChallengeProgress || 0) + 1);
+
         user.spinCycleQuestionsAnswered =
             Number(user.spinCycleQuestionsAnswered ?? 0) + 1;
 

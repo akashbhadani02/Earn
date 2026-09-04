@@ -1608,6 +1608,81 @@ body.notification-locked #notificationRequiredOverlay button{
 #blockRulesModal.show{display:flex}.block-rules-box{width:min(620px,100%);max-height:88vh;overflow:auto;background:var(--card,#fff);color:var(--text,#111);border:1px solid var(--border,#ddd);border-radius:20px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .block-rules-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.block-rules-head h2{margin:0;font-size:22px}.block-rules-close{border:0;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:18px;background:#ef4444;color:#fff}.block-rules-intro{line-height:1.6;margin:8px 0 14px}.block-rules-list{display:grid;gap:9px;padding:0;margin:0;list-style:none}.block-rules-list li{padding:11px 12px;border-radius:12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.18);line-height:1.45}.block-rules-warning{margin-top:16px;padding:14px;border-radius:12px;background:rgba(245,158,11,.12);line-height:1.6}.block-rules-ok{margin-top:14px;text-align:center}.block-rules-ok .btn{min-width:160px}@media(max-width:520px){.block-rules-box{padding:17px;border-radius:16px}.block-rules-head h2{font-size:19px}}
 </style>
+
+<style id="aducate-modern-dashboard">
+:root{--ad-bg:#f5f7ff;--ad-surface:#fff;--ad-text:#111827;--ad-muted:#6b7280;--ad-primary:#5b5cf0;--ad-primary2:#7c3aed;--ad-border:#e7e9f2;--ad-shadow:0 18px 50px rgba(31,41,55,.10)}
+body{background:radial-gradient(circle at 10% 0%,#dfe7ff 0,transparent 30%),radial-gradient(circle at 100% 100%,#e9dcff 0,transparent 28%),#f5f7ff!important;color:var(--ad-text)}
+#dashboard.card{max-width:1120px;width:100%;padding:0;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);border-radius:28px;box-shadow:var(--ad-shadow);overflow:hidden}
+#dashboard .dashboard-topbar{padding:18px 24px 8px;display:flex;justify-content:space-between;align-items:center}
+#dashboard h2{margin:0;padding:0 24px 4px;text-align:left;font-size:30px;background:none;-webkit-text-fill-color:initial;color:#111827;animation:none}
+#dashboard .dashboard-actions{display:none}
+#dashboard .wallet-box{margin:18px 24px;padding:26px 28px;border-radius:24px;background:linear-gradient(135deg,#171a4a,#5b5cf0 58%,#8b5cf6);box-shadow:0 18px 35px rgba(91,92,240,.25);min-height:150px}
+#dashboard .wallet-box small{opacity:.8;font-size:13px}#dashboard .wallet-val{display:block;font-size:42px;font-weight:700;letter-spacing:-1px;margin-top:6px}
+.ad-welcome{padding:0 24px;color:var(--ad-muted);font-size:14px}.ad-main{padding:20px 24px 28px}.ad-section-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.ad-section-title h3{font-size:18px}.ad-section-title span{font-size:12px;color:var(--ad-muted)}
+.ad-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}.ad-card{background:#fff;border:1px solid var(--ad-border);border-radius:20px;padding:18px;box-shadow:0 8px 25px rgba(31,41,55,.05)}
+.ad-progress{height:9px;background:#eef0f7;border-radius:99px;overflow:hidden;margin:12px 0}.ad-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ad-primary),var(--ad-primary2));border-radius:99px;transition:width .4s}
+.ad-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ad-stat{padding:14px;background:#f8f9ff;border-radius:16px}.ad-stat b{display:block;font-size:20px}.ad-stat small{color:var(--ad-muted);font-size:11px}
+.ad-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.ad-action{border:0;border-radius:16px;padding:15px 10px;background:#f6f7ff;color:#25283d;font-weight:600;cursor:pointer;transition:.2s}.ad-action:hover{transform:translateY(-2px);background:#eef0ff}.ad-action .ico{display:block;font-size:24px;margin-bottom:5px}
+.ad-course-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.ad-course{border:1px solid var(--ad-border);border-radius:18px;padding:16px;cursor:pointer;background:linear-gradient(145deg,#fff,#f8f9ff)}.ad-course strong{display:block;margin-bottom:5px}.ad-course p{font-size:12px;color:var(--ad-muted);margin-bottom:12px}.ad-course button{border:0;border-radius:10px;padding:8px 11px;background:#111827;color:#fff;font-size:12px}
+.ad-challenge{display:flex;align-items:center;gap:16px}.ad-ring{width:78px;height:78px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--ad-primary) 0deg,#eceef7 0deg);flex:0 0 auto}.ad-ring:after{content:attr(data-label);width:58px;height:58px;border-radius:50%;background:white;display:grid;place-items:center;font-weight:700;font-size:13px}.ad-challenge h4{font-size:16px;margin-bottom:4px}.ad-challenge p{font-size:12px;color:var(--ad-muted)}
+.ad-days{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:14px}.ad-day{height:28px;border-radius:8px;background:#f0f1f6;display:grid;place-items:center;font-size:10px;color:#777}.ad-day.done{background:#5b5cf0;color:#fff}.ad-day.today{outline:2px solid #8b5cf6;outline-offset:1px}
+.ad-bottom{display:none}.legacy-admin-btn,.tc-note{display:none!important}
+@media(max-width:780px){body{padding:0!important;align-items:flex-start!important}#dashboard.card{min-height:100vh;border-radius:0;max-width:none}.ad-grid{grid-template-columns:1fr}.ad-course-grid{grid-template-columns:1fr}.ad-actions{grid-template-columns:repeat(2,1fr)}.ad-stats{grid-template-columns:repeat(3,1fr)}#dashboard h2{font-size:25px}.ad-days{grid-template-columns:repeat(10,1fr)}#dashboard .wallet-val{font-size:36px}}
+@media(max-width:420px){#dashboard .dashboard-topbar,#dashboard h2,#dashboard .wallet-box,.ad-welcome,.ad-main{margin-left:0;margin-right:0}#dashboard .dashboard-topbar{padding-left:16px;padding-right:16px}#dashboard h2{padding-left:16px}.ad-welcome{padding:0 16px}.ad-main{padding:18px 16px 24px}.ad-actions{gap:8px}.ad-action{padding:13px 7px}.ad-days{gap:4px}.ad-day{height:25px;font-size:9px}}
+</style>
+
+<style id="aducate-book-dashboard-style">
+.ad-book-card{background:linear-gradient(135deg,#ffffff,#f5f3ff)!important;border:1px solid #e9ddff!important}.ad-book-cover{width:72px;height:98px;border-radius:7px;background:linear-gradient(160deg,#fff,#eef2ff);box-shadow:0 10px 22px rgba(76,29,149,.16);display:grid;place-items:center;text-align:center;padding:7px;color:#312e81;font-weight:900;font-size:10px;line-height:1.2;flex:0 0 auto}.ad-book-price{font-size:22px;font-weight:900;color:#6d28d9}.ad-book-buy{border:0;border-radius:12px;padding:11px 16px;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-weight:800;cursor:pointer;box-shadow:0 8px 18px rgba(109,40,217,.2)}.ad-book-buy:hover{transform:translateY(-1px)}
+</style>
+
+<style id="aducate-logo-dashboard-style">
+.ad-topbar-brand{display:flex;align-items:center;gap:9px;color:#fff;font-weight:900;font-size:17px;letter-spacing:.3px}
+.ad-topbar-brand img{width:42px;height:42px;border-radius:12px;object-fit:cover;background:#fff;padding:2px;box-shadow:0 5px 15px rgba(0,0,0,.18)}
+.kbc-orb{overflow:hidden!important;background:#fff!important;padding:2px!important}
+.kbc-orb img{width:100%;height:100%;display:block;object-fit:cover;border-radius:50%}
+@media(max-width:420px){.ad-topbar-brand span{display:none}.ad-topbar-brand img{width:40px;height:40px}}
+</style>
+<style id="aducate-colorful-dashboard">
+:root{--ad-primary:#5b5cf0;--ad-primary2:#ec4899;--ad-border:#e9e7f4}
+body{background:linear-gradient(135deg,#eef2ff 0%,#fff1f7 48%,#ecfeff 100%)!important}
+#dashboard.card{background:rgba(255,255,255,.97);box-shadow:0 24px 70px rgba(76,29,149,.16)}
+#dashboard .dashboard-topbar{background:linear-gradient(90deg,#5b5cf0,#7c3aed,#ec4899);padding-top:18px;padding-bottom:14px}
+#dashboard .dashboard-topbar .icon-btn{background:rgba(255,255,255,.18)!important;color:#fff!important;border-color:rgba(255,255,255,.3)!important;backdrop-filter:blur(8px)}
+#dashboard h2{padding-top:18px;font-weight:900;background:linear-gradient(90deg,#4338ca,#db2777);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ad-welcome{font-weight:600}
+#dashboard .wallet-box{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 45%,#ec4899 100%);box-shadow:0 20px 40px rgba(124,58,237,.28)}
+.ad-card{border:0;box-shadow:0 10px 30px rgba(76,29,149,.08);background:linear-gradient(145deg,#fff,#faf8ff)}
+.ad-section-title h3{font-weight:900}
+.ad-progress{background:#ece9ff}.ad-progress i{background:linear-gradient(90deg,#06b6d4,#6366f1,#ec4899)}
+.ad-stat{border:0;box-shadow:inset 0 0 0 1px rgba(99,102,241,.08)}
+.ad-stat:nth-child(1){background:linear-gradient(145deg,#ecfeff,#cffafe)}
+.ad-stat:nth-child(2){background:linear-gradient(145deg,#fff7ed,#ffedd5)}
+.ad-stat:nth-child(3){background:linear-gradient(145deg,#fdf4ff,#fae8ff)}
+.ad-action{color:#fff;box-shadow:0 9px 20px rgba(0,0,0,.08);border:0}
+.ad-action:nth-child(1){background:linear-gradient(135deg,#06b6d4,#2563eb)}
+.ad-action:nth-child(2){background:linear-gradient(135deg,#8b5cf6,#ec4899)}
+.ad-action:nth-child(3){background:linear-gradient(135deg,#f97316,#ef4444)}
+.ad-action:nth-child(4){background:linear-gradient(135deg,#10b981,#059669)}
+.ad-action:hover{filter:brightness(1.05);transform:translateY(-3px);color:#fff}
+.ad-course{border:0;box-shadow:0 10px 24px rgba(31,41,55,.07);color:#fff;overflow:hidden;position:relative}
+.ad-course:nth-child(1){background:linear-gradient(135deg,#14b8a6,#0ea5e9)}
+.ad-course:nth-child(2){background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.ad-course:nth-child(3){background:linear-gradient(135deg,#f59e0b,#ec4899)}
+.ad-course p{color:rgba(255,255,255,.88)}.ad-course button{background:rgba(255,255,255,.95);color:#312e81}
+.ad-challenge{background:linear-gradient(135deg,#fff7ed,#fdf2f8);border-radius:18px;padding:14px}
+.ad-ring{background:conic-gradient(#f97316 0deg,#fce7f3 0deg)}
+.ad-addon-grid .ad-addon-card{border:0;color:#fff;box-shadow:0 10px 24px rgba(31,41,55,.09)}
+.ad-addon-grid .ad-addon-card:nth-child(1){background:linear-gradient(135deg,#f59e0b,#f97316)}
+.ad-addon-grid .ad-addon-card:nth-child(2){background:linear-gradient(135deg,#10b981,#06b6d4)}
+.ad-addon-grid .ad-addon-card:nth-child(3){background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.ad-addon-grid .ad-addon-card:nth-child(4){background:linear-gradient(135deg,#ef4444,#ec4899)}
+.ad-addon-card small{color:rgba(255,255,255,.88)!important}.ad-addon-card>b{color:#fff!important}.ad-addon-icon{background:rgba(255,255,255,.2);color:#fff}
+.ad-book-card{background:linear-gradient(135deg,#fff,#f0f9ff,#faf5ff)!important;border:0!important;box-shadow:0 12px 30px rgba(37,99,235,.10)!important}
+.ad-book-price{background:linear-gradient(90deg,#2563eb,#db2777);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ad-days .ad-day{background:#ede9fe;color:#6d28d9}.ad-days .ad-day.done{background:linear-gradient(135deg,#6366f1,#ec4899)}.ad-days .ad-day.today{outline-color:#f97316}
+@media(max-width:780px){#dashboard .dashboard-topbar{padding:14px 16px}.ad-action{min-height:82px}.ad-course{min-height:125px}}
+</style>
+
 </head>
 
 <body>
@@ -1632,18 +1707,81 @@ body.notification-locked #notificationRequiredOverlay button{
 
     <div id="dashboard" class="card" aria-hidden="true" style="visibility:hidden;">
         <div class="dashboard-topbar">
-            <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+            <div class="ad-topbar-brand"><img src="/icon-192.png" alt="Aducate Logo"><span>Aducate</span></div>
             <div class="topbar-right">
+                <button id="themeBtn" class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">🌙</button>
                 <button class="icon-btn" onclick="location.href='profile.html'" aria-label="Profile" title="Profile">👤</button>
                 <button class="icon-btn" onclick="location.href='admin.html'" aria-label="Admin" title="Admin">⚙️</button>
             </div>
         </div>
 
-        <h2>Student Dashboard</h2>
+        <h2>Welcome back 👋</h2>
+        <div class="ad-welcome" id="adWelcome">ચાલો આજે થોડું English practice કરીએ અને તમારું learning streak વધારીએ.</div>
 
         <div class="wallet-box">
             <small>Total Balance</small>
             <span class="wallet-val">₹<span id="wallet">0.00</span></span>
+        </div>
+
+        <div class="ad-main">
+            <div class="ad-section-title"><h3>📈 Your Learning</h3><span id="adLevelText">Level 1</span></div>
+            <div class="ad-card" style="margin-bottom:16px">
+                <div style="display:flex;justify-content:space-between;gap:10px"><strong>English progress</strong><strong id="adProgressText">0%</strong></div>
+                <div class="ad-progress"><i id="adProgressBar"></i></div>
+                <div class="ad-stats">
+                    <div class="ad-stat"><b id="adQuestions">0</b><small>Questions</small></div>
+                    <div class="ad-stat"><b id="adStreak">0</b><small>Day streak</small></div>
+                    <div class="ad-stat"><b id="adXp">0</b><small>XP</small></div>
+                </div>
+            </div>
+
+            <div class="ad-section-title"><h3>⚡ Quick Practice</h3><span>Choose an activity</span></div>
+            <div class="ad-actions" style="margin-bottom:18px">
+                <button class="ad-action" onclick="showScreen('quiz')"><span class="ico">📝</span>Quiz</button>
+                <button class="ad-action" onclick="showScreen('activities')"><span class="ico">🎮</span>Practice</button>
+                <button class="ad-action" onclick="openAddonsCenter()"><span class="ico">🔥</span>Challenge</button>
+                <button class="ad-action" onclick="location.href='profile.html'"><span class="ico">👤</span>Profile</button>
+            </div>
+
+            <div class="ad-section-title"><h3>🚀 Add-ons</h3><span>Extra rewards & support</span></div>
+            <div class="ad-addon-grid" style="margin-bottom:18px">
+                <button class="ad-addon-card" type="button" onclick="openAducateAddons()"><span class="ad-addon-icon">🎁</span><span><strong>Rewards & Coupons</strong><small>Redeem coupons, check rewards</small></span><b>›</b></button>
+                <button class="ad-addon-card" type="button" onclick="openAducateAddons('referral')"><span class="ad-addon-icon">👥</span><span><strong>Refer & Earn</strong><small>Share your referral code</small></span><b>›</b></button>
+                <button class="ad-addon-card" type="button" onclick="openAducateAddons('support')"><span class="ad-addon-icon">💬</span><span><strong>Help & Support</strong><small>Create a support ticket</small></span><b>›</b></button>
+                <button class="ad-addon-card" type="button" onclick="openAducateAddons('challenge')"><span class="ad-addon-icon">🔥</span><span><strong>Daily Challenge</strong><small>Complete 10 activities & claim ₹1</small></span><b>›</b></button>
+            </div>
+
+            <div class="ad-card ad-book-card" style="margin-bottom:18px;position:relative;overflow:hidden;">
+                <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+                    <div class="ad-book-cover">COMPLETE<br>ENGLISH<br>ALL-IN-ONE</div>
+                    <div style="flex:1;min-width:210px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                            <h3 style="margin:0">📖 Aducate English Book</h3><span class="ad-book-price">₹499</span>
+                        </div>
+                        <p style="color:var(--ad-muted);font-size:12px;margin:6px 0 12px;line-height:1.6">Grammar, vocabulary, speaking practice and everyday English in one complete book.</p>
+                        <button type="button" class="ad-book-buy" onclick="openBookPurchase()">🛒 Purchase Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad-grid">
+                <div>
+                    <div class="ad-section-title"><h3>📚 Learning Paths</h3><span>Learn at your level</span></div>
+                    <div class="ad-course-grid">
+                        <div class="ad-course" onclick="showScreen('activities')"><strong>🌱 Beginner</strong><p>Basic sentences, vocabulary & everyday English.</p><button>Start learning</button></div>
+                        <div class="ad-course" onclick="showScreen('activities')"><strong>🚀 Intermediate</strong><p>Grammar, sentence building & confidence.</p><button>Continue</button></div>
+                        <div class="ad-course" onclick="showScreen('quiz')"><strong>🏆 Advanced</strong><p>Challenge yourself with quiz & mixed practice.</p><button>Take challenge</button></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="ad-section-title"><h3>🔥 30-Day Challenge</h3><span id="adChallengeLabel">Day 1</span></div>
+                    <div class="ad-card">
+                        <div class="ad-challenge"><div class="ad-ring" id="adRing" data-label="0/10"></div><div><h4>Today's English mission</h4><p id="adChallengeText">Answer 10 quiz questions to finish today's mission.</p></div></div>
+                        <div class="ad-challenge" style="margin-top:10px;background:linear-gradient(135deg,#eff6ff,#ecfeff)"><div class="ad-ring" id="adActivityRing" data-label="0"></div><div><h4>Today's Activities</h4><p id="adActivityText">0 activities completed today.</p></div></div>
+                        <div class="ad-days" id="adDays"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="dashboard-actions">
@@ -1749,7 +1887,7 @@ body.notification-locked #notificationRequiredOverlay button{
     <div class="kbc-shell">
         <div>
             <div class="kbc-topbar">
-                <div class="kbc-brand"><span class="kbc-orb">A</span><span>Aducate Quiz Master</span></div>
+                <div class="kbc-brand"><span class="kbc-orb"><img src="/icon-192.png" alt="Aducate Logo"></span><span>Aducate Quiz Master</span></div>
                 <div class="kbc-balance">Wallet ₹<span id="quizWallet">0.00</span></div>
             </div>
 
@@ -2555,6 +2693,7 @@ body.notification-locked #notificationRequiredOverlay button{
                 dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
                 spinCycleQuestionsAnswered = Number(data.spinCycleQuestionsAnswered ?? data.dailyQuestionsAnswered ?? 0);
                 totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
+                window.totalQuestionsAnswered = totalQuestionsAnswered;
                 dailyQuestionsDate = data.dailyQuestionsDate || "";
                 await syncLifelines(data);
 
@@ -2591,6 +2730,7 @@ body.notification-locked #notificationRequiredOverlay button{
             dailyQuestionsAnswered = Number(data.dailyQuestionsAnswered || 0);
             spinCycleQuestionsAnswered = Number(data.spinCycleQuestionsAnswered ?? data.dailyQuestionsAnswered ?? 0);
             totalQuestionsAnswered = Number(data.totalQuestionsAnswered || 0);
+            window.totalQuestionsAnswered = totalQuestionsAnswered;
             dailyQuestionsDate = data.dailyQuestionsDate || "";
             lastClaim = data.lastClaim || "";
             lastSpin = data.lastSpin || "";
@@ -3605,75 +3745,86 @@ document.addEventListener('click', function(e){
 }, true);
 </script>
 <!-- ADDONS CENTER -->
-<style>
-#quickActionBar{position:fixed;right:18px;bottom:18px;z-index:9999;display:flex;gap:10px;align-items:center;transition:transform .28s ease,opacity .28s ease;will-change:transform,opacity}#quickActionBar.floating-hidden{transform:translateX(calc(100% + 28px));opacity:.12;pointer-events:none}#addonsFab,#bookFab{position:static;z-index:9999;border:0;border-radius:999px;padding:14px 19px;background:linear-gradient(135deg,#7c3aed,#06b6d4);color:#fff;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer}
-#addonsModal{display:none;position:fixed;inset:0;z-index:10000;background:rgba(2,6,23,.70);padding:18px;overflow:auto;backdrop-filter:blur(4px)}
-.addons-box{width:min(980px,100%);margin:20px auto;background:#fff;border-radius:24px;padding:22px;color:#172033;box-shadow:0 24px 70px rgba(0,0,0,.28)}
-.addons-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:1px solid #e5e7eb;padding-bottom:14px}.addons-head h2{margin:0;font-size:25px}.addons-close{border:0;background:#f1f5f9;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer}.addons-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}.addon-card{border:1px solid #e5e7eb;border-radius:18px;padding:16px;background:linear-gradient(180deg,#fff,#f8fafc);box-shadow:0 5px 16px rgba(15,23,42,.05)}.addon-card h3{margin:0 0 9px;font-size:17px}.addon-card button,.addon-card input,.addon-card textarea,.addon-card select{width:100%;box-sizing:border-box;margin-top:9px;padding:11px;border-radius:10px;border:1px solid #d7dde7;font:inherit}.addon-card button{background:#6d28d9;color:#fff;border:0;font-weight:800;cursor:pointer}.addon-card button.secondary{background:#e2e8f0;color:#172033}.addon-card button:disabled{opacity:.55;cursor:not-allowed}.addon-help{font-size:12px;color:#64748b;line-height:1.45;margin-top:7px}.addon-success{color:#15803d;font-weight:700}.addon-error{color:#dc2626;font-weight:700}.leader-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #edf0f4;font-size:13px}.badge{display:inline-block;padding:6px 9px;margin:3px;border-radius:999px;background:#ede9fe;color:#5b21b6;font-size:12px;font-weight:800}.ticket-item{padding:10px;border:1px solid #e5e7eb;border-radius:12px;margin-top:8px;background:#fff}.ticket-item small{color:#64748b}.addon-copy{display:flex;gap:8px;align-items:center}.addon-copy input{margin-top:0;flex:1;background:#f8fafc}.addon-copy button{width:auto;margin-top:0;white-space:nowrap}.ref-link{word-break:break-all;font-size:12px;color:#475569;margin-top:7px}
-@media(max-width:700px){#quickActionBar{right:10px;bottom:12px;gap:7px}#quickActionBar button{padding:11px 12px;font-size:13px}#addonsModal{padding:8px}.addons-box{margin:0 auto;border-radius:18px;padding:14px}.addons-head h2{font-size:20px}.addons-grid{grid-template-columns:1fr;gap:10px}.addon-card{padding:13px}.addon-copy{align-items:stretch;flex-direction:column}.addon-copy button{width:100%}#addonsFab{right:12px;bottom:12px;padding:12px 16px}}
-
-/* Auto-hide floating actions while scrolling so they never cover app content. */
-@media(max-width:700px){
-  #quickActionBar{right:8px;bottom:calc(10px + env(safe-area-inset-bottom));gap:7px;max-width:calc(100vw - 16px);}
-  #quickActionBar.floating-hidden{transform:translateX(calc(100% + 18px));}
-  #quickActionBar button{max-width:46vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+<script id="challenge-navigation-fix">
+// The dashboard Challenge button used to call a missing function.
+// Open the real practice/challenge area instead of doing nothing.
+function openAddonsCenter(){
+  try {
+    if (typeof showScreen === 'function') {
+      showScreen('activities');
+      if (typeof renderActivities === 'function') renderActivities();
+      return;
+    }
+  } catch (e) { console.warn('Challenge navigation failed', e); }
+  window.location.hash = '#activities';
 }
-</style>
-<div id="quickActionBar"><button id="bookFab" type="button" onclick="openBookPurchase()">📖 Book ₹499</button><button id="addonsFab" type="button" onclick="openAddonsCenter()">🚀 Add-ons</button></div>
-<div id="addonsModal" aria-hidden="true"><div class="addons-box"><div class="addons-head"><div><h2>🚀 Earn Add-ons Center</h2><small>Learn • Earn • Grow</small></div><button class="addons-close" type="button" onclick="closeAddonsCenter()">✕ Close</button></div><div id="addonsContent">Loading...</div></div></div>
-<script>
-(function(){
-  const bar=document.getElementById('quickActionBar');
-  if(!bar) return;
-  let lastY=window.scrollY||0, timer=null;
-  const modalOpen=()=>!!document.querySelector('.book-modal.show,#addonsModal[aria-hidden="false"]');
-  const show=()=>{bar.classList.remove('floating-hidden');};
-  const hide=()=>{if(!modalOpen()) bar.classList.add('floating-hidden');};
-  const onScroll=()=>{
-    const y=window.scrollY||0;
-    if(y<lastY-2) show();
-    else if(y>lastY+2) hide();
-    lastY=y;
-    clearTimeout(timer);
-    timer=setTimeout(()=>{ if(!modalOpen() && y>8) hide(); },1400);
-  };
-  window.addEventListener('scroll',onScroll,{passive:true});
-  ['touchstart','pointerdown','mouseenter'].forEach(ev=>bar.addEventListener(ev,show,{passive:true}));
-  window.addEventListener('resize',show,{passive:true});
-  window.showStudentFloatingActions=show;
-})();
-let addonsData=null;
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function studentAddonToken(){return localStorage.getItem('token')||localStorage.getItem('studentToken')||''}
-async function addonFetch(url,opt={}){const token=studentAddonToken();const headers=Object.assign({'Content-Type':'application/json'},opt.headers||{});if(token)headers.Authorization='Bearer '+token;const r=await fetch('/api/addons'+url,Object.assign({},opt,{credentials:'same-origin',headers}));const j=await r.json().catch(()=>({success:false,message:'Server error'}));if(!r.ok||!j.success)throw Error(j.message||'Something went wrong');return j}
-async function openAddonsCenter(){window.showStudentFloatingActions?.();document.getElementById('addonsModal').style.display='block';document.getElementById('addonsModal').setAttribute('aria-hidden','false');await loadAddons()}
-function closeAddonsCenter(){document.getElementById('addonsModal').style.display='none';document.getElementById('addonsModal').setAttribute('aria-hidden','true')}
-async function loadAddons(){const box=document.getElementById('addonsContent');box.innerHTML='<p>⏳ Loading your add-ons...</p>';try{if(!studentAddonToken())throw Error('Login session મળી નથી. Please login again.');const d=await addonFetch('/dashboard');addonsData=d;const p=d.profile;const claimDisabled=p.dailyChallenge.claimed||p.dailyChallenge.progress<10;const referralLink=location.origin+location.pathname+'?ref='+encodeURIComponent(p.referralCode||'');box.innerHTML=`<div class="addons-grid">
-<div class="addon-card"><h3>🔥 Daily Streak</h3><b>${p.streak||0} days</b><div class="addon-help">Longest streak: ${p.longestStreak||0} days<br>Level ${p.level||1} • ${p.experience||0} XP</div></div>
-<div class="addon-card"><h3>🎯 Daily Challenge</h3><div>Complete 10 successful activities: <b>${p.dailyChallenge.progress||0}/10</b></div><button ${claimDisabled?'disabled':''} onclick="claimChallenge()">${p.dailyChallenge.claimed?'✅ Reward Claimed':p.dailyChallenge.progress>=10?'🎁 Claim ₹'+p.dailyChallenge.reward:'🔒 Complete '+(10-(p.dailyChallenge.progress||0))+' more'}</button><div class="addon-help">Challenge resets automatically each day.</div></div>
-<div class="addon-card"><h3>🎁 Referral</h3><div>Your unique code</div><div class="addon-copy"><input id="myRefCode" readonly value="${esc(p.referralCode||'')}"><button onclick="copyReferral()">📋 Copy Code</button></div><div class="ref-link">Invite link: ${esc(referralLink)}</div><div class="addon-help">When a new student uses your code successfully, both students receive the referral bonus. You can use another student's code only once.</div><input id="refCode" placeholder="Enter friend's referral code"><button onclick="applyReferral()">🤝 Apply Referral Code</button><div class="addon-help">Your referrals: <b>${p.referralCount||0}</b></div></div>
-<div class="addon-card"><h3>🎟️ Coupon</h3><input id="couponCode" placeholder="Enter active coupon"><button onclick="applyCoupon()">🎁 Redeem Coupon</button><div class="addon-help">Each coupon is single-use. After successful redemption it is removed automatically from Admin's available coupon list.</div></div>
-<div class="addon-card"><h3>🏅 Achievements</h3>${(p.badges||[]).map(x=>`<span class="badge">🏅 ${esc(x)}</span>`).join('')||'Keep learning to unlock badges!'}</div>
-<div class="addon-card"><h3>🏆 Leaderboard</h3>${(d.leaderboard||[]).map((x,i)=>`<div class="leader-row"><span>${i<3?['🥇','🥈','🥉'][i]:('#'+(i+1))} ${esc(x.name)}</span><b>₹${Number(x.wallet||0).toFixed(2)}</b></div>`).join('')||'No ranking yet.'}</div>
-<div class="addon-card"><h3>📈 Your Progress</h3><div class="leader-row"><span>Level</span><b>${p.level||1}</b></div><div class="leader-row"><span>Experience</span><b>${p.experience||0} XP</b></div><div class="leader-row"><span>Longest streak</span><b>${p.longestStreak||0} days</b></div><div class="leader-row"><span>Referrals</span><b>${p.referralCount||0}</b></div></div>
-<div class="addon-card"><h3>💬 Support Center</h3><select id="ticketCategory"><option>Account</option><option>Payment</option><option>Quiz</option><option>Learning</option><option>Other</option></select><input id="ticketSubject" placeholder="Subject"><textarea id="ticketMessage" rows="4" placeholder="Describe your problem"></textarea><button onclick="createTicket()">📨 Send Ticket</button><button class="secondary" onclick="loadTickets()">📋 View My Tickets</button><div id="ticketsList"></div></div>
-</div>`}catch(e){box.innerHTML='<div class="addon-card"><p class="addon-error">❌ '+esc(e.message)+'</p><button onclick="location.href=\'login.html\'">🔑 Login Again</button></div>'}}
-async function copyReferral(){const v=document.getElementById('myRefCode')?.value||'';try{await navigator.clipboard.writeText(v);alert('✅ Referral code copied: '+v)}catch(e){alert('Your referral code is: '+v)}}
-async function claimChallenge(){try{const j=await addonFetch('/challenge/claim',{method:'POST',body:'{}'});alert('✅ ₹'+j.reward+' added to wallet');await loadAddons()}catch(e){alert('❌ '+e.message)}}
-async function applyReferral(){const el=document.getElementById('refCode');const code=el?.value.trim();if(!code)return alert('Referral code નાખો.');try{const j=await addonFetch('/referral/apply',{method:'POST',body:JSON.stringify({code})});alert('✅ '+j.message);await loadAddons()}catch(e){alert('❌ '+e.message)}}
-async function applyCoupon(){const el=document.getElementById('couponCode');const code=el?.value.trim();if(!code)return alert('Coupon code નાખો.');try{const j=await addonFetch('/coupon',{method:'POST',body:JSON.stringify({code})});alert('✅ '+j.message);await loadAddons()}catch(e){alert('❌ '+e.message)}}
-async function createTicket(){const subject=document.getElementById('ticketSubject').value.trim(),message=document.getElementById('ticketMessage').value.trim(),category=document.getElementById('ticketCategory').value;if(!subject||!message)return alert('Subject અને message બંને લખો.');try{const j=await addonFetch('/tickets',{method:'POST',body:JSON.stringify({subject,message,category})});alert('✅ '+j.message);document.getElementById('ticketSubject').value='';document.getElementById('ticketMessage').value='';await loadTickets()}catch(e){alert('❌ '+e.message)}}
-async function loadTickets(){try{const j=await addonFetch('/tickets');const box=document.getElementById('ticketsList');if(!box)return;box.innerHTML=j.tickets.map(t=>`<div class="ticket-item"><b>${esc(t.subject)}</b><br><small>${esc(t.category||'Other')} • ${esc(t.status||'Pending')}</small><p>${esc(t.message)}</p>${t.adminReply?'<div class="addon-success">Admin reply: '+esc(t.adminReply)+'</div>':''}</div>`).join('')||'<div class="addon-help">No tickets yet.</div>'}catch(e){alert('❌ '+e.message)}}
-window.openAddonsCenter=openAddonsCenter;window.closeAddonsCenter=closeAddonsCenter;
 </script>
 
+<div id="aducateAddonsModal" class="book-modal" role="dialog" aria-modal="true" aria-labelledby="aducateAddonsTitle" style="z-index:10020">
+  <div class="book-box ad-addon-modal-box">
+    <div class="ad-addon-modal-head"><div><div class="book-payment-badge">ADUCATE ADD-ONS</div><h3 id="aducateAddonsTitle">🚀 Rewards & Add-ons</h3><p>Extra tools, rewards and support in one place.</p></div><button type="button" class="book-close-x" onclick="closeAducateAddons()">×</button></div>
+    <div class="ad-addon-tabs">
+      <button type="button" class="active" data-addon-tab="rewards" onclick="switchAducateAddonTab('rewards')">🎁 Rewards</button>
+      <button type="button" data-addon-tab="referral" onclick="switchAducateAddonTab('referral')">👥 Refer</button>
+      <button type="button" data-addon-tab="support" onclick="switchAducateAddonTab('support')">💬 Support</button>
+      <button type="button" data-addon-tab="challenge" onclick="switchAducateAddonTab('challenge')">🔥 Challenge</button>
+    </div>
+    <div id="addonPanelRewards" class="ad-addon-panel">
+      <div class="ad-addon-feature"><div class="ad-addon-big">🎟️</div><div><h4>Redeem Coupon</h4><p>Enter your valid Aducate coupon code to add the reward to your wallet.</p></div></div>
+      <div class="ad-addon-input-row"><input id="addonCouponInput" placeholder="Enter coupon code" autocomplete="off"><button type="button" onclick="redeemAducateCoupon()">Redeem</button></div>
+      <div id="addonCouponStatus" class="ad-addon-status"></div>
+    </div>
+    <div id="addonPanelReferral" class="ad-addon-panel" hidden>
+      <div class="ad-addon-feature"><div class="ad-addon-big">👥</div><div><h4>Refer & Earn</h4><p>Share your referral code. Both eligible users can receive the referral reward.</p></div></div>
+      <div class="ad-referral-code"><span id="addonReferralCode">Loading...</span><button type="button" onclick="copyAducateReferral()">Copy</button></div>
+      <div class="ad-addon-input-row"><input id="addonReferralInput" placeholder="Enter friend's referral code" autocomplete="off"><button type="button" onclick="applyAducateReferral()">Apply</button></div>
+      <div id="addonReferralStatus" class="ad-addon-status"></div>
+    </div>
+    <div id="addonPanelSupport" class="ad-addon-panel" hidden>
+      <div class="ad-addon-feature"><div class="ad-addon-big">💬</div><div><h4>Need Help?</h4><p>Send a message to the Aducate support team.</p></div></div>
+      <input id="addonSupportSubject" class="ad-addon-full-input" placeholder="Subject">
+      <select id="addonSupportCategory" class="ad-addon-full-input"><option value="General">General</option><option value="Payment">Payment</option><option value="Course">Course</option><option value="Account">Account</option></select>
+      <textarea id="addonSupportMessage" class="ad-addon-full-input" rows="4" placeholder="Write your message..."></textarea>
+      <button type="button" class="ad-addon-submit" onclick="createAducateTicket()">Send Support Request</button>
+      <div id="addonSupportStatus" class="ad-addon-status"></div>
+    </div>
+    <div id="addonPanelChallenge" class="ad-addon-panel" hidden>
+      <div class="ad-challenge ad-addon-challenge-box"><div class="ad-ring" id="addonRing" data-label="0/10"></div><div><h4>Today's Challenge</h4><p id="addonChallengeText">Complete 10 activities today.</p></div></div>
+      <button type="button" class="ad-addon-submit" id="addonClaimBtn" onclick="claimAducateChallenge()">🎁 Claim ₹1 Reward</button>
+      <div id="addonChallengeStatus" class="ad-addon-status"></div>
+    </div>
+  </div>
+</div>
+
 <div id="bookPurchaseModal" class="book-modal" role="dialog" aria-modal="true">
-  <div class="book-box">
-    <h3>📖 Aducate English Book</h3>
-    <div class="book-price">₹499</div>
-    <p id="bookPurchaseInfo">તમારા Wallet માં ₹499 અથવા વધુ balance હોય તો સીધું Wallet થી ખરીદી શકો છો. નહિતર external payment કર્યા પછી UTR submit કરીને Admin approval લઈ શકો છો.</p>
-    <input id="bookPaymentReference" placeholder="Payment Reference / UTR Number" autocomplete="off">
-    <div class="book-row"><button class="book-secondary" onclick="closeBookPurchase()">Close</button><button class="book-primary" id="bookWalletBtn" onclick="purchaseBookWithWallet()">💰 Buy with Wallet ₹499</button><button class="book-primary" id="bookRequestBtn" onclick="submitBookPurchase()">Send UTR for Admin Approval</button></div>
+  <div class="book-box book-payment-box">
+    <button type="button" class="book-close-x" onclick="closeBookPurchase()" aria-label="Close purchase" title="Close">×</button>
+    <div class="book-payment-head" style="padding-right:48px;">
+      <div>
+        <div class="book-payment-badge">ADUCATE ENGLISH BOOK</div>
+        <h3>📖 Complete English All-in-One</h3>
+        <p>Grammar • Vocabulary • Speaking • Everyday English</p>
+      </div>
+      <div class="book-price">₹499</div>
+    </div>
+
+    <div class="book-pay-grid">
+      <div class="book-qr-card">
+        <div class="book-pay-title">📷 Scan & Pay</div>
+        <img class="book-payment-qr" src="/book-payment-qr.png" alt="Aducate English Book ₹499 UPI QR code">
+        <div class="book-pay-caption">Scan this QR to pay exactly ₹499</div>
+      </div>
+      <div class="book-upi-card">
+        <div class="book-pay-title">📲 Pay with UPI</div>
+        <a class="book-upi-btn" href="upi://pay?pa=baa836610%40okaxis&pn=A%20Ba&am=499.00&cu=INR&tn=Aducate%20English%20Book">Open UPI App • Pay ₹499</a>
+        <div class="book-upi-id"><span>UPI ID</span><b id="bookUpiId">baa836610@okaxis</b><button type="button" onclick="copyBookUpi()">Copy</button></div>
+        <div class="book-pay-caption">After payment, enter your UTR / Transaction ID below.</div>
+      </div>
+    </div>
+
+    <div class="book-wallet-note">💰 Wallet balance ₹499+ હોય તો payment વગર Wallet થી પણ book ખરીદી શકો છો.</div>
+    <input id="bookPaymentReference" placeholder="Enter Payment Reference / UTR Number" autocomplete="off">
+    <div class="book-row"><button class="book-secondary" onclick="closeBookPurchase()">Close</button><button class="book-primary" id="bookWalletBtn" onclick="purchaseBookWithWallet()">💰 Buy with Wallet ₹499</button><button class="book-primary" id="bookRequestBtn" onclick="submitBookPurchase()">✅ Send UTR for Approval</button></div>
     <div id="bookPurchaseStatus" class="book-status"></div>
   </div>
 </div>
@@ -3701,6 +3852,19 @@ window.openAddonsCenter=openAddonsCenter;window.closeAddonsCenter=closeAddonsCen
 </div>
 
 
+<style id="aducate-addons-ui-style">
+.ad-addon-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.ad-addon-card{border:1px solid var(--ad-border);border-radius:18px;background:linear-gradient(145deg,#fff,#f8f9ff);padding:14px;display:flex;align-items:center;gap:10px;text-align:left;cursor:pointer;transition:.2s;min-height:82px;color:var(--ad-text,#25283d)}.ad-addon-card:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(31,41,55,.08)}.ad-addon-card>span:nth-child(2){flex:1}.ad-addon-card strong,.ad-addon-card small{display:block}.ad-addon-card small{font-size:11px;color:var(--ad-muted);margin-top:4px;line-height:1.35}.ad-addon-card>b{font-size:24px;color:#94a3b8}.ad-addon-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#f1f3ff;font-size:22px;flex:0 0 auto}.ad-addon-modal-box{width:min(760px,100%);padding:22px}.ad-addon-modal-head{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.ad-addon-modal-head h3{margin:0}.ad-addon-modal-head p{margin:5px 0 0;color:#64748b;font-size:12px}.ad-addon-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 12px}.ad-addon-tabs button{border:1px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:11px 7px;font-weight:800;cursor:pointer}.ad-addon-tabs button.active{background:#eef0ff;border-color:#c7d2fe;color:#4338ca}.ad-addon-panel{border:1px solid #e7e9f2;border-radius:18px;background:#fafaff;padding:16px}.ad-addon-feature{display:flex;gap:12px;align-items:center;margin-bottom:14px}.ad-addon-feature h4{margin:0 0 3px;font-size:17px}.ad-addon-feature p{margin:0;color:#64748b;font-size:12px;line-height:1.5}.ad-addon-big{width:50px;height:50px;border-radius:15px;background:#f1f3ff;display:grid;place-items:center;font-size:25px;flex:0 0 auto}.ad-addon-input-row{display:flex;gap:8px}.ad-addon-input-row input,.ad-addon-full-input{width:100%;box-sizing:border-box;border:1px solid #dbe1ea;border-radius:11px;padding:12px;background:#fff;font:inherit;margin-bottom:9px}.ad-addon-input-row button,.ad-referral-code button,.ad-addon-submit{border:0;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,#5b5cf0,#7c3aed);color:#fff;font-weight:800;cursor:pointer;white-space:nowrap}.ad-referral-code{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px;border-radius:12px;background:#f3f4ff;margin-bottom:12px;font-weight:900;color:#3730a3}.ad-addon-status{min-height:20px;margin-top:9px;font-size:12px;color:#475569}.ad-addon-challenge-box{padding:5px 0 15px}.ad-addon-submit{width:100%}@media(max-width:780px){.ad-addon-grid{grid-template-columns:repeat(2,1fr)}.ad-addon-tabs{grid-template-columns:repeat(2,1fr)}.ad-addon-modal-box{padding:15px}}@media(max-width:480px){.ad-addon-grid{grid-template-columns:1fr}.ad-addon-card{min-height:72px}}
+</style>
+<style id="book-payment-upgrade-style">
+/* Purchase Book popup: fully scrollable on desktop + mobile */
+#bookPurchaseModal{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;align-items:flex-start;padding:14px;box-sizing:border-box;}
+#bookPurchaseModal .book-payment-box{width:min(760px,100%);text-align:left;padding:22px;max-height:calc(100vh - 28px);overflow-y:auto;overflow-x:hidden;box-sizing:border-box;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:thin;}
+#bookPurchaseModal .book-payment-box::-webkit-scrollbar{width:7px}
+#bookPurchaseModal .book-payment-box::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
+.book-payment-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid #e9eaf2;padding-bottom:14px}.book-payment-badge{display:inline-block;font-size:10px;font-weight:900;letter-spacing:.12em;color:#6d28d9;background:#f3e8ff;padding:6px 9px;border-radius:999px;margin-bottom:7px}.book-payment-head h3{margin:0;font-size:22px}.book-payment-head p{margin:5px 0 0;color:#64748b;font-size:12px}.book-pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}.book-qr-card,.book-upi-card{border:1px solid #e7e9f2;border-radius:18px;background:#fafaff;padding:15px;text-align:center}.book-pay-title{font-weight:900;color:#1e293b;margin-bottom:9px}.book-payment-qr{width:210px;max-width:75%;display:block;margin:0 auto 8px;border-radius:12px;background:#fff;padding:8px;box-shadow:0 8px 24px rgba(15,23,42,.12)}.book-pay-caption{font-size:11px;color:#64748b;line-height:1.5}.book-upi-btn{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:12px;background:linear-gradient(135deg,#16a34a,#059669);color:#fff;text-decoration:none;font-weight:900;margin:10px 0 12px}.book-upi-id{display:flex;align-items:center;gap:7px;justify-content:center;flex-wrap:wrap;font-size:12px;color:#475569}.book-upi-id span{font-weight:700}.book-upi-id b{font-size:13px;color:#111827}.book-upi-id button{border:0;border-radius:8px;padding:5px 9px;background:#e0e7ff;color:#3730a3;font-weight:800;cursor:pointer}.book-wallet-note{background:#f5f3ff;color:#4c1d95;border:1px solid #e9d5ff;border-radius:12px;padding:10px 12px;font-size:12px;margin-bottom:10px}.book-payment-box #bookPaymentReference{margin:0}.book-payment-box .book-row{flex-wrap:wrap}.book-payment-box .book-row button{min-width:150px}.book-payment-box .book-status{background:#f8fafc;border-radius:12px;padding:9px 10px}
+@media(max-width:650px){#bookPurchaseModal{padding:7px;align-items:flex-start}#bookPurchaseModal .book-payment-box{padding:15px;max-height:calc(100vh - 14px);border-radius:18px}.book-payment-head{display:block}.book-price{margin:7px 0 0}.book-pay-grid{grid-template-columns:1fr}.book-payment-qr{width:190px}.book-payment-box .book-row button{width:100%;min-width:0}}
+</style>
+
 <script>
 async function bookApi(path, options={}){
   const token=localStorage.getItem("token");
@@ -3708,6 +3872,10 @@ async function bookApi(path, options={}){
   const data=await res.json().catch(()=>({success:false,message:"Server error"}));
   if(!res.ok||data.success===false) throw new Error(data.message||"Something went wrong");
   return data;
+}
+async function copyBookUpi(){
+  const upi=document.getElementById('bookUpiId')?.textContent?.trim()||'baa836610@okaxis';
+  try{await navigator.clipboard.writeText(upi);document.getElementById('bookPurchaseStatus').textContent='✅ UPI ID copied: '+upi;}catch(e){document.getElementById('bookPurchaseStatus').textContent='UPI ID: '+upi;}
 }
 async function openBookPurchase(){
   const modal=document.getElementById("bookPurchaseModal"), status=document.getElementById("bookPurchaseStatus"), btn=document.getElementById("bookRequestBtn"), input=document.getElementById("bookPaymentReference"), walletBtn=document.getElementById("bookWalletBtn");
@@ -3717,7 +3885,7 @@ async function openBookPurchase(){
     if(b.status==="approved"){ modal.classList.remove("show"); openBookReader(); return; }
     if(b.status==="pending"){status.textContent="⏳ Payment verification pending. Admin permission મળ્યા પછી book open થશે."; input.style.display="none"; btn.style.display="none"; walletBtn.style.display="none";}
     else if(b.status==="rejected"){status.textContent="❌ Previous request rejected. Correct payment reference enter કરીને ફરી request મોકલો.";}
-    else status.textContent="₹499 payment કર્યા પછી તમારો UTR / Payment Reference enter કરો.";
+    else status.textContent="QR scan કરો અથવા UPI buttonથી ₹499 pay કરો. પછી UTR / Transaction ID enter કરીને approval માટે મોકલો.";
   }catch(err){status.textContent="❌ "+err.message;}
 }
 function closeBookPurchase(){document.getElementById("bookPurchaseModal").classList.remove("show")}
@@ -4035,6 +4203,50 @@ function openBlockRules(){const m=document.getElementById('blockRulesModal');if(
 function closeBlockRules(){const m=document.getElementById('blockRulesModal');if(m){m.classList.remove('show');document.body.style.overflow='';}}
 document.addEventListener('click',function(e){const m=document.getElementById('blockRulesModal');if(m&&e.target===m)closeBlockRules();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeBlockRules();});
+</script>
+
+<script id="aducate-addons-center-script">
+(function(){
+  const token=()=>localStorage.getItem('token')||'';
+  const api=async(path,opts={})=>{const r=await fetch('/api/addons'+path,{...opts,headers:{'Content-Type':'application/json',Authorization:'Bearer '+token(),...(opts.headers||{})}});const d=await r.json().catch(()=>({}));if(!r.ok||!d.success)throw new Error(d.message||'Something went wrong.');return d;};
+  function status(id,msg,ok){const e=document.getElementById(id);if(e){e.textContent=msg||'';e.style.color=ok?'#15803d':'#b91c1c';}}
+  window.switchAducateAddonTab=function(tab){['rewards','referral','support','challenge'].forEach(x=>{const p=document.getElementById('addonPanel'+x[0].toUpperCase()+x.slice(1));if(p)p.hidden=x!==tab;const b=document.querySelector('[data-addon-tab="'+x+'"]');if(b)b.classList.toggle('active',x===tab);});if(tab==='referral')loadReferral();if(tab==='challenge')loadChallenge();};
+  window.openAducateAddons=function(tab='rewards'){const m=document.getElementById('aducateAddonsModal');if(!m)return;m.classList.add('show');document.body.style.overflow='hidden';switchAducateAddonTab(tab);};
+  window.closeAducateAddons=function(){const m=document.getElementById('aducateAddonsModal');if(m)m.classList.remove('show');document.body.style.overflow='';};
+  async function loadReferral(){try{const d=await api('/dashboard');document.getElementById('addonReferralCode').textContent=d.profile?.referralCode||'Unavailable';}catch(e){status('addonReferralStatus',e.message,false);}}
+  window.copyAducateReferral=async function(){const v=document.getElementById('addonReferralCode')?.textContent||'';if(!v||v==='Loading...')return;try{await navigator.clipboard.writeText(v);status('addonReferralStatus','✅ Referral code copied.',true);}catch(e){status('addonReferralStatus','Referral code: '+v,true);}};
+  window.redeemAducateCoupon=async function(){const code=document.getElementById('addonCouponInput')?.value.trim();if(!code)return status('addonCouponStatus','❌ Enter a coupon code.',false);try{const d=await api('/coupon',{method:'POST',body:JSON.stringify({code})});status('addonCouponStatus','✅ '+(d.message||'Coupon redeemed successfully.'),true);document.getElementById('addonCouponInput').value='';if(window.refreshAducateModernDashboard)window.refreshAducateModernDashboard();}catch(e){status('addonCouponStatus','❌ '+e.message,false);}};
+  window.applyAducateReferral=async function(){const code=document.getElementById('addonReferralInput')?.value.trim();if(!code)return status('addonReferralStatus','❌ Enter a referral code.',false);try{const d=await api('/referral/apply',{method:'POST',body:JSON.stringify({code})});status('addonReferralStatus','✅ '+(d.message||'Referral applied.'),true);document.getElementById('addonReferralInput').value='';if(window.refreshAducateModernDashboard)window.refreshAducateModernDashboard();}catch(e){status('addonReferralStatus','❌ '+e.message,false);}};
+  window.createAducateTicket=async function(){const subject=document.getElementById('addonSupportSubject')?.value.trim(),message=document.getElementById('addonSupportMessage')?.value.trim(),category=document.getElementById('addonSupportCategory')?.value;if(!subject||!message)return status('addonSupportStatus','❌ Please enter subject and message.',false);try{const d=await api('/tickets',{method:'POST',body:JSON.stringify({subject,message,category})});status('addonSupportStatus','✅ '+(d.message||'Support request sent.'),true);document.getElementById('addonSupportSubject').value='';document.getElementById('addonSupportMessage').value='';}catch(e){status('addonSupportStatus','❌ '+e.message,false);}};
+  async function loadChallenge(){try{const d=await api('/dashboard');const c=d.profile?.dailyChallenge||{},p=Math.min(10,Number(c.progress||0)),ring=document.getElementById('addonRing');if(ring){const deg=p/10*360;ring.style.background=`conic-gradient(#5b5cf0 ${deg}deg,#eceef7 ${deg}deg)`;ring.setAttribute('data-label',p+'/10');}document.getElementById('addonChallengeText').textContent=p>=10?(c.claimed?'Reward already claimed today.':'🎉 Challenge complete! Claim your ₹1 reward.'):`${p}/10 quiz questions answered today.`;const b=document.getElementById('addonClaimBtn');if(b){b.disabled=p<10||!!c.claimed;b.textContent=c.claimed?'✅ Reward Claimed':p>=10?'🎁 Claim ₹1 Reward':'🔒 Complete 10 Activities';}}catch(e){status('addonChallengeStatus',e.message,false);}}
+  window.claimAducateChallenge=async function(){try{const d=await api('/challenge/claim',{method:'POST',body:'{}'});status('addonChallengeStatus','✅ ₹'+(d.reward||1)+' added to your wallet.',true);loadChallenge();if(window.refreshAducateModernDashboard)window.refreshAducateModernDashboard();}catch(e){status('addonChallengeStatus','❌ '+e.message,false);}};
+  document.addEventListener('click',e=>{const m=document.getElementById('aducateAddonsModal');if(m&&e.target===m)closeAducateAddons();});
+})();
+</script>
+<script id="aducate-modern-dashboard-script">
+(function(){
+  function getUser(){try{return JSON.parse(localStorage.getItem('user')||'{}')}catch(e){return {}}}
+  function setText(id,v){const e=document.getElementById(id);if(e)e.textContent=v}
+  function renderDays(streak){const box=document.getElementById('adDays');if(!box)return;const day=Math.max(1,Math.min(30,Number(streak||1)));box.innerHTML=Array.from({length:30},(_,i)=>`<div class="ad-day ${i+1<day?'done ':''}${i+1===day?'today':''}">${i+1}</div>`).join('')}
+  async function loadModern(){
+    const u=getUser(); const name=u.name||u.fullName||'Student';
+    setText('adWelcome',`Hi ${name}! આજે થોડું English practice કરીએ અને તમારું learning streak વધારીએ.`);
+    try{
+      const r=await fetch('/api/addons/dashboard',{headers:{Authorization:'Bearer '+(localStorage.getItem('token')||'')}});
+      const d=await r.json(); if(!d.success)return; const p=d.profile||{};
+      const q=Number(window.totalQuestionsAnswered||0); const progress=Math.min(100,Math.round((q%100)));
+      setText('adLevelText','Level '+(p.level||1));setText('adQuestions',q);setText('adStreak',p.streak||0);setText('adXp',p.experience||0);
+      setText('adProgressText',progress+'%'); const bar=document.getElementById('adProgressBar');if(bar)bar.style.width=progress+'%';
+      const cp=Math.min(10,Number(p.dailyChallenge?.progress||0)); const deg=cp/10*360; const ring=document.getElementById('adRing');if(ring){ring.style.background=`conic-gradient(#5b5cf0 ${deg}deg,#eceef7 ${deg}deg)`;ring.setAttribute('data-label',cp+'/10')}
+      const day=Math.max(1,Math.min(30,Number(p.streak||1)));setText('adChallengeLabel','Day '+day);
+      setText('adChallengeText',cp>=10?'🎉 Today’s mission complete! Claim your reward in Add-ons.':`${cp}/10 quiz questions answered today • 500 quiz questions available.`);
+      const ap=Math.max(0,Number(p.dailyActivities?.progress||0)); const ar=document.getElementById('adActivityRing'); if(ar){ const adeg=Math.min(1,ap/10)*360; ar.style.background=`conic-gradient(#06b6d4 ${adeg}deg,#e0f2fe ${adeg}deg)`; ar.setAttribute('data-label',String(ap)); } setText('adActivityText',`${ap} activities completed today.`); renderDays(p.streak||0);
+    }catch(e){renderDays(0)}
+  }
+  window.addEventListener('load',()=>setTimeout(loadModern,500));
+  window.addEventListener('DOMContentLoaded',()=>setTimeout(loadModern,300));
+  window.refreshAducateModernDashboard=loadModern;
+})();
 </script>
 </body>
 
